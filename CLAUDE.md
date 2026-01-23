@@ -115,14 +115,68 @@ gRPC Request → service (API) → biz (业务逻辑) → logic/convert/clean/ex
 - **Batch Operations**: 对于涉及大量文件（>5 个）的修改，**必须**先在一个文件中验证方案（Prototype），确认无误后再批量执行。
 - **Precision**: 在理解需求时，优先匹配具体的文件名、变量名和代码符号。
 
+## 核心指令 (Core Directive)
+
+> **Evidence > Assumptions | Code > Documentation | Efficiency > Verbosity**
+
+## 核心工作流 (Core Workflow)
+
+严格遵循：**研究 (Research) → 计划 (Plan) → 实现 (Implement) → 验证 (Verify)**
+
+1.  **研究**: 理解现有模式和架构，不盲目动手。维护跨任务的 Context Awareness。
+2.  **计划 (Plan First)**:
+    -   **强制性**: 所有改动（无论大小）必须先创建 Plan。
+    -   **内容**: 包含目标描述、实现步骤、涉及文件、测试策略、风险评估。
+    -   **效率**: 进行并行化分析 (Parallelization Analysis)，识别可并发执行的操作。
+    -   **确认**: Plan 必须经过用户明确确认后，方可进入实现阶段。
+3.  **实现**: 构建代码，包含测试和错误处理。确保无 `TODO` 遗留。
+4.  **验证**: 实现后 **ALWAYS** 运行格式化工具、静态检查和测试 (`make all`)。
+    -   **根因分析**: 遇到失败必须进行 Root Cause Analysis，严禁通过跳过测试来掩盖问题。
+
+## 运营准则 (Operational Guidelines)
+
+### 1. 规则优先级 (Rule Priority)
+1.  **Safety First (Critical)**: 安全与数据完整性高于一切。
+2.  **Scope > Features**: 只做要求的事，不随意发散。
+3.  **Quality > Speed**: 除非紧急情况，否则质量优先。
+
+### 2. 工具与效率 (Tooling & Optimization)
+-   **Parallel by Default**: 默认并行执行无依赖的工具调用 (Parallel Everything)。
+-   **Best Tool Selection**: 总是选择最适合的工具 (MCP > Native)。
+-   **Batch Operations**: 优先使用批量操作 (如 `MultiEdit`) 减少往返。
+
+### 3. 时间与 Git (Temporal & Git)
+-   **Temporal Awareness**: 涉及时间判断时，必须先检查 `<env>` 中的 "Today's date"。
+-   **Git Workflow**: 始终使用功能分支 (Feature Branches)，严禁直接在 `main` 上工作。提交前检查 (`git diff`)。
+
+### 4. 环境卫生 (Workspace Hygiene)
+-   **Clean Up**: 任务结束前清理临时文件、脚本和 debug 输出。
+-   **No Pollution**: 保持目录结构清晰，不随意新建散乱的测试/脚本文件。
+
+## 工程思维 (Engineering Mindset)
+
+### 决策框架
+- **实证推理**: 所有的判断需基于测试、指标或文档证据 (Evidence-Based)。
+- **权衡分析**: 区分 **可逆决策** (快速迭代) 与 **不可逆决策** (慎重规划)。考虑短期收益与长期维护成本。
+- **系统思维**: 考虑改动对整体架构的涟漪效应 (Ripple Effects)。
+
+### 设计模式
+- **SOLID**: 坚持单一职责、开闭原则、接口隔离与依赖倒置。
+- **KISS/DRY**: 保持简单，消除重复，但避免过早优化。
+- **YAGNI**: 只实现当前需求，拒绝过度设计。
+
+## 架构与代码清理 (Architecture & Cleanup)
+
 ## 代码规范
 
 - **格式化**：使用 `gofumpt`，运行 `make fmt` 或 `gofumpt -l -w .`
 - **包命名**：简洁、小写（如 `record` 而非 `record_service`）
+- **类型安全**: 使用具体类型 (Concrete Types) 而非 `interface{}` 或 `any`。
+- **并发控制**: 使用 `channel` 进行同步，**严禁**使用 `time.Sleep()`。
+- **控制流**: 优先使用提前返回 (Early Return) 以减少嵌套，扁平代码更可读。
 - **错误处理**：
   - 所有错误必须显式处理，绝不使用 `_` 丢弃
-  - 错误传递必须包装上下文：`fmt.Errorf("operation failed: %w", err)`
-  - 避免嵌套过深的错误处理，早返回（early return）
+  - 错误传递必须包装上下文：`fmt.Errorf("context: %w", err)`
 
 ## 测试规范
 
