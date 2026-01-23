@@ -6,17 +6,18 @@
 - **Format**: `make fmt` (gofumpt)
 - **Deps**: `make dep` (go mod tidy)
 - **All**: `make all` (fmt+lint+vet+test+race+build)
+*Note: If `Makefile` is missing, check `README.md` for project-specific commands.*
 
 # Guidelines
 
 > **⚠️ Constitution**: This project strictly adheres to [constitution.md](constitution.md).
-> All code changes MUST comply with its 10 Core Principles.
+> All code changes MUST comply with its **11 Core Principles** and relevant **Language Annexes** (e.g., [Go Annex](docs/constitution/go_annex.md)).
 
 ## Workflow (4-Phase)
 1. **Research**: Analyze context & patterns. Ask if ambiguous.
 2. **Plan**: Create a plan with **Verification Steps** (how to prove it works).
 3. **Implement**: Write code + tests. No `TODO`s.
-4. **Verify**: Run `make all`. Fix root causes, don't suppress errors.
+4. **Verify**: Run tests/lint. Fix root causes, don't suppress errors.
 
 ## Verification First
 > **"Start with how you'll prove it's right."**
@@ -25,26 +26,15 @@
 - **Build**: Fix compile errors and verify successful rebuild.
 - **Refactor**: Ensure tests pass before and after.
 
-## Code Style
-- **Go**: Go 1.23+, `gofumpt`. Concrete types > `any`.
-- **Concurrency**: `errgroup` + channels. **NO** `time.Sleep`.
-- **Errors**: Explicit check (no `_`), wrap: `fmt.Errorf("ctx: %w", err)`.
-- **Context**: Propagate `ctx` (timeout/cancel).
+## Code Style & Patterns
+- **Core**: Follow [constitution.md](constitution.md) Principles (Simplicity, Clarity, SOLID).
+- **Go**: See [Go Annex](docs/constitution/go_annex.md) (gofumpt, errgroup, no globals).
+- **Other**: Follow standard community best practices (PEP8 for Python, etc.).
 
-## Architecture Patterns
+## Architecture Patterns (Current Project)
 - **ETL**: `Query` -> `Clean` -> `Export`.
 - **Optimistic Lock**: `UpdateRecordIfMatchStatus` (Init -> InProcess).
 - **Entities**: Multi-entity support (`Futunn`, `MooMoo`, etc.).
-
-## Code Snippets
-**Optimistic Lock**
-```go
-func (r *Repo) UpdateStatus(ctx context.Context, id uint64, old, new string) error {
-    res := q.Record.WithContext(ctx).Where(q.Record.ID.Eq(id), q.Record.Status.Eq(old)).Updates(map[string]interface{}{"status": new})
-    if res.RowsAffected == 0 { return constant.UpdateRecordStatusEffectRowsZeroErr }
-    return res.Error
-}
-```
 
 ## Anti-Hallucination
 - **Ambiguity**: Ask questions.
