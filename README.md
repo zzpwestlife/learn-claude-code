@@ -6,7 +6,7 @@
 
 ## 📂 核心组件
 
-本仓库包含以下核心文件，可直接复制到你的项目根目录使用：
+本仓库包含以下核心文件：
 
 ### 1. 规则基石
 - **[`constitution.md`](constitution.md)** (项目宪法)
@@ -28,30 +28,42 @@
 
 ---
 
-## 🚀 快速集成指南
+## 🚀 一键集成指南
 
-将以下能力引入你的现有项目：
+将以下能力引入你的现有项目，只需一条命令：
 
-### 第一步：复制文件
-将核心文件复制到你的项目根目录：
+### 方法一：本地集成 (推荐)
+如果你已经克隆了本仓库，可以直接运行 `install.sh` 脚本：
 
 ```bash
-# 假设你在 learn-claude-code 目录下，目标项目在 ../my-app
-cp CLAUDE.md constitution.md ../my-app/
-cp -r .claude ../my-app/
-# (可选) 如果是 Go 项目，复制附录
-mkdir -p ../my-app/docs/constitution
-cp docs/constitution/go_annex.md ../my-app/docs/constitution/
+# 用法: ./install.sh <你的目标项目路径>
+./install.sh ../my-awesome-project
 ```
 
-### 第二步：个性化配置
-1. **修改 `CLAUDE.md`**:
-   - 更新 `# Commands` 部分，将其替换为你项目的实际构建/测试命令（如 `npm run build` 或 `mvn test`）。
-   - 如果不是 Go 项目，请调整 `# Code Style` 部分。
-2. **调整 `.gitignore`**:
-   - 确保 `.claude/` 目录被提交到 Git（如果是团队共享配置），或者忽略（如果是个人配置）。
+### 方法二：手动集成
+如果你更喜欢手动控制，可以执行以下步骤：
 
-### 第三步：验证
+1. **复制核心文件**
+   ```bash
+   cp CLAUDE.md constitution.md ../my-app/
+   cp -r .claude ../my-app/
+   ```
+2. **复制文档**
+   ```bash
+   mkdir -p ../my-app/docs/constitution
+   cp docs/constitution/go_annex.md ../my-app/docs/constitution/
+   ```
+
+---
+
+## 🛠 配置与验证
+
+### 1. 个性化配置
+集成完成后，请务必修改目标项目中的 **`CLAUDE.md`**：
+- 更新 `# Commands` 部分，将其替换为你项目的实际构建/测试命令（如 `npm run build` 或 `mvn test`）。
+- 如果不是 Go 项目，请调整 `# Code Style` 部分。
+
+### 2. 验证
 在你的项目中使用 Claude Code 并提问：
 > "这个项目的核心开发原则是什么？"
 
@@ -59,7 +71,7 @@ cp docs/constitution/go_annex.md ../my-app/docs/constitution/
 
 ---
 
-## 🛠 最佳实践理念
+## 💡 最佳实践理念
 
 - **验证先行 (Verification First)**: 我们强制 AI 在写代码前先想好怎么测。
 - **宪法治国**: 所有的 Prompt 和 Context 都服从于 `constitution.md`。

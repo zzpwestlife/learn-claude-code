@@ -27,7 +27,9 @@
 - **Refactor**: Ensure tests pass before and after.
 
 ## Code Style & Patterns
-- **Core**: Follow [constitution.md](constitution.md) Principles (Simplicity, Clarity, SOLID).
+- **Core**: Follow [constitution.md](constitution.md) Principles.
+  - **Limits**: File < 200 lines, Func < 20 lines, Line < 80 chars.
+  - **Changes**: Minimal diffs only.
 - **Go**: See [Go Annex](docs/constitution/go_annex.md) (gofumpt, errgroup, no globals).
 - **Other**: Follow standard community best practices (PEP8 for Python, etc.).
 
