@@ -55,76 +55,89 @@ echo -e "✅ 目标项目: ${BLUE}$TARGET_DIR${NC}"
 # 2. 语言类型选择 (Language Selection)
 # ==========================================
 
-LANG_CHOICE="All"
+LANG_CHOICE=""
 
-# 如果是交互模式（无命令行参数），询问语言
-if [ -z "$1" ] && command -v osascript >/dev/null 2>&1; then
-    LANG_CHOICE=$(osascript -e 'try
-        choose from list {"Go", "PHP", "All"} with prompt "请选择项目主要语言\n(将安装对应的宪法附录规则):" default items {"All"} OK button name "确定" cancel button name "跳过"
-    on error
-        return "Skip"
-    end try' 2>/dev/null)
-    
-    if [ "$LANG_CHOICE" == "false" ] || [ "$LANG_CHOICE" == "Skip" ]; then
-        LANG_CHOICE="None"
-    fi
+# 尝试通过文件探测语言
+if [ -f "$TARGET_DIR/go.mod" ]; then
+    DETECTED_LANG="Go"
+elif [ -f "$TARGET_DIR/composer.json" ]; then
+    DETECTED_LANG="PHP"
 fi
 
-echo -e "✅ 选择语言配置: ${BLUE}$LANG_CHOICE${NC}"
+if [ -n "$DETECTED_LANG" ]; then
+    echo -e "🔍 检测到项目语言可能为: ${GREEN}$DETECTED_LANG${NC}"
+fi
+
+# 如果是交互模式（无命令行参数），询问语言
+if command -v osascript >/dev/null 2>&1; then
+    LANG_CHOICE=$(osascript -e 'try
+        choose from list {"Go", "PHP"} with prompt "请选择项目主要语言\n(将安装对应的配置文件和规则):" default items {"'"${DETECTED_LANG:-Go}"'"} OK button name "确定" cancel button name "取消"
+    on error
+        return "Cancel"
+    end try' 2>/dev/null)
+    
+    if [ "$LANG_CHOICE" == "false" ] || [ "$LANG_CHOICE" == "Cancel" ]; then
+        echo -e "${YELLOW}用户取消了操作。${NC}"
+        exit 0
+    fi
+else
+    # 命令行交互
+    echo -e "请选择项目语言 (Go/PHP) [默认: ${DETECTED_LANG:-Go}]:"
+    read -r USER_INPUT
+    LANG_CHOICE="${USER_INPUT:-${DETECTED_LANG:-Go}}"
+fi
+
+# 规范化输入
+if [[ "$LANG_CHOICE" =~ ^[Gg][Oo]$ ]]; then
+    PROFILE="go"
+    LANG_NAME="Go"
+elif [[ "$LANG_CHOICE" =~ ^[Pp][Hh][Pp]$ ]]; then
+    PROFILE="php"
+    LANG_NAME="PHP"
+else
+    echo -e "${RED}错误: 不支持的语言 '$LANG_CHOICE'${NC}"
+    exit 1
+fi
+
+echo -e "✅ 选择语言配置: ${BLUE}$LANG_NAME${NC}"
 
 # ==========================================
 # 3. 执行安装 (Installation)
 # ==========================================
 
-echo -e "\n📦 正在复制核心文件..."
-cp -v "$SOURCE_DIR/CLAUDE.md" "$TARGET_DIR/"
-cp -v "$SOURCE_DIR/AGENTS.md" "$TARGET_DIR/"
+echo -e "\n📦 正在安装核心文件..."
+
+# 1. 复制通用宪法
 cp -v "$SOURCE_DIR/constitution.md" "$TARGET_DIR/"
 
-echo "🧠 复制 Agent 配置..."
-if [ -d "$TARGET_DIR/.claude" ]; then
-    echo "  注意: 目标目录已包含 .claude，正在合并..."
-fi
-cp -rv "$SOURCE_DIR/.claude" "$TARGET_DIR/"
+# 2. 复制语言特定的 CLAUDE.md 和 AGENTS.md
+echo "📝 安装 $LANG_NAME 专属配置..."
+cp -v "$SOURCE_DIR/profiles/$PROFILE/CLAUDE.md" "$TARGET_DIR/"
+cp -v "$SOURCE_DIR/profiles/$PROFILE/AGENTS.md" "$TARGET_DIR/"
 
-echo "📚 复制语言附录..."
+# 3. 复制 Agent 配置 (合并模式)
+echo "🧠 复制 Agent 配置..."
+mkdir -p "$TARGET_DIR/.claude/agents"
+# 复制 agents 下的所有文件
+cp -v "$SOURCE_DIR/.claude/agents/"* "$TARGET_DIR/.claude/agents/"
+# 复制 settings.local.json (如果不存在则复制，如果存在则不覆盖? 或者总是覆盖? 模板通常不覆盖本地设置，但这是初始化脚本)
+# 这里假设用户想要从模板更新，所以我们复制，但给个提示
+if [ -f "$SOURCE_DIR/.claude/settings.local.json" ]; then
+    cp -v "$SOURCE_DIR/.claude/settings.local.json" "$TARGET_DIR/.claude/"
+fi
+
+# 4. 复制语言附录
+echo "📚 复制 $LANG_NAME 语言附录..."
 mkdir -p "$TARGET_DIR/docs/constitution"
 
-case "$LANG_CHOICE" in
+case "$LANG_NAME" in
     "Go")
         cp -v "$SOURCE_DIR/docs/constitution/go_annex.md" "$TARGET_DIR/docs/constitution/"
         ;;
     "PHP")
         cp -v "$SOURCE_DIR/docs/constitution/php_annex.md" "$TARGET_DIR/docs/constitution/"
         ;;
-    "All")
-        cp -v "$SOURCE_DIR/docs/constitution/"*.md "$TARGET_DIR/docs/constitution/"
-        ;;
-    *)
-        echo "  跳过语言附录复制 (选择: $LANG_CHOICE)"
-        ;;
 esac
 
-# ==========================================
-# 4. 完成与引导 (Completion & Onboarding)
-# ==========================================
-
-echo -e "\n${GREEN}🎉 集成成功!${NC}"
-
-# 询问是否打开目标目录
-OPEN_ACTION="No"
-if [ -z "$1" ] && command -v osascript >/dev/null 2>&1; then
-    BUTTON_CLICKED=$(osascript -e 'display dialog "集成已完成！\n\n您希望现在打开目标项目文件夹吗？" buttons {"不了", "打开目录"} default button "打开目录" with icon note' 2>/dev/null)
-    if [[ "$BUTTON_CLICKED" == *"button returned:打开目录"* ]]; then
-        OPEN_ACTION="Yes"
-    fi
-fi
-
-if [ "$OPEN_ACTION" == "Yes" ]; then
-    open "$TARGET_DIR"
-fi
-
-echo -e "\n🚀 下一步建议:"
-echo -e "1. ${BLUE}cd $TARGET_DIR${NC}"
-echo -e "2. 编辑 CLAUDE.md，配置 Build/Test 命令"
-echo -e "3. 试着问 Claude: '此项目的宪法原则是什么?'"
+echo -e "\n${GREEN}🎉 安装完成!${NC}"
+echo -e "请检查 $TARGET_DIR/CLAUDE.md 并根据项目实际情况微调命令。"
