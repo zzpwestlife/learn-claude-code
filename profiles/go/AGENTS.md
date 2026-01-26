@@ -21,9 +21,25 @@
 
 ## Workflow (4-Phase)
 1. **Research**: Analyze context & patterns. **Review First**: Before coding, use `@` to read relevant code and understand existing logic.
-2. **Plan**: Create a step-by-step plan. **Wait for confirmation** if the task is complex. Include **Verification Steps**.
+2. **Plan**: Create a step-by-step plan using the **Plan Template** below. **Wait for confirmation** if the task is complex. Include **Verification Steps**.
 3. **Implement**: Write code + tests. No `TODO`s.
 4. **Verify**: Run tests/lint. Fix root causes, don't suppress errors.
+
+## Plan Template (Mandatory)
+When creating a plan, you **MUST** include the following "Constitution Check" section:
+
+```markdown
+## Constitution Check (合宪性审查)
+*GATE: Must pass before technical design.*
+
+- [ ] **Simplicity (Art. 1):** Is the standard library used? Is over-abstraction avoided?
+- [ ] **Test First (Art. 2):** Does the plan include writing tests *before* implementation?
+- [ ] **Clarity (Art. 3):** Are errors explicitly handled? No global state?
+- [ ] **Core Logic (Art. 4):** Is business logic decoupled from HTTP/CLI interfaces?
+- [ ] **Security (Art. 11):** Are inputs validated? No sensitive data leakage?
+
+*If any check fails, provide a strong justification in the "Complexity Tracking" section.*
+```
 
 ## AI Collaboration Directives
 - **Standard Lib First**: Prioritize standard library solutions over new dependencies.

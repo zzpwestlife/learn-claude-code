@@ -19,9 +19,25 @@
 
 ## Workflow (4-Phase)
 1. **Research**: Analyze context & patterns. **Review First**: Before coding, use `@` to read relevant code (Controllers, Services, Models).
-2. **Plan**: Create a step-by-step plan. **Wait for confirmation**. Include **Verification Steps**.
+2. **Plan**: Create a step-by-step plan using the **Plan Template** below. **Wait for confirmation**. Include **Verification Steps**.
 3. **Implement**: Write code + tests. No `TODO`s.
 4. **Verify**: Run tests (`phpunit`) and Lint. Fix root causes.
+
+## Plan Template (Mandatory)
+When creating a plan, you **MUST** include the following "Constitution Check" section:
+
+```markdown
+## Constitution Check (合宪性审查)
+*GATE: Must pass before technical design.*
+
+- [ ] **Simplicity (Art. 1):** Is the framework used effectively? Is over-abstraction avoided?
+- [ ] **Test First (Art. 2):** Does the plan include writing tests *before* implementation?
+- [ ] **Clarity (Art. 3):** Are exceptions explicitly handled? No implicit global state?
+- [ ] **Core Logic (Art. 4):** Is business logic in Services, decoupled from Controllers?
+- [ ] **Security (Art. 11):** Are inputs validated? No sensitive data leakage?
+
+*If any check fails, provide a strong justification in the "Complexity Tracking" section.*
+```
 
 ## AI Collaboration Directives
 - **Framework First**: Prioritize Lumen/Laravel built-in features (Service Container, Eloquent, Middleware) over custom implementations.
