@@ -78,6 +78,7 @@ echo -e "✅ 选择语言配置: ${BLUE}$LANG_CHOICE${NC}"
 
 echo -e "\n📦 正在复制核心文件..."
 cp -v "$SOURCE_DIR/CLAUDE.md" "$TARGET_DIR/"
+cp -v "$SOURCE_DIR/AGENTS.md" "$TARGET_DIR/"
 cp -v "$SOURCE_DIR/constitution.md" "$TARGET_DIR/"
 
 echo "🧠 复制 Agent 配置..."

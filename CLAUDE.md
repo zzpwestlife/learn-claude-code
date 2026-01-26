@@ -1,44 +1,22 @@
-# Commands
+# 导入通用的 AI Agent 协作标准 
+@AGENTS.md 
 
-- **Build**: `make build` (dev: `make build-dev`)
-- **Test**: `make test` (all unit tests), `make race` (race detection)
-- **Lint**: `make lint` (golangci-lint), `make vet` (go vet)
-- **Format**: `make fmt` (gofumpt)
-- **Deps**: `make dep` (go mod tidy)
-- **All**: `make all` (fmt+lint+vet+test+race+build)
-*Note: If `Makefile` is missing, check `README.md` for project-specific commands.*
+# --- 以下是 Claude Code 专属的高级指令 --- 
 
-# Guidelines
+## Sub-agent 定义 
+- **架构设计**: 当需要进行整体架构设计、技术选型或系统分析时，请调用 `architect` sub-agent。
+- **代码构建**: 当需要生成新功能、实现复杂逻辑或重构现有代码时，请调用 `code-builder` sub-agent。
+- **文档编写**: 当需要编写技术文档、API 说明或补充代码注释时，请调用 `code-scribe` sub-agent。
+- **安全审查**: 当需要进行安全漏洞扫描、代码审计或寻求安全修复建议时，请调用 `security-auditor` sub-agent。
+- **测试验证**: 当需要编写单元测试、集成测试或验证代码正确性时，请调用 `test-validator` sub-agent。
 
-> **⚠️ Constitution**: This project strictly adheres to [constitution.md](constitution.md).
-> All code changes MUST comply with its **11 Core Principles** and relevant **Language Annexes** (e.g., [Go Annex](docs/constitution/go_annex.md)).
+## Hooks 配置 
+(根据项目实际使用的语言，取消对应行的注释)
 
-## Workflow (4-Phase)
-1. **Research**: Analyze context & patterns. Ask if ambiguous.
-2. **Plan**: Create a plan with **Verification Steps** (how to prove it works).
-3. **Implement**: Write code + tests. No `TODO`s.
-4. **Verify**: Run tests/lint. Fix root causes, don't suppress errors.
+### Go Projects
+- 在每次代码编辑后, 自动运行 `gofmt`。
+<!-- - 在每次代码编辑后, 自动运行 `goimports`。 -->
 
-## Verification First
-> **"Start with how you'll prove it's right."**
-- **Code**: Provide input/output examples and pass unit tests.
-- **UI**: Compare screenshots/mocks.
-- **Build**: Fix compile errors and verify successful rebuild.
-- **Refactor**: Ensure tests pass before and after.
-
-## Code Style & Patterns
-- **Core**: Follow [constitution.md](constitution.md) Principles.
-  - **Limits**: File < 200 lines, Func < 20 lines, Line < 80 chars.
-  - **Changes**: Minimal diffs only.
-- **Go**: See [Go Annex](docs/constitution/go_annex.md) (gofumpt, errgroup, no globals).
-- **Other**: Follow standard community best practices (PEP8 for Python, etc.).
-
-## Architecture Patterns (Current Project)
-- **ETL**: `Query` -> `Clean` -> `Export`.
-- **Optimistic Lock**: `UpdateRecordIfMatchStatus` (Init -> InProcess).
-- **Entities**: Multi-entity support (`Futunn`, `MooMoo`, etc.).
-
-## Anti-Hallucination
-- **Ambiguity**: Ask questions.
-- **Batching**: Prototype 1 file first.
-- **Precision**: Match exact symbols.
+### PHP Projects
+- 在每次代码编辑后, 自动运行 `php -l` 进行语法检查。
+<!-- - 在每次代码编辑后, 自动运行 `vendor/bin/php-cs-fixer fix`。 -->
