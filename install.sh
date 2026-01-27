@@ -49,6 +49,9 @@ if [ -z "$TARGET_DIR" ] || [ ! -d "$TARGET_DIR" ]; then
     exit 1
 fi
 
+# 去除末尾的斜杠，避免路径中出现 //
+TARGET_DIR="${TARGET_DIR%/}"
+
 echo -e "✅ 目标项目: ${BLUE}$TARGET_DIR${NC}"
 
 # ==========================================
@@ -138,6 +141,39 @@ case "$LANG_NAME" in
         cp -v "$SOURCE_DIR/docs/constitution/php_annex.md" "$TARGET_DIR/docs/constitution/"
         ;;
 esac
+
+# 5. 复制 Slash Commands
+echo "⚡️ 复制 $LANG_NAME Slash Commands..."
+mkdir -p "$TARGET_DIR/.claude/commands"
+
+# 5.1 复制通用命令 (Common Commands)
+if ls "$SOURCE_DIR/.claude/commands/"*.md 1> /dev/null 2>&1; then
+    echo "  -> 复制通用命令..."
+    cp -v "$SOURCE_DIR/.claude/commands/"*.md "$TARGET_DIR/.claude/commands/"
+fi
+
+# 5.2 复制语言特定命令 (Language Specific Commands)
+if [ -d "$SOURCE_DIR/.claude/commands/$PROFILE" ]; then
+    echo "  -> 复制 $LANG_NAME 专属命令..."
+    cp -v "$SOURCE_DIR/.claude/commands/$PROFILE/"* "$TARGET_DIR/.claude/commands/"
+fi
+
+# 6. 复制 Hooks
+echo "🪝 复制 Hooks..."
+mkdir -p "$TARGET_DIR/.claude/hooks"
+
+# 6.1 复制通用 Hooks
+# 使用 find 只复制文件，不复制子目录
+find "$SOURCE_DIR/.claude/hooks" -maxdepth 1 -type f -not -name ".*" -exec cp -v {} "$TARGET_DIR/.claude/hooks/" \; 2>/dev/null || true
+
+# 6.2 复制语言特定 Hooks
+if [ -d "$SOURCE_DIR/.claude/hooks/$PROFILE" ]; then
+    echo "  -> 复制 $LANG_NAME 专属 Hooks..."
+    cp -v "$SOURCE_DIR/.claude/hooks/$PROFILE/"* "$TARGET_DIR/.claude/hooks/"
+fi
+
+# 确保所有脚本具有执行权限
+chmod +x "$TARGET_DIR/.claude/hooks/"* 2>/dev/null || true
 
 echo -e "\n${GREEN}🎉 安装完成!${NC}"
 echo -e "请检查 $TARGET_DIR/CLAUDE.md 并根据项目实际情况微调命令。"

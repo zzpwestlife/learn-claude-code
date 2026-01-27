@@ -4,3 +4,6 @@ dist/
 node_modules/
 .trae/
 tmp.log
+
+# Auto Claude data directory
+.auto-claude/
