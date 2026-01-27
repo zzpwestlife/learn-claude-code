@@ -77,7 +77,7 @@
 - `glm-plan-usage@zai-coding-plugins` - 使用量查询
 - `gopls-lsp@claude-plugins-official` - Go 语言支持
 
-**Stop Hook**: `notify-system.js` - 会话结束时触发通知
+**停止钩子（Stop Hook）**: `notify-system.js` - 会话结束时触发通知
 
 ### 3.2 CLAUDE.md - 全局指令
 

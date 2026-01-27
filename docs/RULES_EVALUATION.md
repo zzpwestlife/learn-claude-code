@@ -1,4 +1,4 @@
-# 规则体系深度评估报告 (CLAUDE.md & Constitution.md)
+# 规则体系深度评估报告（CLAUDE.md 与 constitution.md）
 
 **评估日期**: 2026-01-23
 **评估对象**: 
@@ -10,7 +10,7 @@
 ## 1. 代码质量与规范检查
 
 ### 1.1 结构与命名
-- **优点**: 两个文件结构清晰，使用了 Markdown 的标准层级。`CLAUDE.md` 的 "Verification First" 理念非常先进。
+- **优点**: 两个文件结构清晰，使用了 Markdown 的标准层级。`CLAUDE.md` 的 "验证先行（Verification First）" 理念非常先进。
 - **缺点**: 
     - `constitution.md` 的标题直接标注 "(适用于 Go 项目)"，这破坏了其作为"宪法"的通用性。宪法应当是跨语言的通用原则。
     - `CLAUDE.md` 中的命令部分 (`make ...`) 是硬编码的，对于非 Go 项目或不使用 Makefile 的项目不适用。
@@ -21,8 +21,8 @@
     - **耦合度过高**: 核心原则与技术栈实现细节强耦合。
 
 **改进建议**:
-- 将 `constitution.md` 拆解为 **核心宪法 (Core)** 和 **技术附录 (Annex)**。
-- 核心宪法只讲原则（如"必须有测试"），技术附录讲实现（如"Go项目必须用 Table-Driven Tests"）。
+- 将 `constitution.md` 拆解为 **核心宪法（Core）** 和 **技术附录（Annex）**。
+- 核心宪法只讲原则（如"必须有测试"），技术附录讲实现（如"Go 项目必须用 Table-Driven Tests"）。
 
 ---
 
@@ -31,7 +31,7 @@
 ### 2.1 业务规则完整性
 - **缺失点**:
     - **安全 (Security)**: 目前仅在 `CLAUDE.md` 略有提及，宪法中缺乏对安全（DevSecOps、输入验证、依赖安全）的强制性条款。
-    - **数据隐私 (Privacy)**: 未提及数据脱敏、GDPR/PII 处理原则。
+    - **数据隐私（Privacy）**: 未提及数据脱敏、GDPR/PII 处理原则。
     - **紧急流程**: 缺乏 Hotfix 或紧急发布的豁免/快速通道定义。
 
 ### 2.2 错误处理与日志
@@ -50,7 +50,7 @@
 - **配置管理**: `CLAUDE.md` 缺乏版本号，虽然 `constitution.md` 有版本号，但缺乏两者之间的兼容性矩阵。
 
 ### 3.2 文档与协作
-- **优点**: 变更日志 (Changelog) 机制很好。
+- **优点**: 变更日志（Changelog）机制很好。
 - **缺点**: 缺乏 "如何修改宪法" 的元规则（Meta-rules）。
 
 ---
@@ -66,9 +66,9 @@
 
 ---
 
-## 5. 优化路线图 (Roadmap)
+## 5. 优化路线图（路线图）
 
-### Phase 1: 解耦与重构 (High Priority)
+### 阶段 1：解耦与重构（高优先级）
 1.  **重构 `constitution.md`**: 
     - 剥离所有 Go 特定内容到 `constitution-go.md`。
     - 保留 10 大核心原则，并使其语言无关化。
@@ -76,16 +76,16 @@
     - 将命令部分改为模板或指向 `README.md`。
     - 增强对多语言宪法的支持。
 
-### Phase 2: 增强与补全 (Medium Priority)
-1.  **新增安全原则**: 在宪法中加入 Security First 条款。
+### 阶段 2：增强与补全（中优先级）
+1.  **新增安全原则**: 在宪法中加入安全优先（Security First）条款。
 2.  **建立技术附录库**: 创建 `rules/go.md`, `rules/python.md`, `rules/frontend.md` 模板。
 
-### Phase 3: 工具化 (Low Priority)
+### 阶段 3：工具化（低优先级）
 1.  **Linter 集成**: 编写脚本自动检查代码是否符合宪法（如文件行数检查）。
 
 ---
 
-## 实施方案 (Immediate Actions)
+## 实施方案（立即行动）
 
 我们将立即执行 Phase 1 和 Phase 2 的部分内容：
 1.  创建通用版 `constitution.md`。
