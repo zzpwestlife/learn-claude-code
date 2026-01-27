@@ -1,6 +1,6 @@
-# Developer Guide
+# 开发者指南
 
-## Quick Start
+## 快速开始
 
 ### 前置要求
 - Go 1.23+
@@ -26,7 +26,7 @@ vim conf/conf.toml
 make run
 ```
 
-## Structure
+## 目录结构
 ```
 internal/app/
 ├── biz/                    # 业务逻辑层
@@ -61,7 +61,7 @@ internal/app/
 └── mocks/                # Mock 数据
 ```
 
-## Debugging
+## 调试
 
 ### 常用调试命令
 ```bash

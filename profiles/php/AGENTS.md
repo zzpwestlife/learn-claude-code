@@ -1,30 +1,30 @@
-# Commands
+# 命令
 
 - **Build/Install**: `composer install`
 - **Test**: `vendor/bin/phpunit`
 - **Lint**: `vendor/bin/phpcs` (if available)
 - **Format**: `vendor/bin/php-cs-fixer fix` (if available)
 - **Serve**: `php -S localhost:8000 -t public`
-*Note: Check `composer.json` > `scripts` for project-specific commands.*
+*注意：请查看 `composer.json` 的 `scripts` 获取项目特定命令。*
 
-# Guidelines
+# 指南
 
-> **⚠️ Constitution**: This project strictly adheres to [constitution.md](constitution.md).
-> All code changes MUST comply with its **11 Core Principles** and relevant **Language Annexes** (e.g., [PHP Annex](docs/constitution/php_annex.md)).
+> **⚠️ 宪法**: 本项目严格遵循 [constitution.md](../../constitution.md)。
+> 所有代码修改必须符合其 **11 条核心原则** 以及相关 **语言附录**（如 [PHP 附录](../../docs/constitution/php_annex.md)）。
 
-## Git & Version Control
-- **Commit Message**: **[Strictly Follow]** Conventional Commits (type(scope): subject).
+## Git 与版本控制
+- **提交信息**: **[严格遵循]** Conventional Commits (type(scope): subject)。
   - Format: `<type>(<scope>): <subject>`
   - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`.
 
-## Workflow (4-Phase)
-1. **Research**: Analyze context & patterns. **Review First**: Before coding, use `@` to read relevant code (Controllers, Services, Models).
-2. **Plan**: Create a step-by-step plan using the **Plan Template** below. **Wait for confirmation**. Include **Verification Steps**.
-3. **Implement**: Write code + tests. No `TODO`s.
-4. **Verify**: Run tests (`phpunit`) and Lint. Fix root causes.
+## 工作流（四阶段）
+1. **调研**: 分析上下文与模式。**先审查**：编码前使用 `@` 阅读相关代码（Controllers、Services、Models）。
+2. **计划**: 使用下方 **计划模板** 制定步骤化计划。**等待确认**。包含 **验证步骤**。
+3. **实现**: 编写代码与测试。不允许 `TODO`。
+4. **验证**: 运行测试（`phpunit`）与 Lint。修复根因。
 
-## Plan Template (Mandatory)
-When creating a plan, you **MUST** include the following "Constitution Check" section:
+## 计划模板（强制）
+创建计划时，你 **必须** 包含以下 "Constitution Check" 区块：
 
 ```markdown
 ## Constitution Check (合宪性审查)
@@ -39,21 +39,21 @@ When creating a plan, you **MUST** include the following "Constitution Check" se
 *If any check fails, provide a strong justification in the "Complexity Tracking" section.*
 ```
 
-## AI Collaboration Directives
-- **Framework First**: Prioritize Lumen/Laravel built-in features (Service Container, Eloquent, Middleware) over custom implementations.
-- **PSR Compliance**: Code MUST follow PSR-12 coding standards.
-- **Dependency Injection**: Always use Constructor Injection for dependencies. NEVER use `new` in business logic.
-- **Type Safety**: Use PHP 7+ type hinting (scalar types, return types) where possible. Use PHPDoc for unsupported types.
+## AI 协作指令
+- **框架优先**: 优先使用 Lumen/Laravel 内置能力（Service Container、Eloquent、Middleware），避免自研实现。
+- **PSR 合规**: 代码必须遵循 PSR-12 编码规范。
+- **依赖注入**: 依赖必须使用构造函数注入。业务逻辑中严禁使用 `new`。
+- **类型安全**: 尽可能使用 PHP 7+ 类型标注（标量类型、返回类型）。不支持的类型使用 PHPDoc。
 
-## Verification First
+## 验证先行
 > **"Start with how you'll prove it's right."**
-- **Code**: Provide input/output examples and pass unit tests.
-- **Refactor**: Ensure tests pass before and after.
+- **代码**: 提供输入/输出示例并通过单元测试。
+- **重构**: 确保重构前后测试均通过。
 
-## Code Style & Patterns
-- **Core**: Follow [constitution.md](constitution.md) Principles.
-- **PHP**: See [PHP Annex](docs/constitution/php_annex.md).
-- **Architecture**:
-  - **Controller**: Request/Response only. No business logic.
-  - **Service**: Business logic.
-  - **Model**: Eloquent definitions only.
+## 代码风格与模式
+- **核心**: 遵循 [constitution.md](../../constitution.md) 原则。
+- **PHP**: 参见 [PHP 附录](../../docs/constitution/php_annex.md)。
+- **架构**:
+  - **Controller**: 只处理请求/响应，不包含业务逻辑。
+  - **Service**: 业务逻辑。
+  - **Model**: 仅包含 Eloquent 定义。
