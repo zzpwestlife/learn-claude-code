@@ -65,6 +65,8 @@ if [ -f "$TARGET_DIR/go.mod" ]; then
     DETECTED_LANG="Go"
 elif [ -f "$TARGET_DIR/composer.json" ]; then
     DETECTED_LANG="PHP"
+elif [ -f "$TARGET_DIR/requirements.txt" ] || [ -f "$TARGET_DIR/pyproject.toml" ]; then
+    DETECTED_LANG="Python"
 fi
 
 if [ -n "$DETECTED_LANG" ]; then
@@ -74,7 +76,7 @@ fi
 # 如果是交互模式（无命令行参数），询问语言
 if command -v osascript >/dev/null 2>&1; then
     LANG_CHOICE=$(osascript -e 'try
-        choose from list {"Go", "PHP"} with prompt "请选择项目主要语言\n(将安装对应的配置文件和规则):" default items {"'"${DETECTED_LANG:-Go}"'"} OK button name "确定" cancel button name "取消"
+        choose from list {"Go", "PHP", "Python"} with prompt "请选择项目主要语言\n(将安装对应的配置文件和规则):" default items {"'"${DETECTED_LANG:-Go}"'"} OK button name "确定" cancel button name "取消"
     on error
         return "Cancel"
     end try' 2>/dev/null)
@@ -85,7 +87,7 @@ if command -v osascript >/dev/null 2>&1; then
     fi
 else
     # 命令行交互
-    echo -e "请选择项目语言 (Go/PHP) [默认: ${DETECTED_LANG:-Go}]:"
+    echo -e "请选择项目语言 (Go/PHP/Python) [默认: ${DETECTED_LANG:-Go}]:"
     read -r USER_INPUT
     LANG_CHOICE="${USER_INPUT:-${DETECTED_LANG:-Go}}"
 fi
@@ -97,6 +99,9 @@ if [[ "$LANG_CHOICE" =~ ^[Gg][Oo]$ ]]; then
 elif [[ "$LANG_CHOICE" =~ ^[Pp][Hh][Pp]$ ]]; then
     PROFILE="php"
     LANG_NAME="PHP"
+elif [[ "$LANG_CHOICE" =~ ^[Pp][Yy][Tt][Hh][Oo][Nn]$ ]]; then
+    PROFILE="python"
+    LANG_NAME="Python"
 else
     echo -e "${RED}错误: 不支持的语言 '$LANG_CHOICE'${NC}"
     exit 1
@@ -140,6 +145,9 @@ case "$LANG_NAME" in
     "PHP")
         cp -v "$SOURCE_DIR/docs/constitution/php_annex.md" "$TARGET_DIR/docs/constitution/"
         ;;
+    "Python")
+        cp -v "$SOURCE_DIR/docs/constitution/python_annex.md" "$TARGET_DIR/docs/constitution/"
+        ;;
 esac
 
 # 5. 复制 Slash Commands
@@ -168,12 +176,20 @@ find "$SOURCE_DIR/.claude/hooks" -maxdepth 1 -type f -not -name ".*" -exec cp -v
 
 # 6.2 复制语言特定 Hooks
 if [ -d "$SOURCE_DIR/.claude/hooks/$PROFILE" ]; then
-    echo "  -> 复制 $LANG_NAME 专属 Hooks..."
-    cp -v "$SOURCE_DIR/.claude/hooks/$PROFILE/"* "$TARGET_DIR/.claude/hooks/"
+    # 检查目录下是否有文件
+    if ls "$SOURCE_DIR/.claude/hooks/$PROFILE/"* 1> /dev/null 2>&1; then
+        echo "  -> 复制 $LANG_NAME 专属 Hooks..."
+        cp -v "$SOURCE_DIR/.claude/hooks/$PROFILE/"* "$TARGET_DIR/.claude/hooks/"
+    else
+        echo "  -> (无 $LANG_NAME 专属 Hooks，跳过)"
+    fi
 fi
 
 # 确保所有脚本具有执行权限
 chmod +x "$TARGET_DIR/.claude/hooks/"* 2>/dev/null || true
+
+echo -e "\n${GREEN}🎉 安装完成!${NC}"
+echo -e "请检查 $TARGET_DIR/CLAUDE.md 并根据项目实际情况微调命令。"
 
 echo -e "\n${GREEN}🎉 安装完成!${NC}"
 echo -e "请检查 $TARGET_DIR/CLAUDE.md 并根据项目实际情况微调命令。"
