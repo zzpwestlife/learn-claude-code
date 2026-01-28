@@ -10,7 +10,6 @@
 
 今天这一讲, 我们就要 彻底解决 AI 的 "失忆症". 我们将深入一门所有高级 AI Agent 开发者都必须掌握的核心技艺 —— 上下文的艺术. 你将学会如何通过 `CLAUDE.md` 和 `AGENTS.md`, 为你的 AI 伙伴打造一个持久的、分层的、可共享的 "记忆宫殿", 让它从一个过目就忘的通用助手, 进化成一个真正懂你项目的领域专家.
 
-
 ## AI Agent 的 "长期记忆": 为什么我们需要 `CLAUDE.md`?
 
 @ 指令提供的上下文, 我称之为 "短期工作记忆" (Short-term Working Memory). 它非常适合处理当前任务, 但一旦任务结束或对话切换, 这些记忆就会被 "清空". 而 `CLAUDE.md`  (以及同类的 `AGENTS.md`) 提供的, 则是 "长期记忆" (Long-term Memory). 它是一种 在会话开始时自动加载、高优先级的背景知识.
@@ -21,7 +20,6 @@
 * `CLAUDE.md` 则像是你们团队共享的《团队开发规范手册》. 你的同事入职第一天就读过, 并且已经 内化为自己的工作习惯. 你不需要每次讨论时都提醒他: "记得要写单元测试. "
 
 `CLAUDE.md` 的价值在于, 它将那些 高频、普适、关乎项目核心规范 的指令, 从需要开发者反复输入的 "动态提示", 沉淀为了 AI Agent 会自动遵循的 "静态配置". 这不仅仅是效率的提升, 更是 人机协作模式的规范化和工程化.
-
 
 ![](images/06_image.png)
 
@@ -42,7 +40,6 @@
 未来出现的每一个新的 Agent, 都可能带来自己的一套上下文配置文件 (XX.md).
 
 如果每个项目都需要为不同的 Agent 维护一套不同的 "私约", 那么我们刚刚从 "复制粘贴上下文" 的泥潭中挣扎出来, 又将陷入 "维护多套 AI Agent 配置" 的新泥潭. 这种碎片化, 极大地阻碍了 AI 原生开发方法论的 沉淀和迁移. 我们迫切需要一座能让所有 Agent 都听懂 "通用语" 的 "灯塔".
-
 
 ### `AGENTS.md` 的诞生: 一个面向未来的 "行业标准"
 
@@ -91,8 +88,6 @@
 * 测试与质量: AI 清楚地知道如何验证自己的代码修改 (make test) 和如何保证代码质量 (make lint) .
 * 协同规范:  当 AI 被要求生成 Commit Message 或 PR 时, 它会严格遵循我们定义的格式, 确保与团队的工作流保持一致.
 
-
-
 可以看到,  `AGENTS.md` 就像一张 "项目说明书", 但它的读者不再是人类, 而是 AI Agent. 它用一种结构化的、无歧义的语言, 为我们接下来的人机协作, 设定了清晰的 "游戏规则".
 
 `AGENTS.md` 的愿景, 正是要 打破 "巴别塔", 成为一个跨 Agent 的 "行业标准". 无论你今天用的是 Claude Code, 明天用的是 Gemini CLI, 还是后天社区推出的新工具, 它们都应该能自动地、优先地去寻找并理解 `AGENTS.md`. 这也与我们专栏的核心思想不谋而合:  学习通用的方法论, 而非特定工具的 "奇技淫巧".
@@ -133,7 +128,6 @@
 
 现在, 让我们深入 Claude Code 强大的 `CLAUDE.md` 机制, 看看这个目前最成熟的 "项目私约" 是如何通过分层加载和导入语法, 来构建起复杂的 "记忆宫殿" 的.
 
-
 ## 深入 `CLAUDE.md`: 强大的分层加载机制与 @ 导入语法
 
 现在, 让我们回到 Claude Code 的世界, 深入探索其强大的 `CLAUDE.md` 机制. 它之所以强大, 并不仅仅是因为它是一个自动加载的文件, 更在于其精巧的分层加载机制和模块化的 @ 导入语法.
@@ -143,8 +137,6 @@
 当你启动 Claude Code 时, 它会像剥洋葱一样, 从外到内, 依次加载四个不同层级的 `CLAUDE.md` 文件, 并将它们的内容拼接在一起, 形成最终的 "长期记忆".
 
 ![](images/06_image_5.png)
-
-
 
 上图以 Linux 路径为例, Windows 和 macOS 的 Enterprise Policy 路径有所不同
 
@@ -174,7 +166,6 @@
 
 这个设计非常巧妙, 它实现了 "按需加载上下文 (Context on Demand)", 既保证了相关性, 又避免了在启动时就加载整个庞大项目的无关上下文, 极大地节省了 Token 并提高了 AI Agent 的专注度.
 
-
 #### 实战示例: 一个 monorepo 项目的上下文级联
 
 让我们通过一个具体的 monorepo 项目结构, 来看看这个查找机制是如何工作的.
@@ -201,8 +192,6 @@
     └── shared-utils/
         └── string.go
 ```
-
-
 
 各个 `CLAUDE.md` 文件的内容:
 
@@ -283,7 +272,6 @@
 
 通过这种方式, 团队既保证了协作的一致性, 又为个人保留了定制的空间. 这也是对已废弃的 `CLAUDE.local.md` 的完美替代.
 
-
 ### 实战场景 2: 组合多个上下文文件
 
 你可以利用 @ 导入语法, 将多个不同维度的上下文组合起来.
@@ -305,7 +293,6 @@
 
 通过这种方式, 你可以构建一个可复用的、模块化的 "记忆库", 在不同的项目中按需组合.
 
-
 ## `CLAUDE.md` 的生命周期管理: 从创建到维护
 
 理论已经清晰, 但在繁忙的日常开发中,  `CLAUDE.md` 文件的创建、追加和修改, 需要一套足够便捷的工具才能真正落地. 为此, Claude Code 提供了一套完整的生命周期管理指令:  `/init` 用于 创建 ,  `#` 用于 追加 ,  `/memory` 用于 修改.
@@ -317,8 +304,6 @@
 此时,  /init 指令就派上了用场. 它是一个强大的脚手架 (Scaffolding) 或引导 (Bootstrap) 工具. 只需在项目根目录下运行 Claude Code, 并执行 /init 指令:
 
 ![](images/06_image_6.png)
-
-
 
 Claude Code 会立即分析你的项目情况, 并为你 生成一份包含标准结构和最佳实践建议的 `CLAUDE.md` 模板文件 , 我们以一个名为 go-web-demo 的 Go 空项目为例, 当在 Claude Code 中执行 /init 后, 它的执行过程如下:
 
@@ -360,13 +345,13 @@ Claude Code 会立即分析你的项目情况, 并为你 生成一份包含标�
   ⎿  (No content)
 
 ● Bash(ls -la /root/go/src/github.com/bigwhite/go-web-demo/)
-  ⎿  total 12                                      
+  ⎿  total 12                                    
      drwxr-xr-x  2 root root 4096 Oct 14 08:02 .
      drwxr-xr-x 11 root root 4096 Oct 14 08:02 ..
      -rw-r--r--  1 root root   30 Oct 14 08:02 go.mod
 
 ● Write(CLAUDE.md)
-  ⎿  Wrote 38 lines to CLAUDE.md                                                                                           
+  ⎿  Wrote 38 lines to CLAUDE.md                                                                                         
      # CLAUDE.md
      This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
      ## Project Overview
@@ -379,8 +364,6 @@ Claude Code 会立即分析你的项目情况, 并为你 生成一份包含标�
   phase, containing only a go.mod file with Go version 1.25.0. The documentation includes standard Go development commands and
    outlines a typical project structure for a web application that would likely be developed here.
 ```
-
-
 
 我们看到, Claude Code 会尝试扫描该项目下的一些文件, 由于这是一个空项目, 它没能获取更多信息, 只是从 go.mod 中获取到这是一个 Go Web 项目, 以及使用的 go version. 这种情况下, 它生成的 CLAUDE.md 可能是像下面这样的:
 
@@ -425,8 +408,6 @@ Claude Code 会立即分析你的项目情况, 并为你 生成一份包含标�
 
     The project currently has no external dependencies beyond the Go standard library. The `go.mod` file specifies Go version 1.25.0.
 ```
-
-
 
 如果是一个存量项目, Claude Code 会扫描到更多已知信息, 也会生成更符合项目实际情况的 `CLAUDE.md`. 以我的 bigwhite/issue2md 为例, 通过 `/init` 生成的 `CLAUDE.md` 内容如下:
 
@@ -549,7 +530,6 @@ The application supports these GitHub URL formats:
 
 `/init` 的哲学, 是 "最佳实践引导".  它确保了你创建第一份上下文文件, 就拥有一个专业、合理的结构, 避免了后续的重构成本.
 
-
 ### # 快捷方式: 即时捕捉 "灵光一闪", 从 1 到 N
 
 随着项目的进行, 你会不断有新的规范和知识想要沉淀下来. 例如, 在与 AI Agent 的对话中, 你突然意识到一个重要的团队规范: "所有导出函数的 GoDoc 注释必须以函数名开头". 你当然可以等到对话结束再去更新 `CLAUDE.md`, 但那时灵感可能已经消失了. 此时,  # 快捷方式提供了最佳解决方案.
@@ -561,7 +541,6 @@ The application supports these GitHub URL formats:
 你只需用箭头选择 Project Memory , 按下回车, 这条规则就会被自动地、永久地 追加 到你选择的 `CLAUDE.md` 文件中了.
 
 \#  指令的哲学, 是 "即时追加".  它让你能够在灵感迸发的瞬间, 以最低的成本, 将动态的、临时的思考, 快速沉淀为静态的、持久的团队知识.
-
 
 ### /memory 指令: 系统性地 "整理书架", 从 N 到 N + 1
 
@@ -586,7 +565,6 @@ Claude Code 会给出一个 CLAUDE.md 文件列表, 并让你选择要编辑的 
 /memory  指令的哲学, 是 "系统性维护".  它为你提供了一个定期 "打扫书房、整理书架" 的便捷入口, 确保你的 "长期记忆" 系统始终保持清晰、准确和高效.
 
 掌握了 /init 、 # 和 /memory 这套组合拳,  `CLAUDE.md` 的整个生命周期管理就从一项需要刻意为之的 "配置工作", 变成了融入日常开发对话中的一个自然环节. 现在, 让我们带着这套强大的维护工具, 一起看看如何从零开始, 构建一份高质量的 CLAUDE.md 文件.
-
 
 ## 实战: 打造一份高质量的通用 Go 项目 `CLAUDE.md` 模板
 
@@ -685,7 +663,6 @@ Claude Code 会给出一个 CLAUDE.md 文件列表, 并让你选择要编辑的 
 
 通过这份 "参考模板" 及其剖析, 我希望你不仅能知道 CLAUDE.md 该写什么, 还能更进一步地理解每一条指令背后的工程价值. 现在, 你可以将这份模板作为起点, 根据你自己项目的具体情况, 删减、修改、扩展, 打造出属于你和你的团队的, 那份独一无二的 AI Agent 协作 "宪章".
 
-
 ## 本讲小结
 
 ![](images/06_image_9.png)
@@ -699,7 +676,6 @@ Claude Code 会给出一个 CLAUDE.md 文件列表, 并让你选择要编辑的 
 最后, 也是最重要的一点, 我们不再局限于一个具体项目, 而是共同打磨出了一份 高质量的、可复用的通用 Go 项目 CLAUDE.md 参考模板. 通过对其逐条剖析, 我们理解了如何将团队的 技术栈、架构规范、协作流程乃至技术品味 , 转化为 AI Agent 可以精确理解和执行的 "硬约束" 和 "行为模式".
 
 请务必花时间为你自己的项目也创建或重构一份 CLAUDE.md. 这可能是你在整个专栏学习中, 投入产出比最高的一项实践. 一份精心编写的上下文文件, 其价值远超一个配置文件, 它本质上是你 团队工程文化的 "代码化" 沉淀 , 能让你的 AI 协作效率瞬间提升数倍.
-
 
 ## 思考题
 
@@ -716,5 +692,5 @@ Claude Code 会给出一个 CLAUDE.md 文件列表, 并让你选择要编辑的 
 
 欢迎在评论区分享你 "翻译" 出的团队规则. 这个练习将帮助你迈出将团队隐性知识显性化、工程化的关键一步.
 
-`<span style="color: rgb(143,149,158); background-color: inherit">`CLAUDE.md 不放具体业务逻辑, 业务逻辑太重、太易变. 放进去既费 Token, 又容易过时, 导致 AI 学习了错误的旧逻辑.
-`<span style="color: rgb(143,149,158); background-color: inherit">`claude.md 可以放 "怎么获取业务知识" 的方法. 比如: "项目业务文档在 docs/business/, 代码核心逻辑在 internal/core/, 你需要理解业务时, 请优先阅读这些目录. "
+CLAUDE.md 不放具体业务逻辑, 业务逻辑太重、太易变. 放进去既费 Token, 又容易过时, 导致 AI 学习了错误的旧逻辑.
+claude.md 可以放 "怎么获取业务知识" 的方法. 比如: "项目业务文档在 docs/business/, 代码核心逻辑在 internal/core/, 你需要理解业务时, 请优先阅读这些目录. "

@@ -17,6 +17,66 @@ SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 echo -e "${BLUE}🚀 Learn Claude Code 集成向导${NC}"
 
 # ==========================================
+# 辅助函数: 安全复制 (Safe Copy)
+# ==========================================
+# 参数: $1=源文件, $2=目标路径(文件或目录)
+safe_copy() {
+    local src="$1"
+    local dest="$2"
+    local dest_file
+    
+    # 检查源文件是否存在
+    if [ ! -e "$src" ]; then
+        return
+    fi
+    
+    # 计算目标文件完整路径
+    if [ -d "$dest" ]; then
+        dest_file="$dest/$(basename "$src")"
+    else
+        dest_file="$dest"
+    fi
+    
+    # 确保目标目录存在
+    mkdir -p "$(dirname "$dest_file")"
+    
+    if [ -f "$dest_file" ]; then
+        echo -e "${YELLOW}⚠️  目标文件已存在: $(basename "$dest_file")${NC}"
+        local should_overwrite="false"
+        
+        if command -v osascript >/dev/null 2>&1; then
+            # GUI 弹窗
+            BTN_CLICKED=$(osascript -e 'try
+                display dialog "文件已存在: '"$(basename "$dest_file")"'\n\n是否覆盖？" buttons {"跳过", "覆盖"} default button "跳过" with icon caution
+                return button returned of result
+            on error
+                return "跳过"
+            end try' 2>/dev/null)
+            
+            if [ "$BTN_CLICKED" == "覆盖" ]; then
+                should_overwrite="true"
+            fi
+        else
+            # 命令行交互
+            echo -e "${YELLOW}是否覆盖? (y/N)${NC}"
+            read -r USER_RESP
+            if [[ "$USER_RESP" =~ ^[Yy]$ ]]; then
+                should_overwrite="true"
+            fi
+        fi
+        
+        if [ "$should_overwrite" == "true" ]; then
+            cp -v "$src" "$dest_file"
+        else
+            echo -e "${YELLOW}🚫 已跳过: $(basename "$dest_file")${NC}"
+        fi
+    else
+        # 文件不存在，直接复制
+        cp -v "$src" "$dest_file"
+    fi
+}
+
+# ==========================================
 # 1. 目标目录选择 (Target Directory Selection)
 # ==========================================
 
@@ -116,22 +176,42 @@ echo -e "✅ 选择语言配置: ${BLUE}$LANG_NAME${NC}"
 echo -e "\n📦 正在安装核心文件..."
 
 # 1. 复制通用宪法
-cp -v "$SOURCE_DIR/constitution.md" "$TARGET_DIR/"
+safe_copy "$SOURCE_DIR/constitution.md" "$TARGET_DIR/"
+
+# 1.1 创建 SDD 规范目录 (specs)
+echo "📂 创建 specs 目录..."
+if [ ! -d "$TARGET_DIR/specs" ]; then
+    mkdir -p "$TARGET_DIR/specs"
+    echo "  -> 已创建 specs/ (用于存放 spec.md, plan.md 等)"
+else
+    echo "  -> specs/ 已存在"
+fi
+
+# 1.2 复制团队安全配置 (settings.json)
+if [ -f "$SOURCE_DIR/.claude/settings.json" ]; then
+    echo "🛡️ 安装团队安全配置 (settings.json)..."
+    mkdir -p "$TARGET_DIR/.claude"
+    safe_copy "$SOURCE_DIR/.claude/settings.json" "$TARGET_DIR/.claude/"
+fi
 
 # 2. 复制语言特定的 CLAUDE.md 和 AGENTS.md
 echo "📝 安装 $LANG_NAME 专属配置..."
-cp -v "$SOURCE_DIR/profiles/$PROFILE/CLAUDE.md" "$TARGET_DIR/"
-cp -v "$SOURCE_DIR/profiles/$PROFILE/AGENTS.md" "$TARGET_DIR/"
+safe_copy "$SOURCE_DIR/profiles/$PROFILE/CLAUDE.md" "$TARGET_DIR/"
+safe_copy "$SOURCE_DIR/profiles/$PROFILE/AGENTS.md" "$TARGET_DIR/"
 
 # 3. 复制 Agent 配置 (合并模式)
 echo "🧠 复制 Agent 配置..."
 mkdir -p "$TARGET_DIR/.claude/agents"
-# 复制 agents 下的所有文件
-cp -v "$SOURCE_DIR/.claude/agents/"* "$TARGET_DIR/.claude/agents/"
-# 复制 settings.local.json (如果不存在则复制，如果存在则不覆盖? 或者总是覆盖? 模板通常不覆盖本地设置，但这是初始化脚本)
-# 这里假设用户想要从模板更新，所以我们复制，但给个提示
+# 逐个文件复制以支持覆盖检查
+for file in "$SOURCE_DIR/.claude/agents/"*; do
+    if [ -f "$file" ]; then
+        safe_copy "$file" "$TARGET_DIR/.claude/agents/"
+    fi
+done
+
+# 复制 settings.local.json
 if [ -f "$SOURCE_DIR/.claude/settings.local.json" ]; then
-    cp -v "$SOURCE_DIR/.claude/settings.local.json" "$TARGET_DIR/.claude/"
+    safe_copy "$SOURCE_DIR/.claude/settings.local.json" "$TARGET_DIR/.claude/"
 fi
 
 # 4. 复制语言附录
@@ -140,13 +220,13 @@ mkdir -p "$TARGET_DIR/docs/constitution"
 
 case "$LANG_NAME" in
     "Go")
-        cp -v "$SOURCE_DIR/docs/constitution/go_annex.md" "$TARGET_DIR/docs/constitution/"
+        safe_copy "$SOURCE_DIR/docs/constitution/go_annex.md" "$TARGET_DIR/docs/constitution/"
         ;;
     "PHP")
-        cp -v "$SOURCE_DIR/docs/constitution/php_annex.md" "$TARGET_DIR/docs/constitution/"
+        safe_copy "$SOURCE_DIR/docs/constitution/php_annex.md" "$TARGET_DIR/docs/constitution/"
         ;;
     "Python")
-        cp -v "$SOURCE_DIR/docs/constitution/python_annex.md" "$TARGET_DIR/docs/constitution/"
+        safe_copy "$SOURCE_DIR/docs/constitution/python_annex.md" "$TARGET_DIR/docs/constitution/"
         ;;
 esac
 
@@ -157,13 +237,19 @@ mkdir -p "$TARGET_DIR/.claude/commands"
 # 5.1 复制通用命令 (Common Commands)
 if ls "$SOURCE_DIR/.claude/commands/"*.md 1> /dev/null 2>&1; then
     echo "  -> 复制通用命令..."
-    cp -v "$SOURCE_DIR/.claude/commands/"*.md "$TARGET_DIR/.claude/commands/"
+    for file in "$SOURCE_DIR/.claude/commands/"*.md; do
+        safe_copy "$file" "$TARGET_DIR/.claude/commands/"
+    done
 fi
 
 # 5.2 复制语言特定命令 (Language Specific Commands)
 if [ -d "$SOURCE_DIR/.claude/commands/$PROFILE" ]; then
     echo "  -> 复制 $LANG_NAME 专属命令..."
-    cp -v "$SOURCE_DIR/.claude/commands/$PROFILE/"* "$TARGET_DIR/.claude/commands/"
+    for file in "$SOURCE_DIR/.claude/commands/$PROFILE/"*; do
+        if [ -f "$file" ]; then
+             safe_copy "$file" "$TARGET_DIR/.claude/commands/"
+        fi
+    done
 fi
 
 # 6. 复制 Hooks
@@ -171,15 +257,22 @@ echo "🪝 复制 Hooks..."
 mkdir -p "$TARGET_DIR/.claude/hooks"
 
 # 6.1 复制通用 Hooks
-# 使用 find 只复制文件，不复制子目录
-find "$SOURCE_DIR/.claude/hooks" -maxdepth 1 -type f -not -name ".*" -exec cp -v {} "$TARGET_DIR/.claude/hooks/" \; 2>/dev/null || true
+# 查找文件并逐个复制
+for file in "$SOURCE_DIR/.claude/hooks/"*; do
+    if [ -f "$file" ] && [[ "$(basename "$file")" != .* ]]; then
+        safe_copy "$file" "$TARGET_DIR/.claude/hooks/"
+    fi
+done
 
 # 6.2 复制语言特定 Hooks
 if [ -d "$SOURCE_DIR/.claude/hooks/$PROFILE" ]; then
-    # 检查目录下是否有文件
     if ls "$SOURCE_DIR/.claude/hooks/$PROFILE/"* 1> /dev/null 2>&1; then
         echo "  -> 复制 $LANG_NAME 专属 Hooks..."
-        cp -v "$SOURCE_DIR/.claude/hooks/$PROFILE/"* "$TARGET_DIR/.claude/hooks/"
+        for file in "$SOURCE_DIR/.claude/hooks/$PROFILE/"*; do
+            if [ -f "$file" ]; then
+                safe_copy "$file" "$TARGET_DIR/.claude/hooks/"
+            fi
+        done
     else
         echo "  -> (无 $LANG_NAME 专属 Hooks，跳过)"
     fi
@@ -189,8 +282,41 @@ fi
 echo "🛠️ 复制 Skills..."
 mkdir -p "$TARGET_DIR/.claude/skills"
 if [ -d "$SOURCE_DIR/.claude/skills" ]; then
-    cp -r "$SOURCE_DIR/.claude/skills/"* "$TARGET_DIR/.claude/skills/" 2>/dev/null || true
-    echo "  -> Skills 复制完成"
+    # Skills 是目录结构，简化处理：询问是否更新 Skills 目录
+    # 如果目标目录存在，先询问一次
+    if [ -d "$TARGET_DIR/.claude/skills" ]; then
+        echo -e "${YELLOW}⚠️  目标 .claude/skills 目录已存在${NC}"
+        SKILLS_ACTION="skip"
+        
+        if command -v osascript >/dev/null 2>&1; then
+            BTN_CLICKED=$(osascript -e 'try
+                display dialog "目标 .claude/skills 目录已存在。\n\n是否覆盖/合并更新？" buttons {"跳过", "合并更新"} default button "跳过" with icon caution
+                return button returned of result
+            on error
+                return "跳过"
+            end try' 2>/dev/null)
+             if [ "$BTN_CLICKED" == "合并更新" ]; then
+                SKILLS_ACTION="merge"
+            fi
+        else
+            echo -e "${YELLOW}是否合并更新 Skills? (y/N)${NC}"
+            read -r USER_RESP
+            if [[ "$USER_RESP" =~ ^[Yy]$ ]]; then
+                SKILLS_ACTION="merge"
+            fi
+        fi
+        
+        if [ "$SKILLS_ACTION" == "merge" ]; then
+            cp -r "$SOURCE_DIR/.claude/skills/"* "$TARGET_DIR/.claude/skills/"
+            echo "  -> Skills 已合并更新"
+        else
+            echo "  -> 已跳过 Skills 更新"
+        fi
+    else
+        # 不存在则直接复制
+        cp -r "$SOURCE_DIR/.claude/skills/"* "$TARGET_DIR/.claude/skills/"
+        echo "  -> Skills 复制完成"
+    fi
 else
     echo "  -> (无 Skills 目录，跳过)"
 fi
@@ -198,7 +324,7 @@ fi
 # 8. 复制其他配置文件
 if [ -f "$SOURCE_DIR/.claude/changelog_config.json" ]; then
     echo "⚙️ 复制 changelog_config.json..."
-    cp -v "$SOURCE_DIR/.claude/changelog_config.json" "$TARGET_DIR/.claude/"
+    safe_copy "$SOURCE_DIR/.claude/changelog_config.json" "$TARGET_DIR/.claude/"
 fi
 
 # 确保所有脚本具有执行权限

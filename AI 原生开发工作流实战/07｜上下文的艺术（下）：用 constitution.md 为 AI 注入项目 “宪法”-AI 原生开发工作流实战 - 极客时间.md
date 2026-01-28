@@ -163,7 +163,7 @@ constitution.md for issue2md
 
 请你尝试将其中最重要的 一到两条 原则, 用我们今天学习的 constitution.md 的风格, 写成 "法案" 的形式. 欢迎在评论区分享你的 "立法" 尝试. 这个练习将帮助你思考如何将团队的隐性知识, 转化为可被 AI 理解和执行的显性规则. 如果你觉得有所收获也欢迎你分享给需要的朋友, 我们下节课再见!
 
-* `<span style="color: rgb(143,149,158); background-color: inherit">`团队不断丰富和优化项目规范是正确的. 但就我的实践来看, 有几点对抗 "规范膨胀" 的小 tip 吧:
-  `<span style="color: rgb(143,149,158); background-color: inherit">`不要把所有规范塞进一个文件, 至少保证单一的文件没那么膨胀. 可以按领域划分到不同规范文件中, 比如 go-style.md, db-rules.md 等, 然后在 CLAUDE.md 或 AGENT.md 中 import.
-  `<span style="color: rgb(143,149,158); background-color: inherit">`尽量工具优先. 凡是能用 像 golangci-lint、ESLint 等自动化工具解决的规范, 可考虑不必写在 Prompt 或 Markdown 里. 让工具去管, 而不浪费 AI 的 Token 去读规范.
-  `<span style="color: rgb(143,149,158); background-color: inherit">`定期 "优化":  团队应定期审查, 把过时的、过于琐碎的规范剔除.
+* 团队不断丰富和优化项目规范是正确的. 但就我的实践来看, 有几点对抗 "规范膨胀" 的小 tip 吧:
+  不要把所有规范塞进一个文件, 至少保证单一的文件没那么膨胀. 可以按领域划分到不同规范文件中, 比如 go-style.md, db-rules.md 等, 然后在 CLAUDE.md 或 AGENT.md 中 import.
+  尽量工具优先. 凡是能用 像 golangci-lint、ESLint 等自动化工具解决的规范, 可考虑不必写在 Prompt 或 Markdown 里. 让工具去管, 而不浪费 AI 的 Token 去读规范.
+  定期 "优化":  团队应定期审查, 把过时的、过于琐碎的规范剔除.
