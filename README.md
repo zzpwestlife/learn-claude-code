@@ -2,7 +2,7 @@
 
 **Learn Claude Code** 是一个标准化的 Claude Code 配置套件，旨在帮助开发者快速将最佳实践集成到自己的项目中。它通过引入“宪法机制”和“角色化 Agent”，确保 AI 生成的代码安全、健壮且易于维护。
 
-现在支持多语言配置（Go / PHP），可根据项目类型自动适配。
+现在支持多语言配置（Go / PHP / Python），可根据项目类型自动适配。
 
 ---
 
@@ -21,6 +21,7 @@
 ### 2. 多语言配置模板 - `profiles/`
 - **`profiles/go/`**: 针对 Go 语言优化的 `CLAUDE.md` 和 `AGENTS.md`。
 - **`profiles/php/`**: 针对 PHP（Lumen/Laravel）优化的配置。
+- **`profiles/python/`**: 针对 Python (3.10+) 优化的配置。
 
 ### 3. 智能体（Agents）- `.claude/agents/`
 预设了多个专家角色，用于处理特定任务：
@@ -32,6 +33,7 @@
 ### 4. 扩展文档 - `docs/`
 - **`docs/constitution/go_annex.md`**: Go 语言实施细则。
 - **`docs/constitution/php_annex.md`**: PHP 语言实施细则。
+- **`docs/constitution/python_annex.md`**: Python 语言实施细则。
 
 ---
 
@@ -40,7 +42,7 @@
 将以下能力引入你的现有项目，只需一条命令：
 
 ### 方法一：本地集成（推荐）
-如果你已经克隆了本仓库，可以直接运行 `install.sh` 脚本。它会自动检测目标项目的语言（Go 或 PHP），并安装对应的配置文件。
+如果你已经克隆了本仓库，可以直接运行 `install.sh` 脚本。它会自动检测目标项目的语言（Go, PHP 或 Python），并安装对应的配置文件。
 
 ```bash
 # 用法: ./install.sh <你的目标项目路径>
@@ -50,17 +52,17 @@
 ### 方法二：手动集成
 如果你更喜欢手动控制，可以从 `profiles/` 目录复制对应语言的配置：
 
-1. **复制核心文件**（以 Go 项目为例）
+1. **复制核心文件**（以 Python 项目为例）
    ```bash
    # 复制配置文件
-   cp profiles/go/CLAUDE.md profiles/go/AGENTS.md constitution.md ../my-app/
+   cp profiles/python/CLAUDE.md profiles/python/AGENTS.md constitution.md ../my-app/
    # 复制 Agent
    cp -r .claude ../my-app/
    ```
 2. **复制文档**
    ```bash
    mkdir -p ../my-app/docs/constitution
-   cp docs/constitution/go_annex.md ../my-app/docs/constitution/
+   cp docs/constitution/python_annex.md ../my-app/docs/constitution/
    ```
 
 ---
@@ -77,6 +79,12 @@
 > "这个项目的核心开发原则是什么？"
 
 如果 Claude 能准确列出 `constitution.md` 中的 11 条原则，说明集成成功。
+
+### 3. 环境变量（可选）
+如果项目需要特定环境变量，可以参考 `.env.example` 创建 `.env` 文件。
+```bash
+cp .env.example .env
+```
 
 ---
 

@@ -185,11 +185,28 @@ if [ -d "$SOURCE_DIR/.claude/hooks/$PROFILE" ]; then
     fi
 fi
 
+# 7. 复制 Skills
+echo "🛠️ 复制 Skills..."
+mkdir -p "$TARGET_DIR/.claude/skills"
+if [ -d "$SOURCE_DIR/.claude/skills" ]; then
+    cp -r "$SOURCE_DIR/.claude/skills/"* "$TARGET_DIR/.claude/skills/" 2>/dev/null || true
+    echo "  -> Skills 复制完成"
+else
+    echo "  -> (无 Skills 目录，跳过)"
+fi
+
+# 8. 复制其他配置文件
+if [ -f "$SOURCE_DIR/.claude/changelog_config.json" ]; then
+    echo "⚙️ 复制 changelog_config.json..."
+    cp -v "$SOURCE_DIR/.claude/changelog_config.json" "$TARGET_DIR/.claude/"
+fi
+
 # 确保所有脚本具有执行权限
 chmod +x "$TARGET_DIR/.claude/hooks/"* 2>/dev/null || true
-
-echo -e "\n${GREEN}🎉 安装完成!${NC}"
-echo -e "请检查 $TARGET_DIR/CLAUDE.md 并根据项目实际情况微调命令。"
+# 递归赋予 skills 目录下脚本执行权限
+if [ -d "$TARGET_DIR/.claude/skills" ]; then
+    find "$TARGET_DIR/.claude/skills" -type f \( -name "*.sh" -o -name "*.py" -o -name "*.js" \) -exec chmod +x {} \;
+fi
 
 echo -e "\n${GREEN}🎉 安装完成!${NC}"
 echo -e "请检查 $TARGET_DIR/CLAUDE.md 并根据项目实际情况微调命令。"

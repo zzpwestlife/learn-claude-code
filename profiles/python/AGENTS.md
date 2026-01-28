@@ -1,17 +1,17 @@
 # 命令
 
-- **Build**: `make build` (dev: `make build-dev`)
-- **Test**: `make test` (all unit tests), `make race` (race detection)
-- **Lint**: `make lint` (golangci-lint), `make vet` (go vet)
-- **Format**: `make fmt` (gofumpt)
-- **Deps**: `make dep` (go mod tidy)
-- **All**: `make all` (fmt+lint+vet+test+race+build)
-*注意：如果缺少 `Makefile`，请查看 `README.md` 获取项目特定命令。*
+- **Install**: `pip install -r requirements.txt`
+- **Test**: `pytest` (unit tests), `pytest --cov` (coverage)
+- **Lint**: `flake8` (linting), `black --check .` (formatting check)
+- **Format**: `black .` (code formatting), `isort .` (import sorting)
+- **Deps**: `pip freeze > requirements.txt` (update deps)
+- **All**: `black . && isort . && flake8 && pytest` (format+lint+test)
+*注意：如果缺少 `requirements.txt` 或使用 `poetry`，请查看 `README.md` 获取项目特定命令。*
 
 # 指南
 
 > **⚠️ 宪法**: 本项目严格遵循 [constitution.md](../../constitution.md)。
-> 所有代码修改必须符合其 **11 条核心原则** 以及相关 **语言附录**（如 [Go 附录](../../docs/constitution/go_annex.md)）。
+> 所有代码修改必须符合其 **11 条核心原则** 以及相关 **语言附录**（如 [Python 附录](../../docs/constitution/python_annex.md)）。
 
 ## Git 与版本控制
 - **提交信息**: **[严格遵循]** Conventional Commits (type(scope): subject)。
