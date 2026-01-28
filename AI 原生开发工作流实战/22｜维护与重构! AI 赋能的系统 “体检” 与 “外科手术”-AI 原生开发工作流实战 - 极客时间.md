@@ -6,7 +6,7 @@
 
 至此, 我们的项目成功上线了. 但这, 真的就是故事的结局吗?
 
-对于任何一个严肃的软件项目来说, 代码被合并到 main 分支, 仅仅是它漫长生命周期的 开始. 接下来的岁月里, 我们将面临更严峻、更复杂的挑战:&#x20;
+对于任何一个严肃的软件项目来说, 代码被合并到 main 分支, 仅仅是它漫长生命周期的 开始. 接下来的岁月里, 我们将面临更严峻、更复杂的挑战: 
 
 * 线上问题诊断: 突如其来的 panic, 如何在海量的日志和复杂的代码调用链中, 快速定位根因?
 
@@ -78,7 +78,7 @@ net/http.HandlerFunc.ServeHTTP(0x10f7ea8, 0x113a2c0, 0xc00010c008, 0xc00009c500)
 
 
 
-这是一个典型的 Go 语言空指针异常. 在传统流程中, 你需要:&#x20;
+这是一个典型的 Go 语言空指针异常. 在传统流程中, 你需要: 
 
 1. 找到 main.go 的第 45 行. 
 
@@ -124,7 +124,7 @@ PROMPT="""
 cat panic.log | claude -p "$PROMPT" @cmd/issue2mdweb/main.go @internal/converter/converter.go > root_cause_analysis.md
 ```
 
-这条命令的精妙之处在于:&#x20;
+这条命令的精妙之处在于: 
 
 * cat panic.log | ...: 将日志内容通过 管道 注入. 
 
@@ -136,7 +136,7 @@ cat panic.log | claude -p "$PROMPT" @cmd/issue2mdweb/main.go @internal/converter
 
 ### 产出: 一份专业的根因分析报告
 
-片刻之后,  root\_cause\_analysis.md 文件就生成了. 其内容可能如下:&#x20;
+片刻之后,  root\_cause\_analysis.md 文件就生成了. 其内容可能如下: 
 
 ```go
 Panic根因分析报告
@@ -272,7 +272,7 @@ AI 开始修改 main.go. 但这一次, 它似乎误解了我们的意图, 它不
 
 这正是我们在第 16 讲构建 "驾驶舱" 框架时, 所预见并为之准备的场景. 我们将调用一个 (或创建一个) 封装了 "知识同步" 最佳实践的 Slash Command. 
 
-让我们来创建这个指令. 在 ./.claude/commands/ 目录下, 创建 update-docs.md:&#x20;
+让我们来创建这个指令. 在 ./.claude/commands/ 目录下, 创建 update-docs.md: 
 
 ```yaml
 ---
@@ -294,7 +294,7 @@ model: opus
 
 
 
-现在, 我们只需在 Claude Code 中执行一个简单的命令:&#x20;
+现在, 我们只需在 Claude Code 中执行一个简单的命令: 
 
 > /update-docs
 
@@ -361,7 +361,7 @@ AI 会启动一次对项目的 "全盘扫描", 然后为你生成一份焕然一
 
 至此, 我们已经跑完了 issue2md 项目从诞生到演进的全部里程. 现在, 让我们跳出具体的代码细节, 站在万米高空, 俯瞰一下我们这 7 讲共同构建的这座 "AI 原生大厦". 
 
-我们并非在堆砌工具, 而是在实践一种全新的 工程流. 每一讲, 都是这个流中的关键一环:&#x20;
+我们并非在堆砌工具, 而是在实践一种全新的 工程流. 每一讲, 都是这个流中的关键一环: 
 
 ![](images/22_image.png)
 

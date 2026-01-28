@@ -20,10 +20,10 @@ Checkpointing 的理念, 对于爱玩游戏的小伙伴儿来说, 可能会非�
 
 在你即将进入一场艰难的 Boss 战 (一次复杂的 AI 操作) 之前, 游戏会自动为你创建一个存档点. 如果你在战斗中失败了, 你可以轻松地 "读档", 回到进入战斗前的那个完美状态, 然后换个策略再试一次.
 
-Claude Code 的 Checkpointing 机制, 就是你开发过程中的 "自动存档系统". 它的工作原理可以概括为以下几点:&#x20;
+Claude Code 的 Checkpointing 机制, 就是你开发过程中的 "自动存档系统". 它的工作原理可以概括为以下几点: 
 
 1. 触发时机: 每当你 (用户) 提交一个新的 Prompt 时, Checkpointing 系统就会被触发. 它会在 AI 开始思考和行动之前, 悄悄地为你的项目状态创建一个快照.
-2. 保存内容: 这个快照, 并不仅仅是代码的备份. 它完整地记录了那一刻的 "时空切片", 主要包含两部分信息:&#x20;
+2. 保存内容: 这个快照, 并不仅仅是代码的备份. 它完整地记录了那一刻的 "时空切片", 主要包含两部分信息: 
 
    1. 代码状态: 当前会话中所有被 AI "染指" 过的文件 (即被读取或修改过的文件) 的完整内容.
    2. 对话状态: 到那一刻为止的完整对话历史.
@@ -85,7 +85,7 @@ func GetGreeting(name string, isFormal bool, isMorning bool, isEvening bool) str
 
 ### 第一步: 第一次重构 —— 走向清晰
 
-我们向 Claude Code 下达第一个重构指令:&#x20;
+我们向 Claude Code 下达第一个重构指令: 
 
 ```plain
 @greeting.go 这个函数的 if-else 嵌套太深了, 请帮我重构它, 让逻辑更清晰. 
@@ -93,7 +93,7 @@ func GetGreeting(name string, isFormal bool, isMorning bool, isEvening bool) str
 
 AI Agent 分析后, 可能会提议使用 switch 语句, 并给出了修改方案. 我们觉得很棒,  批准 了这次修改.
 
-代码状态 V2 (第一次重构后):&#x20;
+代码状态 V2 (第一次重构后): 
 
 ```go
 package greeting
@@ -124,7 +124,7 @@ func GetGreeting(name string, isFormal bool, isMorning bool, isEvening bool) str
 
 现在, 我们想更进一步. 我们觉得布尔参数太多了, 想用一个枚举类型来代替 isMorning 和 isEvening.
 
-我们下达了第二个指令:&#x20;
+我们下达了第二个指令: 
 
 ```plain
 很好. 现在, 请再次重构这个函数. 定义一个名为 TimeOfDay 的枚举类型 (可以是 int 常量) , 包含 Morning, Afternoon, Evening. 让函数接收这个枚举类型, 而不是两个布尔值. 
@@ -134,7 +134,7 @@ AI 再次动手, 给出了一套新的实现方案, 包括了新的类型定义�
 
 但是, 我们 "手滑" 批准 了这次修改.
 
-代码状态 V3 (第二次重构后, 我们不满意的版本):&#x20;
+代码状态 V3 (第二次重构后, 我们不满意的版本): 
 
 ```go
 package greeting
@@ -161,27 +161,27 @@ func GetGreeting(name string, isFormal bool, time TimeOfDay) string {
 
 现在, 是时候召唤 "后悔药" 了. 在 Claude Code 的输入框中, 输入 /rewind  (或者直接连按两次 Esc 键) , "时光机" 界面就会出现.
 
-你会看到一个按时间顺序排列的 检查点列表  (旧的在上面, 新的在下面) , 每一个都对应你提交的一次 Prompt:&#x20;
+你会看到一个按时间顺序排列的 检查点列表  (旧的在上面, 新的在下面) , 每一个都对应你提交的一次 Prompt: 
 
 ![](images/10_image_2.png)
 
-更重要的是, 当你通过方向键选择你要回退到的检查点并按下回车后, 你会看到三个强大的 "倒流" 选项:&#x20;
+更重要的是, 当你通过方向键选择你要回退到的检查点并按下回车后, 你会看到三个强大的 "倒流" 选项: 
 
 ![](images/10_image_3.png)
 
-#### Rewind code (只回退代码) :&#x20;
+#### Rewind code (只回退代码) : 
 
 * 作用: 将你的文件系统恢复到选定检查点的状态, 但 保留完整的对话历史.
 * 心智模型: "AI, 我们刚才的 讨论都很有价值, 但我对你的 具体实现不满意. 让我们回到你动手之前, 然后基于我们刚才的讨论, 你再试一次. "
 * 适用场景: AI 的思路正确, 但代码实现有误.
 
-#### Rewind conversation (只回退对话) :&#x20;
+#### Rewind conversation (只回退对话) : 
 
 * 作用: 将你的对话历史回退到选定检查点, 但 保留文件系统的所有修改.
 * 心智模型: "AI, 你刚才做的代码修改是对的, 但我发现我给你的指令说错了. 让我们保留现在的代码, 然后从我上一个指令开始, 我换个说法. "
 * 适用场景: 代码修改符合预期, 但你想从一个早期的对话节点, 探索另一个完全不同的方向.
 
-#### Rewind code and conversation (全部回退) :&#x20;
+#### Rewind code and conversation (全部回退) : 
 
 * 作用: 彻底的 "时光倒流". 将文件系统和对话历史, 都完美地恢复到选定检查点的状态.
 * 心智模型: "AI, 我们刚才那段探索完全是条死胡同. 让我们 假装它从未发生过, 从这个更早的时间点重新开始. "
@@ -189,7 +189,7 @@ func GetGreeting(name string, isFormal bool, time TimeOfDay) string {
 
 在我们的场景中, 我们对第二次重构的整个方向 (引入枚举) 都不满意, 所以我们选择 Rewind code and conversation, 然后按下回车.
 
-瞬间, 奇迹发生了:&#x20;
+瞬间, 奇迹发生了: 
 
 1. 你的 `greeting.go` 文件内容, 被 完美地恢复 到了我们满意的 "代码状态 V2".
 2. 你的 Claude Code 对话界面, 也 回滚 到了你下达第二次重构指令之前的状态.
@@ -201,7 +201,7 @@ func GetGreeting(name string, isFormal bool, time TimeOfDay) string {
 
 Checkpointing 虽然强大, 但它不是万能的. 清晰地理解它的边界, 能帮助我们避免错误的使用, 并将其与我们已有的工具 (如 Git) 进行更好的配合.
 
-1. 它不跟踪  Bash  命令的副作用: 这是 最重要, 也是最容易被误解 的限制. Checkpointing 系统只快照 文件内容 的状态. 对于通过 ! 或 Bash 工具执行的命令所产生的 副作用, 它无能为力. 例如, 如果 AI 执行了:&#x20;
+1. 它不跟踪  Bash  命令的副作用: 这是 最重要, 也是最容易被误解 的限制. Checkpointing 系统只快照 文件内容 的状态. 对于通过 ! 或 Bash 工具执行的命令所产生的 副作用, 它无能为力. 例如, 如果 AI 执行了: 
 
    1. ! rm sensitive-data.log
    2. ! git push --force

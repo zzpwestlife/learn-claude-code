@@ -22,7 +22,7 @@
 
 我们在 tasks.md 中看到的任务列表, 其本身就是按照 TDD 逻辑编排的. 每一个功能模块的实现, 都被拆分成了 "先写测试" 和 "后写实现" 两个步骤. 
 
-这个经典的 "红 - 绿 - 重构" (Red-Green-Refactor) 循环, 在 AI 原生开发的范式下, 被赋予了全新的意义:&#x20;
+这个经典的 "红 - 绿 - 重构" (Red-Green-Refactor) 循环, 在 AI 原生开发的范式下, 被赋予了全新的意义: 
 
 1. 红 (Red) : 指挥 AI 将需求转化为 代码化规范  (失败的测试) . 这是保证 AI "不跑偏" 的第一道缰绳. 
 
@@ -55,7 +55,7 @@
 
 AI 在接收到指令后, 会迅速进入 "疯狂输出" 模式. 它会像一个熟练的架构师, 依次创建 go.mod 、各个 internal 包的 types.go 、 Makefile 、 README.md, 甚至包括 Dockerfile 和 .gitignore 文件. 
 
-但更精彩的还在后面. 在这次实战中, AI 在初次生成代码后, 尝试运行 go build, 结果遇到了 编译错误:&#x20;
+但更精彩的还在后面. 在这次实战中, AI 在初次生成代码后, 尝试运行 go build, 结果遇到了 编译错误: 
 
 > \# github.com/bigwhite/my-issue2md/cmd/issue2md
 >
@@ -63,7 +63,7 @@ AI 在接收到指令后, 会迅速进入 "疯狂输出" 模式. 它会像一个
 
 
 
-这在开发中太常见了 —— 接口定义了, 但实现类漏掉了方法. 如果是传统开发, 你需要去定位文件、补全代码. 但看看 Claude Code 是怎么做的:&#x20;
+这在开发中太常见了 —— 接口定义了, 但实现类漏掉了方法. 如果是传统开发, 你需要去定位文件、补全代码. 但看看 Claude Code 是怎么做的: 
 
 1. 自主发现错误: 它读取了编译报错信息. 
 
@@ -77,7 +77,7 @@ AI 在接收到指令后, 会迅速进入 "疯狂输出" 模式. 它会像一个
 
 不仅如此, 在随后的测试运行中, 它又发现了一个 imported and not used 的错误, 并同样 自动 移除了多余的 import 语句. 
 
-最终, 它不仅交付了一套完整的项目骨架, 还通过运行 ./bin/issue2md 和启动 Web 服务, 向你证明了这套骨架是 真实可运行 的, 以下是我的环境中 Claude Code 对 Phase 1: Foundation 的完成总结:&#x20;
+最终, 它不仅交付了一套完整的项目骨架, 还通过运行 ./bin/issue2md 和启动 Web 服务, 向你证明了这套骨架是 真实可运行 的, 以下是我的环境中 Claude Code 对 Phase 1: Foundation 的完成总结: 
 
 ```markdown
 ● Phase 1: Foundation 完成总结
@@ -190,7 +190,7 @@ Phase 1 完成后, 我们的地基已经打好, 接下来, 让我们进入真正
 
 
 
-AI 开始执行. 它首先创建了 parser.go 定义接口, 然后编写了 parser\_test.go. 但在运行测试时, AI 遇到了一个意想不到的 编译错误:&#x20;
+AI 开始执行. 它首先创建了 parser.go 定义接口, 然后编写了 parser\_test.go. 但在运行测试时, AI 遇到了一个意想不到的 编译错误: 
 
 > internal/parser/types.go:8:6: Parser redeclared in this block
 
@@ -200,11 +200,11 @@ AI 敏锐地发现了这个命名冲突. 它没有停下来报错, 而是 自动
 
 
 
-再次运行测试:&#x20;
+再次运行测试: 
 
 > parser\_test.go:137: Parse() unexpected error = not implemented
 
-完美! 编译通过, 测试失败 (因为函数只返回了 not implemented 错误) . 我们成功进入了 "RED" 状态. 以下是 AI 对这一步的总结性输出:&#x20;
+完美! 编译通过, 测试失败 (因为函数只返回了 not implemented 错误) . 我们成功进入了 "RED" 状态. 以下是 AI 对这一步的总结性输出: 
 
 ```go
 ● 现在让我再次运行测试以确保编译通过但运行失败: 
@@ -310,7 +310,7 @@ AI 接收指令, 开始编写实现代码. 它使用了 strings.Split 来解析�
 
 2. 逻辑漏洞: 在测试 "不支持的 URL 类型" 时, AI 的逻辑对于 https://github.com/owner/repo  (仓库主页) 这种只有两段路径的情况判断有误, 返回了错误的错误信息. AI 分析了测试失败的原因, 修改了路径长度判断的逻辑, 专门处理了 len(pathParts) == 2 的情况. 
 
-经过两轮自主的 "编码 - 测试 - 修复" 循环, AI 终于报告:&#x20;
+经过两轮自主的 "编码 - 测试 - 修复" 循环, AI 终于报告: 
 
 ```markdown
 ● 现在让我再次运行测试: 
@@ -398,7 +398,7 @@ AI 接收指令, 开始编写实现代码. 它使用了 strings.Split 来解析�
 
 ### Prompt 3: 重构优化 (REFACTOR) 
 
-```plain&#x20;text
+```plain text
 代码通过了测试, 但我发现 `Parse` 函数有点长, 不够整洁. 
 
 请进行重构: 
@@ -420,7 +420,7 @@ AI 会迅速执行重构. 由于有刚才那 23 个测试用例的严密保护, 
 
 ./specs/001-core-functionality/tasks.md  (节选) 
 
-```plain&#x20;text
+```plain text
 ## Phase 3: GitHub Fetcher (API交互逻辑, TDD)
 ...
 65. 创建 `internal/github/client_test.go` - GetIssue方法测试
@@ -455,13 +455,13 @@ AI 接收指令后, 开始编写 client\_test.go. 它熟练地使用了 httptest
 
 
 
-然而, 在运行测试时, AI 遇到了意料之外的 编译错误:&#x20;
+然而, 在运行测试时, AI 遇到了意料之外的 编译错误: 
 
 > internal/github/client.go:48:17: cannot use assignee.GetID() (value of type int64) as int value in struct literal
 
 原来, 我们在 Phase 1 定义的 User 结构体中, ID 字段是 int, 但 GitHub API 返回的是 int64. 
 
-AI 迅速识别了这个问题, 并 自动 修改了 internal/github/types.go, 将 ID 字段类型调整为 int64, 消除了类型不匹配. 最终完成了全部尚未通过测试的测试代码的生成:&#x20;
+AI 迅速识别了这个问题, 并 自动 修改了 internal/github/types.go, 将 ID 字段类型调整为 int64, 消除了类型不匹配. 最终完成了全部尚未通过测试的测试代码的生成: 
 
 ```go
 ● 现在再次运行测试: 
@@ -575,11 +575,11 @@ AI 迅速识别了这个问题, 并 自动 修改了 internal/github/types.go, �
 
 #### 第二步 (GREEN) : 为了可测试性而重构
 
-接下来, 按照同样的 "Red-Green" 流程, 引导 AI 实现 client.go 中的真实逻辑, Prompt 如下:&#x20;
+接下来, 按照同样的 "Red-Green" 流程, 引导 AI 实现 client.go 中的真实逻辑, Prompt 如下: 
 
 测试已失败, 正如预期. 
 
-```plain&#x20;text
+```plain text
 测试已失败, 正如预期. 
 
 现在执行任务 **T069**: 在 `internal/github/client.go` 中实现 `GetIssue` 方法的核心逻辑. 
@@ -593,7 +593,7 @@ AI 迅速识别了这个问题, 并 自动 修改了 internal/github/types.go, �
 
 在尝试让测试通过时, AI 发现了一个架构上的阻碍: 我们最初设计的 GitHubClient 并没有暴露设置 HTTP Client 或 BaseURL 的能力, 导致测试代码无法将请求重定向到 Mock Server. 
 
-为了解决这个问题, AI 并没有简单地 "硬编码", 而是做了一次漂亮的设计提升:&#x20;
+为了解决这个问题, AI 并没有简单地 "硬编码", 而是做了一次漂亮的设计提升: 
 
 1. 它在 types.go 中新增了一个构造函数 NewClientWithHTTPClient. 
 
@@ -669,7 +669,7 @@ AI 迅速识别了这个问题, 并 自动 修改了 internal/github/types.go, �
 
 限于篇幅, 我们无法在这里逐一演示 issue2md 每一个功能的实现过程. 但请记住, 第 19 讲的核心目标, 不是交付一个工具, 而是交付一套 "AI 驱动的 TDD 工作流". 
 
-现在, 你已经掌握了这套工作流的全部精髓:&#x20;
+现在, 你已经掌握了这套工作流的全部精髓: 
 
 1. 查看任务: 从 tasks.md 中领取下一个原子任务. 
 
@@ -695,9 +695,9 @@ AI 迅速识别了这个问题, 并 自动 修改了 internal/github/types.go, �
 
 ### 手动并行 (Level 3) 
 
-你可以通过以下命令, 为 T003 和 T029 分别创建独立的工作目录:&#x20;
+你可以通过以下命令, 为 T003 和 T029 分别创建独立的工作目录: 
 
-```plain&#x20;text
+```plain text
 # 为任务 T003 创建一个专门的工作树
 git worktree add ../wt-T003 -b feat/T003
 # 为任务 T029 创建另一个工作树
@@ -706,9 +706,9 @@ git worktree add ../wt-T029 -b feat/T029
 
 
 
-然后, 在两个终端窗口中分别进入这两个目录, 启动两个 Claude Code 会话, 分别下达指令. 它们互不干扰, 并行推进. 完成后, 你只需在各自的目录执行 git merge 即可. 当 T003 和 T029 两个并行开发 worktree 生命周期结束后, 你只需要回到主目录下执行 worktree 清理即可:&#x20;
+然后, 在两个终端窗口中分别进入这两个目录, 启动两个 Claude Code 会话, 分别下达指令. 它们互不干扰, 并行推进. 完成后, 你只需在各自的目录执行 git merge 即可. 当 T003 和 T029 两个并行开发 worktree 生命周期结束后, 你只需要回到主目录下执行 worktree 清理即可: 
 
-```plain&#x20;text
+```plain text
 git worktree remove ../wt-T003
 git worktree remove ../wt-T029
 git worktree prune   # 清理worktree记录

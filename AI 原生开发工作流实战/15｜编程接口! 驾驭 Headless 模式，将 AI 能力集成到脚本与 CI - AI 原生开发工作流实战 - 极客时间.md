@@ -2,7 +2,7 @@
 
 欢迎来到我们专栏进阶篇的最后一讲. 在过去的几讲中, 我们已经将 Claude Code 打造成了一个无所不能的 "钢铁侠战甲": 它拥有持久的记忆、坚固的安全护盾, 以及由自定义指令、Hooks、MCP 服务器、专家 Skills 和 Subagent 组成的、可无限扩展的能力矩阵. 
 
-但是, 到目前为止, 我们驾驶这套 "战甲" 的方式, 始终是坐在这个交互式的 "驾驶舱" 里, 通过一次次的对话来下达指令. 这种模式在探索性、创造性的交互工作中非常高效. 但软件工程中, 还有大量需要 在无人值守的情况下、被重复、确定性地执行 的任务:&#x20;
+但是, 到目前为止, 我们驾驶这套 "战甲" 的方式, 始终是坐在这个交互式的 "驾驶舱" 里, 通过一次次的对话来下达指令. 这种模式在探索性、创造性的交互工作中非常高效. 但软件工程中, 还有大量需要 在无人值守的情况下、被重复、确定性地执行 的任务: 
 
 * 每天凌晨, 自动分析前一天的服务日志, 生成一份异常报告. 
 
@@ -28,7 +28,7 @@ Claude Code 的 Headless 模式, 正是基于这一思想. 它允许我们绕过
 
 
 
-在这个模式下, Claude Code 的行为, 从一个需要持续对话的 "智能体", 蜕变为一个行为类似 "纯函数" 的工具:&#x20;
+在这个模式下, Claude Code 的行为, 从一个需要持续对话的 "智能体", 蜕变为一个行为类似 "纯函数" 的工具: 
 
 * f (输入) = 输出
 
@@ -59,7 +59,7 @@ Claude Code 的 Headless 模式, 正是基于这一思想. 它允许我们绕过
 claude -p "Stage 我的修改, 然后生成一条符合 Conventional Commit 规范的 Message" --allowedTools "Bash,Read" --permission-mode acceptEdits
 ```
 
-Claude Code 会执行这个指令, 将最终生成的 Commit Message 打印到标准输出 (stdout) , 然后立即退出:&#x20;
+Claude Code 会执行这个指令, 将最终生成的 Commit Message 打印到标准输出 (stdout) , 然后立即退出: 
 
 ```markdown
 # claude -p "Stage我的修改, 然后生成一条符合Conventional Commit规范的Message" --allowedTools "Bash,Read" --permission-mode acceptEdits
@@ -101,7 +101,7 @@ Claude Code 的 Headless 模式, 可以无缝地接收来自 stdin 的输入.
 cat nginx-error.log | claude -p "请分析这份Nginx错误日志, 总结出最主要的错误类型和可能的原因. "
 ```
 
-在这个命令中:&#x20;
+在这个命令中: 
 
 1. cat nginx-error.log 将文件的全部内容输出到 stdout. 
 
@@ -139,7 +139,7 @@ claude -p "使用go-code-security-reviewer subagent 审查@internal/converter/co
 
 
 
-打开 review\_report.json 文件, 你会看到一个类似这样的结构:&#x20;
+打开 review\_report.json 文件, 你会看到一个类似这样的结构: 
 
 ```json
 {
@@ -191,7 +191,7 @@ claude -p "使用go-code-security-reviewer subagent 审查@internal/converter/co
 }
 ```
 
-这个 JSON 就是一个 完整的、可审计的 "执行日志". 在自动化脚本中, 你可以轻松地使用 jq 等工具来解析它:&#x20;
+这个 JSON 就是一个 完整的、可审计的 "执行日志". 在自动化脚本中, 你可以轻松地使用 jq 等工具来解析它: 
 
 * 想获取最终的审查结果? jq '.result'
 
@@ -224,7 +224,7 @@ claude -p "使用go-code-security-reviewer subagent 审查@internal/converter/co
 
 
 
-这种格式非常适合:&#x20;
+这种格式非常适合: 
 
 * 构建交互式应用: 你可以编写一个程序, 实时解析 stream-json 的输出, 并将其渲染成一个更漂亮的、带实时状态更新的 UI. 
 
@@ -240,7 +240,7 @@ analyze\_log.sh
 
 ![](images/15_image_2.png)
 
-这个脚本完美地演示了 Headless 模式的威力:&#x20;
+这个脚本完美地演示了 Headless 模式的威力: 
 
 1. 它将一个复杂的 AI 调用, 封装成了一个 可复用的命令行工具. 
 
@@ -305,7 +305,7 @@ jobs:
 
 
 
-这个工作流的精妙之处在于:&#x20;
+这个工作流的精妙之处在于: 
 
 * 完全自动化: 它在无人值守的 CI 环境中, 完整地执行了一个 "获取上下文 -> 调用 AI -> 处理结果 -> 反馈" 的闭环. 
 

@@ -1,7 +1,7 @@
 # Claude Code 配置分析报告
 
 **生成时间**: 2026-01-23
-**扫描路径**: `/Users/admin/.claude`
+**扫描路径**: `~/.claude`
 
 ---
 
@@ -24,8 +24,8 @@
 
 ## 二、目录结构
 
-```
-/Users/admin/.claude/
+```text
+~/.claude/
 ├── 核心配置文件
 │   ├── settings.json                    # 主配置（API 提供商、模型）
 │   ├── settings.local.json              # 权限白名单
@@ -134,7 +134,7 @@
 
 ## 五、命令系统（25 个 sc 命令）
 
-```
+```text
 /sc:analyze       - 代码分析
 /sc:brainstorm    - 交互式需求探索
 /sc:build         - 构建项目
@@ -195,7 +195,7 @@
 
 ## 八、自定义技能
 
-```
+```text
 /skills/
 ├── recipe-generator          → .agents/skills/recipe-generator (符号链接)
 ├── skill-from-masters/       # 技能创建辅助

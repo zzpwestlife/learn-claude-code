@@ -83,14 +83,11 @@ API 文档应包含：
 
 ## 项目特定上下文
 
-在为这个 Go 数据平台服务编写文档时：
-- 遵循 Go 文档规范（godoc 格式）
-- 使用项目在 `CLAUDE.md` 与 `constitution.md` 中的既有文档结构
-- 引用 ETL 管道架构（Query → Clean → Export）
-- 清晰说明分布式任务锁机制
-- 解释记录状态机的状态迁移
-- 使用真实代码库模式举例（errgroup、context 传递、结构化日志）
-- 引用测试框架（goconvey、table-driven tests）
+在编写文档时：
+- 始终参考 `CLAUDE.md` 和 `constitution.md` 中的项目规范。
+- 遵循目标语言的标准文档格式（如 Go 的 Godoc, Python 的 Docstrings, PHP 的 PHPDoc）。
+- 引用项目中已有的架构模式和设计决策。
+- 使用项目中实际使用的测试框架和库作为示例。
 
 ## 工作流
 

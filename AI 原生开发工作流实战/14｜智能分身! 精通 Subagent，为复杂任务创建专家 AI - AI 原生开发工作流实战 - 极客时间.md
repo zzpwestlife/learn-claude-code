@@ -6,13 +6,13 @@
 
 
 
-想象一下, 你正在完成一个复杂的需求, 需要对一个核心 Go 模块进行一次大手术. 你向 Claude Code 下达了一个看似简单的指令:&#x20;
+想象一下, 你正在完成一个复杂的需求, 需要对一个核心 Go 模块进行一次大手术. 你向 Claude Code 下达了一个看似简单的指令: 
 
 > "请重构 internal/billing 模块, 提升其性能, 并确保整个过程符合我们公司的安全规范. "
 
 
 
-这个指令, 其实内含了至少两个截然不同的、甚至可能相互冲突的子任务:&#x20;
+这个指令, 其实内含了至少两个截然不同的、甚至可能相互冲突的子任务: 
 
 1. 性能优化: 这需要 AI 扮演一个 "性能专家" 的角色. 它的思维模式应该是激进的、探索性的, 可能会尝试使用 unsafe 包、底层并发原语, 或者引入新的高性能缓存库. 
 
@@ -42,7 +42,7 @@
 
 
 
-一个设计良好的多智能体系统, 其优势是压倒性的:&#x20;
+一个设计良好的多智能体系统, 其优势是压倒性的: 
 
 1. 上下文压缩与并行推理: 这是最核心的优势. 一个主智能体 (Orchestrator) 可以将一个大问题分解为 5 个子问题, 然后并行地启动 5 个 Subagent. 每个 Subagent 都在 自己独立的、干净的上下文窗口中, 专注地研究自己的子问题. 最后, 它们只将高度浓缩的结论返回给主智能体. 这相当于用 5 \* ContextWindowSize 的总上下文容量, 去解决一个远超单个智能体能力范围的问题. 
 
@@ -58,7 +58,7 @@ Subagent 是 Claude Code 中一项极具创新性的功能. 它允许 AI 在主�
 
 
 
-我们可以用一个非常贴切的比喻来理解这个模型:&#x20;
+我们可以用一个非常贴切的比喻来理解这个模型: 
 
 > 如果你的主 Claude Code 会话是一个 CTO, 那么 Subagent 就是你随时可以召唤的 "部门总监"  (如安全总监、技术美术总监、QA 总监) . 
 
@@ -72,7 +72,7 @@ Subagent 是 Claude Code 中一项极具创新性的功能. 它允许 AI 在主�
 
 
 
-我们看到: 一个 Subagent 的核心特质包括:&#x20;
+我们看到: 一个 Subagent 的核心特质包括: 
 
 1. 独立的上下文窗口: 这是 最关键 的特性. 每个 Subagent 都有自己的一片 "内存空间", 它在工作时不会读取、也不会污染主会话的对话历史. 这从根本上解决了 "上下文污染" 的问题. 
 
@@ -88,7 +88,7 @@ Subagent 这个听起来很强大的概念, 在 Claude Code 中的实现却异�
 
 
 
-Claude Code 会在两个标准位置自动发现这些 "专家" 定义文件:&#x20;
+Claude Code 会在两个标准位置自动发现这些 "专家" 定义文件: 
 
 1. Project-level Subagents (项目级专家) 
 
@@ -129,11 +129,11 @@ It defines the agent's personality, goals, and operational procedures.
 
 
 
-让我们来逐一解析 Frontmatter 中的每一个关键 "基因":&#x20;
+让我们来逐一解析 Frontmatter 中的每一个关键 "基因": 
 
 * name  (必需) : 这是 Subagent 的唯一 ID, 也是主 Agent 调用它时使用的名字. 它必须是小写字母和连字符的组合, 例如 go-code-security-reviewer. 
 
-* description  (必需) : 这是整个 Subagent 定义中最至关重要的部分!  description 是主 Agent 用来自主发现和决定是否委托这个 Subagent 的核心依据. AI 会通过语义匹配, 将用户的任务需求与所有可用 Subagent 的 description 进行比较. 一个高质量的 description 必须有:&#x20;
+* description  (必需) : 这是整个 Subagent 定义中最至关重要的部分!  description 是主 Agent 用来自主发现和决定是否委托这个 Subagent 的核心依据. AI 会通过语义匹配, 将用户的任务需求与所有可用 Subagent 的 description 进行比较. 一个高质量的 description 必须有: 
 
   * 清晰说明能力: 它能做什么? (e.g., "Review Go code for security vulnerabilities") 
 
@@ -147,7 +147,7 @@ It defines the agent's personality, goals, and operational procedures.
 
   * 如果提供了这个字段, Subagent 将 只能 使用你明确列出的工具. 例如,  tools: Read, Grep 意味着这个 Agent 连修改文件的能力都没有, 非常安全. 
 
-* model  (可选) : 这个字段允许你为 Subagent 指定一个特定的 AI 模型. 你有以下几个选择:&#x20;
+* model  (可选) : 这个字段允许你为 Subagent 指定一个特定的 AI 模型. 你有以下几个选择: 
 
   * opus 、 sonnet 、 haiku: 强制该 Subagent 使用特定级别的模型. 对于需要深度推理的复杂任务 (如安全审计) , 可以强制使用 opus; 对于简单的、重复性的任务, 可以使用 haiku 来降低成本和延迟. 
 
@@ -163,7 +163,7 @@ It defines the agent's personality, goals, and operational procedures.
 
 虽然你可以手动创建和编辑这些 `.md` 文件, 但 Claude Code 提供了一个更友好、更不容易出错的管理方式 —— /agents 指令. 
 
-在 Claude Code 会话中输入 /agents, 你会进入一个交互式的管理界面, 在这里你可以:&#x20;
+在 Claude Code 会话中输入 /agents, 你会进入一个交互式的管理界面, 在这里你可以: 
 
 * 查看 (View) : 列出所有当前可用的 Subagents (包括 Project 级和 User 级) , 并查看它们的详细配置. 
 
@@ -199,7 +199,7 @@ It defines the agent's personality, goals, and operational procedures.
 
 ### 第二步: 创建新 Agent
 
-在菜单中, 选择 Create New Agent, 系统会询问你希望创建 Project-level (项目级) 还是 User-level (用户级) 的 Subagent:&#x20;
+在菜单中, 选择 Create New Agent, 系统会询问你希望创建 Project-level (项目级) 还是 User-level (用户级) 的 Subagent: 
 
 ![](images/14_image_5.png)
 
@@ -209,21 +209,21 @@ It defines the agent's personality, goals, and operational procedures.
 
 ### 第三步: 定义 Subagent 的核心属性
 
-接下来, 你会进入一个交互式的定义流程, 你需要为你的新 Agent 提供几个关键信息:&#x20;
+接下来, 你会进入一个交互式的定义流程, 你需要为你的新 Agent 提供几个关键信息: 
 
 ![](images/14_image_6.png)
 
-我们选择 "手工配置", 然后进入下一个页面, 配置该 Subagent 的 ID:&#x20;
+我们选择 "手工配置", 然后进入下一个页面, 配置该 Subagent 的 ID: 
 
 ![](images/14_image_7.png)
 
 这是 Subagent 的唯一 ID, 使用小写字母和连字符. 我们输入: go-code-security-reviewer. 
 
-下一步配置该 Subagent 的 System Prompt  (系统提示) :&#x20;
+下一步配置该 Subagent 的 System Prompt  (系统提示) : 
 
 ![](images/14_image_8.png)
 
-这是 Subagent 的 "灵魂". 我们将为它编写一段专业的、为 Go 语言量身定制的审查指令:&#x20;
+这是 Subagent 的 "灵魂". 我们将为它编写一段专业的、为 Go 语言量身定制的审查指令: 
 
 ```markdown
 You are an elite security code reviewer specializing in Go applications. Your mission is to identify and prevent security vulnerabilities before they reach production, following OWASP Top 10 and Go security best practices.
@@ -258,7 +258,7 @@ Provide your findings in order of severity (Critical, High, Medium, Low). For ea
 
 ![](images/14_image_9.png)
 
-我们输入:&#x20;
+我们输入: 
 
 ```bash
 An expert Go security code reviewer. Use this agent to review Go (Golang) code for security vulnerabilities, input validation issues, and authentication/authorization flaws. Invoke proactively when security is mentioned, or after implementing features that handle user input or have security implications (e.g., API endpoints, auth logic).
@@ -266,13 +266,13 @@ An expert Go security code reviewer. Use this agent to review Go (Golang) code f
 
 
 
-再下一步则是为 Subagent 配置 Tools (工具集) , Claude Code 系统会列出所有可用的工具类别, 让你勾选:&#x20;
+再下一步则是为 Subagent 配置 Tools (工具集) , Claude Code 系统会列出所有可用的工具类别, 让你勾选: 
 
 ![](images/14_image_10.png)
 
 对于一个 "只读" 的安全审查员, 你可以贯彻 "最小权限原则", 只为它选择只读类工具 ( Read-only tools ) , 如果本地安装了 gosec 或 govulncheck 等 Go 安全扫描工具, 还可以精确地只授权这一个命令的执行权限. 
 
-接下来, 在选择 Model、 background Color 后, Subagent 的创建就算完成了:&#x20;
+接下来, 在选择 Model、 background Color 后, Subagent 的创建就算完成了: 
 
 ![](images/14_image_11.png)
 
@@ -300,13 +300,13 @@ An expert Go security code reviewer. Use this agent to review Go (Golang) code f
 
 
 
-现在, 你可以像平常一样提出一个与安全相关的请求:&#x20;
+现在, 你可以像平常一样提出一个与安全相关的请求: 
 
 ```bash
 @internal/converter/converer.go 帮我检查一下这个文件里的 Go 代码, 看看有没有什么安全漏洞. 
 ```
 
-你会看到, 主 Agent 在思考后,  go-code-security-reviewer Subagent 会被激活, 在它 自己的、干净的上下文 中, 开始执行我们在其 System Prompt 中定义的专业审查流程. 最终, 它会将一份结构化的报告返回给主 Agent, 再由主 Agent 呈现给你:&#x20;
+你会看到, 主 Agent 在思考后,  go-code-security-reviewer Subagent 会被激活, 在它 自己的、干净的上下文 中, 开始执行我们在其 System Prompt 中定义的专业审查流程. 最终, 它会将一份结构化的报告返回给主 Agent, 再由主 Agent 呈现给你: 
 
 ![](images/14_image_14.png)
 
@@ -330,7 +330,7 @@ An expert Go security code reviewer. Use this agent to review Go (Golang) code f
 
 Subagent 真正的威力, 体现在处理需要多种专业能力协同的复杂工作流上. 你可以像一个 CTO 一样, 编排多个 Subagent 接力工作. 
 
-让我们回到本讲开头的那个复杂任务:&#x20;
+让我们回到本讲开头的那个复杂任务: 
 
 > First, use the performance-optimizer agent to refactor the @internal/billing module for speed.
 >
@@ -434,7 +434,7 @@ Project 级的 Subagent (即存放在 `./.claude/agents/` 中的) 是你团队�
 
 ## 思考题
 
-我们今天学习了如何通过编排 Subagent 来构建一个简单的多智能体工作流. 现在, 请你设想一个更复杂的真实世界任务: 将一个使用传统 database/sql 包的 Go 项目, 迁移到使用 GORM (一个流行的 ORM 库) . 为了完成这个复杂的迁移任务, 你会设计一个怎样的 多智能体系统 ?请至少设计 3 个 不同职责的 Subagent, 并简要描述:&#x20;
+我们今天学习了如何通过编排 Subagent 来构建一个简单的多智能体工作流. 现在, 请你设想一个更复杂的真实世界任务: 将一个使用传统 database/sql 包的 Go 项目, 迁移到使用 GORM (一个流行的 ORM 库) . 为了完成这个复杂的迁移任务, 你会设计一个怎样的 多智能体系统 ?请至少设计 3 个 不同职责的 Subagent, 并简要描述: 
 
 每个 Subagent 的 名称 和 核心职责. 
 

@@ -2,7 +2,7 @@
 
 在上一讲, 我们经历了一场激动人心的 AI 驱动的 TDD 编码之旅. 现在, 我们的 issue2md 项目, 其部分核心功能代码 ( internal/github 和 internal/converter ) 已经编写完成, 并且拥有了坚实的单元测试作为质量保障. 
 
-代码静静地躺在我们的本地工作区. 接下来的步骤, 对于任何一个专业的开发团队来说, 都至关重要:&#x20;
+代码静静地躺在我们的本地工作区. 接下来的步骤, 对于任何一个专业的开发团队来说, 都至关重要: 
 
 1. 代码审查 (Code Review) :  在代码合入主干之前, 进行一次独立的、客观的质量检查. 
 
@@ -48,7 +48,7 @@
 
 
 
-为了方便大家后续的动手实践, 这里我再贴一下 /review-go-code 命令的定义 ( review-go-code.md ):&#x20;
+为了方便大家后续的动手实践, 这里我再贴一下 /review-go-code 命令的定义 ( review-go-code.md ): 
 
 ```yaml
 ---
@@ -96,7 +96,7 @@ allowed-tools: Read, Grep, Glob, Bash(go vet:*)
 
 ### 执行审查
 
-现在, 让我们来调用这个强大的 "一键审查" 能力. 启动 Claude Code 会话, 我们的指令非常简洁:&#x20;
+现在, 让我们来调用这个强大的 "一键审查" 能力. 启动 Claude Code 会话, 我们的指令非常简洁: 
 
 > /review-go-code internal/
 
@@ -104,13 +104,13 @@ allowed-tools: Read, Grep, Glob, Bash(go vet:*)
 
 
 
-接下来, 观察 Claude Code 的行动. 它将严格按照我们在 第 8 讲 中为 /review-go-code 指令定义的 "剧本" 来行动:&#x20;
+接下来, 观察 Claude Code 的行动. 它将严格按照我们在 第 8 讲 中为 /review-go-code 指令定义的 "剧本" 来行动: 
 
 1. 加载指令模板:  它找到了 `./.claude/commands/review-go-code.md` 文件. 
 
 2. 应用元数据:  它读取了模板的 Frontmatter, 知道了这次任务应该使用 opus 模型, 并且只能使用 Read 、 Grep 、 Glob 等只读工具. 
 
-3. 注入上下文:  它执行了指令的核心内容:&#x20;
+3. 注入上下文:  它执行了指令的核心内容: 
 
    1. 读取了 @$1, 即 @internal/ 目录下的所有 Go 代码. 
 
@@ -118,7 +118,7 @@ allowed-tools: Read, Grep, Glob, Bash(go vet:*)
 
 4. 执行审查并输出:  它将代码与 "宪法" 的每一条原则进行比对, 并最终按照我们预设的 Markdown 格式, 输出一份结构化的审查报告. 
 
-审查报告 (示例) :&#x20;
+审查报告 (示例) : 
 
 ```markdown
 # Code Review Report for internal/ Directory
@@ -211,11 +211,11 @@ func getBoolEnv(key string, defaultValue bool) bool {
 
 
 
-现在, 我们可以根据 AI 的建议, 手动修复这个问题, 或者更高效地, 直接指挥 AI 来修复:&#x20;
+现在, 我们可以根据 AI 的建议, 手动修复这个问题, 或者更高效地, 直接指挥 AI 来修复: 
 
 > 好的, 审查报告收到了. 请修正你刚才提出的高优先级问题. 
 
-在 AI 完成修复, 并再次运行测试确认无误后, 我们的代码就达到了可提交的状态:&#x20;
+在 AI 完成修复, 并再次运行测试确认无误后, 我们的代码就达到了可提交的状态: 
 
 ```markdown
 ● 修复完成总结
@@ -256,7 +256,7 @@ func getBoolEnv(key string, defaultValue bool) bool {
 
 ### 调用预设指令
 
-在 第 16 讲 搭建框架时, 我们建议在 `./.claude/commands/` 下封装通用的 Git 工作流指令. 现在, 假设我们已经有了一个名为 /commit 的自定义指令, 它的定义可能如下:&#x20;
+在 第 16 讲 搭建框架时, 我们建议在 `./.claude/commands/` 下封装通用的 Git 工作流指令. 现在, 假设我们已经有了一个名为 /commit 的自定义指令, 它的定义可能如下: 
 
 `./.claude/commands/commit.md`
 
@@ -271,13 +271,13 @@ allowed-tools: Bash(git diff:*), Bash(git commit:*)
 4. 如果确认, 执行 `git commit -m "..."`. 
 ```
 
-现在, 我们只需要执行:&#x20;
+现在, 我们只需要执行: 
 
 > /commit
 
 
 
-AI 会立即接管流程:&#x20;
+AI 会立即接管流程: 
 
 1. 获取上下文:  它自动执行 git diff --staged, 读取所有代码变更 (包括新增的 converter 和 github 包) . 
 
@@ -287,13 +287,13 @@ AI 会立即接管流程:&#x20;
 
 4. 完成动作:  你输入 y 后, AI 自动执行 git commit 命令. 
 
-下面是我的环境中 AI 的执行过程和最终给出的 Commit 消息:&#x20;
+下面是我的环境中 AI 的执行过程和最终给出的 Commit 消息: 
 
 ![](images/20_image_2.png)
 
 这条由 AI 生成的 Commit Message, 内容详实、格式规范, 质量远超大多数人工手写的记录. 
 
-不过我的 AI 没有直展示信息并询问我是否执行提交. 这里我又手动输入提交命令, AI 会完成自动提交的步骤:&#x20;
+不过我的 AI 没有直展示信息并询问我是否执行提交. 这里我又手动输入提交命令, AI 会完成自动提交的步骤: 
 
 ![](images/20_image_3.png)
 
@@ -303,7 +303,7 @@ AI 会立即接管流程:&#x20;
 
 ## 第三步: 发起协同 —— 让 AI 撰写清晰的 PR 描述
 
-Commit 已经完成, 最后一步, 就是创建一个 Pull Request, 邀请团队成员进行最终的审核和合并. 一份清晰、完整的 PR 描述, 是高效异步协作的关键. 这项工作, 同样可以交给 AI. 下面是我们的 Prompt:&#x20;
+Commit 已经完成, 最后一步, 就是创建一个 Pull Request, 邀请团队成员进行最终的审核和合并. 一份清晰、完整的 PR 描述, 是高效异步协作的关键. 这项工作, 同样可以交给 AI. 下面是我们的 Prompt: 
 
 ```markdown
 非常棒的Commit Message! 
@@ -415,7 +415,7 @@ AI 会整合它所知晓的所有变更信息, 为你生成一份堪称 "范本"
 
 当然可以! 还记得我们在 第 12 讲 (终极扩展: 深入 MCP 服务器)  中配置的 GitHub MCP Server 吗?
 
-如果你的环境中已经配置好了 GitHub MCP, 并且授予了 AI mcp\_\_github\_\_create\_pull\_request 的工具权限, 你完全可以对 AI 说:&#x20;
+如果你的环境中已经配置好了 GitHub MCP, 并且授予了 AI mcp\_\_github\_\_create\_pull\_request 的工具权限, 你完全可以对 AI 说: 
 
 > "描述写得很好. 现在, 请直接调用 GitHub 工具, 使用这段描述, 为我的这次代码评审问题的修正创建一个 Pull Request. "
 

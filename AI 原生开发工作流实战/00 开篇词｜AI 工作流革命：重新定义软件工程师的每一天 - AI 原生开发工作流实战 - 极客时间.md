@@ -106,7 +106,7 @@ AI Agent 会像编译器解释代码一样, 将这份 "意图代码" 逐步 "编
 
 这意味着, 维护软件的核心, 从维护易变的代码, 转向了维护更稳定的规范. 当需求变更时, 我们首先修改 spec.md, 然后驱动 AI 重新生成实现. 这正是 规范驱动开发 (Spec-Driven Development, SDD) 思想的精髓. 
 
-```plain&#x20;text
+```plain text
 spec -> plan/tasks -> code/tests
 ```
 

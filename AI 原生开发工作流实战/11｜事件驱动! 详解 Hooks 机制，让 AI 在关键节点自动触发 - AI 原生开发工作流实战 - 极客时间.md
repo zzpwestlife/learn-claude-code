@@ -39,7 +39,7 @@ Claude Code 为我们开放了多个核心的 Hook 事件. 让我们通过一个
 
 ![](images/11_image_2.png)
 
-这张图揭示了几个最重要的 Hook 事件:&#x20;
+这张图揭示了几个最重要的 Hook 事件: 
 
 ### SessionStart / SessionEnd  (会话级事件) :
 
@@ -140,7 +140,7 @@ Claude Code 为我们开放了多个核心的 Hook 事件. 让我们通过一个
 
 这是最核心的一步. 我们需要编写一个 Shell 命令, 它能够从 Claude Code 通过 stdin 传递的事件 JSON 数据中,  解析出被修改的文件路径, 然后执行格式化操作.
 
-PostToolUse 事件传递的 JSON 结构大致如下:&#x20;
+PostToolUse 事件传递的 JSON 结构大致如下: 
 
 ```json
 {
@@ -162,17 +162,17 @@ PostToolUse 事件传递的 JSON 结构大致如下:&#x20;
 
 我们的命令需要解析这个 JSON, 拿到 tool\_input.file\_path 字段. 这里,  jq 这个强大的命令行 JSON 处理工具是我们的不二之选.
 
-在上图中的 "Add new hook…" 的提示下, 我们回车进入 hook command 配置页面:&#x20;
+在上图中的 "Add new hook…" 的提示下, 我们回车进入 hook command 配置页面: 
 
 ![](images/11_image_7.png)
 
-输入以下命令:&#x20;
+输入以下命令: 
 
 ![](images/11_image_8.png)
 
 ![](images/11_image_9.png)
 
-这个命令是一个完整的 Bash 命令链, 用分号 ; 分隔多个语句. 让我们来逐段拆解这个命令的含义:&#x20;
+这个命令是一个完整的 Bash 命令链, 用分号 ; 分隔多个语句. 让我们来逐段拆解这个命令的含义: 
 
 ![](images/11_image_10.png)
 
@@ -181,19 +181,19 @@ PostToolUse 事件传递的 JSON 结构大致如下:&#x20;
 
 ### 第四步: 保存配置
 
-回车后, 系统会问你将这个配置保存在哪里:&#x20;
+回车后, 系统会问你将这个配置保存在哪里: 
 
 ![](images/11_image_11.png)
 
 我们选择 Project settings, 这样这个自动化格式化的规则, 就能被提交到 Git 仓库, 成为团队所有成员共享的最佳实践.
 
-按下 Esc 退出配置菜单. 现在, 你的 `./.claude/settings.json` 文件里, 应该已经自动生成了如下内容:&#x20;
+按下 Esc 退出配置菜单. 现在, 你的 `./.claude/settings.json` 文件里, 应该已经自动生成了如下内容: 
 
 ![](images/11_image_12.png)
 
 ### 第五步: 验证效果
 
-现在, 你可以随便修改一个 Go 文件, 让其处于未经 gofmt / goimports 格式化的状态. 然后让 AI 修改该 Go 文件. 比如:&#x20;
+现在, 你可以随便修改一个 Go 文件, 让其处于未经 gofmt / goimports 格式化的状态. 然后让 AI 修改该 Go 文件. 比如: 
 
 ```plain
 @greeting.go 在这个文件中以空导入的方式导入 time 包
@@ -208,19 +208,19 @@ PostToolUse 事件传递的 JSON 结构大致如下:&#x20;
 
 Claude Code 支持 debug 模式运行, 在这种模式下运行时, 它会将详细的执行日志, 包括 Hook 的匹配和命令执行日志输出到调试日志文件中, 我们通过查看和分析调试文件, 就可以大致了解 Hook 的执行情况.
 
-下面是以 debug 模式运行的 claude code 启动方式:&#x20;
+下面是以 debug 模式运行的 claude code 启动方式: 
 
 ```plain
 $claude --debug
 ```
 
-启动后, claude code 会显示 debug 文件的路径:&#x20;
+启动后, claude code 会显示 debug 文件的路径: 
 
 ![](images/11_image_13.png)
 
 你在继续和 Claude Code 交互之前, 可以用 tail 命令监视调试文件的输出内容.
 
-下面的日志就是上述 PostToolUse hook 被执行时的 Debug 输出:&#x20;
+下面的日志就是上述 PostToolUse hook 被执行时的 Debug 输出: 
 
 ```bash
 [DEBUG] FileHistory: Tracked file modification for /root/test/claude-code/ch11/greetings/greeting.go
@@ -254,7 +254,7 @@ $claude --debug
 
 ### 第一步: 准备命令脚本文件
 
-我们先在项目根目录的 `.claude/hooks` 下面建立一个名为 `check_main_branch.py` 命令脚本文件, 将我们要进行的 Hook 事件输入处理、检查逻辑以及返回值和输出结果都封装在该脚本文件中:&#x20;
+我们先在项目根目录的 `.claude/hooks` 下面建立一个名为 `check_main_branch.py` 命令脚本文件, 将我们要进行的 Hook 事件输入处理、检查逻辑以及返回值和输出结果都封装在该脚本文件中: 
 
 ```python
 #!/usr/bin/env python3
@@ -355,7 +355,7 @@ if __name__ == "__main__":
 
 check\_main\_branch.py 脚本使用 `git rev-parse --abbrev-ref HEAD` 获取当前分支名, 然后检查分支是否为 main 或 master. 如果在主分支上, 则 Exit code 2, 这会阻止操作继续进行, 并会将错误信息同时显示给用户和 Claude. 如果不在主分支上, 则 Exit code 0, 允许操作继续. 这样就能有效保护你的主分支不被意外修改了!
 
-保存之后, 别忘了使用 chmod 为这个文件加上可执行的权限:&#x20;
+保存之后, 别忘了使用 chmod 为这个文件加上可执行的权限: 
 
 ```plain
 chmod +x <project_root_dir> /.claude/ hooks/check_main_branch. py
@@ -371,7 +371,7 @@ Matcher:  输入 Edit|Write|MultiEdit, 因为我们只关心有破坏性的写�
 
 ### 第三步: 编写 Hook 响应命令
 
-这次我们只需要在 Command 输入框中输入:&#x20;
+这次我们只需要在 Command 输入框中输入: 
 
 ```plain
 " $CLAUDE_PROJECT_DIR " /.claude/hooks/check_main_branch.py
@@ -381,7 +381,7 @@ Matcher:  输入 Edit|Write|MultiEdit, 因为我们只关心有破坏性的写�
 
 ![](images/11_image_14.png)
 
-保存分配后, 你可以在 settings.json 中看到如下 Hook 配置:&#x20;
+保存分配后, 你可以在 settings.json 中看到如下 Hook 配置: 
 
 ```sql
 {
@@ -403,7 +403,7 @@ Matcher:  输入 Edit|Write|MultiEdit, 因为我们只关心有破坏性的写�
 
 ### 第四步: 验证效果
 
-首先, 确保你当前在 main 分支 (git checkout -b main), 或 master 分支. 然后, 启动 Claude Code (可以加上 --debug, 以便后续调试) , 尝试让它修改项目目录下的任何一个文件:&#x20;
+首先, 确保你当前在 main 分支 (git checkout -b main), 或 master 分支. 然后, 启动 Claude Code (可以加上 --debug, 以便后续调试) , 尝试让它修改项目目录下的任何一个文件: 
 
 ```plain
 @greeting.go 在文件末尾加上 "AddPreToolUseHook" 空函数实现
@@ -435,7 +435,7 @@ Hooks 机制, 是你将个人经验和团队最佳实践, 深度、无感地融�
 
 我们今天的 PostToolUse Hook 实现了在修改 .go 文件后自动格式化. 请你思考一下, 如何扩展这个 Hook, 使其能够同时支持多种语言?例如, 当修改的是 .ts 或 .tsx 文件时, 自动运行 npx prettier --write ; 当修改的是 .py 文件时, 自动运行 black.
 
-你需要思考:&#x20;
+你需要思考: 
 
 1. 如何在同一个 Hook 命令中处理不同的文件后缀? (提示:  case 语句或多个 if-elif )
 2. 这个增强版的 Hook 命令应该是什么样的?

@@ -6,6 +6,11 @@ This project demonstrates strict compliance with PHP 7.0 standards as defined in
 - PHP ^7.0 (Syntax compatible with 7.0)
 - Composer
 
+## Installation
+```bash
+composer install
+```
+
 ## Compatibility Checks
 - `composer.json` requires PHP `^7.0` (runs on 7.0, 7.1, etc.), but code syntax is strictly 7.0.
 - Uses PHP 7.0 features:

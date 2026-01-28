@@ -27,7 +27,7 @@ make run
 ```
 
 ## 目录结构
-```
+```text
 internal/app/
 ├── biz/                    # 业务逻辑层
 │   ├── record/            # 记录处理核心模块

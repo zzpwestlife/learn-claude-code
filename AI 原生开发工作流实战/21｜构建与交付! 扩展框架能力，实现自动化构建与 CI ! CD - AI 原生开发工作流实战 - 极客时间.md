@@ -40,7 +40,7 @@
 
 ### 提出意图: 一个包含 "最佳实践" 的 Prompt
 
-启动 Claude Code 会话, 我们的指令将不再是模糊的 "帮我写个 Dockerfile", 而是一个包含了明确优化目标的、专业级的 Prompt:&#x20;
+启动 Claude Code 会话, 我们的指令将不再是模糊的 "帮我写个 Dockerfile", 而是一个包含了明确优化目标的、专业级的 Prompt: 
 
 ```markdown
 你现在是一位资深的DevOps工程师, 专精于Go应用的容器化. 
@@ -62,7 +62,7 @@
 
 
 
-这个 Prompt 的价值在于:&#x20;
+这个 Prompt 的价值在于: 
 
 * 设定专家角色: 资深的 DevOps 工程师, 引导 AI 使用更专业的知识库. 
 
@@ -74,7 +74,7 @@
 
 ### 审查与产出: 一份生产级的 Dockerfile
 
-AI 会分析你的请求, 并提议创建一个 Dockerfile. 在你批准后, 一份高质量的、蕴含了 DevOps 最佳实践的配置文件就诞生了. 这个过程我的 AI 输出如下:&#x20;
+AI 会分析你的请求, 并提议创建一个 Dockerfile. 在你批准后, 一份高质量的、蕴含了 DevOps 最佳实践的配置文件就诞生了. 这个过程我的 AI 输出如下: 
 
 ```markdown
 ● 生产级 Dockerfile 已完成
@@ -125,7 +125,7 @@ AI 会分析你的请求, 并提议创建一个 Dockerfile. 在你批准后, 一
 
 
 
-它生成的 Dockerfile  (示例) :&#x20;
+它生成的 Dockerfile  (示例) : 
 
 ```markdown
 # ==================================
@@ -226,15 +226,15 @@ RUN chmod +x /app/entrypoint.sh
 
 
 
-这份由 AI 生成的 Dockerfile, 质量甚至可能超过许多初中级工程师手写的版本. 你可以让 AI 执行镜像构建, 或你在另外一个终端窗口手工执行构建, 以验证 Dockerfile 的有效性:&#x20;
+这份由 AI 生成的 Dockerfile, 质量甚至可能超过许多初中级工程师手写的版本. 你可以让 AI 执行镜像构建, 或你在另外一个终端窗口手工执行构建, 以验证 Dockerfile 的有效性: 
 
-```plain&#x20;text
+```plain text
 docker build -t issue2md:latest .
 ```
 
-如果成功, 你就可以看到成功构建后的 issue2md 容器镜像:&#x20;
+如果成功, 你就可以看到成功构建后的 issue2md 容器镜像: 
 
-```plain&#x20;text
+```plain text
 docker images|grep issue2md
 issue2md                                               latest          c6e06d55e6d3   27 seconds ago   31.2MB
 ```
@@ -263,7 +263,7 @@ Dockerfile 解决了 "如何打包" 的问题, 但我们还需要一个更通用
 
 
 
-AI 会尝试按核心目标要求, 为你生成一份结构清晰、功能完备的 Makefile:&#x20;
+AI 会尝试按核心目标要求, 为你生成一份结构清晰、功能完备的 Makefile: 
 
 ```yaml
 ● 生产级 Makefile 已完成
@@ -319,7 +319,7 @@ AI 会尝试按核心目标要求, 为你生成一份结构清晰、功能完备
 
 
 
-在你批准写入后, 你的项目就拥有了一套标准化的 "任务启动器". 我的环境下, Makefile 的样例如下:&#x20;
+在你批准写入后, 你的项目就拥有了一套标准化的 "任务启动器". 我的环境下, Makefile 的样例如下: 
 
 ```xml
 # ==================================
@@ -426,7 +426,7 @@ verify: format lint test
 
 
 
-就连我这个用了 10 多年 Makefile 的 "老手" 也不得不承认, AI 生成的 Makefile 真的是很专业. 你可以用常见命令简单验证一下 Makefile 的语法正确性, 比如 make build:&#x20;
+就连我这个用了 10 多年 Makefile 的 "老手" 也不得不承认, AI 生成的 Makefile 真的是很专业. 你可以用常见命令简单验证一下 Makefile 的语法正确性, 比如 make build: 
 
 ```bash
 $make build
@@ -456,7 +456,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s -X main.version=d
 
 ### 1. 创建 /build 指令
 
-```plain&#x20;text
+```plain text
 请帮我在创建一个自定义的项目级的slash command文件 `.claude/commands/build.md`. 
 
 这个指令的作用是: 调用`make build`来构建项目. 如果构建失败, 它应该自动分析错误原因. 
@@ -464,7 +464,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s -X main.version=d
 `allowed-tools` 应该包含 `Bash(make:build)`. 
 ```
 
-AI 会为你创建 build.md, 其内容示例如下:&#x20;
+AI 会为你创建 build.md, 其内容示例如下: 
 
 ```yaml
 ---
@@ -517,7 +517,7 @@ Provide specific remediation steps based on the actual error encountered.
 
 
 
-AI 会为你创建 docker-build.md, 其内容示例如下:&#x20;
+AI 会为你创建 docker-build.md, 其内容示例如下: 
 
 > 注: 在我的环境下, 为了 docker-build 支持参数,  Makefile 也被 AI 做了微调
 
@@ -578,11 +578,11 @@ The command will set `DOCKER_TAG={provided_tag}` before running make docker-buil
 
 
 
-完成这一步, 才到了我们这一讲真正的 "画龙点睛" 之笔. 它实现了能力的 完美闭环:&#x20;
+完成这一步, 才到了我们这一讲真正的 "画龙点睛" 之笔. 它实现了能力的 完美闭环: 
 
 ![](images/21_image_2.png)
 
-现在, 你的团队中任何一个成员, 甚至是新来的实习生, 都不用再去关心 Dockerfile 或 Makefile 的复杂细节. 他们只需要在 Claude Code 中输入一个简单的:&#x20;
+现在, 你的团队中任何一个成员, 甚至是新来的实习生, 都不用再去关心 Dockerfile 或 Makefile 的复杂细节. 他们只需要在 Claude Code 中输入一个简单的: 
 
 > /docker-build v1.0.1
 
@@ -616,11 +616,11 @@ AI 会为你生成一份格式完全正确的 ci.yml 文件. 限于篇幅, 这�
 
 
 
-进阶思考:&#x20;
+进阶思考: 
 
-还记得我们在第 15 讲学到的 Headless 模式 吗?我们甚至可以在这个 CI 流程中, 加入一个 Step:&#x20;
+还记得我们在第 15 讲学到的 Headless 模式 吗?我们甚至可以在这个 CI 流程中, 加入一个 Step: 
 
-```plain&#x20;text
+```plain text
 - name: AI Code Analysis (on failure)
   if: failure()
   run: |
@@ -650,7 +650,7 @@ AI 会为你生成一份格式完全正确的 ci.yml 文件. 限于篇幅, 这�
 
 ## 思考题
 
-我们今天创建的 CI 流水线, 实现了 "测试 - 检查 - 构建" 的自动化. 请你思考一下, 我们能否将这个流水线再向前推进一步, 实现 AI 驱动的持续交付 (CD)  ?例如, 当一个 PR 被合并到 main 分支后, 自动触发一个 Action. 在这个 Action 中, 我们如何通过 Headless 模式, 指挥 Claude Code 来完成以下任务:&#x20;
+我们今天创建的 CI 流水线, 实现了 "测试 - 检查 - 构建" 的自动化. 请你思考一下, 我们能否将这个流水线再向前推进一步, 实现 AI 驱动的持续交付 (CD)  ?例如, 当一个 PR 被合并到 main 分支后, 自动触发一个 Action. 在这个 Action 中, 我们如何通过 Headless 模式, 指挥 Claude Code 来完成以下任务: 
 
 1. 自动提升项目的版本号 (比如, 修改 VERSION 文件) . 
 
