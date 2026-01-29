@@ -230,7 +230,7 @@ echo -e "✅ 选择语言配置: ${BLUE}$LANG_NAME${NC}"
 echo -e "\n📦 正在安装核心文件..."
 
 # 1. 复制通用宪法
-safe_copy "$SOURCE_DIR/constitution.md" "$TARGET_DIR/"
+safe_copy "$SOURCE_DIR/constitution.md" "$TARGET_DIR/.claude/"
 
 # 1.1 创建 SDD 规范目录 (specs)
 echo "📂 创建 specs 目录..."
@@ -251,7 +251,7 @@ fi
 # 2. 复制语言特定的 CLAUDE.md 和 AGENTS.md
 echo "📝 安装 $LANG_NAME 专属配置..."
 safe_copy "$SOURCE_DIR/profiles/$PROFILE/CLAUDE.md" "$TARGET_DIR/"
-safe_copy "$SOURCE_DIR/profiles/$PROFILE/AGENTS.md" "$TARGET_DIR/"
+safe_copy "$SOURCE_DIR/profiles/$PROFILE/AGENTS.md" "$TARGET_DIR/.claude/"
 
 # 3. 复制 Agent 配置 (合并模式)
 echo "🧠 复制 Agent 配置..."
@@ -270,18 +270,18 @@ fi
 
 # 4. 复制语言附录
 echo "📚 复制 $LANG_NAME 语言附录..."
-mkdir -p "$TARGET_DIR/docs/constitution"
+mkdir -p "$TARGET_DIR/.claude/constitution"
 
 case "$LANG_NAME" in
     "Go")
-        safe_copy "$SOURCE_DIR/docs/constitution/go_annex.md" "$TARGET_DIR/docs/constitution/"
+        safe_copy "$SOURCE_DIR/docs/constitution/go_annex.md" "$TARGET_DIR/.claude/constitution/"
         safe_copy "$SOURCE_DIR/profiles/go/Makefile" "$TARGET_DIR/"
         ;;
     "PHP")
-        safe_copy "$SOURCE_DIR/docs/constitution/php_annex.md" "$TARGET_DIR/docs/constitution/"
+        safe_copy "$SOURCE_DIR/docs/constitution/php_annex.md" "$TARGET_DIR/.claude/constitution/"
         ;;
     "Python")
-        safe_copy "$SOURCE_DIR/docs/constitution/python_annex.md" "$TARGET_DIR/docs/constitution/"
+        safe_copy "$SOURCE_DIR/docs/constitution/python_annex.md" "$TARGET_DIR/.claude/constitution/"
         ;;
 esac
 
@@ -380,6 +380,35 @@ fi
 if [ -f "$SOURCE_DIR/.claude/changelog_config.json" ]; then
     echo "⚙️ 复制 changelog_config.json..."
     safe_copy "$SOURCE_DIR/.claude/changelog_config.json" "$TARGET_DIR/.claude/"
+fi
+
+# ==========================================
+# 9. Post-Installation Path Adjustments
+# ==========================================
+echo "🔧 调整配置文件路径引用..."
+
+# Update CLAUDE.md in target to point to .claude/AGENTS.md
+if [ -f "$TARGET_DIR/CLAUDE.md" ]; then
+    sed -i '' 's/@AGENTS.md/@.claude\/AGENTS.md/g' "$TARGET_DIR/CLAUDE.md"
+fi
+
+# Update AGENTS.md in target (.claude/AGENTS.md)
+if [ -f "$TARGET_DIR/.claude/AGENTS.md" ]; then
+    # Replace ../../constitution.md with constitution.md (sibling)
+    sed -i '' 's/(\.\.\/\.\.\/constitution.md)/(constitution.md)/g' "$TARGET_DIR/.claude/AGENTS.md"
+    
+    # Replace ../../docs/constitution/ with constitution/ (child folder)
+    sed -i '' 's/(\.\.\/\.\.\/docs\/constitution\//(constitution\//g' "$TARGET_DIR/.claude/AGENTS.md"
+fi
+
+# Update code-reviewer agent
+if [ -f "$TARGET_DIR/.claude/agents/code-reviewer.md" ]; then
+    sed -i '' 's/docs\/constitution\//.claude\/constitution\//g' "$TARGET_DIR/.claude/agents/code-reviewer.md"
+fi
+
+# Update review-code commands
+if [ -d "$TARGET_DIR/.claude/commands" ]; then
+    find "$TARGET_DIR/.claude/commands" -name "review-code.md" -exec sed -i '' 's/docs\/constitution\//.claude\/constitution\//g' {} \;
 fi
 
 # 确保所有脚本具有执行权限
