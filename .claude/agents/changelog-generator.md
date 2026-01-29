@@ -18,7 +18,8 @@ color: green
     - **默认行为**：运行 `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py`（这将更新 CHANGELOG.md）。
     - **预览模式**：如果用户只是想查看而非修改，使用 `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py --dry-run`。
     - **指定版本**：如果用户提供了版本号（如 v1.0.0），使用 `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py --version v1.0.0`。
-    - **自动提交**：如果用户要求提交变更，使用 `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py --commit`。
+    - **包含未提交变更**：如果用户希望将当前未提交的代码也算进去并一起提交，必须提供 Commit Message，使用 `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py --commit --message "feat: 描述变更"`。
+    - **自动提交**：如果用户要求提交变更（仅 Changelog），使用 `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py --commit`。
 
 3.  **结果验证与反馈**：
     - 检查脚本的执行输出。

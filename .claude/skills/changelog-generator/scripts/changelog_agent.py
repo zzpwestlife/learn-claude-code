@@ -87,97 +87,75 @@ class ChangelogAgent:
     def get_current_branch(self):
         return self._run_git(["rev-parse", "--abbrev-ref", "HEAD"])
 
+    def get_local_author(self):
+        """获取本地 Git 用户名"""
+        name = self._run_git(["config", "user.name"])
+        return name if name else "Unknown"
+
+    def get_uncommitted_files(self):
+        """获取未提交的变更文件列表"""
+        # Unstaged
+        unstaged = self._run_git(["diff", "--name-only"])
+        # Staged
+        staged = self._run_git(["diff", "--cached", "--name-only"])
+        
+        files = set()
+        if unstaged:
+            files.update(unstaged.split('\n'))
+        if staged:
+            files.update(staged.split('\n'))
+            
+        return list(filter(None, files))
+
     def get_diff_commits(self):
         """获取当前分支与主分支的差异提交"""
         current = self.get_current_branch()
-        if current == self.main_branch:
-            print(f"当前已在 {self.main_branch} 分支，无法对比差异。请在功能分支运行。")
-            return []
-
-        # 获取 merge base
-        merge_base = self._run_git(["merge-base", self.main_branch, current])
-        if not merge_base:
-            print("无法找到 merge base，可能分支历史不相关。")
-            return []
-
-        # 获取差异提交
-        # 使用 --name-only 获取变更文件列表
-        # 分隔符使用非常见字符，避免文件名冲突
-        separator = "|||||" 
-        # log_format: hash | author | date | subject | body
-        log_format = f"%h{separator}%an{separator}%ad{separator}%s{separator}%b"
+        # 注意：即使在 main 分支，如果想提交当前工作区的变更，也应该允许运行
+        # 但原来的逻辑是 current == main_branch 就退出。
+        # 我们需要放宽这个限制，如果存在未提交变更且指定了 message。
         
-        # 注意: --name-only 会在 log message 后列出文件名
-        logs = self._run_git(["log", f"{merge_base}..{current}", f"--format={log_format}", "--date=short", "--name-only"])
+        uncommitted_files = self.get_uncommitted_files()
+        has_wip = bool(uncommitted_files) and bool(self.options.message)
         
-        if not logs:
+        if current == self.main_branch and not has_wip:
+            print(f"当前已在 {self.main_branch} 分支且没有指定新的变更消息，无法对比差异。")
             return []
 
         commits = []
-        current_commit = None
-        
-        lines = logs.split('\n')
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-                
-            if separator in line and len(line.split(separator)) >= 5:
-                # 新的 commit 行
-                parts = line.split(separator)
-                if len(parts) >= 5:
-                    # 如果之前有 commit 正在处理，先保存
-                    if current_commit:
-                        if self._should_include_commit(current_commit):
-                            commits.append(current_commit)
-                    
-                    current_commit = {
-                        "hash": parts[0],
-                        "author": parts[1],
-                        "date": parts[2],
-                        "message": parts[3],
-                        "body": parts[4], # Capture body
-                        "files": []
-                    }
+
+        # 1. 获取已提交的差异 (如果有)
+        if current != self.main_branch:
+            # 获取 merge base
+            merge_base = self._run_git(["merge-base", self.main_branch, current])
+            if merge_base:
+                # 获取差异提交
+                # 使用更健壮的解析方法
+                commits = self._get_diff_commits_robust(merge_base, current)
             else:
-                # 文件行 (或者 body 的多行部分，如果 body 包含 separator 会有问题，但几率极小)
-                # git log --format puts body on one line if %b is used? No, %b preserves newlines.
-                # However, with --name-only, file list comes AFTER the message.
-                # We need to be careful. The log format puts everything before files.
-                # But %b might be multiline.
-                # Let's verify behavior. git log --format="%s%n%b" prints subject newline body.
-                # Our format uses separators.
-                
-                # If %b has newlines, they will appear as lines without separator.
-                # But --name-only output is distinct.
-                # Files usually don't have spaces (or at least not typically confusing).
-                # But a body line might look like a file.
-                # A robust parser is needed.
-                # For simplicity in this script, we assume %b is flattened or we handle it.
-                # Actually, strictly speaking, `git log` output with custom format and --name-only:
-                # <format output>
-                # <newline>
-                # <file1>
-                # <file2>
-                
-                # If %b contains newlines, we will see:
-                # hash|author|date|subject|line1
-                # line2
-                # line3
-                # 
-                # file1
-                # file2
-                
-                # The "separator in line" check handles the start of a commit.
-                # Everything else is either body or files.
-                # Since we can't easily distinguish body lines from file lines if both are arbitrary strings,
-                # we might rely on the fact that files are usually at the end.
-                # But wait, if we use a specific delimiter for the END of the commit message, that would help.
-                # Let's add a specialized END marker.
-                pass
+                print("无法找到 merge base，可能分支历史不相关。")
+
+        # 2. 处理未提交的变更 (WIP)
+        if uncommitted_files:
+            print(f"\n检测到 {len(uncommitted_files)} 个未提交的文件变更:")
+            # 显示 diff stat
+            print(self._run_git(["diff", "--stat", "HEAD"]) or self._run_git(["diff", "--stat"]))
+            
+            if self.options.message:
+                print(f"将包含未提交变更，使用消息: {self.options.message}")
+                wip_commit = {
+                    "hash": "WIP", # 占位符
+                    "author": self.get_local_author(),
+                    "date": datetime.date.today().strftime("%Y-%m-%d"),
+                    "message": self.options.message,
+                    "body": "", # 暂不填充 body
+                    "files": uncommitted_files
+                }
+                # 将 WIP 提交插入到最前面
+                commits.insert(0, wip_commit)
+            else:
+                print("提示: 存在未提交的变更，但未指定 --message，这些变更将不会包含在 CHANGELOG 中。")
         
-        # Re-implementing get_diff_commits with a safer delimiter approach
-        return self._get_diff_commits_robust(merge_base, current)
+        return commits
 
     def _get_diff_commits_robust(self, merge_base, current):
         """更健壮的提交解析实现"""
@@ -529,10 +507,10 @@ class ChangelogAgent:
         
         commits = self.get_diff_commits()
         if not commits:
-            print("未发现新的差异提交。")
+            print("未发现新的差异提交 (或未指定 --message 处理未提交变更)。")
             return
 
-        print(f"发现 {len(commits)} 个新提交。")
+        print(f"发现 {len(commits)} 个变更条目。")
         
         changes = self.parse_commits(commits)
         
@@ -565,9 +543,23 @@ class ChangelogAgent:
         print(f"✅ 成功更新 CHANGELOG.md")
         
         if self.options.commit:
-            self._run_git(["add", "CHANGELOG.md"])
-            self._run_git(["commit", "-m", f"docs: update CHANGELOG.md for {version}"])
-            print("✅ 已自动提交 CHANGELOG.md")
+            # 检查是否包含 WIP 提交
+            has_wip = any(c['hash'] == 'WIP' for c in commits)
+            
+            if has_wip and self.options.message:
+                # 提交所有变更
+                print("包含未提交的代码变更，正在执行 git add .")
+                self._run_git(["add", "."])
+                commit_msg = self.options.message
+                # 如果 message 只有一行，可能需要补充说明
+                # 这里简单直接使用 message
+                self._run_git(["commit", "-m", commit_msg])
+                print(f"✅ 已提交代码和 CHANGELOG (Message: {commit_msg})")
+            else:
+                # 仅提交 CHANGELOG
+                self._run_git(["add", "CHANGELOG.md"])
+                self._run_git(["commit", "-m", f"docs: update CHANGELOG.md for {version}"])
+                print("✅ 已自动提交 CHANGELOG.md")
 
 def main():
     parser = argparse.ArgumentParser(description="Claude Code Agent - Changelog Generator")
@@ -575,6 +567,7 @@ def main():
     parser.add_argument("--verbose", action="store_true", help="显示详细日志")
     parser.add_argument("--version", type=str, help="指定版本号 (例如 v1.0.0)")
     parser.add_argument("--commit", action="store_true", help="生成后自动提交")
+    parser.add_argument("--message", "-m", type=str, help="指定提交信息，用于包含当前未提交的变更")
     
     args = parser.parse_args()
     

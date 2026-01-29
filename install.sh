@@ -41,6 +41,12 @@ safe_copy() {
     mkdir -p "$(dirname "$dest_file")"
     
     if [ -f "$dest_file" ]; then
+        # 优先检查内容是否一致，如果一致则直接跳过
+        if cmp -s "$src" "$dest_file"; then
+            echo -e "${GREEN}✅ 已跳过 (内容一致): $(basename "$dest_file")${NC}"
+            return
+        fi
+
         echo -e "${YELLOW}⚠️  目标文件已存在: $(basename "$dest_file")${NC}"
         local should_overwrite="false"
         

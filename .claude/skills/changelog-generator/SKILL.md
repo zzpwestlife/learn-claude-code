@@ -25,7 +25,11 @@ description: "通过分析当前分支与主分支 (main/master) 之间的 Git �
    - 适用场景：用户提供了具体的版本号（例如 v1.0.0）。
    - 命令：`python3 .claude/skills/changelog-generator/scripts/changelog_agent.py --version <version>`
 
-4. **生成并提交 (Generate and Commit)**
+4. **包含未提交变更 (Include Uncommitted Changes)**
+   - 适用场景：用户希望将当前工作区未提交的代码变更一并纳入 Changelog 并提交。
+   - 命令：`python3 .claude/skills/changelog-generator/scripts/changelog_agent.py --commit --message "feat: new feature description"`
+
+5. **生成并提交 (Generate and Commit)**
    - 适用场景：用户希望自动提交生成的变更。
    - 命令：`python3 .claude/skills/changelog-generator/scripts/changelog_agent.py --commit`
 
