@@ -48,6 +48,54 @@ safe_copy() {
         fi
 
         echo -e "${YELLOW}⚠️  目标文件已存在: $(basename "$dest_file")${NC}"
+        
+        # 特殊处理 Makefile 的合并逻辑
+        if [[ "$(basename "$dest_file")" == "Makefile" ]]; then
+            local action="skip"
+            
+            if command -v osascript >/dev/null 2>&1; then
+                # GUI 弹窗
+                BTN_CLICKED=$(osascript -e 'try
+                    display dialog "Makefile 已存在: '"$(basename "$dest_file")"'\n\n请选择操作：" buttons {"跳过", "覆盖", "智能合并"} default button "智能合并" with icon caution
+                    return button returned of result
+                on error
+                    return "跳过"
+                end try' 2>/dev/null)
+                
+                if [ "$BTN_CLICKED" == "覆盖" ]; then
+                    action="overwrite"
+                elif [ "$BTN_CLICKED" == "智能合并" ]; then
+                    action="merge"
+                fi
+            else
+                # 命令行交互
+                echo -e "${YELLOW}Makefile 已存在，请选择操作: [s]跳过 / [o]覆盖 / [m]智能合并 (默认: m)${NC}"
+                read -r USER_RESP
+                if [[ "$USER_RESP" =~ ^[Oo]$ ]]; then
+                    action="overwrite"
+                elif [[ "$USER_RESP" =~ ^[Ss]$ ]]; then
+                    action="skip"
+                else
+                    action="merge"
+                fi
+            fi
+            
+            if [ "$action" == "overwrite" ]; then
+                cp -v "$src" "$dest_file"
+            elif [ "$action" == "merge" ]; then
+                echo "🔄 正在尝试智能合并 Makefile..."
+                # 检查 python3 是否存在
+                if command -v python3 >/dev/null 2>&1; then
+                    python3 "$SOURCE_DIR/scripts/merge_makefile.py" "$src" "$dest_file"
+                else
+                    echo -e "${RED}错误: 未找到 python3，无法执行智能合并。回退到跳过操作。${NC}"
+                fi
+            else
+                echo -e "${YELLOW}🚫 已跳过: $(basename "$dest_file")${NC}"
+            fi
+            return
+        fi
+
         local should_overwrite="false"
         
         if command -v osascript >/dev/null 2>&1; then
@@ -227,6 +275,7 @@ mkdir -p "$TARGET_DIR/docs/constitution"
 case "$LANG_NAME" in
     "Go")
         safe_copy "$SOURCE_DIR/docs/constitution/go_annex.md" "$TARGET_DIR/docs/constitution/"
+        safe_copy "$SOURCE_DIR/profiles/go/Makefile" "$TARGET_DIR/"
         ;;
     "PHP")
         safe_copy "$SOURCE_DIR/docs/constitution/php_annex.md" "$TARGET_DIR/docs/constitution/"
