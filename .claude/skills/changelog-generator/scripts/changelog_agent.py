@@ -87,487 +87,80 @@ class ChangelogAgent:
     def get_current_branch(self):
         return self._run_git(["rev-parse", "--abbrev-ref", "HEAD"])
 
-    def get_local_author(self):
-        """获取本地 Git 用户名"""
-        name = self._run_git(["config", "user.name"])
-        return name if name else "Unknown"
-
-    def get_uncommitted_files(self):
-        """获取未提交的变更文件列表"""
-        # Unstaged
-        unstaged = self._run_git(["diff", "--name-only"])
-        # Staged
-        staged = self._run_git(["diff", "--cached", "--name-only"])
+    def get_full_diff(self):
+        """获取当前工作区与主分支的完整代码差异 (git diff)"""
+        # 排除常见的锁定文件和二进制文件，减少干扰
+        # 使用 :(exclude) 语法以兼容更多 Git 版本，或仅依赖 .gitignore
+        # 注意：git diff main 默认会包含所有差异，除非文件被 ignore。
+        # 如果这些文件已在版本控制中，我们需要显式排除。
         
-        files = set()
-        if unstaged:
-            files.update(unstaged.split('\n'))
-        if staged:
-            files.update(staged.split('\n'))
-            
-        return list(filter(None, files))
-
-    def get_diff_commits(self):
-        """获取当前分支与主分支的差异提交"""
-        current = self.get_current_branch()
-        # 注意：即使在 main 分支，如果想提交当前工作区的变更，也应该允许运行
-        # 但原来的逻辑是 current == main_branch 就退出。
-        # 我们需要放宽这个限制，如果存在未提交变更且指定了 message。
-        
-        uncommitted_files = self.get_uncommitted_files()
-        has_wip = bool(uncommitted_files) and bool(self.options.message)
-        
-        if current == self.main_branch and not has_wip:
-            print(f"当前已在 {self.main_branch} 分支且没有指定新的变更消息，无法对比差异。")
-            return []
-
-        commits = []
-
-        # 1. 获取已提交的差异 (如果有)
-        if current != self.main_branch:
-            # 获取 merge base
-            merge_base = self._run_git(["merge-base", self.main_branch, current])
-            if merge_base:
-                # 获取差异提交
-                # 使用更健壮的解析方法
-                commits = self._get_diff_commits_robust(merge_base, current)
-            else:
-                print("无法找到 merge base，可能分支历史不相关。")
-
-        # 2. 处理未提交的变更 (WIP)
-        if uncommitted_files:
-            print(f"\n检测到 {len(uncommitted_files)} 个未提交的文件变更:")
-            # 显示 diff stat
-            print(self._run_git(["diff", "--stat", "HEAD"]) or self._run_git(["diff", "--stat"]))
-            
-            if self.options.message:
-                print(f"将包含未提交变更，使用消息: {self.options.message}")
-                wip_commit = {
-                    "hash": "WIP", # 占位符
-                    "author": self.get_local_author(),
-                    "date": datetime.date.today().strftime("%Y-%m-%d"),
-                    "message": self.options.message,
-                    "body": "", # 暂不填充 body
-                    "files": uncommitted_files
-                }
-                # 将 WIP 提交插入到最前面
-                commits.insert(0, wip_commit)
-            else:
-                print("提示: 存在未提交的变更，但未指定 --message，这些变更将不会包含在 CHANGELOG 中。")
-        
-        return commits
-
-    def _get_diff_commits_robust(self, merge_base, current):
-        """更健壮的提交解析实现"""
-        commit_sep = "||COMMIT_START||"
-        field_sep = "||FIELD_SEP||"
-        
-        # format: COMMIT_START|hash|author|date|subject|body
-        log_format = f"{commit_sep}%h{field_sep}%an{field_sep}%ad{field_sep}%s{field_sep}%b"
-        
-        logs = self._run_git(["log", f"{merge_base}..{current}", f"--format={log_format}", "--date=short", "--name-only"])
-        
-        if not logs:
-            return []
-
-        commits = []
-        current_commit = None
-        
-        lines = logs.split('\n')
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-                
-            if line.startswith(commit_sep):
-                # Save previous
-                if current_commit:
-                    if self._should_include_commit(current_commit):
-                        commits.append(current_commit)
-                
-                # Parse new
-                content = line[len(commit_sep):]
-                parts = content.split(field_sep)
-                # parts: hash, author, date, subject, body (rest)
-                if len(parts) >= 4:
-                    msg_hash = parts[0]
-                    author = parts[1]
-                    date = parts[2]
-                    subject = parts[3]
-                    body = field_sep.join(parts[4:]) if len(parts) > 4 else ""
-                    
-                    current_commit = {
-                        "hash": msg_hash,
-                        "author": author,
-                        "date": date,
-                        "message": subject,
-                        "body": body,
-                        "files": []
-                    }
-            else:
-                # It's either a continuation of body or a file
-                # With --name-only, files are listed after the commit message block.
-                # But git log doesn't strictly separate message end and file list.
-                # However, files usually don't look like English text sentences.
-                # A better way is to NOT use --name-only in the same command if possible,
-                # or use --name-status which adds A/M/D prefix.
-                # For now, we will treat lines not starting with separator as files if we have a commit.
-                # BUT this is risky for multiline bodies.
-                # Strategy: Use two commands. One for info, one for files. Or `git log --name-only` produces predictable output?
-                # Actually, `git log --format=...` output ends, then a newline, then files.
-                # If we put a special marker at the END of the format, we can split.
-                pass
-
-        # Let's use a simpler approach: Get commits first (info), then files for each if needed.
-        # But getting files for each commit individually is slow (N+1).
-        # We can accept the risk or improve the delimiter.
-        
-        # Revised approach:
-        # Use a very distinct end marker in format.
-        end_marker = "||COMMIT_END||"
-        log_format = f"{commit_sep}%h{field_sep}%an{field_sep}%ad{field_sep}%s{field_sep}%b{end_marker}"
-        
-        logs = self._run_git(["log", f"{merge_base}..{current}", f"--format={log_format}", "--date=short", "--name-only"])
-        
-        commits = []
-        current_commit = None
-        in_message = False
-        
-        lines = logs.split('\n')
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-            
-            if line.startswith(commit_sep):
-                if current_commit:
-                    if self._should_include_commit(current_commit):
-                        commits.append(current_commit)
-                
-                content = line[len(commit_sep):]
-                # Check if it contains end marker
-                if end_marker in content:
-                    # Single line case
-                    main_part, rest = content.split(end_marker, 1)
-                    parts = main_part.split(field_sep)
-                    if len(parts) >= 4:
-                        current_commit = {
-                            "hash": parts[0],
-                            "author": parts[1],
-                            "date": parts[2],
-                            "message": parts[3],
-                            "body": field_sep.join(parts[4:]) if len(parts) > 4 else "",
-                            "files": []
-                        }
-                    in_message = False
-                else:
-                    # Multi line case start
-                    parts = content.split(field_sep)
-                    if len(parts) >= 4:
-                        current_commit = {
-                            "hash": parts[0],
-                            "author": parts[1],
-                            "date": parts[2],
-                            "message": parts[3],
-                            "body": field_sep.join(parts[4:]) if len(parts) > 4 else "",
-                            "files": []
-                        }
-                    in_message = True
-            elif in_message:
-                if end_marker in line:
-                    # End of message found
-                    part, _ = line.split(end_marker, 1)
-                    current_commit["body"] += "\n" + part
-                    in_message = False
-                else:
-                    current_commit["body"] += "\n" + line
-            else:
-                # Files
-                if current_commit:
-                    current_commit["files"].append(line)
-        
-        if current_commit and self._should_include_commit(current_commit):
-            commits.append(current_commit)
-            
-        return commits
-
-    def _should_include_commit(self, commit):
-        """检查提交是否应该被包含（基于忽略规则）"""
-        if not self.config["ignore_patterns"]:
-            return True
-            
-        changed_files = commit["files"]
-        if not changed_files:
-            return True 
-            
-        all_ignored = True
-        for f in changed_files:
-            is_ignored = False
-            for pattern in self.config["ignore_patterns"]:
-                if fnmatch.fnmatch(f, pattern):
-                    is_ignored = True
-                    break
-            if not is_ignored:
-                all_ignored = False
-                break
-        
-        return not all_ignored
-
-    def parse_commits(self, commits):
-        """解析提交信息，分类变更"""
-        cc_regex = re.compile(r"^(\w+)(?:\(([^)]+)\))?: (.+)$")
-        
-        changes = defaultdict(list)
-        
-        type_mapping = {
-            "feat": "✨ 新功能 (Features)",
-            "fix": "🐛 问题修复 (Bug Fixes)",
-            "docs": "📚 文档更新 (Documentation)",
-            "style": "💎 代码格式 (Styles)",
-            "refactor": "♻️ 代码重构 (Code Refactoring)",
-            "perf": "🚀 性能优化 (Performance)",
-            "test": "✅ 测试 (Tests)",
-            "build": "👷 构建系统 (Build)",
-            "ci": "🔧 CI配置 (CI)",
-            "chore": "🎫 杂项 (Chores)",
-            "revert": "⏪ 回滚 (Reverts)"
-        }
-
-        for commit in commits:
-            msg = commit["message"]
-            body = commit["body"]
-            match = cc_regex.match(msg)
-            
-            c_type = "other"
-            c_scope = None
-            c_desc = msg
-            
-            if match:
-                c_type = match.group(1)
-                c_scope = match.group(2) if match.group(2) else ""
-                c_desc = match.group(3)
-            
-            # 增强分析 Body
-            enhanced_info = self._analyze_body(body, c_type)
-            
-            # 确定分类
-            category = type_mapping.get(c_type, "🔨 其他变更 (Other Changes)")
-            
-            # 特殊分类调整
-            if c_type == 'refactor' and (c_scope == 'arch' or 'migration' in body.lower() or 'architecture' in body.lower()):
-                category = "🏗️ 架构调整 (Architecture)"
-            elif enhanced_info.get('is_dep_update'):
-                category = "📦 依赖更新 (Dependencies)"
-            
-            commit_info = {
-                "scope": c_scope,
-                "description": c_desc,
-                "hash": commit["hash"],
-                "author": commit["author"],
-                "body": body,
-                "enhanced_info": enhanced_info
-            }
-            changes[category].append(commit_info)
-                
-        return changes
-
-    def _analyze_body(self, body, c_type):
-        """分析提交 Body，提取关键信息"""
-        info = {}
-        if not body:
-            return info
-            
-        # 提取 Breaking Change
-        if "BREAKING CHANGE" in body:
-            parts = body.split("BREAKING CHANGE")
-            if len(parts) > 1:
-                bc_text = parts[1].strip()
-                if bc_text.startswith(":"):
-                    bc_text = bc_text[1:].strip()
-                info["breaking_change"] = bc_text
-
-        lower_body = body.lower()
-        
-        # 提取示例 (Example)
-        if "example" in lower_body or "usage" in lower_body:
-            info["has_example"] = True
-            
-        # 提取性能指标 (Perf)
-        if c_type == "perf" and any(k in lower_body for k in ["faster", "slower", "ms", "%", "memory", "cpu"]):
-            info["has_metrics"] = True
-            
-        # 提取修复详情 (Fix)
-        if c_type == "fix" and ("impact" in lower_body or "solution" in lower_body):
-            info["has_fix_details"] = True
-            
-        # 提取依赖更新 (Deps)
-        if "bumps" in lower_body and "from" in lower_body and "to" in lower_body:
-             info["is_dep_update"] = True
-             
-        return info
-
-    def generate_markdown(self, changes, version):
-        """生成 Markdown 格式的变更日志"""
-        date_str = datetime.date.today().strftime("%Y-%m-%d")
-        md = f"\n## [{version}] - {date_str}\n\n"
-        
-        priority_order = [
-            "🏗️ 架构调整 (Architecture)",
-            "✨ 新功能 (Features)",
-            "🐛 问题修复 (Bug Fixes)",
-            "🚀 性能优化 (Performance)",
-            "📦 依赖更新 (Dependencies)",
-            "♻️ 代码重构 (Code Refactoring)",
-            "📚 文档更新 (Documentation)",
-            "💎 代码格式 (Styles)",
-            "✅ 测试 (Tests)",
-            "👷 构建系统 (Build)",
-            "🔧 CI配置 (CI)",
-            "🎫 杂项 (Chores)",
-            "⏪ 回滚 (Reverts)",
-            "🔨 其他变更 (Other Changes)"
+        exclude_patterns = [
+            "package-lock.json", 
+            "yarn.lock", 
+            "pnpm-lock.yaml",
+            "go.sum",
+            "*.lock",
+            "*.pyc",
         ]
-
-        for category in priority_order:
-            if category in changes and changes[category]:
-                md += f"### {category}\n\n"
-                for item in changes[category]:
-                    md += self._format_item(item)
-                md += "\n"
         
-        # 处理其他未在优先列表中的分类
-        for category, items in changes.items():
-            if category not in priority_order:
-                md += f"### {category}\n\n"
-                for item in items:
-                    md += self._format_item(item)
-                md += "\n"
-                
-        return md
-
-    def _format_item(self, item):
-        """格式化单个条目"""
-        scope_str = f"**{item['scope']}**: " if item['scope'] else ""
+        # 构建 exclude 参数
+        # 使用 :(exclude)pattern 语法
+        exclude_args = [f":(exclude){p}" for p in exclude_patterns]
         
-        enhanced = item['enhanced_info']
-        
-        # 标题行标记
-        tags = []
-        if enhanced.get("breaking_change"):
-            tags.append("💥 BREAKING")
-        
-        tags_str = " ".join([f"`{t}`" for t in tags])
-        if tags_str:
-            tags_str = " " + tags_str
-        
-        # 处理 Commit 链接
-        hash_str = item['hash']
-        url_template = self.config.get("commit_url_template", "")
-        if url_template and "{hash}" in url_template:
-             # 简单的防误触检查：如果是默认示例值，不生成链接（可选，或者假设用户知道自己在做什么）
-             # 这里我们信任用户配置，只要非空且包含 {hash} 就替换
-             commit_url = url_template.replace("{hash}", hash_str)
-             hash_part = f"[{hash_str}]({commit_url})"
-        else:
-             hash_part = hash_str
-
-        # 基础行
-        md = f"- {scope_str}{item['description']}{tags_str} ({hash_part}) by @{item['author']}\n"
-        
-        # 附加信息 (Body)
-        body = item['body'].strip()
-        
-        if enhanced.get("breaking_change"):
-            md += f"  > ⚠️ **BREAKING CHANGE**: {enhanced['breaking_change']}\n"
-            
-        if body:
-            lines = body.split('\n')
-            for line in lines:
-                line = line.strip()
-                if not line:
-                    continue
-                
-                # 忽略已经处理的 BREAKING CHANGE 行
-                if "BREAKING CHANGE" in line:
-                    continue
-                    
-                # 格式化特殊段落标题
-                lower_line = line.lower()
-                if lower_line.startswith(("example:", "usage:", "impact:", "solution:", "metrics:", "migration guide:")):
-                    # 加粗冒号前的部分
-                    key, val = line.split(':', 1)
-                    md += f"  > **{key}**: {val.strip()}\n"
-                else:
-                    md += f"  > {line}\n"
-                    
-        return md
+        # git diff <main_branch> 会对比工作区（含未提交变更）与主分支
+        cmd = ["diff", self.main_branch, "--", "."] + exclude_args
+        return self._run_git(cmd)
 
     def run(self):
-        print(f"正在分析分支差异: 当前分支 [{self.get_current_branch()}] <-> 主分支 [{self.main_branch}] ...")
-        
-        commits = self.get_diff_commits()
-        if not commits:
-            print("未发现新的差异提交 (或未指定 --message 处理未提交变更)。")
-            return
-
-        print(f"发现 {len(commits)} 个变更条目。")
-        
-        changes = self.parse_commits(commits)
-        
-        version = self.options.version or "Unreleased"
-        
-        new_content = self.generate_markdown(changes, version)
-        
-        if self.options.dry_run:
-            print("\n--- 预览 CHANGELOG ---\n")
-            print(new_content)
-            print("--- 预览结束 ---")
-            return
-
-        existing_content = ""
-        if os.path.exists(self.changelog_file):
-            with open(self.changelog_file, 'r', encoding='utf-8') as f:
-                existing_content = f.read()
-        else:
-            existing_content = "# Changelog\n\nAll notable changes to this project will be documented in this file.\n"
-
-        header_match = re.match(r"(# .+?\n+)(.*)", existing_content, re.DOTALL)
-        if header_match:
-            final_content = header_match.group(1) + new_content + header_match.group(2)
-        else:
-            final_content = "# Changelog\n\n" + new_content + existing_content
-
-        with open(self.changelog_file, 'w', encoding='utf-8') as f:
-            f.write(final_content)
-            
-        print(f"✅ 成功更新 CHANGELOG.md")
-        
+        """执行主流程"""
+        # 模式 1: 提交变更 (Commit Mode)
         if self.options.commit:
-            # 检查是否包含 WIP 提交
-            has_wip = any(c['hash'] == 'WIP' for c in commits)
-            
-            if has_wip and self.options.message:
-                # 提交所有变更
-                print("包含未提交的代码变更，正在执行 git add .")
-                self._run_git(["add", "."])
-                commit_msg = self.options.message
-                # 如果 message 只有一行，可能需要补充说明
-                # 这里简单直接使用 message
-                self._run_git(["commit", "-m", commit_msg])
-                print(f"✅ 已提交代码和 CHANGELOG (Message: {commit_msg})")
-            else:
-                # 仅提交 CHANGELOG
-                self._run_git(["add", "CHANGELOG.md"])
-                self._run_git(["commit", "-m", f"docs: update CHANGELOG.md for {version}"])
-                print("✅ 已自动提交 CHANGELOG.md")
+            self._handle_commit()
+            return
+
+        # 模式 2: 获取差异 (Diff Mode)
+        # 这是默认行为，或者可以通过参数显式指定
+        # 脚本不再负责生成 Markdown，而是负责提供原始数据给 AI Agent
+        print(f"正在获取代码差异: 当前工作区 <-> 主分支 [{self.main_branch}] ...", file=sys.stderr)
+        
+        diff_content = self.get_full_diff()
+        
+        if not diff_content:
+            print("未发现代码差异。", file=sys.stderr)
+            return
+
+        # 直接输出 Diff 内容到 stdout，供 Agent 读取
+        print(diff_content)
+        
+    def _handle_commit(self):
+        """处理提交逻辑"""
+        # 检查是否有变更
+        status = self._run_git(["status", "--porcelain"])
+        if not status:
+            print("没有需要提交的变更。", file=sys.stderr)
+            return
+
+        print("正在提交变更...", file=sys.stderr)
+        
+        # 添加所有变更
+        self._run_git(["add", "."])
+        
+        # 提交消息
+        msg = self.options.message or f"chore: update changelog and project changes {datetime.date.today()}"
+        
+        result = self._run_git(["commit", "-m", msg])
+        if result:
+            print(f"提交成功: {msg}", file=sys.stderr)
+        else:
+            print("提交失败。", file=sys.stderr)
 
 def main():
     parser = argparse.ArgumentParser(description="Claude Code Agent - Changelog Generator")
-    parser.add_argument("--dry-run", action="store_true", help="预览模式，不修改文件")
+    parser.add_argument("--dry-run", action="store_true", help="[已废弃] 预览模式")
     parser.add_argument("--verbose", action="store_true", help="显示详细日志")
-    parser.add_argument("--version", type=str, help="指定版本号 (例如 v1.0.0)")
-    parser.add_argument("--commit", action="store_true", help="生成后自动提交")
-    parser.add_argument("--message", "-m", type=str, help="指定提交信息，用于包含当前未提交的变更")
+    parser.add_argument("--version", type=str, help="[已废弃] 指定版本号")
+    parser.add_argument("--commit", action="store_true", help="执行提交操作")
+    parser.add_argument("--message", "-m", type=str, help="指定提交信息")
     
     args = parser.parse_args()
     
