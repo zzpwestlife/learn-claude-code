@@ -229,6 +229,9 @@ echo -e "✅ 选择语言配置: ${BLUE}$LANG_NAME${NC}"
 
 echo -e "\n📦 正在安装核心文件..."
 
+# 0. 确保基础目录存在
+mkdir -p "$TARGET_DIR/.claude"
+
 # 1. 复制通用宪法
 safe_copy "$SOURCE_DIR/constitution.md" "$TARGET_DIR/.claude/"
 
@@ -303,6 +306,17 @@ if [ -d "$SOURCE_DIR/.claude/commands/$PROFILE" ]; then
     for file in "$SOURCE_DIR/.claude/commands/$PROFILE/"*; do
         if [ -f "$file" ]; then
              safe_copy "$file" "$TARGET_DIR/.claude/commands/"
+        fi
+    done
+fi
+
+# 5.3 复制 FinClaude 命令
+if [ -d "$SOURCE_DIR/.claude/commands/fin" ]; then
+    echo "  -> 复制 FinClaude 命令..."
+    mkdir -p "$TARGET_DIR/.claude/commands/fin"
+    for file in "$SOURCE_DIR/.claude/commands/fin/"*; do
+        if [ -f "$file" ]; then
+            safe_copy "$file" "$TARGET_DIR/.claude/commands/fin/"
         fi
     done
 fi
@@ -382,6 +396,14 @@ if [ -f "$SOURCE_DIR/.claude/changelog_config.json" ]; then
     safe_copy "$SOURCE_DIR/.claude/changelog_config.json" "$TARGET_DIR/.claude/"
 fi
 
+# 9. 初始化 .env 配置
+echo "🔧 检查环境变量配置..."
+if [ ! -f "$TARGET_DIR/.env" ]; then
+    if [ -f "$SOURCE_DIR/.env.example" ]; then
+        safe_copy "$SOURCE_DIR/.env.example" "$TARGET_DIR/.env"
+    fi
+fi
+
 # ==========================================
 # 9. Post-Installation Path Adjustments
 # ==========================================
@@ -420,3 +442,4 @@ fi
 
 echo -e "\n${GREEN}🎉 安装完成!${NC}"
 echo -e "请检查 $TARGET_DIR/CLAUDE.md 并根据项目实际情况微调命令。"
+echo -e "⚠️  注意: 如果你使用 FinClaude 功能，请务必在 .env 中配置 CLAUDE_WEBHOOK_URL。"

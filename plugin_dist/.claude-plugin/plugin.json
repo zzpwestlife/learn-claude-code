@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "name": "fin-claude-plugin",
+  "version": "4.2.0",
+  "description": "Enterprise-grade development framework for Claude Code, featuring specialized agents and workflows.",
+  "author": "Learn Claude Code Team",
+  "license": "MIT",
+  "permissions": {
+    "filesystem": {
+      "read": true,
+      "write": true
+    },
+    "network": {
+      "domains": [
+        "api.anthropic.com",
+        "open.bigmodel.cn"
+      ]
+    },
+    "shell": {
+      "commands": [
+        "git",
+        "make",
+        "go",
+        "python3",
+        "php",
+        "pytest"
+      ]
+    }
+  },
+  "commands": [
+    {
+      "name": "fin:dev",
+      "description": "TDD execution: Red -> Green -> Refactor",
+      "file": "commands/fin/dev.md"
+    },
+    {
+      "name": "fin:plan",
+      "description": "Generate comprehensive implementation plan",
+      "file": "commands/fin/plan.md"
+    },
+    {
+      "name": "fin:review",
+      "description": "Code review workflow",
+      "file": "commands/fin/review.md"
+    },
+    {
+      "name": "commit",
+      "description": "Commit changes with conventional message",
+      "file": "commands/commit.md"
+    },
+    {
+      "name": "go:review",
+      "description": "Go code review",
+      "file": "commands/go/review-code.md"
+    }
+  ],
+  "agents": [
+    {
+      "name": "architect",
+      "description": "System Architect",
+      "file": "agents/architect.md"
+    },
+    {
+      "name": "code-reviewer",
+      "description": "Code Reviewer",
+      "file": "agents/code-reviewer.md"
+    },
+    {
+      "name": "security-auditor",
+      "description": "Security Auditor",
+      "file": "agents/security-auditor.md"
+    },
+    {
+      "name": "test-validator",
+      "description": "Test Validator",
+      "file": "agents/test-validator.md"
+    }
+  ],
+  "skills": [
+    {
+      "name": "notifier",
+      "path": "skills/notifier"
+    },
+    {
+      "name": "changelog-generator",
+      "path": "skills/changelog-generator"
+    }
+  ],
+  "hooks": {
+    "PostToolUse": "hooks/go/format-go-code.sh"
+  }
+}

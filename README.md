@@ -31,8 +31,15 @@
 - **`agents/`**: 预设专家角色（Architect, Security Auditor, Code Reviewer 等）。
 - **`commands/`**: 自定义 Slash 命令（如 `/review-code` 支持 Git 增量审查）。
 - **`hooks/`**: 自动化钩子（如自动格式化、语法检查）。
-- **`skills/`**: 扩展能力（如 YouTube 剪辑、文档搜索）。
+- **`skills/`**: 扩展能力（如 YouTube 剪辑、文档搜索、**Notifier 通知中心**）。
 - **`constitution/`**: 语言实施细则 (go_annex.md 等)。
+
+### 5. FinClaude 金融级开发套件 (新增)
+集成了 `finclaude` 的核心能力，提供高安全标准的开发流程：
+- **/fin:plan**: 生成符合审计要求的架构方案。
+- **/fin:dev**: 强制执行 TDD (红-绿-重构) 循环。
+- **/fin:review**: 执行严格的安全与复杂度审计。
+- **Notifier**: 统一通知中心，支持 Slack/Discord Webhook 集成。
 
 ---
 
