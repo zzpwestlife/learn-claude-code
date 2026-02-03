@@ -1,0 +1,192 @@
+{
+  "version": "1.0.0",
+  "title": "用户认证 REST API 规格定义",
+  "description": "实现完整的用户认证系统，包含注册、登录、Token刷新和个人信息获取功能",
+  "successCriteria": {
+    "functional": [
+      {
+        "id": "F001",
+        "requirement": "用户注册",
+        "endpoint": "POST /auth/register",
+        "expected": {
+          "statusCode": 201,
+          "body": {
+            "id": "uuid",
+            "email": "user@example.com",
+            "name": "string",
+            "createdAt": "ISO8601"
+          }
+        }
+      },
+      {
+        "id": "F002",
+        "requirement": "用户登录",
+        "endpoint": "POST /auth/login",
+        "expected": {
+          "statusCode": 200,
+          "body": {
+            "accessToken": "jwt_string",
+            "refreshToken": "jwt_string",
+            "expiresIn": 3600,
+            "tokenType": "Bearer"
+          }
+        }
+      },
+      {
+        "id": "F003",
+        "requirement": "Token刷新",
+        "endpoint": "POST /auth/refresh",
+        "expected": {
+          "statusCode": "body": {
+ 200,
+                     "accessToken": "jwt_string",
+            "refreshToken": "jwt_string",
+            "expiresIn": 3600
+          }
+        }
+      },
+      {
+        "id": "F004",
+        "requirement": "获取用户信息",
+        "endpoint": "GET /auth/me",
+        "expected": {
+          "statusCode": 200,
+          "headers": {
+            "Authorization": "Bearer <token>"
+          },
+          "body": {
+            "id": "uuid",
+            "email": "user@example.com",
+            "name": "string",
+            "role": "user|admin",
+            "createdAt": "ISO8601"
+          }
+        }
+      }
+    ],
+    "observable": [
+      {
+        "id": "O001",
+        "requirement": "HTTP状态码正确",
+        "criteria": "成功请求返回2xx，错误请求返回4xx，服务器错误返回5xx"
+      },
+      {
+        "id": "O002",
+        "requirement": "响应格式一致",
+        "criteria": "所有响应遵循 {success: boolean, data: object, error: object|null} 结构"
+      },
+      {
+        "id": "O003",
+        "requirement": "错误消息可读",
+        "criteria": "错误响应包含 message, code, details 字段"
+      }
+    ],
+    "passFail": [
+      {
+        "id": "P001",
+        "test": "make test",
+        "criteria": "退出码为0，所有测试通过"
+      },
+      {
+        "id": "P002",
+        "test": "curl 端点测试",
+        "criteria": "4个端点全部返回预期状态码"
+      },
+      {
+        "id": "P003",
+        "test": "lsp_diagnostics",
+        "criteria": "src/auth/ 目录下无错误"
+      },
+      {
+        "id": "P004",
+        "test": "go build ./...",
+        "criteria": "编译成功，无错误"
+      }
+    ]
+  },
+  "constraints": {
+    "security": [
+      "密码必须bcrypt哈希存储",
+      "JWT Secret必须从环境变量读取",
+      "Token过期时间不超过24小时",
+      "敏感信息不记录日志"
+    ],
+    "performance": [
+      "API响应时间 < 200ms",
+      "数据库查询 < 50ms",
+      "支持100并发请求"
+    ],
+    "codeQuality": [
+      "遵循Go代码规范",
+      "单元测试覆盖率 > 80%",
+      "无any类型断言",
+      "错误处理完整"
+    ]
+  },
+  "testPlan": {
+    "objective": "验证用户认证API所有功能正常工作",
+    "prerequisites": [
+      "PostgreSQL 14+ 运行在5432端口",
+      "Redis 6+ 运行在6379端口",
+      "环境变量 AUTH_SECRET, DATABASE_URL 已设置"
+    ],
+    "testCases": [
+      {
+        "id": "TC001",
+        "name": "用户注册成功",
+        "input": "POST /auth/register {\"email\":\"test@example.com\",\"password\":\"SecurePass123\",\"name\":\"Test User\"}",
+        "expected": "201 Created {\"success\":true,\"data\":{\"id\":\"uuid\",\"email\":\"test@example.com\",...}}",
+        "verify": "响应状态码201，响应体包含id和createdAt"
+      },
+      {
+        "id": "TC002",
+        "name": "用户注册-邮箱已存在",
+        "input": "POST /auth/register {\"email\":\"exists@example.com\",\"password\":\"SecurePass123\",\"name\":\"Test\"}",
+        "expected": "409 Conflict {\"success\":false,\"error\":{\"code\":\"EMAIL_EXISTS\",\"message\":\"邮箱已被注册\"}}",
+        "verify": "响应状态码409，错误码为EMAIL_EXISTS"
+      },
+      {
+        "id": "TC003",
+        "name": "用户登录成功",
+        "input": "POST /auth/login {\"email\":\"test@example.com\",\"password\":\"SecurePass123\"}",
+        "expected": "200 OK {\"success\":true,\"data\":{\"accessToken\":\"jwt...\",\"refreshToken\":\"jwt...\"}}",
+        "verify": "响应包含accessToken和refreshToken，Token可解析"
+      },
+      {
+        "id": "TC004",
+        "name": "用户登录-密码错误",
+        "input": "POST /auth/login {\"email\":\"test@example.com\",\"password\":\"WrongPass\"}",
+        "expected": "401 Unauthorized {\"success\":false,\"error\":{\"code\":\"INVALID_PASSWORD\"}}",
+        "verify": "响应状态码401，错误码为INVALID_PASSWORD"
+      },
+      {
+        "id": "TC005",
+        "name": "Token刷新",
+        "input": "POST /auth/refresh {\"refreshToken\":\"jwt_refresh_token\"}",
+        "expected": "200 OK {\"success\":true,\"data\":{\"accessToken\":\"new_jwt...\",\"refreshToken\":\"new_jwt...\"}}",
+        "verify": "返回新的accessToken和refreshToken"
+      },
+      {
+        "id": "TC006",
+        "name": "获取用户信息",
+        "input": "GET /auth/me (Header: Authorization: Bearer <accessToken>)",
+        "expected": "200 OK {\"success\":true,\"data\":{\"id\":\"uuid\",\"email\":\"test@example.com\",\"name\":\"Test User\"}}",
+        "verify": "返回当前登录用户的完整信息"
+      }
+    ],
+    "successCriteria": "所有6个测试用例全部通过",
+    "howToExecute": "执行 make integration-test"
+  },
+  "implementation": {
+    "language": "Go 1.21+",
+    "framework": "Gin + GORM",
+    "database": "PostgreSQL",
+    "cache": "Redis",
+    "structure": {
+      "src/": "Go源代码",
+      "tests/": "测试文件",
+      "migrations/": "数据库迁移",
+      "config/": "配置文件"
+    }
+  }
+}
