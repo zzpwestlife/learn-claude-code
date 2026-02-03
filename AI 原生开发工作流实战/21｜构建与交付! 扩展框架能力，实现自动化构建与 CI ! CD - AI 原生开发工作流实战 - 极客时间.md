@@ -1,6 +1,6 @@
 你好, 我是 Tony Bai. 
 
-在上一讲, 我们成功地将本地的代码变更, 转化为了一个高质量的、包含 AI 自动化审查和清晰描述的 Pull Request. 我们的 issue2md 项目, 在功能上已经准备好被合并和交付了. 
+在上一讲, 我们成功地将本地的代码变更, 转化为了一个高质量的、包含 AI 自动化审查和清晰描述的 Pull Request. 我们的 issue2md 项目, 在功能上已经准备好被合并和交付了.
 
 但是, 一个现代化的软件项目, 其 "完成" 的标志, 绝不仅仅是代码被合并到 main 分支. 真正的交付, 还需要一套 标准化、可重复、自动化 的构建、测试和打包流程. 
 
@@ -26,11 +26,11 @@
 
 ## 第一步: 容器化 —— 让 AI 生成优化的 Dockerfile
 
-将应用容器化, 是现代云原生开发的第一步. 一个好的 Dockerfile, 不仅要能成功构建应用, 更要追求 镜像体积小、构建速度快、安全性高. 这些复杂的优化目标, 恰好是 AI 大模型极佳的应用场景. 
+将应用容器化, 是现代云原生开发的第一步. 一个好的 Dockerfile, 不仅要能成功构建应用, 更要追求 镜像体积小、构建速度快、安全性高. 这些复杂的优化目标, 恰好是 AI 大模型极佳的应用场景.
 
-不过, 细心的你可能还记得, 在第 19 讲我们让 AI 生成 Foundation 阶段的基础代码时, 勤奋的 Claude Code 其实已经顺手为我们生成了一个基础版的 Dockerfile  (以及 Makefile ) . 
+不过, 细心的你可能还记得, 在第 19 讲我们让 AI 生成 Foundation 阶段的基础代码时, 勤奋的 Claude Code 其实已经顺手为我们生成了一个基础版的 Dockerfile  (以及 Makefile).
 
-这在开发初期是够用的, 但当我们准备迈向生产环境时, 这个 "顺手之作" 往往还不够完美. 它可能没有利用多阶段构建来减小体积, 也可能没有优化层缓存来加速构建. 
+这在开发初期是够用的, 但当我们准备迈向生产环境时, 这个 "顺手之作" 往往还不够完美. 它可能没有利用多阶段构建来减小体积, 也可能没有优化层缓存来加速构建.
 
 
 
@@ -62,19 +62,19 @@
 
 
 
-这个 Prompt 的价值在于: 
+这个 Prompt 的价值在于:
 
-* 设定专家角色: 资深的 DevOps 工程师, 引导 AI 使用更专业的知识库. 
+* 设定专家角色: 资深的 DevOps 工程师, 引导 AI 使用更专业的知识库.
 
-* 明确要求 "最佳实践": 多阶段构建, 依赖缓存, 非 root 用户, 这些关键词直接将 AI 的思考方向, 锁定在了 "生产级" 的标准上. 
+* 明确要求 "最佳实践": 多阶段构建, 依赖缓存, 非 root 用户, 这些关键词直接将 AI 的思考方向, 锁定在了 "生产级" 的标准上.
 
-* 赋予上下文感知能力: @. 让 AI 能够分析项目结构, 从而编写出真正符合我们项目实际的构建指令 (比如正确找到两个 cmd 入口) . 
+* 赋予上下文感知能力: @. 让 AI 能够分析项目结构, 从而编写出真正符合我们项目实际的构建指令 (比如正确找到两个 cmd 入口).
 
 
 
 ### 审查与产出: 一份生产级的 Dockerfile
 
-AI 会分析你的请求, 并提议创建一个 Dockerfile. 在你批准后, 一份高质量的、蕴含了 DevOps 最佳实践的配置文件就诞生了. 这个过程我的 AI 输出如下: 
+AI 会分析你的请求, 并提议创建一个 Dockerfile. 在你批准后, 一份高质量的、蕴含了 DevOps 最佳实践的配置文件就诞生了. 这个过程我的 AI 输出如下:
 
 ```markdown
 ● 生产级 Dockerfile 已完成
@@ -125,7 +125,7 @@ AI 会分析你的请求, 并提议创建一个 Dockerfile. 在你批准后, 一
 
 
 
-它生成的 Dockerfile  (示例) : 
+它生成的 Dockerfile  (示例):
 
 ```markdown
 # ==================================
@@ -226,7 +226,7 @@ RUN chmod +x /app/entrypoint.sh
 
 
 
-这份由 AI 生成的 Dockerfile, 质量甚至可能超过许多初中级工程师手写的版本. 你可以让 AI 执行镜像构建, 或你在另外一个终端窗口手工执行构建, 以验证 Dockerfile 的有效性: 
+这份由 AI 生成的 Dockerfile, 质量甚至可能超过许多初中级工程师手写的版本. 你可以让 AI 执行镜像构建, 或你在另外一个终端窗口手工执行构建, 以验证 Dockerfile 的有效性:
 
 ```plain text
 docker build -t issue2md:latest .
@@ -243,7 +243,7 @@ issue2md                                               latest          c6e06d55e
 
 ## 第二步: 标准化构建 —— 让 AI 编写通用的 Makefile
 
-Dockerfile 解决了 "如何打包" 的问题, 但我们还需要一个更通用的 "任务入口", 来标准化我们项目的所有日常操作 (测试、构建、运行、清理等) . 这正是 Makefile 的用武之地. 
+Dockerfile 解决了 "如何打包" 的问题, 但我们还需要一个更通用的 "任务入口", 来标准化我们项目的所有日常操作 (测试、构建、运行、清理等) . 这正是 Makefile 的用武之地.
 
 ```markdown
 很好. 现在, 请继续扮演DevOps工程师的角色, 为我们的项目创建一个 `Makefile`. 
@@ -263,7 +263,7 @@ Dockerfile 解决了 "如何打包" 的问题, 但我们还需要一个更通用
 
 
 
-AI 会尝试按核心目标要求, 为你生成一份结构清晰、功能完备的 Makefile: 
+AI 会尝试按核心目标要求, 为你生成一份结构清晰、功能完备的 Makefile:
 
 ```yaml
 ● 生产级 Makefile 已完成
@@ -319,7 +319,7 @@ AI 会尝试按核心目标要求, 为你生成一份结构清晰、功能完备
 
 
 
-在你批准写入后, 你的项目就拥有了一套标准化的 "任务启动器". 我的环境下, Makefile 的样例如下: 
+在你批准写入后, 你的项目就拥有了一套标准化的 "任务启动器". 我的环境下, Makefile 的样例如下:
 
 ```xml
 # ==================================
@@ -426,7 +426,7 @@ verify: format lint test
 
 
 
-就连我这个用了 10 多年 Makefile 的 "老手" 也不得不承认, AI 生成的 Makefile 真的是很专业. 你可以用常见命令简单验证一下 Makefile 的语法正确性, 比如 make build: 
+就连我这个用了 10 多年 Makefile 的 "老手" 也不得不承认, AI 生成的 Makefile 真的是很专业. 你可以用常见命令简单验证一下 Makefile 的语法正确性, 比如 make build:
 
 ```bash
 $make build
@@ -442,7 +442,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s -X main.version=d
 
 
 
-现在, 任何团队成员, 只需运行 make test, make docker-build 等简单命令, 就能执行复杂的工程任务了. 
+现在, 任何团队成员, 只需运行 make test, make docker-build 等简单命令, 就能执行复杂的工程任务了.
 
 
 
@@ -450,7 +450,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s -X main.version=d
 
 到目前为止, 我们已经成功地让 AI 为我们构建了完整的 DevOps 基础设施. 但如果止步于此, 这些知识和产物, 仍然是 一次性 的.  AI 原生开发以及工作流的精髓, 在于持续地 "沉淀" 和 "复用".  既然我们已经有了 Makefile, 为什么不让 AI 也学会如何使用它呢?
 
-现在, 我们要做的, 就是将我们刚刚生成的这些强大的 DevOps 能力,  封装成新的 Slash Commands, 永久地、可复用地集成到我们在第 16 讲构建的 "AI 驾驶舱" 框架中. 
+现在, 我们要做的, 就是将我们刚刚生成的这些强大的 DevOps 能力,  封装成新的 Slash Commands, 永久地、可复用地集成到我们在第 16 讲构建的 "AI 驾驶舱" 框架中.
 
 
 
@@ -464,7 +464,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-w -s -X main.version=d
 `allowed-tools` 应该包含 `Bash(make:build)`. 
 ```
 
-AI 会为你创建 build.md, 其内容示例如下: 
+AI 会为你创建 build.md, 其内容示例如下:
 
 ```yaml
 ---
@@ -517,7 +517,7 @@ Provide specific remediation steps based on the actual error encountered.
 
 
 
-AI 会为你创建 docker-build.md, 其内容示例如下: 
+AI 会为你创建 docker-build.md, 其内容示例如下:
 
 > 注: 在我的环境下, 为了 docker-build 支持参数,  Makefile 也被 AI 做了微调
 
@@ -578,11 +578,11 @@ The command will set `DOCKER_TAG={provided_tag}` before running make docker-buil
 
 
 
-完成这一步, 才到了我们这一讲真正的 "画龙点睛" 之笔. 它实现了能力的 完美闭环: 
+完成这一步, 才到了我们这一讲真正的 "画龙点睛" 之笔. 它实现了能力的 完美闭环:
 
 ![](images/21_image_2.png)
 
-现在, 你的团队中任何一个成员, 甚至是新来的实习生, 都不用再去关心 Dockerfile 或 Makefile 的复杂细节. 他们只需要在 Claude Code 中输入一个简单的: 
+现在, 你的团队中任何一个成员, 甚至是新来的实习生, 都不用再去关心 Dockerfile 或 Makefile 的复杂细节. 他们只需要在 Claude Code 中输入一个简单的:
 
 > /docker-build v1.0.1
 
@@ -612,13 +612,13 @@ AI 就会自动地、安全地、标准化地为他完成整个容器镜像的�
 
 
 
-AI 会为你生成一份格式完全正确的 ci.yml 文件. 限于篇幅, 这里就不列出 ci.yml 的详细内容了, 各位小伙伴可以在自己的环境里, 对 ci.yml 进行验证, 如有问题, 可以让 AI 继续为你完善, 直至正确为止. 
+AI 会为你生成一份格式完全正确的 ci.yml 文件. 限于篇幅, 这里就不列出 ci.yml 的详细内容了, 各位小伙伴可以在自己的环境里, 对 ci.yml 进行验证, 如有问题, 可以让 AI 继续为你完善, 直至正确为止.
 
 
 
 进阶思考: 
 
-还记得我们在第 15 讲学到的 Headless 模式 吗?我们甚至可以在这个 CI 流程中, 加入一个 Step: 
+还记得我们在第 15 讲学到的 Headless 模式 吗?我们甚至可以在这个 CI 流程中, 加入一个 Step:
 
 ```plain text
 - name: AI Code Analysis (on failure)
@@ -630,9 +630,9 @@ AI 会为你生成一份格式完全正确的 ci.yml 文件. 限于篇幅, 这�
 
 
 
-这将让你的 CI 流水线不仅仅是报错, 还能 自动诊断. 这正是 AI 原生 DevOps 的魅力所在. 
+这将让你的 CI 流水线不仅仅是报错, 还能 自动诊断. 这正是 AI 原生 DevOps 的魅力所在.
 
-注: 前提是你的 CI 环境也部署了 Claude Code, 做了正确的配置, 并且可以访问到内部私有大模型或外部大模型. 
+注: 前提是你的 CI 环境也部署了 Claude Code, 做了正确的配置, 并且可以访问到内部私有大模型或外部大模型.
 
 
 
