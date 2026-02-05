@@ -55,7 +55,7 @@ Subagent 是 Claude Code 中一项极具创新性的功能. 它允许 AI 在主�
 当你遇到一个专业问题时, 你不会自己从头学起, 而是会把问题 "委托" 给最合适的总监. 这位总监会带着问题, 回到自己的办公室 (独立的上下文) , 带领自己的团队 (专属的工具集) , 深度研究并拿出解决方案, 最后只把最终的、精炼的结果报告给 CTO.
 
 
-![](images/14_image_17.png)
+![](../assets/images/14_image_17.png)
 
 我们看到: 一个 Subagent 的核心特质包括:
 
@@ -133,12 +133,12 @@ It defines the agent's personality, goals, and operational procedures.
 * 查看 (View) : 列出所有当前可用的 Subagents (包括 Project 级和 User 级) , 并查看它们的详细配置.
 * 创建 (Create) : 通过一个引导式的问答流程, 一步步地创建新的 Subagent, Claude Code 会自动为你生成对应的 `.md` 文件.
 
-![](images/14_image_2.png)
+![](../assets/images/14_image_2.png)
 
 * 编辑 (Edit) : 可视化地修改一个现有 Subagent 的 description 、 tools 等属性. 尤其是在配置 tools 时, 它会列出所有可用的工具让你勾选, 非常方便.
 * 删除 (Delete) : 安全地删除一个不再需要的 Subagent.
 
-![](images/14_image_3.png)
+![](../assets/images/14_image_3.png)
 
 对于初学者来说,  强烈建议 通过 /agents 命令来创建你的第一个 Subagent. 它能确保文件格式的正确性, 并让你对所有可配置项有一个直观的了解.
 
@@ -155,13 +155,13 @@ It defines the agent's personality, goals, and operational procedures.
 
 在 Claude Code 会话中, 输入 /agents 命令. 这是一个交互式的配置中心, 你可以在这里查看、创建、编辑和删除你的所有 Subagent.
 
-![](images/14_image_4.png)
+![](../assets/images/14_image_4.png)
 
 ### 第二步: 创建新 Agent
 
 在菜单中, 选择 Create New Agent, 系统会询问你希望创建 Project-level (项目级) 还是 User-level (用户级) 的 Subagent:
 
-![](images/14_image_5.png)
+![](../assets/images/14_image_5.png)
 
 对于 "代码安全审查员" 这种与项目规范紧密相关的角色, 我们选择 Project-level.
 
@@ -169,17 +169,17 @@ It defines the agent's personality, goals, and operational procedures.
 
 接下来, 你会进入一个交互式的定义流程, 你需要为你的新 Agent 提供几个关键信息:
 
-![](images/14_image_6.png)
+![](../assets/images/14_image_6.png)
 
 我们选择 "手工配置", 然后进入下一个页面, 配置该 Subagent 的 ID:
 
-![](images/14_image_7.png)
+![](../assets/images/14_image_7.png)
 
 这是 Subagent 的唯一 ID, 使用小写字母和连字符. 我们输入: go-code-security-reviewer.
 
 下一步配置该 Subagent 的 System Prompt  (系统提示) :
 
-![](images/14_image_8.png)
+![](../assets/images/14_image_8.png)
 
 
 
@@ -214,7 +214,7 @@ Provide your findings in order of severity (Critical, High, Medium, Low). For ea
 
 接下来, 进入 description 信息配置页, 这是 最至关重要 的一步!  description 是主 Agent 用来 自主发现和决定是否委托 这个 Subagent 的核心依据. 它必须清晰、准确, 并包含丰富的 "触发关键词":
 
-![](images/14_image_9.png)
+![](../assets/images/14_image_9.png)
 
 我们输入:
 
@@ -226,7 +226,7 @@ An expert Go security code reviewer. Use this agent to review Go (Golang) code f
 
 再下一步则是为 Subagent 配置 Tools (工具集) , Claude Code 系统会列出所有可用的工具类别, 让你勾选:
 
-![](images/14_image_10.png)
+![](../assets/images/14_image_10.png)
 
 
 
@@ -234,11 +234,11 @@ An expert Go security code reviewer. Use this agent to review Go (Golang) code f
 
 接下来, 在选择 Model、 background Color 后, Subagent 的创建就算完成了:
 
-![](images/14_image_11.png)
+![](../assets/images/14_image_11.png)
 
-![](images/14_image_12.png)
+![](../assets/images/14_image_12.png)
 
-![](images/14_image_13.png)
+![](../assets/images/14_image_13.png)
 
 ### 第四步: 保存并验证
 
@@ -262,7 +262,7 @@ An expert Go security code reviewer. Use this agent to review Go (Golang) code f
 
 你会看到, 主 Agent 在思考后,  go-code-security-reviewer Subagent 会被激活, 在它 自己的、干净的上下文 中, 开始执行我们在其 System Prompt 中定义的专业审查流程. 最终, 它会将一份结构化的报告返回给主 Agent, 再由主 Agent 呈现给你:
 
-![](images/14_image_14.png)
+![](../assets/images/14_image_14.png)
 
 ### 显式调用: 当你需要精确控制时
 
@@ -272,7 +272,7 @@ An expert Go security code reviewer. Use this agent to review Go (Golang) code f
 使用 go-code-security-reviewer subagent 检查一下 @internal/converter/converer.go 中是否有安全漏洞
 ```
 
-![](images/14_image_15.png)
+![](../assets/images/14_image_15.png)
 
 这种方式给了你最高的控制权, 确保了特定的任务一定会被特定的专家处理.
 
@@ -295,7 +295,7 @@ Subagent 真正的威力, 体现在处理需要多种专业能力协同的复杂
 
 到目前为止, 我们已经掌握了创建和使用 Subagent 的完整技术流程. 但在你开始为你的项目构建庞大的 "虚拟专家团队" 之前, 我想与你分享几条源自官方和社区实践的 "黄金法则". 遵循这些最佳实践, 将帮助你创造出更可靠、更高效、也更安全的 Subagent.
 
-![](images/14_image_16.png)
+![](../assets/images/14_image_16.png)
 
 ### 先让 AI 创造, 再由你升华
 
@@ -319,9 +319,9 @@ After that, use the go-code-security-reviewer  and go-concurrency-reviewer agent
 Finally, use the go-test-coverage-expert agent to ensure the new code has adequate test coverage.
 ```
 
-![](images/14_image_17.png)
+![](../assets/images/14_image_17.png)
 
-![](images/14_image_18.png)
+![](../assets/images/14_image_18.png)
 
 ### 精心雕琢你的 Prompt
 

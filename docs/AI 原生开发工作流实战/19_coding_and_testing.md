@@ -14,7 +14,7 @@
 
 让我们再次明确我们的 "作战地图", 今天, 我们正式踏入了第三阶段. 
 
-![](images/19_image.png)
+![](../assets/images/19_image.png)
 
 
 

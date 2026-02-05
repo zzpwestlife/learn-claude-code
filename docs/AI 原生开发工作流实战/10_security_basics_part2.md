@@ -36,7 +36,7 @@ Claude Code 的 Checkpointing 机制, 就是你开发过程中的 "自动存档�
 
 我们可以用一张图来清晰地看到这个流程:
 
-![](images/10_image.png)
+![](../assets/images/10_image.png)
 
 看, 在 AI 对你的文件系统进行任何 "写" 操作之前, 一个包含了 "之前" 所有状态的完美快照, 已经被安全地存盘了. 这, 就是我们能够 "时光倒流" 的底气所在.
 
@@ -163,11 +163,11 @@ func GetGreeting(name string, isFormal bool, time TimeOfDay) string {
 
 你会看到一个按时间顺序排列的 检查点列表  (旧的在上面, 新的在下面) , 每一个都对应你提交的一次 Prompt: 
 
-![](images/10_image_2.png)
+![](../assets/images/10_image_2.png)
 
 更重要的是, 当你通过方向键选择你要回退到的检查点并按下回车后, 你会看到三个强大的 "倒流" 选项: 
 
-![](images/10_image_3.png)
+![](../assets/images/10_image_3.png)
 
 #### Rewind code (只回退代码) : 
 
@@ -215,7 +215,7 @@ Checkpointing 虽然强大, 但它不是万能的. 清晰地理解它的边界, 
 
 * 它不是 Git 的替代品: 这个误解必须澄清. Checkpointing 和 Git 是解决两种不同问题的工具, 它们是 互补 而非替代关系.
 
-![](images/10_image_4.png)
+![](../assets/images/10_image_4.png)
 
 最佳实践是: 在一个功能开发的过程中, 你可以自由地使用 Checkpointing 进行各种大胆的尝试和回滚. 当你完成了一个有意义的、稳定的功能点时, 再使用 git commit, 将这个 阶段性的成果, 永久地记录到项目的 "正式历史" 中去.
 

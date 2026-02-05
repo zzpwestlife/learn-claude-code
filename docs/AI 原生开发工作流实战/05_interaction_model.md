@@ -26,7 +26,7 @@
 
 `@` 和 `!`, 正是将这种高效的人类协作模式, 完美地复刻到了人机交互之中.
 
-![](images/05_image.png)
+![](../assets/images/05_image.png)
 
 * @ 指令: 它将 "提供上下文" 这个动作, 从一个模糊的、需要靠复制粘贴完成的任务, 变成了一个 精确的、可追溯的、结构化的指令 . 当你输入 @main.go 时, 你和 AI 之间就建立了一个明确的契约: "我们接下来的对话, 是围绕 main.go 这个文件的当前状态展开的. "
 * ! 指令: 它将 "执行动作" 这个环节, 从一个需要你切换窗口、手动操作的流程, 无缝地 融入到了对话流之中 . 它打通了 AI 的 "大脑" (语言模型) 和你的本地环境之间的 "隔膜", 让 AI 的思考可以直接转化为真实世界的影响.
@@ -49,7 +49,7 @@
 
 Claude Code 拥有强大的路径自动补全功能. 你只需输入 @ , 就会自动列出当前目录下的文件和目录列表 (如下图所示) ; 输入和文件名的前几个字母, 然后按下 Tab 键, 它也会像 IDE 一样为你补全路径.
 
-![](images/05_image_2.png)
+![](../assets/images/05_image_2.png)
 
 接下来, 我们将结合开发者日常工作, 看两个 @ 指令与单个文件结合的实战场景.
 
@@ -57,7 +57,7 @@ Claude Code 拥有强大的路径自动补全功能. 你只需输入 @ , 就会�
 
 假设你正在接手一个陌生的 Go 项目, 看到了一个复杂的 Dockerfile 文件, 你想快速理解它的作用. 你可以直接将 Dockerfile 通过 @ 指令喂给 Claude Code:
 
-![](images/05_image_3.png)
+![](../assets/images/05_image_3.png)
 
 我们看到, Claude Code 在加载 Dockerfile (我使用的是 bigwhite / issue2md 项目下的 Dockerfile) 时, 会输出对该上下文数据的概要理解. 当然如果你要进一步针对该 Dockerfile 提问, 可以直接输入你的问题:
 
@@ -167,21 +167,21 @@ func Add(a, b int) int {
 
 AI 会读取 math.go , 理解 Add 函数的签名和功能, 然后为你输出一份高质量的 utils/math\_test.go 文件内容:
 
-![](images/05_image_4.png)
+![](../assets/images/05_image_4.png)
 
 在生成的内容末尾, Claude Code 还给出了三个授权选项:
 
-![](images/05_image_5.png)
+![](../assets/images/05_image_5.png)
 
 选项 1 是授权 Claude Code 在本地创建该 `utils/math_test.go` 文件, 选项 2 是授权 Claude Code 在本次会话下可以进行任何编辑操作. 考虑安全性, 这次我们选择了选项 1, 授权 Claude Code 在本地创建 `utils/math_test.go` 文件.
 
 之后 Claude Code 将创建该文件并输出如下内容:
 
-![](images/05_image_6.png)
+![](../assets/images/05_image_6.png)
 
 我们看到 Claude Code 还贴心地对测试的覆盖范围做了说明, 并给出了后续的建议操作! 你可以在本地跑测试, 也可以在 Claude Code 中使用 ! 指令, 进入 utils 并运行 go test -v, 以查看测试是否运行通过 (如下图) . 关于 ! 指令, 我们后面会详细说明.
 
-![](images/05_image_7.png)
+![](../assets/images/05_image_7.png)
 
 ### 引用整个目录: 开启 "上帝视角"
 
@@ -209,7 +209,7 @@ AI 会读取 math.go , 理解 Add 函数的签名和功能, 然后为你输出�
 @ ./
 ```
 
-![](images/05_image_8.png)
+![](../assets/images/05_image_8.png)
 
 然后, 我们向 Claude Code 表述意图, Claude Code 会结合整个目录上下文给出答案:
 
@@ -392,13 +392,13 @@ AI 会读取 math.go , 理解 Add 函数的签名和功能, 然后为你输出�
 
 假设你想对 issue2md 项目中的 internal/github/ 包进行重构, 将所有调用 Github RESTful API 的地方换为基于 GitHub GraphQL API 的调用, 我们可以基于 GitHub 这个目录的上下文提出我们的重构要求:
 
-![](images/05_image_9.png)
+![](../assets/images/05_image_9.png)
 
-![](images/05_image_10.png)
+![](../assets/images/05_image_10.png)
 
 AI 会一次性读取 api 包下的所有 `.go` 文件, 理解它们之间的相互关系, 然后为你提供一个完整的、系统性的重构方案, 并可以在你的授权后, 直接生成修改后的所有文件内容. 这是单个文件上下文完全无法做到的.
 
-![](images/05_image_11.png)
+![](../assets/images/05_image_11.png)
 
 @ 指令是 AI Agent 的 输入管道. 它以一种结构化的方式, 将真实世界的、多维度的信息 (本地文件、项目结构等) 转化为 AI 可以理解的上下文. 精通 @ , 是你从 "把 AI 当玩具" 到 "把 AI 当工具" 的第一步.
 
@@ -425,7 +425,7 @@ AI 会一次性读取 api 包下的所有 `.go` 文件, 理解它们之间的相
 
 终端会直接执行这条命令, 并返回结果. 你可以立即知道依赖是否存在, 然后继续你的对话. 在我的 issue2md 下执行的结果如下:
 
-![](images/05_image_12.png)
+![](../assets/images/05_image_12.png)
 
 注: 输出上述结果是因为 issue2md 没有依赖 go-redis.
 
@@ -515,7 +515,7 @@ AI 会一次性读取 api 包下的所有 `.go` 文件, 理解它们之间的相
 
 你向 Claude Code 提了一个高层级的任务: "帮我分析这个项目的外部模块依赖" . AI 可能会这样回应 (在 Claude Code 的界面中, 这会以一个需要你确认的交互式卡片出现) :
 
-![](images/05_image_13.png)
+![](../assets/images/05_image_13.png)
 
 我们看到 AI 给出了后续的本地操作建议, 但此时需要你的授权.
 
@@ -539,7 +539,7 @@ AI 永远不会在你不知情的情况下, 擅自执行任何 `rm -rf /` 这样
 
 第一步: 感知项目现状 ( @ )
 
-![](images/05_image_14.png)
+![](../assets/images/05_image_14.png)
 
 Claude Code 读取 `go.mod`, 了解项目当前的依赖情况.
 
@@ -547,21 +547,21 @@ Claude Code 读取 `go.mod`, 了解项目当前的依赖情况.
 
 第二步: 输入意图, 让 AI 提议行动
 
-![](images/05_image_15.png)
+![](../assets/images/05_image_15.png)
 
-![](images/05_image_16.png)
+![](../assets/images/05_image_16.png)
 
 你批准执行.
 
 AI 知道要创建一个新文件, 它会调用 Write 工具, 并生成如下内容:
 
-![](images/05_image_17.png)
+![](../assets/images/05_image_17.png)
 
 
 
 你批准后, AI 完成代码写入, 并提示你使用 go get 更新依赖:
 
-![](images/05_image_18.png)
+![](../assets/images/05_image_18.png)
 
 
 
@@ -569,7 +569,7 @@ AI 知道要创建一个新文件, 它会调用 Write 工具, 并生成如下内
 
 我们使用 ! 指令, 参考 Claude Code 给出的建议执行 go get, 以更新 go.mod 中的依赖:
 
-![](images/05_image_19.png)
+![](../assets/images/05_image_19.png)
 
 
 
@@ -577,11 +577,11 @@ AI 知道要创建一个新文件, 它会调用 Write 工具, 并生成如下内
 
 假设测试通过了. 我们希望把所有这些变更 (go.mod, go.sum, 新增的 uuid.go) 暂存, 生成一条 commit message, 并提交:
 
-![](images/05_image_20.png)
+![](../assets/images/05_image_20.png)
 
-![](images/05_image_21.png)
+![](../assets/images/05_image_21.png)
 
-![](images/05_image_22.png)
+![](../assets/images/05_image_22.png)
 
 看到了吗?从分析需求, 到修改环境, 再到编写代码, 最后版本控制, 整个流程一气呵成. 你全程扮演的是一个 提出意图、审查决策 的 "架构师" 角色, 而所有具体的、繁琐的 "感知 - 行动" 循环, 都由 AI 高效地完成了.
 
@@ -590,7 +590,7 @@ AI 知道要创建一个新文件, 它会调用 Write 工具, 并生成如下内
 
 今天, 我们深入学习了所有 Coding Agent 的 "通用语言"—— 以 @ 为代表的 上下文注入 和以 ! 为代表的 Shell 执行 . 这不仅仅是两个命令, 它们共同构成了一套全新的人机协作哲学.
 
-![](images/05_image_23.png)
+![](../assets/images/05_image_23.png)
 
 首先, 我们建立了 AI"眼 + 手" 的心智模型:  @ 负责 感知世界,  ! 负责 改造世界. 接着, 我们系统性地学习了 @ 指令的两种主要用法: 引用 单个文件 和引用 整个目录  (及其智能的 Git 感知能力) , 它解决了 AI 的 "失忆症". 然后, 我们深入了 ! 指令的两种核心用法:  手动执行 以快速验证, 以及让 AI 提议并执行 以驱动工作流.
 
