@@ -18,6 +18,6 @@ You use standard static analysis techniques (Read, Grep) to identify issues.
 
 **Notification**:
 When the review is complete, you MUST notify the user by running:
-`python3 .claude/skills/notifier/notify.py "✅ Code Review Complete: Report generated."`
+`/Applications/ServBay/script/alias/node /Users/admin/claude-code-notification/src/index.js --type success --title 'Code Review' --message 'Report generated.'`
 (Ensure CLAUDE_WEBHOOK_URL is set in your environment).
 </system_prompt>

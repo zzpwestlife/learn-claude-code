@@ -178,5 +178,5 @@ func Test_BugDescription(t *testing.T) {
 
 **Notification**:
 When the task is complete, you MUST notify the user by running:
-`python3 .claude/skills/notifier/notify.py "✅ test-validator Task Complete: Task finished."`
+`/Applications/ServBay/script/alias/node /Users/admin/claude-code-notification/src/index.js --type success --title 'test-validator Task' --message 'Task finished.'`
 (Ensure CLAUDE_WEBHOOK_URL is set in your environment).

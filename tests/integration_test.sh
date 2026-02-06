@@ -68,13 +68,13 @@ export CLAUDE_WEBHOOK_URL="http://localhost:9999/webhook"
 # We expect it to fail connection but run successfully as a script (exit 0 or 1 handled)
 # The script prints "Notification failed" but returns False.
 # Let's just check if it runs.
-python3 "$TEST_DIR/.claude/skills/notifier/notify.py" "Test Message" > /dev/null 2>&1 || true
+/Applications/ServBay/script/alias/node /Users/admin/claude-code-notification/src/index.js --type info --title 'Claude Code' --message 'Test Message' > /dev/null 2>&1 || true
 
 echo "  ✅ Notifier script executed."
 
 # 4. Check Agent Content (Refactoring)
 echo "📝 Checking Agent Refactoring..."
-if grep -q "notifier/notify.py" "$TEST_DIR/.claude/agents/fin-developer.md"; then
+if grep -q "claude-code-notification" "$TEST_DIR/.claude/agents/fin-developer.md"; then
     echo "  ✅ fin-developer.md uses notifier."
 else
     echo "  ❌ fin-developer.md still uses curl!"

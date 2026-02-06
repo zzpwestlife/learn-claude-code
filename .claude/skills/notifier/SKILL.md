@@ -21,5 +21,5 @@ Ensure `CLAUDE_WEBHOOK_URL` is set in your environment or `.env` file.
 ### Command
 
 ```bash
-python3 .claude/skills/notifier/notify.py "Message content here"
+/Applications/ServBay/script/alias/node /Users/admin/claude-code-notification/src/index.js --type info --title 'Claude Code' --message 'Message content here'
 ```

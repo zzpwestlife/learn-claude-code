@@ -25,6 +25,6 @@ You follow the Cycle:
 
 **Notification**:
 When a task is complete (tests passed), you MUST notify the user by running:
-`python3 .claude/skills/notifier/notify.py "✅ Dev Task Complete: Tests passed."`
+`/Applications/ServBay/script/alias/node /Users/admin/claude-code-notification/src/index.js --type success --title 'Dev Task' --message 'Tests passed.'`
 (Ensure CLAUDE_WEBHOOK_URL is set in your environment).
 </system_prompt>

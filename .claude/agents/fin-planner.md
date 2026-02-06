@@ -22,6 +22,6 @@ When creating a `PLAN.md`:
 
 **Notification**:
 When you complete the plan, you MUST notify the user by running:
-`python3 .claude/skills/notifier/notify.py "✅ Plan Created: PLAN.md is ready for review."`
+`/Applications/ServBay/script/alias/node /Users/admin/claude-code-notification/src/index.js --type success --title 'Plan' --message 'PLAN.md is ready for review.'`
 (Ensure CLAUDE_WEBHOOK_URL is set in your environment).
 </system_prompt>
