@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Claude Code Insights</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; color: #334155; line-height: 1.65; padding: 48px 24px; }
+    .container { max-width: 800px; margin: 0 auto; }
+    h1 { font-size: 32px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+    h2 { font-size: 20px; font-weight: 600; color: #0f172a; margin-top: 48px; margin-bottom: 16px; }
+    .subtitle { color: #64748b; font-size: 15px; margin-bottom: 32px; }
+    .nav-toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 32px 0; padding: 16px; background: white; border-radius: 8px; border: 1px solid #e2e8f0; }
+    .nav-toc a { font-size: 12px; color: #64748b; text-decoration: none; padding: 6px 12px; border-radius: 6px; background: #f1f5f9; transition: all 0.15s; }
+    .nav-toc a:hover { background: #e2e8f0; color: #334155; }
+    .stats-row { display: flex; gap: 24px; margin-bottom: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; flex-wrap: wrap; }
+    .stat { text-align: center; }
+    .stat-value { font-size: 24px; font-weight: 700; color: #0f172a; }
+    .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; }
+    .at-a-glance { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 1px solid #f59e0b; border-radius: 12px; padding: 20px 24px; margin-bottom: 32px; }
+    .glance-title { font-size: 16px; font-weight: 700; color: #92400e; margin-bottom: 16px; }
+    .glance-sections { display: flex; flex-direction: column; gap: 12px; }
+    .glance-section { font-size: 14px; color: #78350f; line-height: 1.6; }
+    .glance-section strong { color: #92400e; }
+    .see-more { color: #b45309; text-decoration: none; font-size: 13px; white-space: nowrap; }
+    .see-more:hover { text-decoration: underline; }
+    .project-areas { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+    .project-area { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+    .area-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .area-name { font-weight: 600; font-size: 15px; color: #0f172a; }
+    .area-count { font-size: 12px; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; }
+    .area-desc { font-size: 14px; color: #475569; line-height: 1.5; }
+    .narrative { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+    .narrative p { margin-bottom: 12px; font-size: 14px; color: #475569; line-height: 1.7; }
+    .key-insight { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 14px; color: #166534; }
+    .section-intro { font-size: 14px; color: #64748b; margin-bottom: 16px; }
+    .big-wins { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+    .big-win { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; }
+    .big-win-title { font-weight: 600; font-size: 15px; color: #166534; margin-bottom: 8px; }
+    .big-win-desc { font-size: 14px; color: #15803d; line-height: 1.5; }
+    .friction-categories { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+    .friction-category { background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 16px; }
+    .friction-title { font-weight: 600; font-size: 15px; color: #991b1b; margin-bottom: 6px; }
+    .friction-desc { font-size: 13px; color: #7f1d1d; margin-bottom: 10px; }
+    .friction-examples { margin: 0 0 0 20px; font-size: 13px; color: #334155; }
+    .friction-examples li { margin-bottom: 4px; }
+    .claude-md-section { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+    .claude-md-section h3 { font-size: 14px; font-weight: 600; color: #1e40af; margin: 0 0 12px 0; }
+    .claude-md-actions { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #dbeafe; }
+    .copy-all-btn { background: #2563eb; color: white; border: none; border-radius: 4px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+    .copy-all-btn:hover { background: #1d4ed8; }
+    .copy-all-btn.copied { background: #16a34a; }
+    .claude-md-item { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; padding: 10px 0; border-bottom: 1px solid #dbeafe; }
+    .claude-md-item:last-child { border-bottom: none; }
+    .cmd-checkbox { margin-top: 2px; }
+    .cmd-code { background: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; color: #1e40af; border: 1px solid #bfdbfe; font-family: monospace; display: block; white-space: pre-wrap; word-break: break-word; flex: 1; }
+    .cmd-why { font-size: 12px; color: #64748b; width: 100%; padding-left: 24px; margin-top: 4px; }
+    .features-section, .patterns-section { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }
+    .feature-card { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px; }
+    .pattern-card { background: #f0f9ff; border: 1px solid #7dd3fc; border-radius: 8px; padding: 16px; }
+    .feature-title, .pattern-title { font-weight: 600; font-size: 15px; color: #0f172a; margin-bottom: 6px; }
+    .feature-oneliner { font-size: 14px; color: #475569; margin-bottom: 8px; }
+    .pattern-summary { font-size: 14px; color: #475569; margin-bottom: 8px; }
+    .feature-why, .pattern-detail { font-size: 13px; color: #334155; line-height: 1.5; }
+    .feature-examples { margin-top: 12px; }
+    .feature-example { padding: 8px 0; border-top: 1px solid #d1fae5; }
+    .feature-example:first-child { border-top: none; }
+    .example-desc { font-size: 13px; color: #334155; margin-bottom: 6px; }
+    .example-code-row { display: flex; align-items: flex-start; gap: 8px; }
+    .example-code { flex: 1; background: #f1f5f9; padding: 8px 12px; border-radius: 4px; font-family: monospace; font-size: 12px; color: #334155; overflow-x: auto; white-space: pre-wrap; }
+    .copyable-prompt-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
+    .copyable-prompt-row { display: flex; align-items: flex-start; gap: 8px; }
+    .copyable-prompt { flex: 1; background: #f8fafc; padding: 10px 12px; border-radius: 4px; font-family: monospace; font-size: 12px; color: #334155; border: 1px solid #e2e8f0; white-space: pre-wrap; line-height: 1.5; }
+    .feature-code { background: #f8fafc; padding: 12px; border-radius: 6px; margin-top: 12px; border: 1px solid #e2e8f0; display: flex; align-items: flex-start; gap: 8px; }
+    .feature-code code { flex: 1; font-family: monospace; font-size: 12px; color: #334155; white-space: pre-wrap; }
+    .pattern-prompt { background: #f8fafc; padding: 12px; border-radius: 6px; margin-top: 12px; border: 1px solid #e2e8f0; }
+    .pattern-prompt code { font-family: monospace; font-size: 12px; color: #334155; display: block; white-space: pre-wrap; margin-bottom: 8px; }
+    .prompt-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #64748b; margin-bottom: 6px; }
+    .copy-btn { background: #e2e8f0; border: none; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer; color: #475569; flex-shrink: 0; }
+    .copy-btn:hover { background: #cbd5e1; }
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+    .chart-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+    .chart-title { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 12px; }
+    .bar-row { display: flex; align-items: center; margin-bottom: 6px; }
+    .bar-label { width: 100px; font-size: 11px; color: #475569; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-track { flex: 1; height: 6px; background: #f1f5f9; border-radius: 3px; margin: 0 8px; }
+    .bar-fill { height: 100%; border-radius: 3px; }
+    .bar-value { width: 28px; font-size: 11px; font-weight: 500; color: #64748b; text-align: right; }
+    .empty { color: #94a3b8; font-size: 13px; }
+    .horizon-section { display: flex; flex-direction: column; gap: 16px; }
+    .horizon-card { background: linear-gradient(135deg, #faf5ff 0%, #f5f3ff 100%); border: 1px solid #c4b5fd; border-radius: 8px; padding: 16px; }
+    .horizon-title { font-weight: 600; font-size: 15px; color: #5b21b6; margin-bottom: 8px; }
+    .horizon-possible { font-size: 14px; color: #334155; margin-bottom: 10px; line-height: 1.5; }
+    .horizon-tip { font-size: 13px; color: #6b21a8; background: rgba(255,255,255,0.6); padding: 8px 12px; border-radius: 4px; }
+    .feedback-header { margin-top: 48px; color: #64748b; font-size: 16px; }
+    .feedback-intro { font-size: 13px; color: #94a3b8; margin-bottom: 16px; }
+    .feedback-section { margin-top: 16px; }
+    .feedback-section h3 { font-size: 14px; font-weight: 600; color: #475569; margin-bottom: 12px; }
+    .feedback-card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .feedback-card.team-card { background: #eff6ff; border-color: #bfdbfe; }
+    .feedback-card.model-card { background: #faf5ff; border-color: #e9d5ff; }
+    .feedback-title { font-weight: 600; font-size: 14px; color: #0f172a; margin-bottom: 6px; }
+    .feedback-detail { font-size: 13px; color: #475569; line-height: 1.5; }
+    .feedback-evidence { font-size: 12px; color: #64748b; margin-top: 8px; }
+    .fun-ending { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 1px solid #fbbf24; border-radius: 12px; padding: 24px; margin-top: 40px; text-align: center; }
+    .fun-headline { font-size: 18px; font-weight: 600; color: #78350f; margin-bottom: 8px; }
+    .fun-detail { font-size: 14px; color: #92400e; }
+    .collapsible-section { margin-top: 16px; }
+    .collapsible-header { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 12px 0; border-bottom: 1px solid #e2e8f0; }
+    .collapsible-header h3 { margin: 0; font-size: 14px; font-weight: 600; color: #475569; }
+    .collapsible-arrow { font-size: 12px; color: #94a3b8; transition: transform 0.2s; }
+    .collapsible-content { display: none; padding-top: 16px; }
+    .collapsible-content.open { display: block; }
+    .collapsible-header.open .collapsible-arrow { transform: rotate(90deg); }
+    @media (max-width: 640px) { .charts-row { grid-template-columns: 1fr; } .stats-row { justify-content: center; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Claude Code Insights</h1>
+    <p class="subtitle">331 messages across 41 sessions | 2026-01-18 to 2026-01-27</p>
+
+    
+    <div class="at-a-glance">
+      <div class="glance-title">At a Glance</div>
+      <div class="glance-sections">
+        <div class="glance-section"><strong>What's working:</strong> You've developed a strong workflow around financial data analysis using the AlphaMoeMoe plugin, combining ticker sentiment, daily summaries, and blogger consensus to inform stock research decisions. Your Go refactoring work shows architectural discipline—you successfully executed a three-step dependency inversion refactoring with clear abstraction layers. You're also proactive about code quality, routinely requesting both security and concurrency reviews before issues arise. <a href="#section-wins" class="see-more">Impressive Things You Did →</a></div>
+        <div class="glance-section"><strong>What's hindering you:</strong> Claude occasionally misidentifies files during refactoring tasks (looking for client.go instead of github.go) and can misunderstand type definitions, mistaking interfaces for structs. On your side, nearly half your sessions end prematurely due to interruptions, timeouts, or early exits—often you'll invoke a plugin but don't follow through with feedback or complete the analysis workflow you started. <a href="#section-friction" class="see-more">Where Things Go Wrong →</a></div>
+        <div class="glance-section"><strong>Quick wins to try:</strong> Consider creating Custom Skills for your stock analysis workflow—standardize the combination of sentiment retrieval, daily summaries, and consensus views into a single /command. For your Go refactoring patterns, capture the successful dependency inversion steps as a reusable skill so you can apply the same architectural approach consistently across projects without re-explaining the pattern each time. <a href="#section-features" class="see-more">Features to Try →</a></div>
+        <div class="glance-section"><strong>Ambitious workflows:</strong> With more capable models coming, you could build an autonomous stock analysis agent that continuously monitors your tickers, synthesizes sentiment across timeframes, and proactively surfaces insights without per-session prompting. Similarly, imagine orchestrating parallel specialized agents for your Go codebase—one handling security analysis, another concurrency patterns, a third dependency injection—with a supervisory agent synthesizing findings and applying coordinated refactoring across your entire project automatically. <a href="#section-horizon" class="see-more">On the Horizon →</a></div>
+      </div>
+    </div>
+    
+
+    <nav class="nav-toc">
+      <a href="#section-work">What You Work On</a>
+      <a href="#section-usage">How You Use CC</a>
+      <a href="#section-wins">Impressive Things</a>
+      <a href="#section-friction">Where Things Go Wrong</a>
+      <a href="#section-features">Features to Try</a>
+      <a href="#section-patterns">New Usage Patterns</a>
+      <a href="#section-horizon">On the Horizon</a>
+      <a href="#section-feedback">Team Feedback</a>
+    </nav>
+
+    <div class="stats-row">
+      <div class="stat"><div class="stat-value">331</div><div class="stat-label">Messages</div></div>
+      <div class="stat"><div class="stat-value">+4,432/-398</div><div class="stat-label">Lines</div></div>
+      <div class="stat"><div class="stat-value">31</div><div class="stat-label">Files</div></div>
+      <div class="stat"><div class="stat-value">4</div><div class="stat-label">Days</div></div>
+      <div class="stat"><div class="stat-value">82.8</div><div class="stat-label">Msgs/Day</div></div>
+    </div>
+
+    
+    <h2 id="section-work">What You Work On</h2>
+    <div class="project-areas">
+      
+        <div class="project-area">
+          <div class="area-header">
+            <span class="area-name">Stock Market Analysis</span>
+            <span class="area-count">~16 sessions</span>
+          </div>
+          <div class="area-desc">Extensive use of financial data plugins to retrieve ticker sentiment, daily summaries, and blogger consensus views. Claude helped analyze UNH stock and identify stocks with blogger consensus through MCP tools.</div>
+        </div>
+      
+        <div class="project-area">
+          <div class="area-header">
+            <span class="area-name">Go Code Refactoring</span>
+            <span class="area-count">~9 sessions</span>
+          </div>
+          <div class="area-desc">Dependency inversion refactoring work in Go, creating interfaces and restructuring codebase to use abstraction layers. Claude provided guidance through a three-step refactoring process.</div>
+        </div>
+      
+        <div class="project-area">
+          <div class="area-header">
+            <span class="area-name">Security and Concurrency Review</span>
+            <span class="area-count">~8 sessions</span>
+          </div>
+          <div class="area-desc">Detailed security and concurrency analysis of Go files. Claude identified specific vulnerabilities and provided comprehensive review findings.</div>
+        </div>
+      
+        <div class="project-area">
+          <div class="area-header">
+            <span class="area-name">Documentation Generation</span>
+            <span class="area-count">~1 sessions</span>
+          </div>
+          <div class="area-desc">Complete README.md documentation generated by scanning project files and analyzing the codebase structure.</div>
+        </div>
+      
+    </div>
+    
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">What You Wanted</div>
+        <div class="bar-row">
+        <div class="bar-label">Data Retrieval</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#2563eb"></div></div>
+        <div class="bar-value">20</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Code Refactoring</div>
+        <div class="bar-track"><div class="bar-fill" style="width:45%;background:#2563eb"></div></div>
+        <div class="bar-value">9</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Data Analysis</div>
+        <div class="bar-track"><div class="bar-fill" style="width:40%;background:#2563eb"></div></div>
+        <div class="bar-value">8</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Security Review</div>
+        <div class="bar-track"><div class="bar-fill" style="width:40%;background:#2563eb"></div></div>
+        <div class="bar-value">8</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Concurrency Review</div>
+        <div class="bar-track"><div class="bar-fill" style="width:40%;background:#2563eb"></div></div>
+        <div class="bar-value">8</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Documentation Generation</div>
+        <div class="bar-track"><div class="bar-fill" style="width:5%;background:#2563eb"></div></div>
+        <div class="bar-value">1</div>
+      </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Top Tools Used</div>
+        <div class="bar-row">
+        <div class="bar-label">Mcp  Plugin AlphaMoeMoe Moemoe  Get Ticker Sentiment</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#0891b2"></div></div>
+        <div class="bar-value">162</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Mcp  Plugin AlphaMoeMoe Moemoe  Get Daily Summary</div>
+        <div class="bar-track"><div class="bar-fill" style="width:49.382716049382715%;background:#0891b2"></div></div>
+        <div class="bar-value">80</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Mcp  Plugin AlphaMoeMoe Moemoe  Search Viewpoints</div>
+        <div class="bar-track"><div class="bar-fill" style="width:46.913580246913575%;background:#0891b2"></div></div>
+        <div class="bar-value">76</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Task</div>
+        <div class="bar-track"><div class="bar-fill" style="width:26.543209876543212%;background:#0891b2"></div></div>
+        <div class="bar-value">43</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">TodoWrite</div>
+        <div class="bar-track"><div class="bar-fill" style="width:20.37037037037037%;background:#0891b2"></div></div>
+        <div class="bar-value">33</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Read</div>
+        <div class="bar-track"><div class="bar-fill" style="width:17.901234567901234%;background:#0891b2"></div></div>
+        <div class="bar-value">29</div>
+      </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Languages</div>
+        <div class="bar-row">
+        <div class="bar-label">Go</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#10b981"></div></div>
+        <div class="bar-value">41</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Markdown</div>
+        <div class="bar-track"><div class="bar-fill" style="width:68.29268292682927%;background:#10b981"></div></div>
+        <div class="bar-value">28</div>
+      </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Session Types</div>
+        <div class="bar-row">
+        <div class="bar-label">Single Task</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#8b5cf6"></div></div>
+        <div class="bar-value">29</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Multi Task</div>
+        <div class="bar-track"><div class="bar-fill" style="width:37.93103448275862%;background:#8b5cf6"></div></div>
+        <div class="bar-value">11</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Quick Question</div>
+        <div class="bar-track"><div class="bar-fill" style="width:3.4482758620689653%;background:#8b5cf6"></div></div>
+        <div class="bar-value">1</div>
+      </div>
+      </div>
+    </div>
+
+    
+    <h2 id="section-usage">How You Use Claude Code</h2>
+    <div class="narrative">
+      <p>You are an <strong>experimental and tool-driven user</strong> who treats Claude Code as a data analyst assistant, with the overwhelming majority of your interactions (318 out of 331 messages) focused on retrieving market sentiment and stock data through custom MCP plugins. Rather than traditional coding work, you use Claude primarily as a query interface for financial data, running repeated ticker sentiment checks (162 calls), daily summaries (80), and viewpoint searches (76). Your approach is <strong>highly repetitive and data-hungry</strong>—you're not looking for one-off answers but rather continuous market monitoring.</p>
+<p>When you do engage in actual development work, you're a <strong>methodical refactoring specialist</strong> who provides clear, structured guidance. Your Go dependency inversion refactoring session demonstrates you think in architectural layers and can guide Claude through multi-step transformations with precision. However, your session completion rate is strikingly low (only 4 fully achieved out of 41 sessions)—you frequently interrupt your own requests, exit prematurely with /exit, or encounter timeouts before reaching conclusions. This suggests you're <strong>rapidly testing capabilities</strong> rather than seeing sessions through to completion, often bouncing between tools and experiments without always following through.</p>
+      <div class="key-insight"><strong>Key pattern:</strong> Data-obsessed financial analyst who treats Claude as a market intelligence platform while occasionally dipping into methodical Go refactoring, but with high session abandonment.</div>
+    </div>
+    
+
+    <!-- Response Time Distribution -->
+    <div class="chart-card" style="margin: 24px 0;">
+      <div class="chart-title">User Response Time Distribution</div>
+      <div class="bar-row">
+        <div class="bar-label">2-10s</div>
+        <div class="bar-track"><div class="bar-fill" style="width:31.521739130434785%;background:#6366f1"></div></div>
+        <div class="bar-value">29</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">10-30s</div>
+        <div class="bar-track"><div class="bar-fill" style="width:20.652173913043477%;background:#6366f1"></div></div>
+        <div class="bar-value">19</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">30s-1m</div>
+        <div class="bar-track"><div class="bar-fill" style="width:21.73913043478261%;background:#6366f1"></div></div>
+        <div class="bar-value">20</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">1-2m</div>
+        <div class="bar-track"><div class="bar-fill" style="width:3.260869565217391%;background:#6366f1"></div></div>
+        <div class="bar-value">3</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">2-5m</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#6366f1"></div></div>
+        <div class="bar-value">92</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">5-15m</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%;background:#6366f1"></div></div>
+        <div class="bar-value">0</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">>15m</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%;background:#6366f1"></div></div>
+        <div class="bar-value">0</div>
+      </div>
+      <div style="font-size: 12px; color: #64748b; margin-top: 8px;">
+        Median: 124.3s &bull; Average: 107.8s
+      </div>
+    </div>
+
+    <!-- Multi-clauding Section (matching Python reference) -->
+    <div class="chart-card" style="margin: 24px 0;">
+      <div class="chart-title">Multi-Clauding (Parallel Sessions)</div>
+      
+        <p style="font-size: 14px; color: #64748b; padding: 8px 0;">
+          No parallel session usage detected. You typically work with one Claude Code session at a time.
+        </p>
+      
+    </div>
+
+    <!-- Time of Day & Tool Errors -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title" style="display: flex; align-items: center; gap: 12px;">
+          User Messages by Time of Day
+          <select id="timezone-select" style="font-size: 12px; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+            <option value="0">PT (UTC-8)</option>
+            <option value="3">ET (UTC-5)</option>
+            <option value="8">London (UTC)</option>
+            <option value="9">CET (UTC+1)</option>
+            <option value="17">Tokyo (UTC+9)</option>
+            <option value="custom">Custom offset...</option>
+          </select>
+          <input type="number" id="custom-offset" placeholder="UTC offset" style="display: none; width: 80px; font-size: 12px; padding: 4px; border-radius: 4px; border: 1px solid #e2e8f0;">
+        </div>
+        <div id="hour-histogram">
+      <div class="bar-row">
+        <div class="bar-label">Morning (6-12)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.9146341463414633%;background:#8b5cf6"></div></div>
+        <div class="bar-value">3</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">Afternoon (12-18)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%;background:#8b5cf6"></div></div>
+        <div class="bar-value">0</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">Evening (18-24)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#8b5cf6"></div></div>
+        <div class="bar-value">328</div>
+      </div>
+
+      <div class="bar-row">
+        <div class="bar-label">Night (0-6)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0%;background:#8b5cf6"></div></div>
+        <div class="bar-value">0</div>
+      </div></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Tool Errors Encountered</div>
+        <div class="bar-row">
+        <div class="bar-label">Other</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#dc2626"></div></div>
+        <div class="bar-value">4</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">File Not Found</div>
+        <div class="bar-track"><div class="bar-fill" style="width:75%;background:#dc2626"></div></div>
+        <div class="bar-value">3</div>
+      </div>
+      </div>
+    </div>
+
+    
+    <h2 id="section-wins">Impressive Things You Did</h2>
+    <p class="section-intro">You're demonstrating strong proficiency with Go codebase work and financial data analysis, particularly leveraging MCP plugins for stock market research.</p>
+    <div class="big-wins">
+      
+        <div class="big-win">
+          <div class="big-win-title">Strategic Go refactoring</div>
+          <div class="big-win-desc">You successfully executed a three-step dependency inversion refactoring in Go, creating interfaces and restructuring the codebase with abstraction layers. Your systematic approach to architectural improvements shows deep understanding of clean code principles.</div>
+        </div>
+      
+        <div class="big-win">
+          <div class="big-win-title">Financial sentiment analysis</div>
+          <div class="big-win-desc">You're extensively using the AlphaMoeMoe MCP plugin to gather ticker sentiment data, daily summaries, and blogger viewpoints. Your workflow focuses on consensus-driven stock research by leveraging multiple data retrieval tools to inform investment decisions.</div>
+        </div>
+      
+        <div class="big-win">
+          <div class="big-win-title">Comprehensive code reviews</div>
+          <div class="big-win-desc">You proactively requested both security and concurrency reviews for your Go code, receiving detailed vulnerability analysis. Your commitment to code quality through systematic reviews across multiple dimensions demonstrates professional development practices.</div>
+        </div>
+      
+    </div>
+    
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">What Helped Most (Claude's Capabilities)</div>
+        <div class="bar-row">
+        <div class="bar-label">Fast/Accurate Search</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#16a34a"></div></div>
+        <div class="bar-value">20</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Good Explanations</div>
+        <div class="bar-track"><div class="bar-fill" style="width:40%;background:#16a34a"></div></div>
+        <div class="bar-value">8</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Multi-file Changes</div>
+        <div class="bar-track"><div class="bar-fill" style="width:20%;background:#16a34a"></div></div>
+        <div class="bar-value">4</div>
+      </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Outcomes</div>
+        <div class="bar-row">
+        <div class="bar-label">Mostly Achieved</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#8b5cf6"></div></div>
+        <div class="bar-value">28</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Fully Achieved</div>
+        <div class="bar-track"><div class="bar-fill" style="width:14.285714285714285%;background:#8b5cf6"></div></div>
+        <div class="bar-value">4</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Unclear</div>
+        <div class="bar-track"><div class="bar-fill" style="width:32.142857142857146%;background:#8b5cf6"></div></div>
+        <div class="bar-value">9</div>
+      </div>
+      </div>
+    </div>
+
+    
+    <h2 id="section-friction">Where Things Go Wrong</h2>
+    <p class="section-intro">You experience significant friction from incomplete sessions, premature exits, and intermittent tool usage patterns that disrupt your workflow continuity.</p>
+    <div class="friction-categories">
+      
+        <div class="friction-category">
+          <div class="friction-title">Incomplete Sessions and Premature Exits</div>
+          <div class="friction-desc">You frequently start sessions but exit before achieving your goals, either due to interruptions, timeouts, or using /exit before any interaction occurs. You could try formulating your complete request before starting or waiting for responses.</div>
+          <ul class="friction-examples"><li>You said hi then interrupted your own request before stating what you needed help with, resulting in no goal being achieved</li><li>You ran local sandbox commands without engaging Claude, then exited immediately with /exit before any actual work took place</li></ul>
+        </div>
+      
+        <div class="friction-category">
+          <div class="friction-title">Interrupted Plugin Workflows</div>
+          <div class="friction-desc">You often invoke plugins for stock analysis and data retrieval but don't provide feedback or complete the workflow, leaving sessions incomplete. You could follow through on your initial requests by asking follow-up questions or confirming the results.</div>
+          <ul class="friction-examples"><li>You requested stock analysis for UNH ticker using a plugin, but the session ended with no user feedback provided after data retrieval started</li><li>You asked to view GitHub issues using MCP but the session ended before any response was provided or analyzed</li></ul>
+        </div>
+      
+        <div class="friction-category">
+          <div class="friction-title">Tool Confusion and Misinterpretation</div>
+          <div class="friction-desc">You encounter friction when Claude misidentifies files or misunderstands data structures during complex refactoring tasks. You could provide more explicit file paths and clarify type definitions upfront.</div>
+          <ul class="friction-examples"><li>Claude initially looked for client.go instead of github.go during your refactoring session, wasting time before finding the correct file</li><li>Claude misinterpreted your IssueData as a struct rather than an interface, requiring clarification before proceeding with the code changes</li></ul>
+        </div>
+      
+    </div>
+    
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Primary Friction Types</div>
+        <div class="bar-row">
+        <div class="bar-label">Misunderstood Request</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#dc2626"></div></div>
+        <div class="bar-value">3</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Wrong File</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#dc2626"></div></div>
+        <div class="bar-value">3</div>
+      </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Inferred Satisfaction (model-estimated)</div>
+        <div class="bar-row">
+        <div class="bar-label">Likely Satisfied</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:#eab308"></div></div>
+        <div class="bar-value">36</div>
+      </div>
+<div class="bar-row">
+        <div class="bar-label">Satisfied</div>
+        <div class="bar-track"><div class="bar-fill" style="width:25%;background:#eab308"></div></div>
+        <div class="bar-value">9</div>
+      </div>
+      </div>
+    </div>
+
+    
+    
+    <h2 id="section-features">Existing CC Features to Try</h2>
+    <div class="claude-md-section">
+      <h3>Suggested CLAUDE.md Additions</h3>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 12px;">Just copy this into Claude Code to add it to your CLAUDE.md.</p>
+      <div class="claude-md-actions">
+        <button class="copy-all-btn" onclick="copyAllCheckedClaudeMd()">Copy All Checked</button>
+      </div>
+      
+        <div class="claude-md-item">
+          <input type="checkbox" id="cmd-0" class="cmd-checkbox" checked data-text="Add under ## Project Structure or ## File Priority section\n\nWhen working with GitHub-related files, always prioritize reading github.go before client.go to understand the correct file structure first.">
+          <label for="cmd-0">
+            <code class="cmd-code">When working with GitHub-related files, always prioritize reading github.go before client.go to understand the correct file structure first.</code>
+            <button class="copy-btn" onclick="copyCmdItem(0)">Copy</button>
+          </label>
+          <div class="cmd-why">Claude incorrectly looked for client.go instead of github.go, causing friction during the GitHub MCP session.</div>
+        </div>
+      
+        <div class="claude-md-item">
+          <input type="checkbox" id="cmd-1" class="cmd-checkbox" checked data-text="Add under ## Go Code Review or ## Type System Conventions\n\nFor Go projects with interface-based design, check if IssueData (or similar types) are interfaces rather than structs before making assumptions about their implementation.">
+          <label for="cmd-1">
+            <code class="cmd-code">For Go projects with interface-based design, check if IssueData (or similar types) are interfaces rather than structs before making assumptions about their implementation.</code>
+            <button class="copy-btn" onclick="copyCmdItem(1)">Copy</button>
+          </label>
+          <div class="cmd-why">Claude misinterpreted IssueData as a struct rather than an interface during the security/concurrency review session.</div>
+        </div>
+      
+        <div class="claude-md-item">
+          <input type="checkbox" id="cmd-2" class="cmd-checkbox" checked data-text="Add under ## MCP Usage or ## Stock Analysis Workflow\n\nWhen using MCP plugins for stock analysis (like AlphaMoeMoe), always provide ticker symbols explicitly and clarify if you need sentiment data, daily summaries, or blogger consensus.">
+          <label for="cmd-2">
+            <code class="cmd-code">When using MCP plugins for stock analysis (like AlphaMoeMoe), always provide ticker symbols explicitly and clarify if you need sentiment data, daily summaries, or blogger consensus.</code>
+            <button class="copy-btn" onclick="copyCmdItem(2)">Copy</button>
+          </label>
+          <div class="cmd-why">Stock analysis sessions were clearer when commands like /consensus were used, but some sessions appeared incomplete without clear parameters.</div>
+        </div>
+      
+    </div>
+    
+    
+    <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Just copy this into Claude Code and it'll set it up for you.</p>
+    <div class="features-section">
+      
+        <div class="feature-card">
+          <div class="feature-title">Custom Skills</div>
+          <div class="feature-oneliner">Create reusable markdown prompts that run with a single /command</div>
+          <div class="feature-why"><strong>Why for you:</strong> You're already using /consensus successfully - create more skills for your repetitive workflows like security reviews, Go refactoring patterns, or documentation generation</div>
+          
+          <div class="feature-examples">
+            <div class="feature-example">
+              <div class="example-code-row">
+                <code class="example-code"># Create .claude/skills/security/SKILL.md
+# Then run: /security
+
+# SKILL.md content:
+Review the specified Go file for:
+1. Race conditions and concurrency issues
+2. Input validation vulnerabilities
+3. Error handling patterns
+4. Security best practices violations
+
+Provide specific line numbers and remediation steps.</code>
+                <button class="copy-btn" onclick="copyText(this)">Copy</button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      
+        <div class="feature-card">
+          <div class="feature-title">Custom Skills</div>
+          <div class="feature-oneliner">Standardize complex workflows into repeatable commands</div>
+          <div class="feature-why"><strong>Why for you:</strong> Your Go dependency inversion refactoring was successful - capture that 3-step process as a skill to reuse on future refactoring tasks</div>
+          
+          <div class="feature-examples">
+            <div class="feature-example">
+              <div class="example-code-row">
+                <code class="example-code"># Create .claude/skills/refactor-di/SKILL.md
+
+When asked to refactor for dependency inversion:
+1. Identify concrete dependencies in the target file
+2. Create interfaces for those dependencies
+3. Restructure code to depend on abstractions
+4. Generate factory functions if needed
+
+Always show before/after code comparisons.</code>
+                <button class="copy-btn" onclick="copyText(this)">Copy</button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      
+        <div class="feature-card">
+          <div class="feature-title">MCP Servers</div>
+          <div class="feature-oneliner">Connect Claude to external tools, databases, and APIs</div>
+          <div class="feature-why"><strong>Why for you:</strong> You're already heavily using AlphaMoeMoe MCP plugin (162+ calls) - consider adding GitHub MCP permanently for issue tracking, and explore other finance APIs to complement your stock analysis workflow</div>
+          
+          <div class="feature-examples">
+            <div class="feature-example">
+              <div class="example-code-row">
+                <code class="example-code"># Add GitHub MCP for issue tracking (you tried this once):
+claude mcp add github -- npx -y @modelcontextprotocol/server-github
+
+# Consider adding more finance APIs:
+claude mcp add finnhub -- npx -y @modelcontextprotocol/server-finnhub</code>
+                <button class="copy-btn" onclick="copyText(this)">Copy</button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      
+        <div class="feature-card">
+          <div class="feature-title">Hooks</div>
+          <div class="feature-oneliner">Auto-run shell commands at specific lifecycle events</div>
+          <div class="feature-why"><strong>Why for you:</strong> With 9 code_refactoring goals, add hooks to auto-run go fmt, go vet, or tests after file edits to maintain code quality during refactoring sessions</div>
+          
+          <div class="feature-examples">
+            <div class="feature-example">
+              <div class="example-code-row">
+                <code class="example-code"># Add to .claude/settings.json:
+{
+  &quot;hooks&quot;: {
+    &quot;postEdit&quot;: &quot;cd /path/to/go/project &amp;&amp; go fmt ./... &amp;&amp; go vet ./...&quot;
+  }
+}</code>
+                <button class="copy-btn" onclick="copyText(this)">Copy</button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      
+    </div>
+    
+    
+    <h2 id="section-patterns">New Ways to Use Claude Code</h2>
+    <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Just copy this into Claude Code and it'll walk you through it.</p>
+    <div class="patterns-section">
+      
+        <div class="pattern-card">
+          <div class="pattern-title">Stock Analysis Workflow Standardization</div>
+          <div class="pattern-summary">Define a consistent workflow for stock analysis that clarifies what data you need upfront.</div>
+          <div class="pattern-detail">You frequently use AlphaMoeMoe MCP plugin but some sessions appear incomplete. By explicitly stating whether you need ticker sentiment, daily summaries, or blogger consensus at the start, you'll reduce ambiguity and get more complete analysis.</div>
+          
+          <div class="copyable-prompt-section">
+            <div class="prompt-label">Paste into Claude Code:</div>
+            <div class="copyable-prompt-row">
+              <code class="copyable-prompt">Analyze [TICKER] stock by: 1) Getting recent sentiment data, 2) Retrieving daily summaries for the past 5 days, 3) Checking blogger consensus if available. Summarize bullish/bearish signals with specific data points.</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+          
+        </div>
+      
+        <div class="pattern-card">
+          <div class="pattern-title">Go Refactoring Pattern Capture</div>
+          <div class="pattern-summary">Document successful refactoring patterns as reusable instructions.</div>
+          <div class="pattern-detail">Your dependency inversion refactoring was fully achieved. Capture that 3-step process (identify dependencies → create interfaces → restructure) as a repeatable pattern for future Go refactoring work.</div>
+          
+          <div class="copyable-prompt-section">
+            <div class="prompt-label">Paste into Claude Code:</div>
+            <div class="copyable-prompt-row">
+              <code class="copyable-prompt">Apply dependency inversion refactoring to [TARGET_FILE]: 1) List concrete dependencies, 2) Define interfaces for each dependency, 3) Refactor to use interfaces with before/after code comparison.</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+          
+        </div>
+      
+        <div class="pattern-card">
+          <div class="pattern-title">Session Intent Clarity</div>
+          <div class="pattern-summary">State your goal clearly at session start to avoid interrupted or incomplete sessions.</div>
+          <div class="pattern-detail">Multiple sessions show 'unclear_from_transcript' due to interruptions or timeout. Starting with 'I need help with [specific task]' helps Claude understand context faster and reduces wasted time.</div>
+          
+          <div class="copyable-prompt-section">
+            <div class="prompt-label">Paste into Claude Code:</div>
+            <div class="copyable-prompt-row">
+              <code class="copyable-prompt">Start sessions with: 'I need to [ACTION] the [FILE/COMPONENT] to achieve [GOAL]. Please [FIRST_STEP].'</code>
+              <button class="copy-btn" onclick="copyText(this)">Copy</button>
+            </div>
+          </div>
+          
+        </div>
+      
+    </div>
+    
+    
+
+    
+    <h2 id="section-horizon">On the Horizon</h2>
+    <p class="section-intro">The data reveals a pattern of strong technical reviews and data retrieval success, yet significant opportunity remains in autonomous workflows that can complete multi-step objectives without interruption.</p>
+    <div class="horizon-section">
+      
+        <div class="horizon-card">
+          <div class="horizon-title">Autonomous Stock Analysis Pipeline</div>
+          <div class="horizon-possible">Deploy a self-directing agent that continuously monitors your tracked tickers, synthesizes sentiment data across multiple timeframes, generates comparative analyses, and proactively surfaces actionable insights without requiring per-session prompting.</div>
+          <div class="horizon-tip"><strong>Getting started:</strong> Create a persistent agent workflow using MCP plugins with scheduled triggers and stateful context retention.</div>
+          <div class="pattern-prompt"><div class="prompt-label">Paste into Claude Code:</div><code>Create an autonomous stock monitoring agent that: 1) Every 6 hours, automatically fetches sentiment data for my tracked tickers (UNH, and others in my watchlist), 2) Analyzes trends across daily summaries and blogger viewpoints, 3) Compares current sentiment against 7-day and 30-day baselines, 4) Generates a concise markdown report highlighting significant sentiment shifts (&gt;20% change), unusual consensus patterns, or emerging risk signals, 5) Saves reports to a dated log file and flags critical insights for my review. Use MCP plugins for all data retrieval and maintain state between runs to track sentiment evolution over time.</code><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+        </div>
+      
+        <div class="horizon-card">
+          <div class="horizon-title">Multi-Agent Parallel Codebase Refactoring</div>
+          <div class="horizon-possible">Orchestrate specialized agents working in parallel—one conducting security analysis, another handling concurrency patterns, a third managing dependency injection—while a supervisory agent synthesizes findings and applies coordinated refactoring across the entire Go codebase.</div>
+          <div class="horizon-tip"><strong>Getting started:</strong> Implement parallel agent tasks with distinct roles (SecurityReviewer,ConcurrencyExpert,RefactoringArchitect) and a coordinator.</div>
+          <div class="pattern-prompt"><div class="prompt-label">Paste into Claude Code:</div><code>Launch a coordinated multi-agent refactoring operation on this Go codebase. Agent 1 (SecurityReviewer): Scan all files for common vulnerabilities (SQL injection, missing input validation, insecure dependencies) and generate a prioritized remediation plan. Agent 2 (ConcurrencyExpert): Analyze goroutine usage, channel patterns, and mutex handling for race conditions and deadlocks. Agent 3 (RefactoringArchitect): Identify dependency inversion opportunities and create interface abstractions. After parallel analysis completes, a Coordinator agent should: synthesize all findings into a unified refactoring roadmap, identify dependencies between changes, and execute the refactoring in safe phases with automated test validation between each phase. Generate a final report documenting all changes, test results, and any manual intervention required.</code><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+        </div>
+      
+        <div class="horizon-card">
+          <div class="horizon-title">Self-Improving Documentation System</div>
+          <div class="horizon-possible">Build an intelligent documentation engine that not only generates initial README files from codebase analysis but also monitors code changes over time, automatically updating documentation, surfacing inconsistencies between code and docs, and maintaining comprehensive API references without manual prompting.</div>
+          <div class="horizon-tip"><strong>Getting started:</strong> Set up a watcher agent that tracks git changes and triggers documentation updates using Read/Write tools.</div>
+          <div class="pattern-prompt"><div class="prompt-label">Paste into Claude Code:</div><code>Create a living documentation system that maintains comprehensive, always-current project documentation. The system should: 1) Perform an initial deep scan of the Go codebase to generate complete README.md files including project overview, architecture diagrams, setup instructions, and API documentation, 2) Monitor git commits and file changes to detect when code structure diverges from documentation, 3) Automatically update relevant documentation sections when significant changes occur (new functions, modified interfaces, changed dependencies), 4) Run weekly consistency checks comparing code signatures against documented APIs and generate discrepancy reports, 5) Maintain a changelog.md that auto-updates with feature additions, bug fixes, and breaking changes, 6) Use the Read and Write tools to make atomic documentation updates, and 7) Provide a summary dashboard showing documentation coverage percentage, last update timestamps, and any sections requiring manual review.</code><button class="copy-btn" onclick="copyText(this)">Copy</button></div>
+        </div>
+      
+    </div>
+    
+
+    
+    <div class="fun-ending">
+      <div class="fun-headline">"The user who greeted Claude, then immediately interrupted themselves"</div>
+      <div class="fun-detail">A moment of human hesitation - the user said hi, started to ask something, then changed their mind and interrupted their own request before completion, leaving Claude waiting for a question that never came</div>
+    </div>
+    
+
+    
+  </div>
+  <script>
+    function toggleCollapsible(header) {
+      header.classList.toggle('open');
+      const content = header.nextElementSibling;
+      content.classList.toggle('open');
+    }
+    function copyText(btn) {
+      const code = btn.previousElementSibling;
+      navigator.clipboard.writeText(code.textContent).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      });
+    }
+    function copyCmdItem(idx) {
+      const checkbox = document.getElementById('cmd-' + idx);
+      if (checkbox) {
+        const text = checkbox.dataset.text;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = checkbox.nextElementSibling.querySelector('.copy-btn');
+          if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy'; }, 2000); }
+        });
+      }
+    }
+    function copyAllCheckedClaudeMd() {
+      const checkboxes = document.querySelectorAll('.cmd-checkbox:checked');
+      const texts = [];
+      checkboxes.forEach(cb => {
+        if (cb.dataset.text) { texts.push(cb.dataset.text); }
+      });
+      const combined = texts.join('\n');
+      const btn = document.querySelector('.copy-all-btn');
+      if (btn) {
+        navigator.clipboard.writeText(combined).then(() => {
+          btn.textContent = 'Copied ' + texts.length + ' items!';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.textContent = 'Copy All Checked'; btn.classList.remove('copied'); }, 2000);
+        });
+      }
+    }
+    // Timezone selector for time of day chart (data is from our own analytics, not user input)
+    const rawHourCounts = {"9":3,"20":189,"21":14,"22":125};
+    function updateHourHistogram(offsetFromPT) {
+      const periods = [
+        { label: "Morning (6-12)", range: [6,7,8,9,10,11] },
+        { label: "Afternoon (12-18)", range: [12,13,14,15,16,17] },
+        { label: "Evening (18-24)", range: [18,19,20,21,22,23] },
+        { label: "Night (0-6)", range: [0,1,2,3,4,5] }
+      ];
+      const adjustedCounts = {};
+      for (const [hour, count] of Object.entries(rawHourCounts)) {
+        const newHour = (parseInt(hour) + offsetFromPT + 24) % 24;
+        adjustedCounts[newHour] = (adjustedCounts[newHour] || 0) + count;
+      }
+      const periodCounts = periods.map(p => ({
+        label: p.label,
+        count: p.range.reduce((sum, h) => sum + (adjustedCounts[h] || 0), 0)
+      }));
+      const maxCount = Math.max(...periodCounts.map(p => p.count)) || 1;
+      const container = document.getElementById('hour-histogram');
+      container.textContent = '';
+      periodCounts.forEach(p => {
+        const row = document.createElement('div');
+        row.className = 'bar-row';
+        const label = document.createElement('div');
+        label.className = 'bar-label';
+        label.textContent = p.label;
+        const track = document.createElement('div');
+        track.className = 'bar-track';
+        const fill = document.createElement('div');
+        fill.className = 'bar-fill';
+        fill.style.width = (p.count / maxCount) * 100 + '%';
+        fill.style.background = '#8b5cf6';
+        track.appendChild(fill);
+        const value = document.createElement('div');
+        value.className = 'bar-value';
+        value.textContent = p.count;
+        row.appendChild(label);
+        row.appendChild(track);
+        row.appendChild(value);
+        container.appendChild(row);
+      });
+    }
+    document.getElementById('timezone-select').addEventListener('change', function() {
+      const customInput = document.getElementById('custom-offset');
+      if (this.value === 'custom') {
+        customInput.style.display = 'inline-block';
+        customInput.focus();
+      } else {
+        customInput.style.display = 'none';
+        updateHourHistogram(parseInt(this.value));
+      }
+    });
+    document.getElementById('custom-offset').addEventListener('change', function() {
+      const offset = parseInt(this.value) + 8;
+      updateHourHistogram(offset);
+    });
+  </script>
+</body>
+</html>

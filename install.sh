@@ -41,6 +41,9 @@ SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR=""
 BACKUP_DIR=""
 OS_TYPE=""
+NEW_IGNORE_ENTRIES=()
+IGNORE_CLAUDE_DIR="false"
+IGNORE_SPECS_DIR="false"
 
 # ==========================================
 # 1. OS Detection & Tool Abstraction
@@ -99,8 +102,7 @@ check_tools() {
 
 init_backup() {
     if [ -z "$TARGET_DIR" ]; then return; fi
-    # Create backup dir inside .claude to avoid polluting root, but ensure .claude exists
-    mkdir -p "$TARGET_DIR/.claude"
+    ensure_dir "$TARGET_DIR/.claude"
     BACKUP_DIR="$TARGET_DIR/.claude/.install_backup_$(date +%Y%m%d_%H%M%S)"
     mkdir -p "$BACKUP_DIR"
     log "INFO" "Backup directory initialized at: $BACKUP_DIR"
@@ -150,6 +152,42 @@ trap cleanup EXIT
 # ==========================================
 # 3. Helper Functions
 # ==========================================
+
+add_ignore_entry() {
+    local entry="$1"
+    if [ -n "$entry" ]; then
+        NEW_IGNORE_ENTRIES+=("$entry")
+    fi
+}
+
+ensure_dir() {
+    local dir="$1"
+    if [ ! -d "$dir" ]; then
+        mkdir -p "$dir"
+        local rel_path="${dir#$TARGET_DIR/}"
+        if [ "$rel_path" != "$dir" ]; then
+            if [ "${rel_path: -1}" != "/" ]; then
+                rel_path="$rel_path/"
+            fi
+            add_ignore_entry "$rel_path"
+            if [ "$rel_path" == ".claude/" ]; then IGNORE_CLAUDE_DIR="true"; fi
+            if [ "$rel_path" == "specs/" ]; then IGNORE_SPECS_DIR="true"; fi
+        fi
+    fi
+}
+
+ensure_gitignore() {
+    local gitignore="$TARGET_DIR/.gitignore"
+    if [ ! -f "$gitignore" ]; then
+        touch "$gitignore"
+    fi
+
+    for entry in "${NEW_IGNORE_ENTRIES[@]}"; do
+        if [ -n "$entry" ] && ! grep -Fqx "$entry" "$gitignore"; then
+            printf "\n%s\n" "$entry" >> "$gitignore"
+        fi
+    done
+}
 
 # Safe Copy with Backup and Merge logic
 safe_copy() {
@@ -217,6 +255,16 @@ safe_copy() {
     else
         # File doesn't exist, just copy
         cp -v "$src" "$dest_file"
+        local rel_path="${dest_file#$TARGET_DIR/}"
+        if [ "$rel_path" != "$dest_file" ]; then
+            if [[ "$IGNORE_CLAUDE_DIR" == "true" && "$dest_file" == "$TARGET_DIR/.claude/"* ]]; then
+                :
+            elif [[ "$IGNORE_SPECS_DIR" == "true" && "$dest_file" == "$TARGET_DIR/specs/"* ]]; then
+                :
+            else
+                add_ignore_entry "$rel_path"
+            fi
+        fi
     fi
 }
 
@@ -347,14 +395,14 @@ log "INFO" "Selected Profile: $LANG_NAME"
 log "INFO" "Installing core files..."
 
 # 0. Ensure base dir
-mkdir -p "$TARGET_DIR/.claude"
+ensure_dir "$TARGET_DIR/.claude"
 
 # 1. Copy Constitution
 safe_copy "$SOURCE_DIR/constitution.md" "$TARGET_DIR/.claude/"
 
 # 1.1 Specs dir
 if [ ! -d "$TARGET_DIR/specs" ]; then
-    mkdir -p "$TARGET_DIR/specs"
+    ensure_dir "$TARGET_DIR/specs"
     log "INFO" "Created specs/ directory"
 fi
 
@@ -370,7 +418,7 @@ safe_copy "$SOURCE_DIR/profiles/$PROFILE/AGENTS.md" "$TARGET_DIR/.claude/"
 
 # 3. Copy Agents
 log "INFO" "Copying Agents..."
-mkdir -p "$TARGET_DIR/.claude/agents"
+ensure_dir "$TARGET_DIR/.claude/agents"
 for file in "$SOURCE_DIR/.claude/agents/"*; do
     if [ -f "$file" ]; then safe_copy "$file" "$TARGET_DIR/.claude/agents/"; fi
 done
@@ -381,7 +429,7 @@ fi
 
 # 4. Copy Annex
 log "INFO" "Copying $LANG_NAME Annex..."
-mkdir -p "$TARGET_DIR/.claude/constitution"
+ensure_dir "$TARGET_DIR/.claude/constitution"
 case "$LANG_NAME" in
     "Go")
         safe_copy "$SOURCE_DIR/docs/constitution/go_annex.md" "$TARGET_DIR/.claude/constitution/"
@@ -397,7 +445,7 @@ esac
 
 # 5. Copy Commands
 log "INFO" "Copying Commands..."
-mkdir -p "$TARGET_DIR/.claude/commands"
+ensure_dir "$TARGET_DIR/.claude/commands"
 if ls "$SOURCE_DIR/.claude/commands/"*.md 1> /dev/null 2>&1; then
     for file in "$SOURCE_DIR/.claude/commands/"*.md; do
         safe_copy "$file" "$TARGET_DIR/.claude/commands/"
@@ -411,7 +459,7 @@ if [ -d "$SOURCE_DIR/.claude/commands/$PROFILE" ]; then
 fi
 
 if [ -d "$SOURCE_DIR/.claude/commands/fin" ]; then
-    mkdir -p "$TARGET_DIR/.claude/commands/fin"
+    ensure_dir "$TARGET_DIR/.claude/commands/fin"
     for file in "$SOURCE_DIR/.claude/commands/fin/"*; do
         if [ -f "$file" ]; then safe_copy "$file" "$TARGET_DIR/.claude/commands/fin/"; fi
     done
@@ -419,7 +467,7 @@ fi
 
 # 6. Copy Hooks
 log "INFO" "Copying Hooks..."
-mkdir -p "$TARGET_DIR/.claude/hooks"
+ensure_dir "$TARGET_DIR/.claude/hooks"
 for file in "$SOURCE_DIR/.claude/hooks/"*; do
     if [ -f "$file" ] && [[ "$(basename "$file")" != .* ]]; then
         safe_copy "$file" "$TARGET_DIR/.claude/hooks/"
@@ -436,7 +484,7 @@ fi
 
 # 7. Copy Skills
 log "INFO" "Copying Skills..."
-mkdir -p "$TARGET_DIR/.claude/skills"
+ensure_dir "$TARGET_DIR/.claude/skills"
 if [ -d "$SOURCE_DIR/.claude/skills" ]; then
     if [ -d "$TARGET_DIR/.claude/skills" ] && [ "$(ls -A "$TARGET_DIR/.claude/skills")" ]; then
         # Skills dir exists and not empty
@@ -476,6 +524,8 @@ log "INFO" "Checking .env configuration..."
 if [ ! -f "$TARGET_DIR/.env" ] && [ -f "$SOURCE_DIR/.env.example" ]; then
     safe_copy "$SOURCE_DIR/.env.example" "$TARGET_DIR/.env"
 fi
+
+ensure_gitignore
 
 # ==========================================
 # 6. Post-Install Adjustments
