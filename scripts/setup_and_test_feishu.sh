@@ -42,7 +42,7 @@ fi
 
 if [ -z "$WEBHOOK_URL" ]; then
     echo -e "\n${YELLOW}已跳过 Webhook 测试。${NC}"
-    echo -e "您稍后可以手动测试: \n  python3 $TARGET_PATH/.claude/skills/notifier/notify.py \"测试消息\""
+    echo -e "您稍后可以手动测试: \n  /Applications/ServBay/script/alias/node /Users/admin/claude-code-notification/src/index.js --type info --title 'Manual Test' --message '测试消息'"
     exit 0
 fi
 
@@ -74,8 +74,8 @@ fi
 
 # 发送测试通知
 echo -e "\n${BLUE}4. 发送测试通知...${NC}"
-NOTIFY_SCRIPT="$TARGET_PATH/.claude/skills/notifier/notify.py"
+NOTIFY_CMD="/Applications/ServBay/script/alias/node /Users/admin/claude-code-notification/src/index.js"
 # 显式传递 Webhook URL，确保无需依赖 python-dotenv
-python3 "$NOTIFY_SCRIPT" "👋 你好！这是来自 Learn Claude Code 的飞书集成测试消息。" "$WEBHOOK_URL"
+$NOTIFY_CMD --type info --title "Setup Test" --message "👋 你好！这是来自 Learn Claude Code 的飞书集成测试消息。"
 
 echo -e "\n${GREEN}✨ 流程结束！${NC}"
