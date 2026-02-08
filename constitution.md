@@ -53,9 +53,9 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 **Core:** Keep changes minimal and strictly control code size to ensure maintainability.
 
 - **5.1 (Minimal Changes):** When modifying code, follow the principle of minimal changes. Only modify necessary parts, avoid irrelevant changes, reduce regression risk.
-- **5.2 (File Size):** Single file line count should ideally be under 200 lines.
-- **5.3 (Function Size):** Single function or method line count should ideally be under 20 lines.
-- **5.4 (Line Width Limit):** Single line code should ideally not exceed 80 characters, with a hard limit of 120 characters.
+- **5.2 (File Size):** Single file line count **should** be under 200 lines. Significant exceedance requires justification or refactoring plan.
+- **5.3 (Function Size):** Single function or method line count **should** be under 20 lines.
+- **5.4 (Line Width Limit):** Single line code **should** not exceed 80 characters, with a hard limit of 120 characters.
 - **5.5 (Code Evolution):** Delete old code directly, strictly prohibit keeping commented-out obsolete code.
 
 ---
@@ -74,7 +74,7 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 
 **Core:** Establish a closed-loop mechanism for learning from mistakes.
 
-- **7.1 (Experience Documentation):** After fixing important bugs, must summarize root causes and consider updating the constitution or best practice documents.
+- **7.1 (Experience Documentation):** After fixing important bugs, must summarize root causes. Operational learnings go to **AGENTS.md**, while engineering principles go to **constitution.md**.
 
 ---
 

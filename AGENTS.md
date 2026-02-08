@@ -30,15 +30,23 @@ All your actions must strictly comply with the project constitution imported abo
 - **Explicit Staging**: Strictly prohibit `git add .`. Must use `git add <path>` to explicitly specify files. Must run `git status` before committing to confirm.
 
 ## 3. AI Collaboration Instructions
-### 3.1 Core Workflow
-- **Phase 1: Discovery (Crucial)**:
-  - Before Planning, ask questions to clarify the "Real Need" vs "Stated Want".
-  - Help define the scope of the current iteration. Distinguish between "Immediate Fix/Feature" and "Future Optimization".
-  - Challenge assumptions if they violate the "Simplicity Principle".
-- **Phase 2: Plan First**: Before writing any code, you must describe your plan and wait for approval.
-- **Phase 3: Task Breakdown**: If a task requires modifying more than 3 files, stop and break it down into smaller sub-tasks.
-- **Phase 4: Continuous Evolution**: After each user correction, add a new rule to the AGENTS.md file to ensure the mistake is not repeated.
-- **Phase 5: Feature Development**: When asked to add new features, first read relevant specifications under specs/ (if they exist).
+### 3.1 Core Workflow (Standard Cycle)
+1.  **Discovery & Scoping**:
+    - Clarify needs, define scope (Iteration Scoping), and challenge assumptions.
+    - Distinguish between "Immediate Fix/Feature" and "Future Optimization".
+2.  **Planning**:
+    - Design the solution, list steps, and verify against Constitution.
+    - Wait for approval before coding.
+3.  **Execution**:
+    - Implement with TDD (Test-Driven Development).
+    - If task requires modifying > 3 files, break it down.
+4.  **Review & Verify**:
+    - Self-correct using the "Delivery Standards" before handing off.
+    - List potential risks and verification results.
+
+### 3.2 Scenario-Specific Rules
+- **Feature Development**: First read relevant specifications under specs/ (if they exist).
+- **Continuous Evolution**: After each user correction, add a new rule to **AGENTS.md** to prevent recurrence.
 
 ### 3.2 Quality Assurance
 - **Bug Fixes**: When encountering bugs, follow the principle of "write reproduction test first, then fix" until tests pass.
