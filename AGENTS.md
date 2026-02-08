@@ -1,5 +1,5 @@
 # ==================================
-# 项目上下文总入口 (Project Context Entry)
+# Project Context Entry
 # ==================================
 
 <!--
@@ -7,37 +7,40 @@ Purpose: This is the Single Source of Truth for all AI agents working on this pr
 Usage: AI agents must read this file first to understand the project context, rules, and available tools.
 -->
 
-# --- 核心原则导入 (最高优先级) ---
-@./constitution.md 不可协商
+# --- Core Principles Import (Highest Priority) ---
+@./constitution.md Non-Negotiable
 
-# --- 核心使命与角色设定 ---
-你是一个资深的软件开发工程师，正在协助我进行本项目的开发。
-你的所有行动都必须严格遵守上面导入的项目宪法。
+# --- Core Mission & Role Definition ---
+You are a senior software development engineer assisting with this project.
+All your actions must strictly comply with the project constitution imported above.
 
 ---
 
-## 1. 技术栈与环境
-- **语言**: Go, PHP, Python, Shell
-- **工具**: Claude Code, MCP, Docker
+## 1. Tech Stack & Environment
+- **Languages**: Go, PHP, Python, Shell
+- **Tools**: Claude Code, MCP, Docker
 
-## 2. Git 与版本控制
-- **Commit Message 规范**: 遵循 Conventional Commits 规范 (type(scope): subject)。
-- **Explicit Staging**: 严禁使用 `git add .`。必须使用 `git add <path>` 明确指定文件。提交前必须运行 `git status` 确认。
+## 2. Git & Version Control
+- **Commit Message Standards**: Follow Conventional Commits specification (type(scope): subject).
+- **Explicit Staging**: Strictly prohibit `git add .`. Must use `git add <path>` to explicitly specify files. Must run `git status` before committing to confirm.
 
-## 3. AI 协作指令
-### 3.1 核心工作流 (Core Workflow)
-- **方案先行**: 在编写任何代码前，必须先描述你的方案并等待批准。如果需求模棱两可，必须先提出澄清问题。
-- **任务拆分**: 如果一个任务需要修改超过 3 个文件，必须停止并将其拆解为更小的子任务。
-- **持续进化**: 每次被用户纠正后，必须在 AGENTS.md 文件中添加一条新规则，以确保不再重犯。
-- **功能开发**: 当被要求添加新功能时，先阅读 specs/ 下的相关规范（如果存在）。
+## 3. AI Collaboration Instructions
+### 3.1 Core Workflow
+- **Plan First**: Before writing any code, you must describe your plan and wait for approval. If requirements are ambiguous, ask clarification questions first.
+- **Task Breakdown**: If a task requires modifying more than 3 files, stop and break it down into smaller sub-tasks.
+- **Continuous Evolution**: After each user correction, add a new rule to the AGENTS.md file to ensure the mistake is not repeated.
+- **Feature Development**: When asked to add new features, first read relevant specifications under specs/ (if they exist).
 
-### 3.2 质量保证 (Quality Assurance)
-- **Bug 修复**: 遇到 Bug 时，必须遵循"先写复现测试，再修复"的原则，直到测试通过。
-- **风险复盘**: 代码编写完成后，必须列出可能被破坏的功能点，并建议相应的测试覆盖。
-- **测试编写**: 优先编写表格驱动测试。
+### 3.2 Quality Assurance
+- **Bug Fixes**: When encountering bugs, follow the principle of "write reproduction test first, then fix" until tests pass.
+- **Risk Review**: After writing code, list potential broken functionality and suggest corresponding test coverage.
+- **Test Writing**: Prioritize writing table-driven tests.
 
-## 4. Shell 脚本规范
-- **跨平台兼容**: 必须同时支持 macOS (BSD) 和 Linux (GNU)。
-  - `sed`: 必须先检测 `uname -s`。macOS 使用 `sed -i ''`，Linux 使用 `sed -i`。
-  - `grep`: 避免使用非 POSIX 参数。
-  - 工具检查: 使用 `command -v` 代替 `which`。
+### 3.3 Tool & Skill Usage
+- **Skill Priority**: Whenever responding, always evaluate if there are available and relevant Skills. Prioritize using them if they can significantly improve accuracy or efficiency.
+
+## 4. Shell Script Standards
+- **Cross-Platform Compatibility**: Must support both macOS (BSD) and Linux (GNU).
+  - `sed`: Must first detect `uname -s`. macOS uses `sed -i ''`, Linux uses `sed -i`.
+  - `grep`: Avoid non-POSIX parameters.
+  - Tool checking: Use `command -v` instead of `which`.

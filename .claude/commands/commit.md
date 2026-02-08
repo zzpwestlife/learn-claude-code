@@ -1,5 +1,5 @@
 ---
-description: 根据暂存区变更生成提交信息
+description: Generate commit message based on staged changes
 allowed-tools:
   - Bash(git diff --staged)
   - Bash(git branch --show-current)
@@ -8,22 +8,16 @@ allowed-tools:
 !git branch --show-current
 !git diff --staged
 
-你是一名资深开发者。请根据上方 git diff 输出，按照 Conventional Commits 规范生成简洁且描述明确的提交信息。
+You are a senior developer. Please generate a concise and descriptive commit message based on the git diff output above, following Conventional Commits specification.
 
-结构：
+Structure:
 <type>(<scope>): <subject>
 
 <body>
 
 <footer>
 
-规则：
-1. Type 必须为以下之一：feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert。
-2. Subject 必须使用祈使语气、小写结尾且不加句号。
-3. 若 diff 为空，提示用户先暂存变更。
-
-
-**Notification**:
-When the task is complete, you MUST notify the user by running:
-`/Applications/ServBay/script/alias/node /Users/admin/claude-code-notification/src/index.js --type success --title 'Command commit' --message 'Execution finished.'`
-(Ensure CLAUDE_WEBHOOK_URL is set in your environment).
+Rules:
+1. Type must be one of: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert.
+2. Subject must use imperative mood, lowercase ending, and no period.
+3. If diff is empty, prompt the user to stage changes first.

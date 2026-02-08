@@ -1,141 +1,141 @@
-# learn-claude-code 项目开发宪法 (通用核心版)
+# Project Constitution (Universal Core Version)
 
-**版本：2.1，批准日期：2026-01-26**
+**Version: 2.1, Approved Date: 2026-01-26**
 
-本文件定义了本项目不可动摇的核心开发原则。所有代码修改必须严格遵守这些原则。
-本宪法适用于本项目下的所有技术栈（Go、PHP、Python、前端、运维等）。特定语言的实施细则请参考 [附录](#附录-appendices)。
-
----
-
-## 第一条：简单性原则（简单性优先）
-
-**核心：** "少即是多"（Less is More）。绝不进行不必要的抽象，绝不引入非必需的依赖。
-
-- **1.1 (YAGNI):** 只实现明确要求的功能，不推测未来需求。
-- **1.2 (最小依赖):** 优先使用语言标准库或成熟的社区标准库。引入新依赖需经过严格评估。
-- **1.3 (反过度工程):** 简单的函数和数据结构优于复杂的抽象。避免过度设计。
+This document defines the unshakeable core development principles of this project. All code modifications must strictly adhere to these principles.
+This constitution applies to all technology stacks under this project (Go, PHP, Python, Frontend, DevOps, etc.). For language-specific implementation details, please refer to the [Appendices](#appendices).
 
 ---
 
-## 第二条：测试质量原则（测试质量）- 不可协商
+## Article 1: Simplicity Principle (Simplicity First)
 
-**核心：** 所有新功能或 Bug 修复，必须有测试覆盖。
+**Core:** "Less is More". Never create unnecessary abstractions, never introduce non-essential dependencies.
 
-- **2.1 (测试策略):** 依据复杂度分层：复杂业务逻辑坚持测试先行；简单逻辑可在实现后补充测试。
-- **2.2 (测试覆盖):** 测试必须覆盖正常路径、异常路径和边界条件。
-- **2.3 (可测性):** 代码设计必须易于测试（使用依赖注入等技术）。
-
----
-
-## 第三条：明确性原则（清晰与显式）- 不可协商
-
-**核心：** 代码的首要目的是让人类易于理解，其次才是让机器执行。
-
-- **3.1 (错误处理):** **不可协商**：所有错误必须显式处理，绝不允许静默失败。
-- **3.2 (显式依赖):** 不允许使用全局隐式状态。所有依赖必须显式定义和传递。
-- **3.3 (自解释):** 命名应当自解释。注释解释"为什么" (Why)，而不是"是什么" (What)。
+- **1.1 (YAGNI):** Only implement explicitly requested features, don't speculate on future needs.
+- **1.2 (Minimal Dependencies):** Prioritize language standard libraries or mature community standard libraries. Introducing new dependencies requires rigorous evaluation.
+- **1.3 (Anti-over-engineering):** Simple functions and data structures are better than complex abstractions. Avoid over-design.
 
 ---
 
-## 第四条：架构与设计原则（架构与设计）
+## Article 2: Testing Quality Principle (Testing Quality) - Non-Negotiable
 
-**核心：** 遵循 SOLID 原则，确保系统的高内聚、低耦合与核心逻辑隔离。
+**Core:** All new features or bug fixes must have test coverage.
 
-- **4.1 (核心逻辑隔离):** **"Library First" 精神**。核心业务逻辑必须与外部接口（HTTP, CLI, GUI）解耦，作为一个独立的、可测试的“库”存在。
-- **4.2 (单一职责):** 每个模块、类、函数只做好一件事（Single Responsibility）。
-- **4.3 (接口隔离):** 定义小的、目标明确的接口。
-- **4.4 (依赖倒置):** 依赖于抽象而非具体实现。
-
----
-
-## 第五条：修改与结构原则（修改与结构）
-
-**核心：** 保持变更的最小化，并严格控制代码规模以保障可维护性。
-
-- **5.1 (最小化修改):** 修改代码时，遵循最小修改原则。仅修改必要的部分，避免无关的变动，降低回归风险。
-- **5.2 (文件规模):** 单个文件行数应尽量控制在 200 行以内。
-- **5.3 (函数规模):** 单个函数或方法行数应尽量控制在 20 行以内。
-- **5.4 (行宽限制):** 单行代码尽量不超过 80 字符，强制上限为 120 字符。
-- **5.5 (代码演进):** 直接删除旧代码，严禁保留注释掉的废弃代码。
+- **2.1 (Testing Strategy):** Stratify by complexity: complex business logic insists on test-first; simple logic can be supplemented after implementation.
+- **2.2 (Test Coverage):** Tests must cover happy paths, error paths, and edge cases.
+- **2.3 (Testability):** Code design must be easy to test (using dependency injection and other techniques).
 
 ---
 
-## 第六条：文案排版原则（文案与排版）
+## Article 3: Clarity Principle (Clarity and Explicitness) - Non-Negotiable
 
-**核心：** 统一多语言环境下的文案排版，提升文档专业度。
+**Core:** The primary purpose of code is to be understandable by humans, secondarily for machines to execute.
 
-- **6.1 (中西文间隔):** 中英文之间、中文与数字之间必须增加空格。
-- **6.2 (标点使用):** 中文语境使用全角标点，英文整句使用半角标点。
-- **6.3 (专有名词):** 必须使用官方定义的正确大小写（如 GitHub, iPhone）。
-
----
-
-## 第七条：持续改进原则（持续改进）
-
-**核心：** 建立从错误中学习的闭环机制。
-
-- **7.1 (经验沉淀):** 修复重要 Bug 后，必须总结根本原因，并考虑更新宪法或最佳实践文档。
+- **3.1 (Error Handling):** **Non-Negotiable**: All errors must be handled explicitly, silent failures are absolutely prohibited.
+- **3.2 (Explicit Dependencies):** No implicit global state allowed. All dependencies must be explicitly defined and passed.
+- **3.3 (Self-Documenting):** Naming should be self-documenting. Comments explain "why" (Why), not "what" (What).
 
 ---
 
-## 第八条：计划先行原则（计划优先）- 不可协商
+## Article 4: Architecture & Design Principles
 
-**核心：** 谋定而后动。
+**Core:** Follow SOLID principles, ensure high cohesion, low coupling, and core logic isolation.
 
-- **8.1 (强制计划):** 编码前必须制定 Plan。
-- **8.2 (用户确认):** Plan 必须包含目标、步骤、验证方法，并经过确认。
-- **8.3 (合宪性审查):** 任何计划在生成前，必须对照本宪法进行自检（Constitution Check）。
-
----
-
-## 第九条：实证原则（循证原则）
-
-**核心：** 事实胜于假设（Evidence > Assumptions）。
-
-- **9.1 (验证驱动):** 技术决策必须基于测试结果或监控数据。
-- **9.2 (来源验证):** 引用第三方库或文档时，必须验证其可信度。
+- **4.1 (Core Logic Isolation):** **"Library First" spirit**. Core business logic must be decoupled from external interfaces (HTTP, CLI, GUI), existing as an independent, testable "library".
+- **4.2 (Single Responsibility):** Each module, class, and function should do one thing well (Single Responsibility).
+- **4.3 (Interface Segregation):** Define small, focused interfaces.
+- **4.4 (Dependency Inversion):** Depend on abstractions rather than concrete implementations.
 
 ---
 
-## 第十条：交付标准原则（交付标准）
+## Article 5: Modification & Structure Principles
 
-**核心：** 始于计划，终于完成。
+**Core:** Keep changes minimal and strictly control code size to ensure maintainability.
 
-- **10.1 (完成度):** 交付的代码必须是生产就绪的。严禁遗留 `TODO`。
-- **10.2 (环境卫生):** 操作结束后必须清理临时文件。
-- **10.3 (分支规范):** 严禁直接在主分支 (`main`/`master`) 工作。
-
----
-
-## 第十一条：安全与隐私原则（安全与隐私优先）
-
-**核心：** 安全不是附加功能，是基础属性。
-
-- **11.1 (最小权限):** 组件和账户仅应拥有执行其功能所需的最小权限。
-- **11.2 (输入验证):** 永远不要信任外部输入。必须在边界处对所有输入进行验证和清洗。
-- **11.3 (数据隐私):** 严禁在日志、错误信息或测试数据中泄露敏感信息 (PII, Credentials)。
-- **11.4 (依赖安全):** 定期检查并修复依赖库的安全漏洞。
+- **5.1 (Minimal Changes):** When modifying code, follow the principle of minimal changes. Only modify necessary parts, avoid irrelevant changes, reduce regression risk.
+- **5.2 (File Size):** Single file line count should ideally be under 200 lines.
+- **5.3 (Function Size):** Single function or method line count should ideally be under 20 lines.
+- **5.4 (Line Width Limit):** Single line code should ideally not exceed 80 characters, with a hard limit of 120 characters.
+- **5.5 (Code Evolution):** Delete old code directly, strictly prohibit keeping commented-out obsolete code.
 
 ---
 
-## 治理（Governance）
+## Article 6: Copywriting & Typography Principles
 
-本宪法具有最高优先级。所有代码修改在实施前，都必须进行"合宪性审查"（Constitution Check）。
-任何违反"不可协商"条款的计划或代码，都应被视为"违宪"并予以驳回。
+**Core:** Unify copywriting typography in multilingual environments, improve documentation professionalism.
 
-### 附录（Appendices）
-
-- [Go 语言实施细则](docs/constitution/go_annex.md)
-- [PHP 语言实施细则 (Lumen)](docs/constitution/php_annex.md)
-- [Python 语言实施细则](docs/constitution/python_annex.md)
-- (待添加: 前端实施细则)
+- **6.1 (CJK-ASCII Spacing):** Must add space between Chinese and English, and between Chinese and numbers.
+- **6.2 (Punctuation Usage):** Use full-width punctuation in Chinese contexts, half-width for complete English sentences.
+- **6.3 (Proper Nouns):** Must use correct official case (e.g., GitHub, iPhone).
 
 ---
 
-## 变更日志（Changelog）
+## Article 7: Continuous Improvement Principle
 
-| Version | Date       | 变更说明                                                                                         |
+**Core:** Establish a closed-loop mechanism for learning from mistakes.
+
+- **7.1 (Experience Documentation):** After fixing important bugs, must summarize root causes and consider updating the constitution or best practice documents.
+
+---
+
+## Article 8: Plan-First Principle - Non-Negotiable
+
+**Core:** Think before acting.
+
+- **8.1 (Mandatory Planning):** Plans must be created before coding.
+- **8.2 (User Confirmation):** Plans must include objectives, steps, verification methods, and be confirmed.
+- **8.3 (Constitution Check):** Before generating any plan, self-check against this constitution (Constitution Check).
+
+---
+
+## Article 9: Evidence-Based Principle
+
+**Core:** Facts over assumptions (Evidence > Assumptions).
+
+- **9.1 (Validation-Driven):** Technical decisions must be based on test results or monitoring data.
+- **9.2 (Source Verification):** When citing third-party libraries or documentation, must verify credibility.
+
+---
+
+## Article 10: Delivery Standards Principle
+
+**Core:** Start with planning, end with completion.
+
+- **10.1 (Completeness):** Delivered code must be production-ready. Strictly prohibit leaving `TODO`s.
+- **10.2 (Environmental Hygiene):** Must clean up temporary files after operations end.
+- **10.3 (Branch Standards):** Strictly prohibit working directly on main branch (`main`/`master`).
+
+---
+
+## Article 11: Security & Privacy Principle - Non-Negotiable
+
+**Core:** Security is not an add-on feature, it is a fundamental attribute.
+
+- **11.1 (Least Privilege):** Components and accounts should only have the minimum permissions needed to perform their functions.
+- **11.2 (Input Validation):** Never trust external input. Must validate and sanitize all input at boundaries.
+- **11.3 (Data Privacy):** Strictly prohibit leaking sensitive information (PII, Credentials) in logs, error messages, or test data.
+- **11.4 (Dependency Security):** Regularly check and fix dependency library security vulnerabilities.
+
+---
+
+## Governance
+
+This constitution has the highest priority. Before implementation, all code modifications must undergo "Constitution Check".
+Any plans or code that violate "Non-Negotiable" clauses should be deemed "unconstitutional" and rejected.
+
+### Appendices
+
+- [Go Language Implementation Details](docs/constitution/go_annex.md)
+- [PHP Language Implementation Details (Lumen)](docs/constitution/php_annex.md)
+- [Python Language Implementation Details](docs/constitution/python_annex.md)
+- (To be added: Frontend implementation details)
+
+---
+
+## Changelog
+
+| Version | Date       | Changes                                                                                         |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------ |
-| 2.1     | 2026-01-26 | 修订第四条：引入 "Core Logic Isolation"（Library First）精神；修订第八条：明确 "合宪性审查" 要求 |
-| 2.0     | 2026-01-23 | **重大重构**：拆分为通用核心宪法与技术附录；新增第十一条 (安全与隐私)                      |
-| 1.7     | 2026-01-23 | 新增第十条：交付标准原则；修订第二条 (测试诚信)                                                  |
+| 2.1     | 2026-01-26 | Revised Article 4: Introduced "Core Logic Isolation" (Library First) spirit; Revised Article 8: Clarified "Constitution Check" requirements |
+| 2.0     | 2026-01-23 | **Major Refactoring**: Split into universal core constitution and technical annexes; Added Article 11 (Security & Privacy)                      |
+| 1.7     | 2026-01-23 | Added Article 10: Delivery Standards Principle; Revised Article 2 (Testing Integrity)                                                  |

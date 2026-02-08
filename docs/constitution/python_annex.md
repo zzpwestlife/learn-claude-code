@@ -1,42 +1,43 @@
-# 宪法附录: Python 语言实施细则
+# Constitution Annex: Python Language Implementation Details
 
-**适用范围**: 所有 Python 语言后端项目
-**对应宪法版本**: 2.0+
+**Scope**: All Python backend projects
+**Constitution Version**: 2.0+
 
-本附录定义了 [项目开发宪法](../../constitution.md) 在 Python 语言项目中的具体执行标准。
+This annex defines the specific execution standards for the [Project Development Constitution](../../constitution.md) in Python projects.
 
 ---
 
-## 1. 简单性原则实施（简单性）
-- **1.1 标准库优先**: 在框架约束外，优先使用 Python 标准库 (`stdlib`)。
-- **1.2 依赖管理**: 严禁引入未使用的依赖。使用 `pip freeze > requirements.txt` 或 `poetry` 保持清洁。
+## 1. Simplicity Principle Implementation
+- **1.1 Stdlib First**: Outside framework constraints, prioritize Python standard library.
+- **1.2 Dependency Management**: Strictly prohibit introducing unused dependencies. Use `pip freeze` or `poetry` to keep clean.
 
-## 2. 测试质量实施（测试质量）
-- **2.1 参数化测试**: 单元测试 **必须** 采用 `pytest.mark.parametrize` 模式。
-- **2.2 框架选择**: 
-    - 单元测试: `pytest` (首选)。
-    - Mock: 优先使用 `unittest.mock` 或 `pytest-mock`。
-- **2.3 异步测试**: 涉及并发的代码必须使用 `pytest-asyncio` 验证。
+## 2. Testing Quality Implementation
+- **2.1 Pytest Parametrization**: Unit tests **MUST** use pytest parametrization for multiple test cases.
+- **2.2 Framework Selection**: 
+    - Unit tests: `pytest` (preferred) or `unittest`.
+    - Mock: Use `unittest.mock` or `pytest-mock` for mocking.
+- **2.3 Async Testing**: Async code must be tested with `pytest-asyncio`.
 
-## 3. 明确性原则实施（明确性）
-- **3.1 错误处理（错误处理）**:
-    - **禁止**: 严禁使用裸 `except:` 捕获所有异常。
-    - **链式异常**: 异常传递必须使用 `raise NewException from e` 保留原始堆栈。
-    - **Fail Fast**: 严禁在业务逻辑中吞掉关键异常，必须显式处理或向上抛出。
-- **3.2 依赖注入**: 所有依赖（DB, Cache, Config）必须通过构造函数或参数传递，严禁使用全局变量。
-- **3.3 Docstrings**: 导出的函数和类必须有符合 Google 或 NumPy 风格的文档字符串。
+## 3. Clarity Principle Implementation
+- **3.1 Error Handling**:
+    - **Prohibited**: Strictly forbid bare `except:` clauses.
+    - **Exception Chaining**: Use `raise ... from err` to preserve exception chains.
+    - **Fail Fast**: Validate inputs early and raise exceptions immediately.
+- **3.2 Dependency Injection**: All dependencies (DB, Cache, Config) must be passed through function parameters or class constructors; strictly prohibit global variables.
+- **3.3 Docstrings**: Functions and classes must have docstrings following PEP 257 conventions.
 
-## 4. 代码风格与结构（风格与结构）
-- **4.1 格式化**: 强制使用 `black` 和 `isort`。
-- **4.2 并发模型**: 
-    - 使用 `asyncio.TaskGroup` (Python 3.11+) 或 `asyncio.gather` 管理并发任务。
-    - 严禁在异步代码中使用阻塞的 `time.Sleep`。
-- **4.3 命名规范**: 遵循 `PEP 8` 指南。显式类型提示 (`Type Hints`) 优于 `Any`。
-- **4.4 文件限制**: 
-    - 单文件建议 < 300 行。
-    - 单函数建议 < 30 行 (不含注释)。
+## 4. Code Style & Structure
+- **4.1 Formatting**: Mandatory use of `black` and `isort` for formatting and import sorting.
+- **4.2 Async Model**: 
+    - Use `asyncio` or `asyncio.TaskGroup` for concurrency.
+    - Use `asyncio.sleep()` instead of blocking `time.sleep()` in async code.
+    - Always pass context for timeout and cancellation control.
+- **4.3 Type Hints**: Use type hints for function parameters and return types.
+- **4.4 File Limits**: 
+    - Single file recommended < 200 lines.
+    - Single function recommended < 20 lines.
 
-## 5. 架构模式（架构）
-- **5.1 ETL 模式**: 数据处理遵循 `Query` -> `Clean` -> `Export` 管道。
-- **5.2 乐观锁**: 数据库更新推荐使用版本号控制。
-- **5.3 模块化**: 支持多模块逻辑分离，避免循环依赖。
+## 5. Architecture Patterns
+- **5.1 ETL Pattern**: Data processing follows `Query` -> `Clean` -> `Export` pipeline.
+- **5.2 Optimistic Locking**: Handle concurrent updates with version checks.
+- **5.3 Modular Design**: Keep modules focused and loosely coupled.

@@ -1,43 +1,43 @@
-# 宪法附录: Go 语言实施细则
+# Constitution Annex: Go Language Implementation Details
 
-**适用范围**: 所有 Go 语言后端项目
-**对应宪法版本**: 2.0+
+**Scope**: All Go language backend projects
+**Constitution Version**: 2.0+
 
-本附录定义了 [项目开发宪法](../../constitution.md) 在 Go 语言项目中的具体执行标准。
+This annex defines the specific execution standards for the [Project Development Constitution](../../constitution.md) in Go projects.
 
 ---
 
-## 1. 简单性原则实施（简单性）
-- **1.1 标准库优先**: 在框架约束外，优先使用 Go 标准库 (`stdlib`)。
-- **1.2 依赖管理**: 严禁引入未使用的依赖。使用 `go mod tidy` 保持清洁。
+## 1. Simplicity Principle Implementation
+- **1.1 Stdlib First**: Outside framework constraints, prioritize Go standard library (`stdlib`).
+- **1.2 Dependency Management**: Strictly prohibit introducing unused dependencies. Use `go mod tidy` to keep clean.
 
-## 2. 测试质量实施（测试质量）
-- **2.1 表格驱动测试**: 单元测试 **必须** 采用 Table-Driven Tests 模式。
-- **2.2 框架选择**: 
-    - 单元测试: `testing` (标准库) 或 `goconvey` (如果项目已集成)。
-    - Mock: 优先使用接口注入，避免复杂的 Mock 框架，除非必要使用 `gomock`。
-- **2.3 并发测试**: 涉及并发的代码必须使用 `go test -race` 验证。
+## 2. Testing Quality Implementation
+- **2.1 Table-Driven Tests**: Unit tests **MUST** adopt Table-Driven Tests pattern.
+- **2.2 Framework Selection**: 
+    - Unit tests: `testing` (stdlib) or `goconvey` (if already integrated).
+    - Mock: Prioritize interface injection, avoid complex mock frameworks; use `gomock` only when necessary.
+- **2.3 Concurrent Testing**: Code involving concurrency must be verified using `go test -race`.
 
-## 3. 明确性原则实施（明确性）
-- **3.1 错误处理（错误处理）**:
-    - **禁止**: 严禁使用 `_` 忽略 error。
-    - **包装**: 错误传递必须使用 `fmt.Errorf("context: %w", err)` 进行包装，保留堆栈或上下文。
-    - **Panic**: 严禁在业务逻辑中使用 `panic`，必须返回 error。仅在 `main` 启动阶段允许 panic。
-- **3.2 依赖注入**: 所有依赖（DB, Cache, Config）必须通过结构体字段或函数参数传递，严禁使用全局变量。
-- **3.3 GoDoc**: 导出的函数和类型必须有符合 Go 官方规范的注释。
+## 3. Clarity Principle Implementation
+- **3.1 Error Handling**:
+    - **Prohibited**: Strictly forbid using `_` to ignore errors.
+    - **Wrapping**: Error propagation must use `fmt.Errorf("context: %w", err)` for wrapping, preserving stack or context.
+    - **Panic**: Strictly forbid using `panic` in business logic; must return errors. Panic only allowed during `main` startup phase.
+- **3.2 Dependency Injection**: All dependencies (DB, Cache, Config) must be passed through struct fields or function parameters; strictly prohibit global variables.
+- **3.3 GoDoc**: Exported functions and types must have comments following Go official specifications.
 
-## 4. 代码风格与结构（风格与结构）
-- **4.1 格式化**: 强制使用 `gofumpt` (比 `gofmt` 更严格)。
-- **4.2 并发模型**: 
-    - 使用 `errgroup` 管理并发任务。
-    - 严禁在生产代码中使用 `time.Sleep` (测试除外)。
-    - Context 必须作为第一个参数传递，用于超时和取消控制。
-- **4.3 命名规范**: 遵循 `Effective Go` 指南。具体类型优于 `any`/`interface{}`。
-- **4.4 文件限制**: 
-    - 单文件建议 < 200 行。
-    - 单函数建议 < 20 行 (不含错误处理)。
+## 4. Code Style & Structure
+- **4.1 Formatting**: Mandatory use of `gofumpt` (stricter than `gofmt`).
+- **4.2 Concurrency Model**: 
+    - Use `errgroup` to manage concurrent tasks.
+    - Strictly forbid using `time.Sleep` in production code (tests excepted).
+    - Context must be passed as first parameter for timeout and cancellation control.
+- **4.3 Naming Conventions**: Follow `Effective Go` guidelines. Concrete types preferred over `any`/`interface{}`.
+- **4.4 File Limits**: 
+    - Single file recommended < 200 lines.
+    - Single function recommended < 20 lines (excluding error handling).
 
-## 5. 架构模式（架构）
-- **5.1 ETL 模式**: 数据处理遵循 `Query` -> `Clean` -> `Export` 管道。
-- **5.2 乐观锁**: 使用 `UpdateRecordIfMatchStatus` 处理并发更新。
-- **5.3 实体隔离**: 支持多实体 (`Futunn`, `MooMoo`) 逻辑分离。
+## 5. Architecture Patterns
+- **5.1 ETL Pattern**: Data processing follows `Query` -> `Clean` -> `Export` pipeline.
+- **5.2 Optimistic Locking**: Use `UpdateRecordIfMatchStatus` to handle concurrent updates.
+- **5.3 Entity Isolation**: Support multi-entity (`Futunn`, `MooMoo`) logic separation.

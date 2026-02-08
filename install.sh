@@ -452,18 +452,7 @@ if ls "$SOURCE_DIR/.claude/commands/"*.md 1> /dev/null 2>&1; then
     done
 fi
 
-if [ -d "$SOURCE_DIR/.claude/commands/$PROFILE" ]; then
-    for file in "$SOURCE_DIR/.claude/commands/$PROFILE/"*; do
-        if [ -f "$file" ]; then safe_copy "$file" "$TARGET_DIR/.claude/commands/"; fi
-    done
-fi
 
-if [ -d "$SOURCE_DIR/.claude/commands/fin" ]; then
-    ensure_dir "$TARGET_DIR/.claude/commands/fin"
-    for file in "$SOURCE_DIR/.claude/commands/fin/"*; do
-        if [ -f "$file" ]; then safe_copy "$file" "$TARGET_DIR/.claude/commands/fin/"; fi
-    done
-fi
 
 # 6. Copy Hooks
 log "INFO" "Copying Hooks..."
