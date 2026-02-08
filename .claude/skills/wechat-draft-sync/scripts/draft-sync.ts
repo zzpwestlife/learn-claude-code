@@ -4,6 +4,10 @@ import axios from 'axios';
 import FormData from 'form-data';
 import { marked } from 'marked';
 import dotenv from 'dotenv';
+import { exec } from 'child_process';
+import util from 'util';
+
+const execPromise = util.promisify(exec);
 
 dotenv.config();
 
@@ -38,24 +42,22 @@ async function getAccessToken(): Promise<string> {
 
 async function uploadImageForContent(accessToken: string, imagePath: string): Promise<string> {
   const url = `https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token=${accessToken}`;
-  const form = new FormData();
   
   if (!fs.existsSync(imagePath)) {
     throw new Error(`Image file not found: ${imagePath}`);
   }
 
-  form.append('media', fs.createReadStream(imagePath));
-
+  // Use curl as a fallback because axios/form-data sometimes fails with 412 on WeChat API
+  const command = `curl -F "media=@${imagePath}" "${url}" -s`;
+  
   try {
-    const response = await axios.post(url, form, {
-      headers: {
-        ...form.getHeaders()
-      }
-    });
-    if (response.data.errcode && response.data.errcode !== 0) {
-      throw new Error(`Failed to upload content image: ${response.data.errmsg}`);
+    const { stdout, stderr } = await execPromise(command);
+    const data = JSON.parse(stdout);
+    
+    if (data.errcode && data.errcode !== 0) {
+      throw new Error(`Failed to upload content image: ${data.errmsg}`);
     }
-    return response.data.url;
+    return data.url;
   } catch (error: any) {
     throw new Error(`Error uploading content image: ${error.message}`);
   }
@@ -63,24 +65,22 @@ async function uploadImageForContent(accessToken: string, imagePath: string): Pr
 
 async function uploadCoverImage(accessToken: string, imagePath: string): Promise<string> {
   const url = `https://api.weixin.qq.com/cgi-bin/material/add_material?access_token=${accessToken}&type=image`;
-  const form = new FormData();
 
   if (!fs.existsSync(imagePath)) {
     throw new Error(`Cover image file not found: ${imagePath}`);
   }
 
-  form.append('media', fs.createReadStream(imagePath));
+  // Use curl as a fallback
+  const command = `curl -F "media=@${imagePath}" "${url}" -s`;
 
   try {
-    const response = await axios.post(url, form, {
-      headers: {
-        ...form.getHeaders()
-      }
-    });
-    if (response.data.errcode && response.data.errcode !== 0) {
-      throw new Error(`Failed to upload cover image: ${response.data.errmsg}`);
+    const { stdout } = await execPromise(command);
+    const data = JSON.parse(stdout);
+    
+    if (data.errcode && data.errcode !== 0) {
+      throw new Error(`Failed to upload cover image: ${data.errmsg}`);
     }
-    return response.data.media_id;
+    return data.media_id;
   } catch (error: any) {
     throw new Error(`Error uploading cover image: ${error.message}`);
   }
@@ -109,12 +109,12 @@ function parseFrontmatter(content: string): { metadata: ArticleMetadata; body: s
   }
 
   return {
-    metadata: { title: 'Untitled' },
+    metadata: {} as ArticleMetadata,
     body: content
   };
 }
 
-async function processMarkdown(content: string, baseDir: string, accessToken: string): Promise<string> {
+async function processMarkdown(content: string, baseDir: string, accessToken: string): Promise<{ content: string; firstImageId?: string }> {
   const imageRegex = /!\[.*?\]\((.*?)\)/g;
   let match;
   let newContent = content;
@@ -124,7 +124,9 @@ async function processMarkdown(content: string, baseDir: string, accessToken: st
     matches.push({ full: match[0], url: match[1] });
   }
 
-  // Process images sequentially to avoid overwhelming
+  let firstImageId: string | undefined;
+
+  // Process images sequentially
   for (const m of matches) {
     const imagePath = path.resolve(baseDir, m.url);
     console.log(`Processing image: ${imagePath}`);
@@ -132,12 +134,28 @@ async function processMarkdown(content: string, baseDir: string, accessToken: st
       const wechatUrl = await uploadImageForContent(accessToken, imagePath);
       newContent = newContent.replace(m.url, wechatUrl);
       console.log(`Uploaded to: ${wechatUrl}`);
+      
+      // If we haven't found a cover image yet, try to upload this one as a material to get media_id
+      if (!firstImageId) {
+          try {
+             // We need to upload it again as 'image' type to get a media_id for cover
+             // Note: uploadimg returns URL, add_material returns media_id
+             firstImageId = await uploadCoverImage(accessToken, imagePath);
+             console.log(`Used first image as cover, media_id: ${firstImageId}`);
+          } catch (e) {
+              console.warn("Failed to upload first image as cover:", e);
+          }
+      }
     } catch (e: any) {
       console.error(`Failed to upload image ${m.url}: ${e.message}`);
+      if (e.response) {
+          console.error('Response status:', e.response.status);
+          console.error('Response data:', e.response.data);
+      }
     }
   }
 
-  return newContent;
+  return { content: newContent, firstImageId };
 }
 
 async function addDraft(accessToken: string, article: any) {
@@ -188,12 +206,20 @@ async function main() {
       console.log(`Uploading cover image: ${coverPath}`);
       thumb_media_id = await uploadCoverImage(accessToken, coverPath);
     } else {
-      console.warn('Warning: No cover image (cover_image) specified in frontmatter.');
-      // You might want to upload a default image or fail here
+      console.warn('Warning: No cover image (cover_image) specified in frontmatter. Will try to use first image from content.');
     }
 
     console.log('Processing content images...');
-    const processedMarkdown = await processMarkdown(body, path.dirname(filePath), accessToken);
+    const { content: processedMarkdown, firstImageId } = await processMarkdown(body, path.dirname(filePath), accessToken);
+
+    if (!thumb_media_id && firstImageId) {
+        thumb_media_id = firstImageId;
+        console.log(`Set cover image to first content image: ${thumb_media_id}`);
+    }
+
+    if (!thumb_media_id) {
+        throw new Error("No cover image found. Please specify 'cover_image' in frontmatter or include at least one image in the content.");
+    }
 
     console.log('Converting to HTML...');
     const htmlContent = await marked.parse(processedMarkdown);

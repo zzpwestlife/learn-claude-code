@@ -83,8 +83,9 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 **Core:** Think before acting.
 
 - **8.1 (Mandatory Planning):** Plans must be created before coding.
-- **8.2 (User Confirmation):** Plans must include objectives, steps, verification methods, and be confirmed.
-- **8.3 (Constitution Check):** Before generating any plan, self-check against this constitution (Constitution Check).
+- **8.2 (Iteration Scoping):** Explicitly define the boundaries of the current task. Focus on the immediate objective and avoid expanding scope unrelated to the current request.
+- **8.3 (User Confirmation):** Plans must include objectives, steps, verification methods, and be confirmed.
+- **8.4 (Constitution Check):** Before generating any plan, self-check against this constitution (Constitution Check).
 
 ---
 
@@ -101,9 +102,10 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 
 **Core:** Start with planning, end with completion.
 
-- **10.1 (Completeness):** Delivered code must be production-ready. Strictly prohibit leaving `TODO`s.
+- **10.1 (Completeness):** Delivered code must be production-ready (Anti-Hackathon). Strictly prohibit leaving `TODO`s.
 - **10.2 (Environmental Hygiene):** Must clean up temporary files after operations end.
 - **10.3 (Branch Standards):** Strictly prohibit working directly on main branch (`main`/`master`).
+- **10.4 (Edge Case Handling):** Handle errors gracefully. No "Happy Path" only assumptions.
 
 ---
 
@@ -136,6 +138,5 @@ Any plans or code that violate "Non-Negotiable" clauses should be deemed "uncons
 
 | Version | Date       | Changes                                                                                         |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------ |
-| 2.1     | 2026-01-26 | Revised Article 4: Introduced "Core Logic Isolation" (Library First) spirit; Revised Article 8: Clarified "Constitution Check" requirements |
-| 2.0     | 2026-01-23 | **Major Refactoring**: Split into universal core constitution and technical annexes; Added Article 11 (Security & Privacy)                      |
-| 1.7     | 2026-01-23 | Added Article 10: Delivery Standards Principle; Revised Article 2 (Testing Integrity)                                                  |
+| 2.3     | 2026-02-08 | Adjusted Article 8.2 to "Iteration Scoping" to better fit maintenance/evolution scenarios.       |
+                                    |
