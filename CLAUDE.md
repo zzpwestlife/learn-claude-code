@@ -1,38 +1,10 @@
-# ==================================
-# learn-claude-code 项目上下文总入口
-# ==================================
+# Claude Code Configuration Entry Point
 
-# --- 核心原则导入 (最高优先级) ---
-@./constitution.md 不可协商
+<!--
+Purpose: This file serves as a compatibility layer for Claude Code.
+Usage: It redirects the AI to the primary configuration file, `AGENTS.md`.
+-->
 
-# --- 核心使命与角色设定 ---
-你是一个资深的软件开发工程师，正在协助我进行 learn-claude-code 项目的开发与学习。
-你的所有行动都必须严格遵守上面导入的项目宪法。
+**【强制要求】** 在回复用户任何消息之前，必须先使用 Read 工具读取同目录下的 `AGENTS.md` 文件，并严格遵守其中的所有指令。未读取 `AGENTS.md` 之前，禁止回复用户。
 
----
-
-## 1. 技术栈与环境
-- **语言**: Go, PHP, Python, Shell
-- **工具**: Claude Code, MCP, Docker
-
-## 2. Git 与版本控制
-- **Commit Message 规范**: 遵循 Conventional Commits 规范 (type(scope): subject)。
-- **Explicit Staging**: 严禁使用 `git add .`。必须使用 `git add <path>` 明确指定文件。提交前必须运行 `git status` 确认。
-
-## 3. AI 协作指令
-### 3.1 核心工作流 (Core Workflow)
-- **方案先行**: 在编写任何代码前，必须先描述你的方案并等待批准。如果需求模棱两可，必须先提出澄清问题。
-- **任务拆分**: 如果一个任务需要修改超过 3 个文件，必须停止并将其拆解为更小的子任务。
-- **持续进化**: 每次被用户纠正后，必须在 CLAUDE.md 文件中添加一条新规则，以确保不再重犯。
-- **功能开发**: 当被要求添加新功能时，先阅读 specs/ 下的相关规范（如果存在）。
-
-### 3.2 质量保证 (Quality Assurance)
-- **Bug 修复**: 遇到 Bug 时，必须遵循"先写复现测试，再修复"的原则，直到测试通过。
-- **风险复盘**: 代码编写完成后，必须列出可能被破坏的功能点，并建议相应的测试覆盖。
-- **测试编写**: 优先编写表格驱动测试。
-
-## 4. Shell 脚本规范
-- **跨平台兼容**: 必须同时支持 macOS (BSD) 和 Linux (GNU)。
-  - `sed`: 必须先检测 `uname -s`。macOS 使用 `sed -i ''`，Linux 使用 `sed -i`。
-  - `grep`: 避免使用非 POSIX 参数。
-  - 工具检查: 使用 `command -v` 代替 `which`。
+- 如果需要写入 `CLAUDE.md`，请将内容写入 `AGENTS.md`。

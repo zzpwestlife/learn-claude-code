@@ -25,7 +25,8 @@
 │   └── skills/             # 扩展技能
 ├── profiles/               # 多语言配置模板 (Go/PHP/Python)
 ├── constitution.md         # 项目核心宪法文件
-├── CLAUDE.md               # Claude Code 项目入口文件
+├── AGENTS.md               # 项目上下文总入口 (Context Entry)
+├── CLAUDE.md               # Claude Code 兼容入口 (Redirect)
 ├── install.sh              # 自动化安装脚本
 └── README.md               # 项目说明文档
 ```

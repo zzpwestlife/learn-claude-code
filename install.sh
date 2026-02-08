@@ -414,7 +414,7 @@ fi
 # 2. Copy Language Configs
 log "INFO" "Installing $LANG_NAME configurations..."
 safe_copy "$SOURCE_DIR/profiles/$PROFILE/CLAUDE.md" "$TARGET_DIR/"
-safe_copy "$SOURCE_DIR/profiles/$PROFILE/AGENTS.md" "$TARGET_DIR/.claude/"
+safe_copy "$SOURCE_DIR/profiles/$PROFILE/AGENTS.md" "$TARGET_DIR/"
 
 # 3. Copy Agents
 log "INFO" "Copying Agents..."
@@ -534,12 +534,13 @@ log "INFO" "Adjusting configuration paths..."
 
 # Use run_sed_i wrapper for cross-platform compatibility
 if [ -f "$TARGET_DIR/CLAUDE.md" ]; then
-    run_sed_i 's/@AGENTS.md/@.claude\/AGENTS.md/g' "$TARGET_DIR/CLAUDE.md"
+    run_sed_i 's/@AGENTS.md/@AGENTS.md/g' "$TARGET_DIR/CLAUDE.md"
 fi
 
-if [ -f "$TARGET_DIR/.claude/AGENTS.md" ]; then
-    run_sed_i 's/(\.\.\/\.\.\/constitution.md)/(constitution.md)/g' "$TARGET_DIR/.claude/AGENTS.md"
-    run_sed_i 's/(\.\.\/\.\.\/docs\/constitution\//(constitution\//g' "$TARGET_DIR/.claude/AGENTS.md"
+if [ -f "$TARGET_DIR/AGENTS.md" ]; then
+    run_sed_i 's/(\.\.\/\.\.\/constitution.md)/(.claude\/constitution.md)/g' "$TARGET_DIR/AGENTS.md"
+    run_sed_i 's/(\.\.\/\.\.\/docs\/constitution\//(.claude\/constitution\//g' "$TARGET_DIR/AGENTS.md"
+    run_sed_i 's/@\.\/constitution.md/@.claude\/constitution.md/g' "$TARGET_DIR/AGENTS.md"
 fi
 
 if [ -f "$TARGET_DIR/.claude/agents/code-reviewer.md" ]; then
