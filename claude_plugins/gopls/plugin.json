@@ -1,0 +1,6 @@
+{
+  "name": "gopls",
+  "description": "Go Language Server (gopls)",
+  "version": "1.0.0",
+  "author": "Local"
+}
