@@ -1,11 +1,7 @@
 {
   "hooks": {
-    "pre-commit": [
-      "go vet ./...",
-      "go fmt ./...",
-      "gofumpt -w .",
-      "go test ./... -short"
-    ]
+    "UserPromptSubmit": [],
+    "Notification": []
   },
   "permissions": {
     "defaultMode": "plan",

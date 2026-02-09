@@ -7,7 +7,7 @@ echo "Args: $@" >> "$LOG_FILE"
 echo "PATH: $PATH" >> "$LOG_FILE"
 
 # 确保 gopls 在路径中，或者使用绝对路径
-GOPLS_CMD="/Users/admin/go/bin/gopls"
+GOPLS_CMD="/Users/joeyzou/go/bin/gopls"
 
 if [ ! -x "$GOPLS_CMD" ]; then
     echo "Error: gopls not found at $GOPLS_CMD" >> "$LOG_FILE"

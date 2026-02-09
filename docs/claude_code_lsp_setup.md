@@ -42,7 +42,14 @@ gopls version
 ```
 
 ### 3. 验证
-重启 Claude Code，打开一个 `.go` 文件并询问代码定义位置。
+仅仅安装插件并不意味着 LSP 已经工作。请按以下步骤确认：
+
+1.  **检查状态**：在 Claude Code 中输入 `/plugin list`，确保 `gopls` 显示为 `✔ enabled`。
+2.  **功能测试**：
+    *   **重启 Claude Code** (`/exit` 后重新运行)。
+    *   **打开文件**：`/read test_lsp.go`。
+    *   **测试诊断**：故意写错代码（如 `fmt.PrintLine`），询问 "Is there any error?"。如果能指出 "undefined"，说明 LSP 正常工作。
+
 
 ---
 
@@ -92,6 +99,10 @@ gopls version
 ```text
 /plugin install gopls@local_lsp
 ```
+
+### 4. 验证
+步骤同“方案 A”的验证部分：先用 `/plugin list` 检查状态，再通过故意制造语法错误来测试 LSP 诊断功能。
+
 
 ---
 

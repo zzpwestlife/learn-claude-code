@@ -1,6 +1,6 @@
 {
   "go": {
-    "command": "/Users/admin/openSource/learn-claude-code/claude_plugins/gopls/gopls_wrapper.sh",
+    "command": "/Users/joeyzou/Code/OpenSource/learn-claude-code/claude_plugins/gopls/gopls_wrapper.sh",
     "args": [],
     "extensionToLanguage": {
       ".go": "go",
