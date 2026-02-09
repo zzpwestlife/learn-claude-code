@@ -30,31 +30,32 @@ All your actions must strictly comply with the project constitution imported abo
 - **Explicit Staging**: Strictly prohibit `git add .`. Must use `git add <path>` to explicitly specify files. Must run `git status` before committing to confirm.
 
 ## 3. AI Collaboration Instructions
-### 3.1 Core Workflow (Standard Cycle)
+### 3.1 Core Workflow (Adaptive)
+Apply "Simplicity Principle" to the workflow itself.
+
 1.  **Discovery & Scoping**:
     - Clarify needs, define scope (Iteration Scoping), and challenge assumptions.
-    - Distinguish between "Immediate Fix/Feature" and "Future Optimization".
-2.  **Planning**:
-    - Design the solution, list steps, and verify against Constitution.
-    - Wait for approval before coding.
+2.  **Planning (Scaled)**:
+    - **Complex Tasks**: Detailed step-by-step plan, Constitution check, wait for approval.
+    - **Simple Tasks**: Brief one-sentence plan, implicit Constitution check, proceed immediately.
 3.  **Execution**:
-    - Implement with TDD (Test-Driven Development).
+    - Implement with TDD (Test-Driven Development) where applicable.
     - If task requires modifying > 3 files, break it down.
 4.  **Review & Verify**:
     - Self-correct using the "Delivery Standards" before handing off.
-    - List potential risks and verification results.
+    - List verification results.
 
 ### 3.2 Scenario-Specific Rules
 - **Feature Development**: First read relevant specifications under specs/ (if they exist).
 - **Continuous Evolution**: After each user correction, add a new rule to **AGENTS.md** to prevent recurrence.
 
-### 3.2 Quality Assurance
+### 3.3 Quality Assurance
 - **Bug Fixes**: When encountering bugs, follow the principle of "write reproduction test first, then fix" until tests pass.
 - **Risk Review**: After writing code, list potential broken functionality and suggest corresponding test coverage.
 - **Test Writing**: Prioritize writing table-driven tests.
 - **Production Mindset**: Handle edge cases gracefully. Do not assume "happy path" only.
 
-### 3.3 Communication & Tool Usage
+### 3.4 Communication & Tool Usage
 - **Plain Language**: Explain technical decisions in plain language (educational). Translate jargon.
 - **Skill Priority**: Whenever responding, always evaluate if there are available and relevant Skills. Prioritize using them if they can significantly improve accuracy or efficiency.
 

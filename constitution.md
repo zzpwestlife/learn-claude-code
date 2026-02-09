@@ -1,6 +1,6 @@
 # Project Constitution (Universal Core Version)
 
-**Version: 2.1, Approved Date: 2026-01-26**
+**Version: 2.4, Approved Date: 2026-02-09**
 
 This document defines the unshakeable core development principles of this project. All code modifications must strictly adhere to these principles.
 This constitution applies to all technology stacks under this project (Go, PHP, Python, Frontend, DevOps, etc.). For language-specific implementation details, please refer to the [Appendices](#appendices).
@@ -82,7 +82,7 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 
 **Core:** Think before acting.
 
-- **8.1 (Mandatory Planning):** Plans must be created before coding.
+- **8.1 (Adaptive Planning):** Planning is mandatory but scalable. Complex tasks require detailed plans; trivial tasks require clear intent.
 - **8.2 (Iteration Scoping):** Explicitly define the boundaries of the current task. Focus on the immediate objective and avoid expanding scope unrelated to the current request.
 - **8.3 (User Confirmation):** Plans must include objectives, steps, verification methods, and be confirmed.
 - **8.4 (Constitution Check):** Before generating any plan, self-check against this constitution (Constitution Check).
@@ -139,4 +139,5 @@ Any plans or code that violate "Non-Negotiable" clauses should be deemed "uncons
 | Version | Date       | Changes                                                                                         |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------ |
 | 2.3     | 2026-02-08 | Adjusted Article 8.2 to "Iteration Scoping" to better fit maintenance/evolution scenarios.       |
+| 2.4     | 2026-02-09 | Updated Article 8.1 to "Adaptive Planning" to allow scalable planning for trivial tasks.         |
                                     |
