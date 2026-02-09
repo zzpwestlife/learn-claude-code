@@ -1,6 +1,6 @@
 ---
 name: "changelog-generator"
-description: "通过分析当前分支与主分支 (main/master) 之间的 Git 差异，辅助生成项目变更日志。此工具负责提取代码差异和提交变更，日志内容的分析与生成由 AI Agent 完成。"
+description: "在用户请求生成变更日志、Changelog 或总结差异时触发，提取 Git 差异并辅助生成 CHANGELOG.md。"
 ---
 
 # 变更日志生成器 (Changelog Generator)
@@ -48,3 +48,17 @@ description: "通过分析当前分支与主分支 (main/master) 之间的 Git �
 
 - 确保项目是一个 Git 仓库。
 - 确保 `changelog_agent.py` 存在于 `.claude/skills/changelog-generator/scripts/` 目录下。
+
+## 工具脚本
+
+- `scripts/changelog_agent.py`: 获取差异与提交变更。
+
+## 参考资料
+
+- `references/conventional-commits.md`: 约定式提交与 Changelog 分类参考。
+
+## 测试策略
+
+- **触发测试**：请求“生成 Changelog”“变更日志”“总结差异”应触发；无关请求不触发。
+- **功能测试**：脚本输出 diff；修改 CHANGELOG.md 后提交成功。
+- **性能对比**：对话轮次减少、失败提交次数下降。

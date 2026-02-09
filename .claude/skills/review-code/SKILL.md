@@ -1,5 +1,6 @@
 ---
-description: Review code changes in the current git repository using standard best practices.
+name: "review-code"
+description: "在用户请求代码审查、Review 变更或生成 CODE_REVIEW.md 时触发，读取 Git 差异并按规范输出中文审查报告。"
 ---
 
 # Code Review Skill
@@ -31,6 +32,23 @@ description: Review code changes in the current git repository using standard be
         *   **Improvement Suggestions**：建议修复的问题（性能、重构）。
         *   **Code Style**：风格问题（可选）。
         *   **Positive Highlights**：亮点。
+
+## 工具脚本
+
+- `scripts/get-diff.sh`: 自动选择 staged 或 unstaged diff 并输出。
+- `scripts/lint-runner.py`: 根据语言检测执行 go vet 或 flake8。
+- `scripts/metadata-checker.py`: 检查模块 README 与源文件头部 INPUT/OUTPUT/POS。
+
+## 参考资料
+
+- `references/review-checklist.md`: 审查清单与常见问题提示。
+- `references/report-template.md`: CODE_REVIEW.md 模板。
+
+## 测试策略
+
+- **触发测试**：请求“代码审查”“Review 变更”“生成 CODE_REVIEW.md”应触发；无关请求不触发。
+- **功能测试**：脚本可在目标仓库运行并输出结果；CODE_REVIEW.md 结构完整。
+- **性能对比**：与无 Skill 情况相比，审查步骤更少、重复沟通更少。
 
 ## 注意事项
 *   忽略琐碎的格式问题（假设已有自动格式化工具）。

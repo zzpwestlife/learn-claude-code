@@ -68,6 +68,50 @@
 3.  **多语言支持**: 提供 Go, PHP, Python 的标准化配置模板 (`profiles/`)。
 4.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中。
 
+### 评审与元信息约定
+
+- **评审入口**: 使用 `.claude/commands/review-code.md` 统一执行差异审查与全量审查。
+- **计划前置**: 变更触及 3 个以上文件或跨模块时，先进入 /plan 明确范围与验收标准。
+- **模块元信息**: 每个模块目录需要 README，说明 Role/Logic/Constraints 与子模块清单。
+- **源文件头部**: 源文件前三行包含 INPUT/OUTPUT/POS，变更后需要同步更新。
+- **交付卫生**: 本地产物与日志不得进入仓库，确保 `.gitignore` 覆盖。
+
+#### 模板示例
+
+模块 README 模板
+
+```
+# <模块名称>
+
+## Role
+<该模块在系统中的角色与职责>
+
+## Logic
+<该模块的核心逻辑与工作方式>
+
+## Constraints
+<使用方必须遵循的约束/不变量>
+
+## Submodules
+- <子模块A>: <用途>
+- <子模块B>: <用途>
+```
+
+源文件头部三行模板
+
+```
+INPUT: <该文件依赖的输入/模块/接口>
+OUTPUT: <该文件对外提供的能力/接口/副作用>
+POS: <该文件在系统中的位置/角色>
+```
+
+#### 快速实践：最小示例模块
+
+- 创建业务模块目录（示例）：`modules/example-module/`
+- 在模块目录中放置 `README.md`（按“模块 README 模板”填写 Role/Logic/Constraints 与 Submodules）
+- 在源码文件头部添加三行注释（按“源文件头部三行模板”填写 INPUT/OUTPUT/POS）
+- 提交前运行评审命令，确保模块元信息完整：参考 `.claude/commands/review-code.md`
+
 ### 快速开始
 
 **本地集成（推荐）**

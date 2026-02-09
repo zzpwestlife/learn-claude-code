@@ -23,18 +23,26 @@ You are a senior code reviewer. Your task is to review code, automatically detec
 If argument "$1" is "diff" or empty, perform **Git incremental review**.
 Otherwise, perform **full file review** on path "$1".
 
+**Complex Change Threshold:**
+If the change touches more than 3 files or crosses multiple modules, run a planning step first (/plan) to clarify scope and acceptance criteria.
+
 ### Mode A: Full File Review (path: "$1")
 1.  **Static Analysis** (by language):
     - Go: Run `go vet $1`
     - Python: Run `flake8 $1`
     - PHP: Read code directly
 2.  **Read Code**: Recursively read code files in the specified path.
+3.  **Module Metadata Check**:
+    - Verify module directory README exists and includes: Role, Logic, Constraints, and a submodule index.
+    - Verify each source file starts with three header lines: INPUT (dependencies), OUTPUT (provided capabilities), POS (position in the system).
+    - Record missing or inaccurate metadata in the review report with file paths.
 
 ### Mode B: Git Incremental Review (Diff Mode)
 1.  **Get Changes**:
     - Run `git diff main...HEAD` (try master if main doesn't exist) to view all changes.
     - Run `git log main..HEAD` to understand commit history.
 2.  **Read Changes**: Carefully analyze diff content.
+3.  **Metadata in Changes**: For changed modules and files, apply the same Module Metadata Check as in Mode A.
 
 ---
 

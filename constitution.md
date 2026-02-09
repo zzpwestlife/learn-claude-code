@@ -57,6 +57,7 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 - **5.3 (Function Size):** Single function or method line count **should** be under 20 lines.
 - **5.4 (Line Width Limit):** Single line code **should** not exceed 80 characters, with a hard limit of 120 characters.
 - **5.5 (Code Evolution):** Delete old code directly, strictly prohibit keeping commented-out obsolete code.
+- **5.6 (Module Metadata):** Each module directory must include a README describing Role, Logic, Constraints, and a submodule index. Each source file should start with three header lines: INPUT (dependencies), OUTPUT (provided capabilities), POS (position in the system). When code changes, these metadata must be updated accordingly.
 
 ---
 
@@ -86,6 +87,7 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 - **8.2 (Iteration Scoping):** Explicitly define the boundaries of the current task. Focus on the immediate objective and avoid expanding scope unrelated to the current request.
 - **8.3 (User Confirmation):** Plans must include objectives, steps, verification methods, and be confirmed.
 - **8.4 (Constitution Check):** Before generating any plan, self-check against this constitution (Constitution Check).
+- **8.5 (Pre-Review Planning):** For complex changes (touching > 3 files or crossing multiple modules), perform a planning step before code review, define objectives, steps, verification methods, and acceptance criteria.
 
 ---
 
