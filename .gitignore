@@ -4,6 +4,9 @@ dist/
 node_modules/
 .trae/
 tmp.log
+generated_images/
+install_claude_code.log
+plugin_dist/
 
 # Auto Claude data directory
 .auto-claude/
