@@ -55,6 +55,8 @@ tags: [AI, Coding, LLM, Guide, Vibe Coding]
 
 酷，让我们开始吧！
 
+
+
 ### 参考资料
 
 - [The End of Programming as We Know It (Tim O'Reilly)](https://www.oreilly.com/radar/the-end-of-programming-as-we-know-it)
@@ -76,6 +78,8 @@ Vibe Coding 是 AI 编程的升级版 :-) 在这里，你不太关心生成的�
 
 所以，总之，无论你是使用 AI 来讨论你的软件想法，还是仅帮助编写现有代码库的部分代码，或者你正在全面进行 Vibe Coding，你都是在使用 AI 帮助你生成代码。让我们称之为 AI 编程并继续。
 
+
+
 # 如何使用它？
 
 你可以通过许多不同的方式使用 AI 编程，但总之：
@@ -87,6 +91,8 @@ Vibe Coding 是 AI 编程的升级版 :-) 在这里，你不太关心生成的�
 > **Tip:** 你应该学习并练习这两者！
 
 但随着项目复杂度的增加，应更多地倾向于 Copilot 模式，而远离纯粹的 YOLO Vibe Coding。另一个人（或六个月后的你自己）必须维护代码的可能性越大，这就越重要。
+
+
 
 # 🗺️ 路线图
 
@@ -110,6 +116,8 @@ Vibe Coding 是 AI 编程的升级版 :-) 在这里，你不太关心生成的�
 
 - [Vibe Coding 101 with Replit](https://www.deeplearning.ai/short-courses/vibe-coding-101-with-replit/)
 - [Cursor AI Tutorial for Beginners [2025 Edition]](https://www.youtube.com/watch?v=3289vhOUdKA)
+
+
 
 ## 如何编写编程提示词？（即如何进行 Vibe Coding？）
 
@@ -215,6 +223,8 @@ Vibe Coding 是 AI 编程的升级版 :-) 在这里，你不太关心生成的�
 - [RepoPrompt](https://repoprompt.com/)：一个帮助从你的项目中组装上下文的工具。值得观看 [RepoPrompt Workflow](https://www.youtube.com/watch?v=fm3VreCt-5E) 的概述视频，学习如何轻松利用这些工具在你的 Vibe Coding 提示词中提供更多上下文。
 - [Not all AI-assisted programming is vibe coding (but vibe coding rocks) (Simon Willison)](https://simonwillison.net/2025/Mar/19/vibe-coding/)
 
+
+
 ## 我应该使用哪个 LLM 模型？
 
 LLM 经过训练和微调以实现不同的目标，这里有一份关于你可能拥有的目标/用途以及应该使用哪个模型的综合列表：
@@ -230,6 +240,8 @@ LLM 经过训练和微调以实现不同的目标，这里有一份关于你可�
 - [Models.dev](https://models.dev)：AI 模型的开源数据库。
 - [Agent Leaderboard](https://huggingface.co/spaces/galileo-ai/agent-leaderboard)
 
+
+
 ## 遇到可怕的「速率限制」消息时该怎么办
 
 **切换到不同的模型。**
@@ -237,6 +249,8 @@ LLM 经过训练和微调以实现不同的目标，这里有一份关于你可�
 这可能至少有两个不同的原因。你可能发出了一个超过模型输入/输出 Token 限制的繁重请求。或者，如果它运行的服务器集群状况不佳，你可能会被限制以减少负载。你得到的错误消息通常对此并不透明。你可以在 [这里](https://platform.openai.com/docs/guides/rate-limits) 找到更详细的解释。
 
 不同的模型有非常不同的 Token 限制。例如，在我撰写本文时的 2025 年 4 月下旬，gpt-4.1-mini 比 gpt-4.1 慷慨得多。在你的口袋里准备几个 API 密钥（这很便宜，因为你是按需付费的）并访问描述速率限制的页面。这里以 [Anthropic 的](https://console.anthropic.com/settings/limits) 为例。
+
+
 
 ## 如何设置项目级规则？
 
