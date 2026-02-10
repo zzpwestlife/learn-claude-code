@@ -25,3 +25,4 @@ settings.local.json
 *.bak
 *.swp
 *.tmp
+.env

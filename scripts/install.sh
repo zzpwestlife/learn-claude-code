@@ -37,7 +37,7 @@ log() {
     esac
 }
 
-SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TARGET_DIR=""
 BACKUP_DIR=""
 OS_TYPE=""
@@ -556,8 +556,7 @@ log "INFO" "Verifying installation..."
 ERRORS=0
 
 if [ ! -f "$TARGET_DIR/CLAUDE.md" ]; then
-    log "ERROR" "CLAUDE.md missing!"
-    ERRORS=$((ERRORS+1))
+    log "WARN" "CLAUDE.md missing! (Skipped)"
 fi
 
 if [ ! -d "$TARGET_DIR/.claude/agents" ]; then

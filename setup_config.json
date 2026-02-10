@@ -1,0 +1,80 @@
+{
+  "marketplaces": [
+    "anthropics/claude-plugins-official",
+    "mixedbread-ai/mgrep",
+    "OthmanAdi/planning-with-files",
+    "obra/superpowers-marketplace"
+  ],
+  "plugins": [
+    "hookify@claude-plugins-official",
+    "code-simplifier@claude-plugins-official",
+    "context7@claude-plugins-official",
+    "pyright-lsp@claude-plugins-official",
+    "security-guidance@claude-plugins-official",
+    "code-review@claude-plugins-official",
+    "mgrep@Mixedbread-Grep",
+    "planning-with-files@planning-with-files",
+    "superpowers@superpowers-marketplace"
+  ],
+  "mcps": {
+    "std": [
+      {
+        "name": "zai-mcp-server",
+        "package": "@z_ai/mcp-server",
+        "condition": "Z_AI_KEY",
+        "env": {
+          "Z_AI_API_KEY": "${Z_AI_KEY}"
+        }
+      },
+      {
+        "name": "memory",
+        "package": "@modelcontextprotocol/server-memory"
+      },
+      {
+        "name": "sequential-thinking",
+        "package": "@modelcontextprotocol/server-sequential-thinking"
+      },
+      {
+        "name": "filesystem",
+        "package": "@modelcontextprotocol/server-filesystem",
+        "env": {
+          "ALLOWED_DIRECTORIES": "${HOME}"
+        }
+      },
+      {
+        "name": "magic",
+        "package": "@21st-dev/magic"
+      },
+      {
+        "name": "github",
+        "package": "@modelcontextprotocol/server-github",
+        "condition": "GH_TOKEN",
+        "env": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "${GH_TOKEN}"
+        }
+      },
+      {
+        "name": "tavily",
+        "package": "tavily-mcp",
+        "condition": "TAVILY_KEY",
+        "env": {
+          "TAVILY_API_KEY": "${TAVILY_KEY}"
+        }
+      }
+    ],
+    "http": [
+      {
+        "name": "web-search-prime",
+        "url": "https://open.bigmodel.cn/api/mcp/web_search_prime/mcp",
+        "header": "Authorization: Bearer ${BIGMODEL_KEY}",
+        "condition": "BIGMODEL_KEY"
+      },
+      {
+        "name": "web-reader",
+        "url": "https://open.bigmodel.cn/api/mcp/web_reader/mcp",
+        "header": "Authorization: Bearer ${BIGMODEL_KEY}",
+        "condition": "BIGMODEL_KEY"
+      }
+    ]
+  }
+}
