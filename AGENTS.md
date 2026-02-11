@@ -36,7 +36,7 @@ Apply "Simplicity Principle" to the workflow itself.
 1.  **Discovery & Scoping**:
     - Clarify needs, define scope (Iteration Scoping), and challenge assumptions.
 2.  **Planning (Scaled)**:
-    - **Complex Tasks**: Detailed step-by-step plan, Constitution check, wait for approval.
+    - **Complex Tasks**: Detailed step-by-step plan with verification criteria (Format: `[Step] -> verify: [check]`), Constitution check, wait for approval.
     - **Simple Tasks**: Brief one-sentence plan, implicit Constitution check, proceed immediately.
 3.  **Execution**:
     - Implement with TDD (Test-Driven Development) where applicable.
@@ -50,6 +50,7 @@ Apply "Simplicity Principle" to the workflow itself.
 - **Continuous Evolution**: After each user correction, add a new rule to **AGENTS.md** to prevent recurrence.
 
 ### 3.3 Quality Assurance
+- **Surgical Changes**: Touch only what you must. Clean up only your own mess (remove imports/variables your changes made unused). Do not "improve" adjacent code unless explicitly requested.
 - **Bug Fixes**: When encountering bugs, follow the principle of "write reproduction test first, then fix" until tests pass.
 - **Risk Review**: After writing code, list potential broken functionality and suggest corresponding test coverage.
 - **Test Writing**: Prioritize writing table-driven tests.
