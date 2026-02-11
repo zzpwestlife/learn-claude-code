@@ -14,35 +14,24 @@ description: "在用户请求生成变更日志、Changelog 或总结差异时�
 1.  **获取差异 (Fetch Diff)**: Agent 运行脚本获取当前代码与主分支的差异。
 2.  **分析总结 (Analyze & Summarize)**: Agent 读取脚本输出的差异内容，利用 AI 能力分析代码变更的语义，生成高质量的 Changelog 内容。
 3.  **更新文件 (Update File)**: Agent 将生成的内容写入 `CHANGELOG.md`。
-4.  **提交变更 (Commit)**: Agent 再次运行脚本，将代码变更和 CHANGELOG 一起提交。
 
 ## 用法 (Usage)
 
-### 1. 获取代码差异 (Get Git Diff)
+### 获取代码差异 (Get Git Diff)
 
 获取当前分支（包括未提交的变更）与主分支 (`main` 或 `master`) 之间的所有代码差异。
 
 - **命令**: `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py`
 - **输出**: 标准输出 (stdout) 显示完整的 `git diff` 内容。Agent 应读取此输出进行分析。
 
-### 2. 提交变更 (Commit Changes)
-
-将当前的所有变更（包括对 `CHANGELOG.md` 的修改和代码变更）提交到 Git。
-
-- **命令**: `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py --commit --message "feat: description of changes"`
-- **参数**:
-    - `--commit`: 启用提交模式。
-    - `--message "..."`: 指定提交信息。
-
 ## 示例 (Examples)
 
 **Agent 操作流程示例**:
 
-1.  Agent 收到用户请求："生成并提交 Changelog"。
+1.  Agent 收到用户请求："生成 Changelog"。
 2.  Agent 运行: `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py`
 3.  Agent 获取到 Diff 输出，分析发现新增了登录功能。
 4.  Agent 编辑 `CHANGELOG.md`，添加 "## [Unreleased] - ✨ 新增用户登录功能..."。
-5.  Agent 运行: `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py --commit --message "feat: add user login and update changelog"`
 
 ## 前置条件 (Prerequisites)
 
@@ -51,7 +40,7 @@ description: "在用户请求生成变更日志、Changelog 或总结差异时�
 
 ## 工具脚本
 
-- `scripts/changelog_agent.py`: 获取差异与提交变更。
+- `scripts/changelog_agent.py`: 获取差异。
 
 ## 参考资料
 
@@ -60,5 +49,5 @@ description: "在用户请求生成变更日志、Changelog 或总结差异时�
 ## 测试策略
 
 - **触发测试**：请求“生成 Changelog”“变更日志”“总结差异”应触发；无关请求不触发。
-- **功能测试**：脚本输出 diff；修改 CHANGELOG.md 后提交成功。
-- **性能对比**：对话轮次减少、失败提交次数下降。
+- **功能测试**：脚本输出 diff。
+- **性能对比**：对话轮次减少。

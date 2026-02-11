@@ -9,12 +9,8 @@ Claude Code Agent - Changelog Generator
 import os
 import sys
 import subprocess
-import re
-import datetime
 import argparse
-from collections import defaultdict
 import json
-import fnmatch
 
 class ChangelogAgent:
     def __init__(self, options):
@@ -113,13 +109,8 @@ class ChangelogAgent:
 
     def run(self):
         """执行主流程"""
-        # 模式 1: 提交变更 (Commit Mode)
-        if self.options.commit:
-            self._handle_commit()
-            return
-
-        # 模式 2: 获取差异 (Diff Mode)
-        # 这是默认行为，或者可以通过参数显式指定
+        # 模式: 获取差异 (Diff Mode)
+        # 这是默认行为
         # 脚本不再负责生成 Markdown，而是负责提供原始数据给 AI Agent
         print(f"正在获取代码差异: 当前工作区 <-> 主分支 [{self.main_branch}] ...", file=sys.stderr)
         
@@ -131,36 +122,12 @@ class ChangelogAgent:
 
         # 直接输出 Diff 内容到 stdout，供 Agent 读取
         print(diff_content)
-        
-    def _handle_commit(self):
-        """处理提交逻辑"""
-        # 检查是否有变更
-        status = self._run_git(["status", "--porcelain"])
-        if not status:
-            print("没有需要提交的变更。", file=sys.stderr)
-            return
-
-        print("正在提交变更...", file=sys.stderr)
-        
-        # 添加所有变更
-        self._run_git(["add", "."])
-        
-        # 提交消息
-        msg = self.options.message or f"chore: update changelog and project changes {datetime.date.today()}"
-        
-        result = self._run_git(["commit", "-m", msg])
-        if result:
-            print(f"提交成功: {msg}", file=sys.stderr)
-        else:
-            print("提交失败。", file=sys.stderr)
 
 def main():
     parser = argparse.ArgumentParser(description="Claude Code Agent - Changelog Generator")
     parser.add_argument("--dry-run", action="store_true", help="[已废弃] 预览模式")
     parser.add_argument("--verbose", action="store_true", help="显示详细日志")
     parser.add_argument("--version", type=str, help="[已废弃] 指定版本号")
-    parser.add_argument("--commit", action="store_true", help="执行提交操作")
-    parser.add_argument("--message", "-m", type=str, help="指定提交信息")
     
     args = parser.parse_args()
     
