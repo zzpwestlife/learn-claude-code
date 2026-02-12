@@ -39,10 +39,12 @@ Apply "Simplicity Principle" to the workflow itself.
     - **Complex Tasks**: Detailed step-by-step plan with verification criteria (Format: `[Step] -> verify: [check]`), Constitution check, wait for approval.
     - **Simple Tasks**: Brief one-sentence plan, implicit Constitution check, proceed immediately.
 3.  **Execution**:
+    - **Read First**: Always read relevant files and context before modifying.
     - Implement with TDD (Test-Driven Development) where applicable.
     - If task requires modifying > 3 files, break it down.
 4.  **Review & Verify**:
-    - Self-correct using the "Delivery Standards" before handing off.
+    - **Self-Verification**: Manually verify changes (run tests, check output) before handing off.
+    - Self-correct using the "Delivery Standards".
     - List verification results.
 
 ### 3.2 Scenario-Specific Rules
@@ -50,15 +52,29 @@ Apply "Simplicity Principle" to the workflow itself.
 - **Continuous Evolution**: After each user correction, add a new rule to **AGENTS.md** to prevent recurrence.
 
 ### 3.3 Quality Assurance
-- **Surgical Changes**: Touch only what you must. Clean up only your own mess (remove imports/variables your changes made unused). Do not "improve" adjacent code unless explicitly requested.
-- **Bug Fixes**: When encountering bugs, follow the principle of "write reproduction test first, then fix" until tests pass.
-- **Risk Review**: After writing code, list potential broken functionality and suggest corresponding test coverage.
-- **Test Writing**: Prioritize writing table-driven tests.
-- **Production Mindset**: Handle edge cases gracefully. Do not assume "happy path" only.
+- **Code Quality Principles**:
+  - **Readability First**: Prioritize readability; make the simplest necessary changes.
+  - **Strict Typing**: No `any` type (or equivalent); define explicit types. No `eslint-disable` or `@ts-ignore`.
+  - **Clean Code**: Delete unused code immediately; do not comment it out.
+  - **Reuse First**: Check for existing implementations/utils before writing new code.
+- **Naming & Style**:
+  - **Conventions**: Follow language-specific standards (Go: Tabs, Python: 4 spaces/snake_case). For JS/TS, use 2 spaces.
+  - **Naming**: Use camelCase for variables (unless language demands otherwise) and verb-first function names (e.g., `getUserById`).
+- **Surgical Changes**: Touch only what you must. Clean up only your own mess.
+- **Bug Fixes**: Write reproduction test first, then fix.
+- **Risk Review**: List potential broken functionality and suggest test coverage.
+- **Test Writing**: Prioritize table-driven tests.
+- **Production Mindset**: Handle edge cases; do not assume "happy path".
 
 ### 3.4 Communication & Tool Usage
-- **Plain Language**: Explain technical decisions in plain language (educational). Translate jargon.
-- **Skill Priority**: Whenever responding, always evaluate if there are available and relevant Skills. Prioritize using them if they can significantly improve accuracy or efficiency.
+- **Language**: **Always use Simplified Chinese** for all responses and code comments.
+- **Tone**: Direct and professional. No polite fillers ("Sorry", "I understand"). No code summaries unless requested.
+- **Truth-Seeking**:
+  - Do not guess. If uncertain, verify or ask.
+  - Explicitly distinguish between "Facts" (evidence-based) and "Speculation".
+  - Provide evidence for conclusions about environment/code.
+- **Skill Priority**: Evaluate and use available Skills (e.g., Context7, Search) before coding.
+- **SubAgent/Expert Dispatch**: Delegate complex analysis or search tasks to specialized SubAgents/Skills rather than doing everything yourself.
 
 ### 3.5 Code Review Workflow
 - Pre‑flight: read `constitution.md` and the language annex under `docs/constitution/`.

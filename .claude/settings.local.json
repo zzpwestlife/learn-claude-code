@@ -5,7 +5,9 @@
       "mcp__web-search-prime__webSearchPrime",
       "mcp__fetch__fetch",
       "Bash(npm install:*)",
-      "Bash(npm run build)"
+      "Bash(npm run build)",
+      "Skill(optimize-prompt)",
+      "Bash(tree:*)"
     ]
   },
   "hooks": {
