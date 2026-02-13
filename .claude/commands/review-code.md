@@ -7,6 +7,7 @@ allowed-tools:
   - Read
   - Grep
   - Glob
+  - RunCommand
   - Bash(go vet *, flake8 *, git diff *, git log *)
 ---
 
@@ -67,4 +68,4 @@ After the review is complete:
     -   **Options**: ["Yes", "No"]
 3.  If User says **Yes**:
     -   **Action**: Use `RunCommand` tool to execute `/changelog-generator`.
-    -   **Important**: Set `requires_approval: true` so the user can see and confirm the command (press Tab/Enter) without typing it manually.
+    -   **Important**: Set `requires_approval: true`. This allows the user to simply confirm (Tab/Enter) to proceed.

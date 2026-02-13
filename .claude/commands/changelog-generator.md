@@ -5,6 +5,7 @@ allowed-tools:
   - Read
   - Write
   - AskUserQuestion
+  - RunCommand
 ---
 
 !python3 .claude/skills/changelog-generator/scripts/changelog_agent.py

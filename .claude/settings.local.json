@@ -7,7 +7,8 @@
       "Bash(npm install:*)",
       "Bash(npm run build)",
       "Skill(optimize-prompt)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Skill(planning-with-files:planning-with-files)"
     ]
   },
   "hooks": {

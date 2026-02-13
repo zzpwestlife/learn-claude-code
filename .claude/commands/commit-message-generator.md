@@ -5,6 +5,7 @@ model: sonnet
 allowed-tools:
   - Bash
   - AskUserQuestion
+  - RunCommand
 ---
 
 !git status --porcelain
@@ -40,8 +41,8 @@ You are a **Senior Code Auditor & Commit Message Specialist**. Your task is to a
 - Analyze the output of `git status` and `git diff`.
 - **CRITICAL**: If `git diff --staged` is empty:
     - If there are unstaged changes, use `AskUserQuestion` to ask: "检测到没有暂存的文件 (No staged files). 是否需要我先为您执行 `git add .` ?"
-    - If `git add .` is approved, assume the user ran it (or ask them to run it) and proceed. *Note: In this command context, you cannot run `git add` interactively and expect the `!git diff` context to update instantly in the same turn without tool use. So, just advise the user or output a message saying "Please stage your changes first."*
-    - **Better approach for this command**: If empty, strictly output: "⚠️ **没有检测到暂存的更改 (No staged changes)**。\n请先使用 `git add <file>` 暂存文件，或者告诉我想提交什么内容。" and stop.
+    - If user says **Yes**: Use `RunCommand` to execute `git add .` (with `requires_approval: false`), then proceed to analyze changes (you may need to mentally infer changes or ask user to re-run if tool output doesn't update). *Better*: Just execute it and say "Added all files. Please run `/commit-message-generator` again to analyze."
+    - If `git status` is completely clean, output: "⚠️ **没有检测到更改 (No changes)**。" and stop.
 
 ## 2. 分析变更 (Analyze Changes)
 - Identify the **Scope**: Which module/component is affected? (e.g., `auth`, `ui`, `api`).
@@ -71,27 +72,16 @@ type(scope): subject
 <footer>
 ```
 
-### 💡 提交建议 (Suggestions)
-- If the diff contains unrelated changes, suggest splitting the commit.
-- If specific files seem to be accidental (e.g., `.DS_Store`, `debug.log`), warn the user.
-
-# 示例 (Example)
-**Diff**: Modified `src/components/Button.tsx` (changed color) and `src/components/Button.test.tsx` (updated snapshot).
-
-**Output**:
-### 📋 变更摘要
-更新了 Button 组件的样式颜色，并同步更新了测试快照。
-
-### 🚀 推荐的 Commit Message
-**选项 1: 标准模式**
-```text
-style(ui): update button component color scheme
-```
-
-**选项 2: 详细模式**
-```text
-style(ui): update button component color scheme
-
-Updated the primary button color to match the new design system specs.
-Verified with updated snapshot tests.
-```
+## 4. 提交引导 (Commit Handoff)
+1.  **Select Best Option**: Choose the most appropriate message (usually Option 1 or Option 2).
+2.  **Prompt User**: Use `AskUserQuestion` to ask:
+    -   **Question**: "是否使用推荐的 Commit Message 直接提交？"
+    -   **Options**: 
+        -   "提交 (Commit with Option 1)"
+        -   "提交 (Commit with Option 2)"
+        -   "修改 (Edit manually)"
+3.  **Action**:
+    -   If user chooses an option: Use `RunCommand` to execute:
+        `git commit -m "CHOSEN_MESSAGE"`
+        (Ensure quotes are escaped properly).
+    -   **Important**: Set `requires_approval: true` so the user can review the final command.

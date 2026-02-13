@@ -2,14 +2,8 @@
 .DS_Store
 dist/
 node_modules/
-.trae/
-tmp.log
-generated_images/
-install_claude_code.log
-plugin_dist/
-
-# Auto Claude data directory
-.auto-claude/
+.trae
+.cursor
 
 # Python
 __pycache__/
@@ -26,5 +20,4 @@ settings.local.json
 *.swp
 *.tmp
 .env
-.claude/tmp/
 

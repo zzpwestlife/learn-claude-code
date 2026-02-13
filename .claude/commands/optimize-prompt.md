@@ -7,6 +7,7 @@ allowed-tools:
   - Read
   - Write
   - SearchCodebase
+  - RunCommand
 ---
 
 你是一位精通 Anthropic Claude 系列模型（特别是最新的 **Claude 4.5/4.6**）特性的 **资深提示词工程师 (Prompt Engineer)**。
@@ -73,7 +74,9 @@ allowed-tools:
             -   "满意，结束 (Finish)"
             -   "不满意，需要修改 (Revise)"
     -   **处理**:
-        -   If "满意，进入规划...": 输出 `Please run: /planning-with-files:plan` (or `/planning-with-files` if using local skill).
+        -   If "满意，进入规划...":
+            -   输出 "正在为您准备规划环境..."
+            -   **必须**调用 `RunCommand` 工具，执行命令 `/planning-with-files:plan` (设置 `requires_approval=true` 以便用户可以直接确认/Tab键填入)。
         -   If "不满意...": 询问具体修改意见。
 
 ## 第四阶段：后续行动 (Follow-up)

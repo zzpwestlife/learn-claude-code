@@ -1,7 +1,7 @@
 {
-  "name": "smart-guided-workflow",
+  "name": "FlowState",
   "version": "1.0.0",
-  "description": "A comprehensive AI-native development workflow plugin for Claude Code, featuring Prompt Optimization, Planning, Code Review, and Changelog automation.",
+  "description": "A Zero-Friction Workflow plugin for Claude Code. Keep your flow unbroken.",
   "author": "Claude Code Community",
   "license": "MIT",
   "repository": "https://github.com/learn-claude-code/smart-guided-workflow",

@@ -1,6 +1,5 @@
----
 name: planning-with-files
-version: "2.10.0"
+version: "2.13.0"
 description: Implements Manus-style file-based planning for complex tasks. Creates task_plan.md, findings.md, and progress.md. Use when starting complex multi-step tasks, research projects, or any task requiring >5 tool calls. Now with automatic session recovery after /clear.
 user-invocable: true
 allowed-tools:
@@ -13,31 +12,59 @@ allowed-tools:
   - WebFetch
   - WebSearch
   - AskUserQuestion
+  - RunCommand
 hooks:
   PostToolUse:
     - matcher: "Write|Edit|Bash"
       hooks:
         - type: command
           command: |
-            SCRIPT_DIR="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/planning-with-files}/scripts"
-            OUTPUT=$(sh "$SCRIPT_DIR/check-complete.sh" "task_plan.md" 2>/dev/null)
+            # Find project root by walking up to find .claude
+            d="$PWD"; ROOT_DIR=""; while [ "$d" != "/" ]; do if [ -d "$d/.claude" ]; then ROOT_DIR="$d"; break; fi; d=$(dirname "$d"); done; if [ -z "$ROOT_DIR" ]; then ROOT_DIR="$PWD"; fi
+            
+            SCRIPT_DIR="$ROOT_DIR/.claude/skills/planning-with-files/scripts"
+            
+            # Attempt to find task_plan.md in current dir, immediate subdirs, or project root
+            PLAN_FILE=$(find . -maxdepth 2 -name task_plan.md -not -path '*/.*' 2>/dev/null | head -n 1)
+            if [ -z "$PLAN_FILE" ]; then
+                if [ -f "$ROOT_DIR/task_plan.md" ]; then
+                    PLAN_FILE="$ROOT_DIR/task_plan.md"
+                else
+                    PLAN_FILE="task_plan.md"
+                fi
+            fi
+            
+            OUTPUT=$(sh "$SCRIPT_DIR/check-complete.sh" "$PLAN_FILE" 2>/dev/null)
             
             # Concise output: only show status if changed or complete
             if echo "$OUTPUT" | grep -q "ALL PHASES COMPLETE"; then
               echo ""
               echo "<system-reminder>"
               echo "✅ SYSTEM NOTICE: All phases in task_plan.md are complete."
-              echo "🛑 STOP: DO NOT commit changes automatically. DO NOT use the /commit skill yet."
-              echo "👉 ACTION REQUIRED: You MUST now use 'AskUserQuestion' to prompt the user:"
-               echo "  '所有方案任务已执行完成！是否需要执行 /review-code 对代码进行深度review？'"
-               echo "  Options: ['Yes', 'No']"
-               echo "  If Yes: Use RunCommand tool to execute '/review-code' with requires_approval=true."
-               echo "</system-reminder>"
+              echo "👉 ACTION REQUIRED: To maintain a zero-friction workflow, you MUST now PROPOSE the next step:"
+              echo "  1. Summarize the completed work briefly."
+              echo "  2. Use the 'RunCommand' tool IMMEDIATELY to propose the Code Review:"
+              echo "     - command: '/review-code'"
+              echo "     - requires_approval: true"
+              echo "     - message: 'All phases complete. Press Tab to start Code Review.'"
+              echo "  DO NOT ask the user if they want to review. Just propose the command so they can Tab-to-Execute."
+              echo "</system-reminder>"
             elif [ -n "$OUTPUT" ]; then
               # Write detailed status to a temp file to keep chat clean
                     mkdir -p .claude/tmp
                     echo "$OUTPUT" > .claude/tmp/planning_status.md
                     echo "Planning Status Updated: [View Status](file:///Users/admin/openSource/learn-claude-code/.claude/tmp/planning_status.md)"
+                    
+                    # If not complete, remind model to STOP after single phase in Execute mode
+                    echo "<system-reminder>"
+                    echo "🛑 STOP! EXECUTION PAUSE REQUIRED 🛑"
+                    echo "You have completed a phase. You MUST STOP NOW."
+                    echo "DO NOT proceed to the next phase."
+                    echo "👉 ACTION REQUIRED: Use 'RunCommand' to propose the next step:"
+                    echo "     - command: '/planning-with-files:execute'"
+                    echo "     - requires_approval: true"
+                    echo "     - message: 'Phase complete. Press Tab to execute next phase, or edit plan/code first.'"
+                    echo "</system-reminder>"
             fi
   Stop:
     - hooks:
@@ -53,6 +80,16 @@ hooks:
               case "$UNAME_S" in
                 CYGWIN*|MINGW*|MSYS*) IS_WINDOWS=1 ;;
               esac
+            fi
+            
+            # Check completion status on session stop
+            sh "$SCRIPT_DIR/check-complete.sh" "task_plan.md" 2>/dev/null | grep -q "ALL PHASES COMPLETE"
+            if [ $? -eq 0 ]; then
+                echo ""
+                echo "🎉 **Plan Execution Complete!**"
+                echo "The next logical step is to review the code changes."
+                echo "👉 **Proposed Command:** \`/review-code\`"
+                echo "(Please execute the proposed command below to proceed)"
             fi
 
             if [ "$IS_WINDOWS" -eq 1 ]; then
@@ -72,6 +109,17 @@ hooks:
 # Planning with Files
 
 Work like Manus: Use persistent markdown files as your "working memory on disk."
+
+## Modes
+
+1.  **Plan** (Default): Create or update planning files (`task_plan.md`, `findings.md`, `progress.md`).
+2.  **Execute** (Triggered by arg `execute` or command `/planning-with-files:execute`):
+    -   **CRITICAL CONSTRAINT**: You are **STRICTLY FORBIDDEN** from executing more than **ONE** phase in a single response.
+    -   Read `task_plan.md` to identify the **single next pending phase**.
+    -   Execute the tasks for that phase **ONLY**.
+    -   Update `progress.md`.
+    -   **TERMINATE** your response immediately after completing the phase.
+    -   **ALWAYS** use `RunCommand` to propose the next step (Execute next phase OR Review).
 
 ## FIRST: Check for Previous Session (v2.2.0)
 
@@ -93,137 +141,37 @@ If catchup report shows unsynced context:
 3. Update planning files based on catchup + git diff
 4. Then proceed with task
 
+## Workflow Handoff (Zero-Friction + User Control)
+
+**When Planning (Mode 1) is Complete:**
+After you have successfully created or updated the planning files (`task_plan.md`, etc.):
+
+1.  **STOP IMMEDIATELY**:
+    -   **DO NOT** execute any tasks from the plan yet.
+    -   **DO NOT** create project directories or code files yet.
+    -   The user **MUST** have the opportunity to review and modify the plan.
+
+2.  **Summary**: Briefly list the created files and the current status (e.g., "Phase 1 Ready").
+
+3.  **Propose Execution**:
+    -   Use the `RunCommand` tool to propose the execution command.
+    -   **Command**: `/planning-with-files:execute`
+    -   **Requires Approval**: `true` (CRITICAL: This allows the user to Tab-to-Execute OR pause to edit `task_plan.md`).
+    -   **Message**: "Plan created. Press Tab to start Phase 1 execution, or edit task_plan.md first."
+
+**When Execution (Mode 2) is Complete:**
+After completing a **single phase**:
+
+1.  **Summary**: Report completion of the current phase.
+2.  **Check Status**:
+    -   If there are **more phases pending**:
+        -   **Propose Next Phase**: Use `RunCommand` to propose `/planning-with-files:execute`.
+        -   **Message**: "Phase X complete. Press Tab to execute Phase Y, or edit plan/code first."
+    -   If **all phases are complete**:
+        -   **Propose Review**: Use `RunCommand` to propose `/review-code`.
+        -   **Message**: "All tasks complete. Press Tab to start Code Review."
+
 ## Important: Where Files Go
 
 - **Templates** are in `${CLAUDE_PLUGIN_ROOT}/templates/`
 - **Your planning files** go in **your project directory**
-
-| Location | What Goes There |
-|----------|-----------------|
-| Skill directory (`${CLAUDE_PLUGIN_ROOT}/`) | Templates, scripts, reference docs |
-| Your project directory | `task_plan.md`, `findings.md`, `progress.md` |
-
-## Quick Start
-
-Before ANY complex task:
-
-1. **Create `task_plan.md`** — Use [templates/task_plan.md](templates/task_plan.md) as reference
-2. **Create `findings.md`** — Use [templates/findings.md](templates/findings.md) as reference
-3. **Create `progress.md`** — Use [templates/progress.md](templates/progress.md) as reference
-4. **Re-read plan before decisions** — Refreshes goals in attention window
-5. **Update after each phase** — Mark complete, log errors
-
-> **Note:** Planning files go in your project root, not the skill installation folder.
-
-## The Core Pattern
-
-```
-Context Window = RAM (volatile, limited)
-Filesystem = Disk (persistent, unlimited)
-
-→ Anything important gets written to disk.
-```
-
-## File Purposes
-
-| File | Purpose | When to Update |
-|------|---------|----------------|
-| `task_plan.md` | Phases, progress, decisions | After each phase |
-| `findings.md` | Research, discoveries | After ANY discovery |
-| `progress.md` | Session log, test results | Throughout session |
-
-## Critical Rules
-
-### 1. Create Plan First
-Never start a complex task without `task_plan.md`. Non-negotiable.
-
-### 2. The 2-Action Rule
-> "After every 2 view/browser/search operations, IMMEDIATELY save key findings to text files."
-
-This prevents visual/multimodal information from being lost.
-
-### 3. Read Before Decide
-Before major decisions, read the plan file. This keeps goals in your attention window.
-
-### 4. Update After Act
-After completing any phase:
-- Mark phase status: `in_progress` → `complete`
-- Log any errors encountered
-- Note files created/modified
-
-### 5. Log ALL Errors
-Every error goes in the plan file. This builds knowledge and prevents repetition.
-
-```markdown
-## Errors Encountered
-| Error | Attempt | Resolution |
-|-------|---------|------------|
-| FileNotFoundError | 1 | Created default config |
-| API timeout | 2 | Added retry logic |
-```
-
-### 6. Never Repeat Failures
-```
-if action_failed:
-    next_action != same_action
-```
-Track what you tried. Mutate the approach.
-
-## The 3-Strike Error Protocol
-
-```
-ATTEMPT 1: Diagnose & Fix
-  → Read error carefully
-  → Identify root cause
-  → Apply targeted fix
-
-ATTEMPT 2: Alternative Approach
-  → Same error? Try different method
-  → Different tool? Different library?
-  → NEVER repeat exact same failing action
-
-ATTEMPT 3: Broader Rethink
-  → Question assumptions
-  → Search for solutions
-  → Consider updating the plan
-
-AFTER 3 FAILURES: Escalate to User
-  → Explain what you tried
-  → Share the specific error
-  → Ask for guidance
-```
-
-## Read vs Write Decision Matrix
-
-| Situation | Action | Reason |
-|-----------|--------|--------|
-| Just wrote a file | DON'T read | Content still in context |
-| Viewed image/PDF | Write findings NOW | Multimodal → text before lost |
-| Browser returned data | Write to file | Screenshots don't persist |
-| Starting new phase | Read plan/findings | Re-orient if context stale |
-| Error occurred | Read relevant file | Need current state to fix |
-| Resuming after gap | Read all planning files | Recover state |
-
-## The 5-Question Reboot Test
-
-If you can answer these, your context management is solid:
-
-| Question | Answer Source |
-|----------|---------------|
-| Where am I? | Current phase in task_plan.md |
-| Where am I going? | Remaining phases |
-| What's the goal? | Goal statement in plan |
-| What have I learned? | findings.md |
-
-## Workflow Handoff (CRITICAL)
-
-**When you have completed all phases in `task_plan.md` and verified the results:**
-
-1.  **Status Check**: Ensure all tasks are marked as `[x]` or `Completed`.
-2.  **STOP**: DO NOT automatically commit changes. DO NOT use the `/commit` skill.
-3.  **Prompt User**: Use the `AskUserQuestion` tool to ask:
-    "所有方案任务已执行完成！是否需要执行 `/review-code` 对代码进行深度review？"
-    -   Options: ["Yes", "No"]
-4.  **Action**:
-    -   If User says **Yes**: Output "Great! Please run the following command:" and show `/review-code`.
-    -   If User says **No**: Conclude the session.
