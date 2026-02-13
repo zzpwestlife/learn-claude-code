@@ -8,7 +8,10 @@
       "Bash(npm run build)",
       "Skill(optimize-prompt)",
       "Bash(tree:*)",
-      "Skill(planning-with-files:planning-with-files)"
+      "Skill(planning-with-files:planning-with-files)",
+      "Bash(gofmt:*)",
+      "Bash(go build:*)",
+      "Bash(go mod init:*)"
     ]
   },
   "hooks": {

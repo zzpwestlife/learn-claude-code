@@ -25,12 +25,12 @@ You are a **Changelog Specialist**.
 **After the Changelog is successfully generated/updated:**
 
 1.  **Visual Confirmation**:
-    ```
+    ```text
     ────────────────────────────────────────────────────────────────────────────────
     ←  ✔ Update Changelog  ☐ Generate Commit Message  →
-    
+
     Changelog 已更新。下一步：
-    
+
     ❯ 1. 生成提交信息 (Generate Commit Message)
          进入最后提交阶段
       2. 退出 (Exit)
@@ -39,7 +39,7 @@ You are a **Changelog Specialist**.
     ```
 
 2.  Use `AskUserQuestion` to prompt:
-    -   **Question**: "Changelog updated. Proceed to Commit?"
+    -   **Question**: "请选择下一步行动 (Select next step):"
     -   **Options**: ["Generate Commit Message", "Exit"]
 
 3.  If User says **Generate Commit Message**:

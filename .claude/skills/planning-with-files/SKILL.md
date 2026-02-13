@@ -23,6 +23,14 @@ hooks:
             d="$PWD"; ROOT_DIR=""; while [ "$d" != "/" ]; do if [ -d "$d/.claude" ]; then ROOT_DIR="$d"; break; fi; d=$(dirname "$d"); done; if [ -z "$ROOT_DIR" ]; then ROOT_DIR="$PWD"; fi
             
             SCRIPT_DIR="$ROOT_DIR/.claude/skills/planning-with-files/scripts"
+            CHECK_SCRIPT="$SCRIPT_DIR/check-complete.sh"
+            
+            # Fallback logic if script not found via relative path
+            if [ ! -f "$CHECK_SCRIPT" ]; then
+                if [ -f "$HOME/.claude/skills/planning-with-files/scripts/check-complete.sh" ]; then
+                    CHECK_SCRIPT="$HOME/.claude/skills/planning-with-files/scripts/check-complete.sh"
+                fi
+            fi
             
             # Attempt to find task_plan.md in current dir, immediate subdirs, or project root
             PLAN_FILE=$(find . -maxdepth 2 -name task_plan.md -not -path '*/.*' 2>/dev/null | head -n 1)
@@ -34,36 +42,38 @@ hooks:
                 fi
             fi
             
-            OUTPUT=$(sh "$SCRIPT_DIR/check-complete.sh" "$PLAN_FILE" 2>/dev/null)
+            # Run check script safely
+            if [ -f "$CHECK_SCRIPT" ]; then
+                OUTPUT=$(sh "$CHECK_SCRIPT" "$PLAN_FILE" 2>/dev/null || true)
+            else
+                OUTPUT=""
+            fi
             
             # Concise output: only show status if changed or complete
             if echo "$OUTPUT" | grep -q "ALL PHASES COMPLETE"; then
               echo ""
               echo "<system-reminder>"
               echo "✅ SYSTEM NOTICE: All phases in task_plan.md are complete."
-              echo "👉 ACTION REQUIRED: To maintain a zero-friction workflow, you MUST now PROPOSE the next step:"
-              echo "  1. Summarize the completed work briefly."
-              echo "  2. Use the 'RunCommand' tool IMMEDIATELY to propose the Code Review:"
-              echo "     - command: '/review-code'"
-              echo "     - requires_approval: true"
-              echo "     - message: 'All phases complete. Press Tab to start Code Review.'"
-              echo "  DO NOT ask the user if they want to review. Just propose the command so they can Tab-to-Execute."
+              echo "👉 ACTION REQUIRED: Present the TUI Menu for completion."
+              echo "  1. Display the Visual TUI Handoff menu (All Phases Complete)."
+              echo "  2. Use 'AskUserQuestion' to ask for the next step (Review/Exit)."
+              echo "  3. Based on choice, use 'RunCommand' to propose '/review-code'."
               echo "</system-reminder>"
             elif [ -n "$OUTPUT" ]; then
               # Write detailed status to a temp file to keep chat clean
                     mkdir -p .claude/tmp
                     echo "$OUTPUT" > .claude/tmp/planning_status.md
-                    echo "Planning Status Updated: [View Status](file:///Users/admin/openSource/learn-claude-code/.claude/tmp/planning_status.md)"
+                    echo "Planning Status Updated: [View Status](file://${ROOT_DIR}/.claude/tmp/planning_status.md)"
                     
                     # If not complete, remind model to STOP after single phase in Execute mode
                     echo "<system-reminder>"
                     echo "🛑 STOP! EXECUTION PAUSE REQUIRED 🛑"
                     echo "You have completed a phase. You MUST STOP NOW."
                     echo "DO NOT proceed to the next phase."
-                    echo "👉 ACTION REQUIRED: Use 'RunCommand' to propose the next step:"
-                    echo "     - command: '/planning-with-files:execute'"
-                    echo "     - requires_approval: true"
-                    echo "     - message: 'Phase complete. Press Tab to execute next phase, or edit plan/code first.'"
+                    echo "👉 ACTION REQUIRED: Present the TUI Menu for Phase Completion."
+                    echo "  1. Display the Visual TUI Handoff menu (Phase [X] Complete)."
+                    echo "  2. Use 'AskUserQuestion' to ask for the next step (Proceed/Pause/Commit)."
+                    echo "  3. Based on choice, use 'RunCommand' to propose '/planning-with-files:execute'."
                     echo "</system-reminder>"
             fi
   Stop:
@@ -87,9 +97,7 @@ hooks:
             if [ $? -eq 0 ]; then
                 echo ""
                 echo "🎉 **Plan Execution Complete!**"
-                echo "The next logical step is to review the code changes."
-                echo "👉 **Proposed Command:** \`/review-code\`"
-                echo "(Please execute the proposed command below to proceed)"
+                echo "👉 Please run \`/review-code\` to proceed."
             fi
 
             if [ "$IS_WINDOWS" -eq 1 ]; then

@@ -57,7 +57,7 @@ If the change touches more than 3 files or crosses multiple modules, run a plann
 **Output Format:**
 1.  **Visual Progress**: Start output with `[✔ Optimize] → [✔ Plan] → [✔ Execute] → [➤ Review] → [Changelog] → [Commit]`
 2.  Output Markdown report in English containing: Summary, Critical Issues, Improvement Suggestions, Code Style & Conventions, Positive Highlights.
-Provide specific code snippets and line numbers when possible.
+3.  Provide specific code snippets and line numbers when possible.
 
 ## Workflow Handoff
 After the review is complete:
@@ -65,12 +65,12 @@ After the review is complete:
 1.  **Reflective Handoff**:
     -   Do not just ask "Yes/No". Use the TUI style to offer options based on your review findings.
     -   **Format**:
-        ```
+        ```text
         ────────────────────────────────────────────────────────────────────────────────
         ←  ☐ Fix Issues  ☐ Manual Check  ✔ Generate Changelog  →
-        
+
         代码审查完成。建议下一步：
-        
+
         ❯ 1. 生成变更日志 (Generate Changelog)
              代码无重大问题，准备发布
           2. 修复关键问题 (Fix Critical Issues)

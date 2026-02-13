@@ -78,12 +78,12 @@ type(scope): subject
 ## 4. 提交引导 (Commit Handoff)
 
 1.  **Reflective Selection**:
-    ```
+    ```text
     ────────────────────────────────────────────────────────────────────────────────
     ←  ✔ Analyze  ✔ Generate  ☐ Commit  →
-    
+
     请选择提交方式：
-    
+
     ❯ 1. 使用标准提交 (Option 1: Standard)
          [Option 1 Preview]
       2. 使用详细提交 (Option 2: Detailed)
@@ -93,11 +93,12 @@ type(scope): subject
     ────────────────────────────────────────────────────────────────────────────────
     ```
 
-2.  **Prompt User**: Use `AskUserQuestion` to ask:
-    -   **Question**: "Select commit message style:"
+2.  **Prompt User**: Use `AskUserQuestion` to prompt:
+    -   **Question**: "请选择提交方式 (Select commit message style):"
     -   **Options**: 
         -   "Commit with Option 1"
         -   "Commit with Option 2"
+        -   "Edit Manually"
         -   "Edit manually"
 
 3.  **Action**:
