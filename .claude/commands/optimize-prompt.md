@@ -73,5 +73,7 @@ allowed-tools:
 
 ## 第四阶段：后续行动 (Follow-up)
 询问用户是否满意。
-- 如果满意，且输入源是文件，询问是否需要将新 Prompt 覆盖原文件或保存为新文件（如 `optimized_prompt.md`）。
-- 如果不满意，询问具体调整方向并重新生成。
+- 如果满意，询问用户是否继续：
+    - 使用 `AskUserQuestion` 提问："提示词优化已完成！是否要继续执行 `/planning-with-files:plan` 进行方案和任务设计？" (选项: Yes, No)
+    - 如果用户选择 Yes，明确提示用户运行命令：`Please run: /planning-with-files:plan`
+- 如果不满意，询问具体调整方向并重新生成.

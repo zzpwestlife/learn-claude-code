@@ -64,3 +64,14 @@ If the change touches more than 3 files or crosses multiple modules, run a plann
 **Output Format:**
 Output Markdown report in English containing: Summary, Critical Issues, Improvement Suggestions, Code Style & Conventions, Positive Highlights.
 Provide specific code snippets and line numbers when possible.
+
+## Workflow Handoff
+After the review is complete:
+1.  If **NO critical issues** are found (or if you have verified they are fixed):
+    -   Use `AskUserQuestion` to prompt:
+        "代码review已完成，未发现问题！是否使用 `/changelog-generator` skill 生成Changelog文件？"
+        -   Options: ["Yes", "No"]
+2.  If User says **Yes**:
+    -   Output: "Great! Please run the following command:"
+    -   Command: `/changelog-generator`
+
