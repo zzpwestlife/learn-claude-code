@@ -1,6 +1,6 @@
 ---
-description: Review specified code files or directories, or perform Git incremental review. Automatically detects language and applies best practices.
-argument-hint: [path_to_review | diff]
+description: Review specified code files or directories, or perform Git incremental review. Automatically detects language and applies best practices. Supports output directory.
+argument-hint: [path_to_review | diff] [output_dir]
 model: sonnet
 allowed-tools:
   - AskUserQuestion
@@ -9,6 +9,7 @@ allowed-tools:
   - Glob
   - RunCommand
   - Bash(go vet *, flake8 *, git diff *, git log *)
+  - Write
 ---
 
 You are a senior code reviewer. Your task is to review code, automatically detect the project language, and apply corresponding standards.
@@ -22,8 +23,13 @@ You are a senior code reviewer. Your task is to review code, automatically detec
 6. If parameter path contains `.php` files → PHP
 
 **Mode Detection:**
-If argument "$1" is "diff" or empty, perform **Git incremental review**.
-Otherwise, perform **full file review** on path "$1".
+1. **Analyze Arguments**:
+   - Check if the last argument is a directory path that looks like an "output directory" (e.g., `fib`, `tasks/xyz`). If so, set it as `output_dir`.
+   - The first argument determines the mode: "diff" (or empty) for incremental, or a file/path for full review.
+
+2. **Execution**:
+   - If argument "$1" is "diff" or empty, perform **Git incremental review**.
+   - Otherwise, perform **full file review** on path "$1".
 
 **Complex Change Threshold:**
 If the change touches more than 3 files or crosses multiple modules, run a planning step first (/plan) to clarify scope and acceptance criteria.
@@ -57,7 +63,8 @@ If the change touches more than 3 files or crosses multiple modules, run a plann
 **Output Format:**
 1.  **Visual Progress**: Start output with `[✔ Optimize] → [✔ Plan] → [✔ Execute] → [➤ Review] → [Changelog] → [Commit]`
 2.  Output Markdown report in English containing: Summary, Critical Issues, Improvement Suggestions, Code Style & Conventions, Positive Highlights.
-3.  Provide specific code snippets and line numbers when possible.
+3.  **Save Report**: If `output_dir` is defined, save the review report to `output_dir/review_report.md`.
+4.  Provide specific code snippets and line numbers when possible.
 
 ## Workflow Handoff
 After the review is complete:
@@ -69,7 +76,7 @@ After the review is complete:
         ────────────────────────────────────────────────────────────────────────────────
         ←  ☐ Fix Issues  ☐ Manual Check  ✔ Generate Changelog  →
 
-        代码审查完成。建议下一步：
+        代码审查完成 (Report saved to {output_dir}/review_report.md)。建议下一步：
 
         ❯ 1. 生成变更日志 (Generate Changelog)
              代码无重大问题，准备发布
@@ -83,6 +90,6 @@ After the review is complete:
     -   **Question**: "请选择下一步行动 (Select next step):"
     -   **Options**: ["Generate Changelog", "Fix Issues", "Manual Verification"]
 3.  **Action**:
-    -   If "Generate Changelog": `RunCommand` -> `/changelog-generator` (requires_approval: true)
-    -   If "Fix Issues": `RunCommand` -> `/planning-with-files:plan` (to plan fixes)
+    -   If "Generate Changelog": `RunCommand` -> `/changelog-generator {output_dir}` (requires_approval: true)
+    -   If "Fix Issues": `RunCommand` -> `/planning-with-files:plan {output_dir}` (to plan fixes)
     -   If "Manual Verification": Stop and let user act.

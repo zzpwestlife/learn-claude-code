@@ -20,4 +20,4 @@ settings.local.json
 *.swp
 *.tmp
 .env
-
+.claude/tmp/

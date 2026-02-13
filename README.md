@@ -45,6 +45,26 @@
 
 只需执行首个命令，系统将在每个阶段完成后自动引导进入下一步。
 
+### 📂 统一生成物管理 (Artifact Management)
+
+您可以指定一个目录来统一管理任务流中的所有中间文件（如 `prompt.md`, `task_plan.md`, `review_report.md` 等），保持项目根目录整洁。
+
+示例：
+```bash
+/optimize-prompt "实现斐波那契数列" fib
+```
+上述命令将：
+1.  创建 `fib` 目录。
+2.  将优化后的 Prompt 保存为 `fib/prompt.md`。
+3.  后续的 `/plan`, `/execute`, `/review` 等步骤生成的中间文件都会自动存放在 `fib` 目录中。
+
+### 🤫 静默模式与文件优先 (Silent Mode & File-First)
+
+为了保持会话窗口的简洁，Claude Code 将遵循 **"Silent Mode"** 原则：
+-   **长文本自动归档**：任何超过 10 行的详细分析、调试日志或长篇推理，都会自动写入 `fib/analysis_*.md` 或 `fib/scratchpad.md`，并在会话中仅保留摘要和文件链接。
+-   **命令输出重定向**：产生大量输出的命令（如测试日志）将被重定向到文件（如 `fib/test_run.log`）。
+-   **"Don't print it if you can file it"**：让你的聊天界面始终保持清爽、专注于核心决策。
+
 ### 📊 交互式工作流 (Interactive Workflow)
 
 ```mermaid
@@ -102,6 +122,7 @@ graph TD
     -   **Mandatory Review**: 在规划完成后，强制暂停供你审查方案。
     -   **Atomic Execution**: 每个开发阶段（Phase）原子化执行，绝不“抢跑”。
     -   **Interactive Handoff**: 在阶段完成时提供明确选项（继续/审查/提交），由你决定流向。
+-   **可移植性 (Portability)**: 所有脚本路径均动态计算，不依赖硬编码的绝对路径，确保在不同机器和环境（macOS/Linux/Windows WSL）下均可正常运行。
 
 工作流应该像水一样流畅，让你的思维不再被繁琐的命令打断。
 
