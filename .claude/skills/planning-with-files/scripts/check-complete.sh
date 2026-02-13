@@ -95,7 +95,12 @@ fi
 if [ "$COMPLETE" -gt "$PREV_COMPLETE" ]; then
     echo "$TIMESTAMP: Phase $COMPLETE completed (Previous: $PREV_COMPLETE)" >> "$AUDIT_LOG"
     echo "EVENT: PHASE_COMPLETE"
-    echo "Details: Phase $COMPLETE finished."
+    echo ""
+    echo "🛑🛑🛑 STOP EXECUTION NOW 🛑🛑🛑"
+    echo "Phase $COMPLETE is marked as COMPLETE."
+    echo "You have reached a MANDATORY STOP POINT."
+    echo "DO NOT PROCEED to Phase $(($COMPLETE + 1))."
+    echo "WAIT for user instruction."
     exit 0
 fi
 

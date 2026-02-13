@@ -188,15 +188,17 @@ Work like Manus: Use persistent markdown files as your "working memory on disk."
         -   You are authorized to complete **EXACTLY ONE (1)** phase per turn.
         -   **NEVER** chain multiple phases. **NEVER** "just do the next one".
         -   **VIOLATION**: Executing >1 phase triggers a critical workflow failure.
-    -   **ATOMIC EXECUTION**:
-        -   You MUST update `task_plan.md` state ONLY when a phase is FULLY done.
-        -   **CRITICAL**: When you update `task_plan.md` to mark a phase or the entire plan as `[complete]`:
-            1.  Perform the file update using `Write` or `SearchReplace`.
-            2.  **STOP IMMEDIATELY**. Do NOT write any summary, conclusion, or next steps in the same turn.
-            3.  Wait for the System Reminder (from the PostToolUse hook) to confirm the state transition.
-            4.  Only AFTER receiving the System Reminder, present the TUI Menu or ask for user input.
-        -   **NEVER** automatically proceed to the next phase after marking one as complete.
-        -   **NEVER** assume the plan is complete until the system confirms it.
+    -   **ATOMIC EXECUTION (NON-NEGOTIABLE)**:
+        -   You MUST execute **ONE PHASE AT A TIME**.
+        -   **SINGLE SOURCE OF TRUTH**: You cannot claim a phase is complete in the chat unless `task_plan.md` is updated.
+        -   **VERIFICATION FIRST**: Before outputting "Phase X Complete", you MUST invoke `Write` or `SearchReplace` to update `task_plan.md` (mark items `[x]` and status `complete`).
+        -   **PHASE GATE**: The transition between phases is **GATED**. You need explicit user permission to pass.
+        -   **FATAL ERROR WARNING**: Any attempt to proceed to the next phase (e.g., running commands for Phase X+1) in the same turn as completing Phase X is a **CRITICAL ALIGNMENT FAILURE**.
+        -   **MANDATORY STOP**: When you update `task_plan.md` to mark a phase as `complete` or `pending` -> `in_progress`:
+            1.  **Call the Tool** (`Write`/`SearchReplace`).
+            2.  **STOP GENERATING**. Do not output "Moving to next phase". Do not output "Ready for Phase X+1".
+            3.  **WAIT** for the System Reminder from the PostToolUse hook.
+            4.  **ONLY THEN** present the TUI Menu.
     -   **INTERACTIVE HANDOFF (MANDATORY)**:
         -   You MUST pause after updating `progress.md` and present options.
         -   Use `AskUserQuestion` to ask "What's next?" (See Workflow Handoff section).
