@@ -1,39 +1,22 @@
 #!/bin/bash
-
-# Claudeception Auto-Activation Hook
-# This hook ensures the claudeception skill evaluates every interaction
-# for extractable knowledge worth preserving.
-#
-# Installation:
-#   1. Copy this script to ~/.claude/hooks/
-#   2. Make it executable: chmod +x ~/.claude/hooks/claudeception-activator.sh
-#   3. Add to ~/.claude/settings.json (see README for details)
+# Skill Architect Activator (formerly Claudeception)
+# Prompts to Create or Evolve skills.
 
 cat << 'EOF'
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 MANDATORY SKILL EVALUATION REQUIRED
+🧠 SKILL ARCHITECT: EVOLUTION CHECK
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-CRITICAL: After completing this user request, you MUST evaluate whether
-it produced extractable knowledge using the claudeception skill.
+After completing this task, evaluate if you have gained new knowledge:
 
-EVALUATION PROTOCOL (NON-NEGOTIABLE):
+1. NEW CAPABILITY?
+   → Use `skill-architect` (Tool: Forge) to create a new skill.
+   Example: `python3 .claude/skills/skill-architect/scripts/architect.py forge "new-skill" ...`
 
-1. COMPLETE the user's request first
-2. EVALUATE: Ask yourself:
-   - Did this require non-obvious investigation or debugging?
-   - Was the solution something that would help in future similar situations?
-   - Did I discover something not immediately obvious from documentation?
+2. NEW WISDOM? (Bug fix, better prompt, preference)
+   → Use `skill-architect` (Tool: Refine) to save it to an existing skill.
+   Example: `python3 .claude/skills/skill-architect/scripts/architect.py refine "existing-skill" "fix" "..."`
 
-3. IF YES to any question above:
-   ACTIVATE: Use Skill(claudeception) NOW to extract the knowledge
-
-4. IF NO to all questions:
-   SKIP: No skill extraction needed
-
-This is NOT optional. Failing to evaluate means valuable knowledge is lost.
-The claudeception skill will decide whether to actually create a new
-skill based on its quality criteria.
-
+This ensures your toolkit gets smarter over time.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF

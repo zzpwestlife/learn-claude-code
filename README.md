@@ -140,6 +140,26 @@ POS: <该文件在系统中的位置/角色>
 4.  **`/changelog-generator`**: 生成 CHANGELOG.md -> 引导提交信息
 5.  **`/commit-message-generator`**: 生成标准 Commit Message
 
+**技能自我进化 (Skill Architect)**:
+当你在使用任何工具时，系统会自动评估你的操作。如果你修复了一个 Bug、发现了一个更好的 Prompt 或创建了一个新工具，`Skill Architect` 会引导你将其沉淀下来。
+- **Forge**: 将新能力封装为标准 Skill。
+- **Refine**: 将经验（Fixes/Preferences）注入现有 Skill。
+- **Stitch**: 自动更新 Skill 文档，让工具越用越聪明。
+
+**进化示例**：
+```bash
+# 1. 创建新技能 (Forge)
+python3 .claude/skills/skill-architect/scripts/architect.py forge "video-downloader" --desc "视频下载工具"
+
+# 2. 沉淀经验 (Refine)
+# 当你发现下载某个网站需要特殊参数时，记录下来：
+python3 .claude/skills/skill-architect/scripts/architect.py refine "video-downloader" "fix" "下载 B 站视频时必须使用 --cookies-from-browser 参数"
+
+# 3. 结果
+# 系统会自动将这条经验写入 video-downloader/SKILL.md。
+# 下次 Agent 使用该技能时，会自动看到这条提示，避免踩坑。
+```
+
 **体验方式**：
 ```bash
 /optimize-prompt <你的原始需求>

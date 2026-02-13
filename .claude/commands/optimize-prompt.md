@@ -38,42 +38,43 @@ allowed-tools:
     - **边界 (Constraints)**: 什么不能做？错误怎么处理？
     - **格式 (Input/Output Format)**: 输入数据的结构和输出的期望格式。
 
-## 第二阶段：交互式完善 (Interactive Interview)
+## 第二阶段：交互式完善 (Interactive Interview - Socratic Method)
 **如果不满足上述要素（特别是缺少示例时），不要急于生成！**
+采用 **苏格拉底提问法 (Socratic Questioning)** 进行引导。不要只是机械地索要信息，而是通过启发性问题帮助用户挖掘深层需求和隐性约束。
+
+**提问策略**:
+1.  **澄清性提问 (Clarification)**: 当需求模糊时，不要猜测，而是要求通过具体场景来澄清。
+    -   *Bad*: "你的目标用户是谁？"
+    -   *Good*: "这个 Prompt 是为了解决新手的入门问题，还是为专家提供深度分析？能描述一个典型的使用场景吗？"
+2.  **假设与后果 (Assumptions & Consequences)**: 引导用户思考边界情况。
+    -   *Bad*: "有什么限制吗？"
+    -   *Good*: "如果 AI 生成的内容非常长但细节丰富，或者是简短但略显抽象，哪种更符合您的预期？"
+3.  **示例挖掘 (Example Mining)**:
+    -   *Bad*: "给我一个例子。"
+    -   *Good*: "您能回忆一次您觉得非常完美的类似回复吗？它好在哪里？或者一次非常糟糕的回复，它犯了什么错误？"
+
 使用 `AskUserQuestion` 工具向用户提问。**注意：提问语言必须与用户 Prompt 的主要语言一致。**
 
 *   *中文场景示例*:
-    - "为了让 AI 更准确地理解您的风格，您能提供 1-2 个具体的输入和您期望的理想输出示例吗？"
-    - "这个任务有哪些常见的错误情况（Edge Cases）需要特别避免？"
+    -   "为了让 AI 更精准地捕捉您的意图，您能设想一个 AI 可能会误解的场景，并告诉我那个场景下您希望它怎么做吗？"
+    -   "您提到了'专业风格'，在您看来，'专业'更多是指用词严谨（像学术论文），还是逻辑干练（像商业简报）？"
 *   *English Scenario Examples*:
     - "To help the AI better understand your style, could you provide 1-2 examples of inputs and your desired outputs?"
     - "Are there any common edge cases or errors that should be specifically avoided?"
 
-## 第三阶段：生成优化方案 (Generation)
-收集完信息后，输出优化后的 Prompt。
-**输出要求**:
-1.  使用 Markdown 代码块包裹优化后的 Prompt。
-2.  Prompt 内部必须使用 XML 结构（`<role>`, `<instruction>` 等标签建议保持英文以获得最佳模型性能，但**标签内的内容语言应与用户输入保持一致**）。
-    ```xml
-    <system_prompt>
-    <role>...</role>
-    <context>...</context>
-    <instruction>...</instruction>
-    <examples>
-        <example>
-            <input>...</input>
-            <output>...</output>
-        </example>
-    </examples>
-    </system_prompt>
-    ```
-3.  在代码块下方，简要说明你做了哪些优化。**说明文字的语言必须与用户输入保持一致**。
-    - *中文*: “添加了 `<thinking>` 标签以增强逻辑推理能力...”
-    - *English*: "Added `<thinking>` tags to enhance logical reasoning..."
+## 第三阶段：生成与交付 (Generation & Handoff)
+1.  **生成**: 输出优化后的 Prompt (使用 Markdown 代码块包裹)。
+2.  **解释**: 简要说明优化点。
+3.  **强制引导 (Mandatory Guide)**:
+    -   **立即**使用 `AskUserQuestion` 工具询问后续行动（不要等待用户反馈）：
+        -   **Question**: "Prompt 优化已完成。您对结果满意吗？是否继续执行 `/planning-with-files:plan` 进行方案规划？"
+        -   **Options**: 
+            -   "满意，进入规划 (Run /planning-with-files:plan)"
+            -   "满意，结束 (Finish)"
+            -   "不满意，需要修改 (Revise)"
+    -   **处理**:
+        -   If "满意，进入规划...": 输出 `Please run: /planning-with-files:plan` (or `/planning-with-files` if using local skill).
+        -   If "不满意...": 询问具体修改意见。
 
 ## 第四阶段：后续行动 (Follow-up)
-询问用户是否满意。
-- 如果满意，询问用户是否继续：
-    - 使用 `AskUserQuestion` 提问："提示词优化已完成！是否要继续执行 `/planning-with-files:plan` 进行方案和任务设计？" (选项: Yes, No)
-    - 如果用户选择 Yes，明确提示用户运行命令：`Please run: /planning-with-files:plan`
-- 如果不满意，询问具体调整方向并重新生成.
+(Merged into Phase 3)

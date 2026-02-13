@@ -3,6 +3,7 @@ description: Review specified code files or directories, or perform Git incremen
 argument-hint: [path_to_review | diff]
 model: sonnet
 allowed-tools:
+  - AskUserQuestion
   - Read
   - Grep
   - Glob
@@ -67,11 +68,11 @@ Provide specific code snippets and line numbers when possible.
 
 ## Workflow Handoff
 After the review is complete:
-1.  If **NO critical issues** are found (or if you have verified they are fixed):
-    -   Use `AskUserQuestion` to prompt:
-        "代码review已完成，未发现问题！是否使用 `/changelog-generator` skill 生成Changelog文件？"
-        -   Options: ["Yes", "No"]
-2.  If User says **Yes**:
+1.  **Mandatory Check**: Even if issues are found, you MUST ask the user if they want to proceed with changelog generation (assuming they will fix issues later or the issues are minor).
+2.  Use `AskUserQuestion` to prompt:
+    "代码review已完成！是否使用 `/changelog-generator` skill 生成Changelog文件？"
+    -   Options: ["Yes", "No"]
+3.  If User says **Yes**:
     -   Output: "Great! Please run the following command:"
     -   Command: `/changelog-generator`
 

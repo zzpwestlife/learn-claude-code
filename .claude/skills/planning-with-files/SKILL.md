@@ -20,15 +20,24 @@ hooks:
         - type: command
           command: "cat task_plan.md 2>/dev/null | head -30 || true"
   PostToolUse:
-    - matcher: "Write|Edit"
+    - matcher: "Write|Edit|Bash"
       hooks:
         - type: command
-          command: "echo '[planning-with-files] File updated. If this completes a phase, update task_plan.md status.'"
+          command: |
+            SCRIPT_DIR="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/planning-with-files}/scripts"
+            OUTPUT=$(sh "$SCRIPT_DIR/check-complete.sh" "task_plan.md" 2>/dev/null)
+            echo "$OUTPUT"
+            if echo "$OUTPUT" | grep -q "ALL PHASES COMPLETE"; then
+              echo ""
+              echo "✅ SYSTEM NOTICE: All phases are complete."
+              echo "🛑 STOP: DO NOT commit changes automatically. DO NOT use the /commit skill yet."
+              echo "👉 ACTION REQUIRED: You MUST now use 'AskUserQuestion' to prompt: '所有方案任务已执行完成！是否需要执行 /review-code 对代码进行深度review？'"
+            fi
   Stop:
     - hooks:
         - type: command
           command: |
-            SCRIPT_DIR="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/plugins/planning-with-files}/scripts"
+            SCRIPT_DIR="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/planning-with-files}/scripts"
 
             IS_WINDOWS=0
             if [ "${OS-}" = "Windows_NT" ]; then
@@ -205,9 +214,10 @@ If you can answer these, your context management is solid:
 **When you have completed all phases in `task_plan.md` and verified the results:**
 
 1.  **Status Check**: Ensure all tasks are marked as `[x]` or `Completed`.
-2.  **Prompt User**: Use the `AskUserQuestion` tool to ask:
+2.  **STOP**: DO NOT automatically commit changes. DO NOT use the `/commit` skill.
+3.  **Prompt User**: Use the `AskUserQuestion` tool to ask:
     "所有方案任务已执行完成！是否需要执行 `/review-code` 对代码进行深度review？"
     -   Options: ["Yes", "No"]
-3.  **Action**:
+4.  **Action**:
     -   If User says **Yes**: Output "Great! Please run the following command:" and show `/review-code`.
     -   If User says **No**: Conclude the session.
