@@ -67,6 +67,7 @@ Apply "Simplicity Principle" to the workflow itself.
 - **Production Mindset**: Handle edge cases; do not assume "happy path".
 
 ### 3.4 Communication & Tool Usage
+- **Concise Output**: Avoid dumping large logs or long intermediate outputs directly in chat. Redirect them to project-specific temporary Markdown files (e.g., `.claude/tmp/logs.md`) and provide a link with a brief summary. Ensure `.claude/tmp/` is added to `.gitignore`.
 - **Language**: **Always use Simplified Chinese** for all responses and code comments.
 - **Tone**: Direct and professional. No polite fillers ("Sorry", "I understand"). No code summaries unless requested.
 - **Truth-Seeking**:

@@ -14,11 +14,6 @@ allowed-tools:
   - WebSearch
   - AskUserQuestion
 hooks:
-  PreToolUse:
-    - matcher: "Write|Edit|Bash|Read|Glob|Grep"
-      hooks:
-        - type: command
-          command: "cat task_plan.md 2>/dev/null | head -30 || true"
   PostToolUse:
     - matcher: "Write|Edit|Bash"
       hooks:
@@ -26,12 +21,23 @@ hooks:
           command: |
             SCRIPT_DIR="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/planning-with-files}/scripts"
             OUTPUT=$(sh "$SCRIPT_DIR/check-complete.sh" "task_plan.md" 2>/dev/null)
-            echo "$OUTPUT"
+            
+            # Concise output: only show status if changed or complete
             if echo "$OUTPUT" | grep -q "ALL PHASES COMPLETE"; then
               echo ""
-              echo "✅ SYSTEM NOTICE: All phases are complete."
+              echo "<system-reminder>"
+              echo "✅ SYSTEM NOTICE: All phases in task_plan.md are complete."
               echo "🛑 STOP: DO NOT commit changes automatically. DO NOT use the /commit skill yet."
-              echo "👉 ACTION REQUIRED: You MUST now use 'AskUserQuestion' to prompt: '所有方案任务已执行完成！是否需要执行 /review-code 对代码进行深度review？'"
+              echo "👉 ACTION REQUIRED: You MUST now use 'AskUserQuestion' to prompt the user:"
+               echo "  '所有方案任务已执行完成！是否需要执行 /review-code 对代码进行深度review？'"
+               echo "  Options: ['Yes', 'No']"
+               echo "  If Yes: Use RunCommand tool to execute '/review-code' with requires_approval=true."
+               echo "</system-reminder>"
+            elif [ -n "$OUTPUT" ]; then
+              # Write detailed status to a temp file to keep chat clean
+                    mkdir -p .claude/tmp
+                    echo "$OUTPUT" > .claude/tmp/planning_status.md
+                    echo "Planning Status Updated: [View Status](file:///Users/admin/openSource/learn-claude-code/.claude/tmp/planning_status.md)"
             fi
   Stop:
     - hooks:

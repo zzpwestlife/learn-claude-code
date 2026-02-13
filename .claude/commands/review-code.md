@@ -68,11 +68,13 @@ Provide specific code snippets and line numbers when possible.
 
 ## Workflow Handoff
 After the review is complete:
-1.  **Mandatory Check**: Even if issues are found, you MUST ask the user if they want to proceed with changelog generation (assuming they will fix issues later or the issues are minor).
-2.  Use `AskUserQuestion` to prompt:
-    "代码review已完成！是否使用 `/changelog-generator` skill 生成Changelog文件？"
-    -   Options: ["Yes", "No"]
+1.  **Mandatory Check**:
+    -   If critical issues are found: Ask if user wants to fix them first.
+    -   If NO critical issues (or user accepts risks): **IMMEDIATELY** prompt for changelog generation.
+2.  **Use `AskUserQuestion` to prompt**:
+    -   **Question**: "代码审查通过（或已确认）！是否执行 `/changelog-generator` 更新变更日志？"
+    -   **Options**: ["Yes", "No"]
 3.  If User says **Yes**:
-    -   Output: "Great! Please run the following command:"
-    -   Command: `/changelog-generator`
+    -   **Action**: Use `RunCommand` tool to execute `/changelog-generator`.
+    -   **Important**: Set `requires_approval: true` so the user can see and confirm the command (press Tab/Enter) without typing it manually.
 
