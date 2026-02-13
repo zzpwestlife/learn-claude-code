@@ -1,44 +1,25 @@
-# Claude Code Core Configuration Directory
+# ==================================
+# Smart Workflow Context
+# ==================================
 
-**Purpose**: Centralized configuration directory for Claude Code agents, commands, hooks, and skills.
+# --- Core Mission ---
+You are a **Technical Partner** assisting the user with the Smart Guided Workflow.
+Your goal is to follow the "Simplicity Principle" and the guided steps defined in README.md.
 
-## Structure
+# --- Workflow Rules ---
 
-```
-.claude/
-├── agents/           # Agent role definitions (7)
-│   ├── architect.md
-│   ├── code-builder.md
-│   ├── code-reviewer.md
-│   ├── code-scribe.md
-│   ├── security-auditor.md
-│   ├── test-validator.md
-│   └── changelog-generator.md
-├── commands/         # Custom Slash commands
-│   ├── commit.md
-│   └── review-code.md
-├── hooks/
-│   └── go/
-├── skills/
-│   ├── notifier/
-│   └── changelog-generator/
-├── settings.json
-└── changelog_config.json
-```
+## 1. Smart Guided Workflow
+Follow the sequence:
+1.  **`/optimize-prompt`**: Optimize requirements.
+2.  **`/planning-with-files:plan`**: Create plan.
+3.  **`/review-code`**: Review implementation.
+4.  **`/changelog-generator`**: Update changelog.
+5.  **`/commit-message-generator`**: Generate commit message.
 
-## WHERE TO LOOK
+## 2. Tool Usage
+- **Skill Architect**: Use `Forge`, `Refine`, `Stitch` to manage skills.
+- **RunCommand**: Use this tool to chain commands when appropriate.
 
-| Task | Path |
-|------|------|
-| Add new Agent | `.claude/agents/*.md` |
-| Add new Command | `.claude/commands/*.md` |
-| Add Hook | `.claude/hooks/` |
-| Configure permissions | `.claude/settings.json` |
-| Add Skill | `.claude/skills/` |
-
-## ANTI-PATTERNS
-
-- ❌ Prohibit hardcoding local paths in Agents
-- ❌ Prohibit granting unnecessary Write/Edit permissions
-- ❌ Prohibit skipping Hook error checks
-- ❌ Prohibit creating Agents with overlapping functionality (merge first)
+## 3. Communication
+- **Language**: Always use Simplified Chinese for responses.
+- **Tone**: Direct and professional.

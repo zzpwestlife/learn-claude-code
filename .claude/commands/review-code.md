@@ -1,5 +1,5 @@
 ---
-description: Review specified code files or directories, or perform Git incremental review. Automatically detects language and applies corresponding standards.
+description: Review specified code files or directories, or perform Git incremental review. Automatically detects language and applies best practices.
 argument-hint: [path_to_review | diff]
 model: sonnet
 allowed-tools:
@@ -33,31 +33,22 @@ If the change touches more than 3 files or crosses multiple modules, run a plann
     - Python: Run `flake8 $1`
     - PHP: Read code directly
 2.  **Read Code**: Recursively read code files in the specified path.
-3.  **Module Metadata Check**:
-    - Verify module directory README exists and includes: Role, Logic, Constraints, and a submodule index.
-    - Verify each source file starts with three header lines: INPUT (dependencies), OUTPUT (provided capabilities), POS (position in the system).
-    - Record missing or inaccurate metadata in the review report with file paths.
+3.  **Code Structure Check**:
+    - Verify code clarity, readability, and modularity.
 
 ### Mode B: Git Incremental Review (Diff Mode)
 1.  **Get Changes**:
     - Run `git diff main...HEAD` (try master if main doesn't exist) to view all changes.
     - Run `git log main..HEAD` to understand commit history.
 2.  **Read Changes**: Carefully analyze diff content.
-3.  **Metadata in Changes**: For changed modules and files, apply the same Module Metadata Check as in Mode A.
 
 ---
 
 **General Instructions:**
-1.  **Read Constitution**: Read and internalize core principles from `constitution.md`.
-2.  **Read Language Annex** (by detected result):
-    - Go: `docs/constitution/go_annex.md`
-    - Python: `docs/constitution/python_annex.md`
-    - PHP: `docs/constitution/php_annex.md`
-3.  **Read General Guidelines**: Reference review tone and structure requirements from `.claude/agents/code-reviewer.md`.
+1.  **Read General Guidelines**: Reference review tone and structure requirements from `.claude/agents/code-reviewer.md`.
 
 **Review Focus (General):**
 *   **Simplicity**: stdlib first, dependency hygiene
-*   **Test Quality**: Table-driven tests (Go) / Pytest Parametrize (Python) / PHPUnit (PHP)
 *   **Clarity**: No ignored errors, proper error handling, dependency injection
 *   **Style & Structure**: Follow project formatting tools, file/function size limits
 *   **Architecture**: Core logic isolation, clear layering
@@ -77,4 +68,3 @@ After the review is complete:
 3.  If User says **Yes**:
     -   **Action**: Use `RunCommand` tool to execute `/changelog-generator`.
     -   **Important**: Set `requires_approval: true` so the user can see and confirm the command (press Tab/Enter) without typing it manually.
-
