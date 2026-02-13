@@ -113,13 +113,41 @@ Work like Manus: Use persistent markdown files as your "working memory on disk."
 ## Modes
 
 1.  **Plan** (Default): Create or update planning files (`task_plan.md`, `findings.md`, `progress.md`).
+    -   **VISUAL**: Start output with `[✔ Optimize] → [➤ Plan] → [Execute] → [Review] → [Changelog] → [Commit]`
+    -   **PHASE 0: SOCRATIC INTERVIEW (Mandatory)**:
+        -   Before generating the plan, you **MUST** pause and consider: "Do I have enough context to build a solid architectural plan?"
+        -   If unsure about *Tech Stack*, *Testing Strategy*, *Edge Cases*, or *User Preferences*, use `AskUserQuestion` **IMMEDIATELY**.
+        -   **Format**: Use the TUI-style format:
+            ```
+            ────────────────────────────────────────────────────────────────────────────────
+            ←  ☐ Tech Stack  ☐ Architecture  ☐ Testing  ✔ Plan Generation  →
+            
+            为了确保方案的稳健性，我需要确认以下关键点：
+            
+            1. [Question 1]
+               [Description]
+            2. [Question 2]
+               [Description]
+            ...
+            ────────────────────────────────────────────────────────────────────────────────
+            ```
+    -   **GOAL**: ONLY create/update the plan.
+    -   **FORBIDDEN**: DO NOT execute any tasks. DO NOT create code files (except plan files).
+    -   **STOP**: Terminate immediately after writing the plan files.
 2.  **Execute** (Triggered by arg `execute` or command `/planning-with-files:execute`):
-    -   **CRITICAL CONSTRAINT**: You are **STRICTLY FORBIDDEN** from executing more than **ONE** phase in a single response.
-    -   Read `task_plan.md` to identify the **single next pending phase**.
-    -   Execute the tasks for that phase **ONLY**.
-    -   Update `progress.md`.
-    -   **TERMINATE** your response immediately after completing the phase.
-    -   **ALWAYS** use `RunCommand` to propose the next step (Execute next phase OR Review).
+    -   **VISUAL**: Start output with `[✔ Optimize] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
+    -   **SINGLE PHASE GUARANTEE (STRICT)**:
+        -   You are authorized to complete **EXACTLY ONE (1)** phase per turn.
+        -   **NEVER** chain multiple phases. **NEVER** "just do the next one".
+        -   **VIOLATION**: Executing >1 phase triggers a critical workflow failure.
+    -   **ATOMIC EXECUTION RULE**:
+        1.  Read `task_plan.md` to identify the **single next pending phase**.
+        2.  Execute the tasks for that phase **ONLY**.
+        3.  Update `progress.md`.
+        4.  **STOP IMMEDIATELY**.
+    -   **INTERACTIVE HANDOFF (MANDATORY)**:
+        -   You MUST pause after updating `progress.md` and present options.
+        -   Use `AskUserQuestion` to ask "What's next?" (See Workflow Handoff section).
 
 ## FIRST: Check for Previous Session (v2.2.0)
 
@@ -153,23 +181,58 @@ After you have successfully created or updated the planning files (`task_plan.md
 
 2.  **Summary**: Briefly list the created files and the current status (e.g., "Phase 1 Ready").
 
-3.  **Propose Execution**:
-    -   Use the `RunCommand` tool to propose the execution command.
-    -   **Command**: `/planning-with-files:execute`
-    -   **Requires Approval**: `true` (CRITICAL: This allows the user to Tab-to-Execute OR pause to edit `task_plan.md`).
-    -   **Message**: "Plan created. Press Tab to start Phase 1 execution, or edit task_plan.md first."
+3.  **Reflective Handoff (Visual TUI)**:
+    -   Display a clear TUI-style menu for the final decision.
+    -   Use the following format:
+        ```text
+        ────────────────────────────────────────────────────────────────────────────────
+        ←  ✔ Optimize  ✔ Plan  ☐ Execute  →
+
+        Planning 完成。请审查 task_plan.md。下一步：
+
+        ❯ 1. 执行计划 (Execute Plan)
+             开始执行 Phase 1
+          2. 修改计划 (Modify Plan)
+             需要调整任务或架构
+          3. 查看文件 (View Files)
+             cat task_plan.md
+        ────────────────────────────────────────────────────────────────────────────────
+        ```
+
+4.  **Action**:
+    -   Use `AskUserQuestion` to capture the user's choice.
+    -   **Option 1 (Execute)**: If selected, IMMEDIATELY call `RunCommand` with `/planning-with-files:execute` (requires_approval: true).
+    -   **Option 2 (Modify)**: If selected, ask for specific feedback and loop back to planning.
+    -   **Option 3 (View)**: If selected, use `RunCommand` to `cat task_plan.md` and then re-display the menu.
+    -   **Custom Input**: If user types feedback directly, loop back to planning.
 
 **When Execution (Mode 2) is Complete:**
 After completing a **single phase**:
 
 1.  **Summary**: Report completion of the current phase.
-2.  **Check Status**:
-    -   If there are **more phases pending**:
-        -   **Propose Next Phase**: Use `RunCommand` to propose `/planning-with-files:execute`.
-        -   **Message**: "Phase X complete. Press Tab to execute Phase Y, or edit plan/code first."
-    -   If **all phases are complete**:
-        -   **Propose Review**: Use `RunCommand` to propose `/review-code`.
-        -   **Message**: "All tasks complete. Press Tab to start Code Review."
+2.  **Reflective Handoff (Visual TUI)**:
+    -   Display a clear TUI-style menu for the final decision.
+    -   Use the following format:
+        ```text
+        ────────────────────────────────────────────────────────────────────────────────
+        ←  ✔ Phase [X]  ☐ Phase [X+1]  →
+
+        Phase [X] 已完成。下一步：
+
+        ❯ 1. 继续执行 (Proceed to Phase [X+1])
+             开始执行下一阶段任务
+          2. 暂停/审查 (Pause & Review)
+             检查代码或修改计划
+          3. 提交更改 (Commit Changes)
+             git commit -m "Phase [X] complete"
+        ────────────────────────────────────────────────────────────────────────────────
+        ```
+
+3.  **Action**:
+    -   Use `AskUserQuestion` to capture the user's choice.
+    -   **Option 1 (Proceed)**: Call `RunCommand` with `/planning-with-files:execute` (requires_approval: true).
+    -   **Option 2 (Pause)**: Stop and yield control.
+    -   **Option 3 (Commit)**: Call `RunCommand` with `git commit`.
 
 ## Important: Where Files Go
 

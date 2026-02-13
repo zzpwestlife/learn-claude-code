@@ -52,6 +52,9 @@ You are a **Senior Code Auditor & Commit Message Specialist**. Your task is to a
 ## 3. 生成输出 (Generate Output)
 Output a Markdown report containing:
 
+### Visual Progress
+`[✔ Optimize] → [✔ Plan] → [✔ Execute] → [✔ Review] → [✔ Changelog] → [➤ Commit]`
+
 ### 📋 变更摘要 (Change Summary)
 (用中文简要描述修改了什么，为什么修改)
 
@@ -73,13 +76,30 @@ type(scope): subject
 ```
 
 ## 4. 提交引导 (Commit Handoff)
-1.  **Select Best Option**: Choose the most appropriate message (usually Option 1 or Option 2).
+
+1.  **Reflective Selection**:
+    ```
+    ────────────────────────────────────────────────────────────────────────────────
+    ←  ✔ Analyze  ✔ Generate  ☐ Commit  →
+    
+    请选择提交方式：
+    
+    ❯ 1. 使用标准提交 (Option 1: Standard)
+         [Option 1 Preview]
+      2. 使用详细提交 (Option 2: Detailed)
+         [Option 2 Preview]
+      3. 手动修改 (Edit Manually)
+         复制内容自行提交
+    ────────────────────────────────────────────────────────────────────────────────
+    ```
+
 2.  **Prompt User**: Use `AskUserQuestion` to ask:
-    -   **Question**: "是否使用推荐的 Commit Message 直接提交？"
+    -   **Question**: "Select commit message style:"
     -   **Options**: 
-        -   "提交 (Commit with Option 1)"
-        -   "提交 (Commit with Option 2)"
-        -   "修改 (Edit manually)"
+        -   "Commit with Option 1"
+        -   "Commit with Option 2"
+        -   "Edit manually"
+
 3.  **Action**:
     -   If user chooses an option: Use `RunCommand` to execute:
         `git commit -m "CHOSEN_MESSAGE"`

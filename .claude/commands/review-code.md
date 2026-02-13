@@ -55,17 +55,34 @@ If the change touches more than 3 files or crosses multiple modules, run a plann
 *   **Architecture**: Core logic isolation, clear layering
 
 **Output Format:**
-Output Markdown report in English containing: Summary, Critical Issues, Improvement Suggestions, Code Style & Conventions, Positive Highlights.
+1.  **Visual Progress**: Start output with `[✔ Optimize] → [✔ Plan] → [✔ Execute] → [➤ Review] → [Changelog] → [Commit]`
+2.  Output Markdown report in English containing: Summary, Critical Issues, Improvement Suggestions, Code Style & Conventions, Positive Highlights.
 Provide specific code snippets and line numbers when possible.
 
 ## Workflow Handoff
 After the review is complete:
-1.  **Mandatory Check**:
-    -   If critical issues are found: Ask if user wants to fix them first.
-    -   If NO critical issues (or user accepts risks): **IMMEDIATELY** prompt for changelog generation.
+
+1.  **Reflective Handoff**:
+    -   Do not just ask "Yes/No". Use the TUI style to offer options based on your review findings.
+    -   **Format**:
+        ```
+        ────────────────────────────────────────────────────────────────────────────────
+        ←  ☐ Fix Issues  ☐ Manual Check  ✔ Generate Changelog  →
+        
+        代码审查完成。建议下一步：
+        
+        ❯ 1. 生成变更日志 (Generate Changelog)
+             代码无重大问题，准备发布
+          2. 修复关键问题 (Fix Critical Issues)
+             发现 [N] 个阻断性问题，需要修复
+          3. 手动验证 (Manual Verification)
+             建议人工复核复杂逻辑
+        ────────────────────────────────────────────────────────────────────────────────
+        ```
 2.  **Use `AskUserQuestion` to prompt**:
-    -   **Question**: "代码审查通过（或已确认）！是否执行 `/changelog-generator` 更新变更日志？"
-    -   **Options**: ["Yes", "No"]
-3.  If User says **Yes**:
-    -   **Action**: Use `RunCommand` tool to execute `/changelog-generator`.
-    -   **Important**: Set `requires_approval: true`. This allows the user to simply confirm (Tab/Enter) to proceed.
+    -   **Question**: "请选择下一步行动 (Select next step):"
+    -   **Options**: ["Generate Changelog", "Fix Issues", "Manual Verification"]
+3.  **Action**:
+    -   If "Generate Changelog": `RunCommand` -> `/changelog-generator` (requires_approval: true)
+    -   If "Fix Issues": `RunCommand` -> `/planning-with-files:plan` (to plan fixes)
+    -   If "Manual Verification": Stop and let user act.

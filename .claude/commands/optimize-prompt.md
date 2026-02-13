@@ -64,20 +64,31 @@ allowed-tools:
     - "Are there any common edge cases or errors that should be specifically avoided?"
 
 ## 第三阶段：生成与交付 (Generation & Handoff)
-1.  **生成**: 输出优化后的 Prompt (使用 Markdown 代码块包裹)。
-2.  **解释**: 简要说明优化点。
-3.  **强制引导 (Mandatory Guide)**:
-    -   **立即**使用 `AskUserQuestion` 工具询问后续行动（不要等待用户反馈）：
-        -   **Question**: "Prompt 优化已完成。您对结果满意吗？是否继续执行 `/planning-with-files:plan` 进行方案规划？"
-        -   **Options**: 
-            -   "满意，进入规划 (Run /planning-with-files:plan)"
-            -   "满意，结束 (Finish)"
-            -   "不满意，需要修改 (Revise)"
-    -   **处理**:
-        -   If "满意，进入规划...":
-            -   输出 "正在为您准备规划环境..."
-            -   **必须**调用 `RunCommand` 工具，执行命令 `/planning-with-files:plan` (设置 `requires_approval=true` 以便用户可以直接确认/Tab键填入)。
-        -   If "不满意...": 询问具体修改意见。
+1.  **Visual Progress**: Start your response with the FlowState Progress Bar:
+    `[➤ Optimize] → [Plan] → [Execute] → [Review] → [Changelog] → [Commit]`
+2.  **生成**: 输出优化后的 Prompt (使用 Markdown 代码块包裹)。
+3.  **解释**: 简要说明优化点 (Use structured "Optimization Notes" format with icons).
+4.  **Reflective Handoff (Visual TUI)**:
+    -   Display a clear TUI-style menu for the final decision.
+    -   Use the following format:
+        ```text
+        ────────────────────────────────────────────────────────────────────────────────
+        ←  ✔ Optimize  ☐ Plan  →
+
+        Prompt 优化完成。下一步：
+
+        ❯ 1. 继续规划 (Proceed to Planning)
+             直接基于此 Prompt 生成执行方案
+          2. 修改 Prompt (Revise Prompt)
+             输入反馈进行调整
+        ────────────────────────────────────────────────────────────────────────────────
+        ```
+
+5.  **Action**:
+    -   Use `AskUserQuestion` to capture the user's choice.
+    -   **Option 1 (Proceed)**: If selected, IMMEDIATELY call `RunCommand` with `/planning-with-files:plan` (requires_approval: true).
+    -   **Option 2 (Revise)**: If selected, ask for specific feedback and loop back to Phase 2.
+    -   **Custom Input**: If user types feedback directly, loop back to Phase 2.
 
 ## 第四阶段：后续行动 (Follow-up)
 (Merged into Phase 3)

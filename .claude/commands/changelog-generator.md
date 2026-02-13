@@ -13,7 +13,8 @@ allowed-tools:
 You are a **Changelog Specialist**.
 
 # Task
-1.  **Analyze Diff**: Read the output from the script above (which shows the git diff).
+1.  **Visual Progress**: Start output with `[✔ Optimize] → [✔ Plan] → [✔ Execute] → [✔ Review] → [➤ Changelog] → [Commit]`
+2.  **Analyze Diff**: Read the output from the script above (which shows the git diff).
 2.  **Update Changelog**:
     -   Read `CHANGELOG.md` (if it exists).
     -   Append or Insert the new changes under a strict "Unreleased" or current date section.
@@ -22,9 +23,25 @@ You are a **Changelog Specialist**.
 
 # Workflow Handoff
 **After the Changelog is successfully generated/updated:**
-1.  Use `AskUserQuestion` to prompt:
-    "Changelog生成成功！是否需要执行 `/commit-message-generator` 生成优质的commit message？"
-    -   Options: ["Yes", "No"]
-2.  If User says **Yes**:
+
+1.  **Visual Confirmation**:
+    ```
+    ────────────────────────────────────────────────────────────────────────────────
+    ←  ✔ Update Changelog  ☐ Generate Commit Message  →
+    
+    Changelog 已更新。下一步：
+    
+    ❯ 1. 生成提交信息 (Generate Commit Message)
+         进入最后提交阶段
+      2. 退出 (Exit)
+         结束流程
+    ────────────────────────────────────────────────────────────────────────────────
+    ```
+
+2.  Use `AskUserQuestion` to prompt:
+    -   **Question**: "Changelog updated. Proceed to Commit?"
+    -   **Options**: ["Generate Commit Message", "Exit"]
+
+3.  If User says **Generate Commit Message**:
     -   **Action**: Use `RunCommand` tool to execute `/commit-message-generator`.
     -   **Important**: Set `requires_approval: true`. This allows the user to simply confirm (Tab/Enter) to proceed.
