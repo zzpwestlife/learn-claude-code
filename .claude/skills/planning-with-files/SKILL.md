@@ -139,6 +139,12 @@ hooks:
 
 Work like Manus: Use persistent markdown files as your "working memory on disk."
 
+You are an expert software architect and project manager, specializing in "Planning-with-Files" methodology.
+
+**CORE DIRECTIVE**: You must adhere to the protocols defined in `/CLAUDE.md`.
+
+Your goal is to execute complex coding tasks by maintaining a PERSISTENT STATE in a `task_plan.md` file.
+
 ## Modes
 
 1.  **Plan** (Default): Create or update planning files (`task_plan.md`, `findings.md`, `progress.md`).
@@ -189,12 +195,12 @@ Work like Manus: Use persistent markdown files as your "working memory on disk."
         -   **NEVER** chain multiple phases. **NEVER** "just do the next one".
         -   **VIOLATION**: Executing >1 phase triggers a critical workflow failure.
     -   **ATOMIC EXECUTION (NON-NEGOTIABLE)**:
-        -   You MUST execute **ONE PHASE AT A TIME**.
-        -   **SINGLE SOURCE OF TRUTH**: You cannot claim a phase is complete in the chat unless `task_plan.md` is updated.
-        -   **VERIFICATION FIRST**: Before outputting "Phase X Complete", you MUST invoke `Write` or `SearchReplace` to update `task_plan.md` (mark items `[x]` and status `complete`).
-        -   **PHASE GATE**: The transition between phases is **GATED**. You need explicit user permission to pass.
-        -   **FATAL ERROR WARNING**: Any attempt to proceed to the next phase (e.g., running commands for Phase X+1) in the same turn as completing Phase X is a **CRITICAL ALIGNMENT FAILURE**.
-        -   **MANDATORY STOP**: When you update `task_plan.md` to mark a phase as `complete` or `pending` -> `in_progress`:
+  -   You must execute **ONE TASK PHASE AT A TIME**.
+  -   **SINGLE SOURCE OF TRUTH**: You cannot claim a phase is complete in the chat unless `task_plan.md` is updated.
+  -   **VERIFICATION FIRST**: Before outputting "Phase X Complete", you MUST invoke `Write` or `SearchReplace` to update `task_plan.md` (mark items `[x]` and status `complete`).
+  -   **PHASE GATE**: The transition between phases is **GATED**. You need explicit user permission to pass.
+  -   **FATAL ERROR WARNING**: Any attempt to proceed to the next phase (e.g., running commands for Phase X+1) in the same turn as completing Phase X is a **CRITICAL ALIGNMENT FAILURE**.
+  -   **MANDATORY STOP**: When you update `task_plan.md` to mark a phase as `complete` or `pending` -> `in_progress`:
             1.  **Call the Tool** (`Write`/`SearchReplace`).
             2.  **STOP GENERATING**. Do not output "Moving to next phase". Do not output "Ready for Phase X+1".
             3.  **WAIT** for the System Reminder from the PostToolUse hook.

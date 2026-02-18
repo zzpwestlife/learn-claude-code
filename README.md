@@ -85,8 +85,8 @@ fib/
 
 ```mermaid
 graph TD
-    Start[User Request] --> Optimize["/optimize-prompt<br/>(Socratic Analysis)"]
-    Optimize -->|Tab| Plan["/planning-with-files:plan<br/>(Phase 0 Interview)"]
+    Start["/optimize-prompt 用户提示词"] --> Optimize["交互式问答, 生成 prompt.md"]
+    Optimize -->|Tab| Plan["/planning-with-files:plan<br/>(Step 2 Interview)"]
     Plan -->|Tab| Execute["/planning-with-files:execute<br/>(Atomic Execution)"]
     Execute -->|Loop until done| Execute
     Execute -->|Tab| Review["/review-code<br/>(Reflective Handoff)"]
@@ -105,18 +105,18 @@ graph TD
 ```
 
 **Visual Progress Bar (全程可视化进度)**:
-`[✔ Optimize] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
+`[✔ Step 1: Optimize] → [✔ Step 2: Plan] → [➤ Step 3: Execute] → [Step 4: Review] → [Changelog] → [Commit]`
 
 ### 🛠️ 核心命令详解
 
-1.  **`/optimize-prompt`**: 
+1.  **`/optimize-prompt`** (Step 1): 
     -   **Socratic Analysis**: 采用苏格拉底提问法，深度挖掘需求。
     -   **Output**: 生成优化后的 Prompt。
-2.  **`/planning-with-files:plan`**: 
+2.  **`/planning-with-files:plan`** (Step 2): 
     -   **Phase 0 Interview**: 规划前强制进行架构与技术栈确认。
     -   **Output**: 生成 `task_plan.md`。
-3.  **`/planning-with-files:execute`**: 
-    -   **Strict Atomic Execution**: 每次**严格**只执行一个阶段 (Phase)，绝不自动进入下一阶段。
+3.  **`/planning-with-files:execute`** (Step 3): 
+    -   **Strict Atomic Execution**: 每次**严格**只执行一个任务阶段 (Task Phase)，绝不自动进入下一阶段。
     -   **Mandatory TUI Handoff**: 每阶段完成后必须暂停，显示 TUI 菜单等待用户明确指令（继续/暂停/提交）。
 4.  **`/review-code`**: 
     -   **Reflective Handoff**: 提供基于审查结果的情境选项 (生成日志/修复问题/人工复核)。

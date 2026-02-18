@@ -81,11 +81,11 @@ allowed-tools:
 
         Prompt 优化完成并已保存至 `{output_dir}/prompt.md`。下一步：
 
-        ❯ 1. 继续规划 (Proceed to Planning)
-             基于 `{output_dir}/prompt.md` 生成执行方案
-          2. 修改 Prompt (Revise Prompt)
-             输入反馈进行调整
-        ────────────────────────────────────────────────────────────────────────────────
+84→        ❯ 1. 继续规划 (Proceed to Planning)
+85→             执行 `/planning-with-files:plan {output_dir}`
+86→          2. 修改 Prompt (Revise Prompt)
+87→             输入反馈进行调整
+88→        ────────────────────────────────────────────────────────────────────────────────
         ```
 
 6.  **Action**:
