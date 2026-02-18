@@ -79,17 +79,16 @@ After the review is complete:
         代码审查完成 (Report saved to {output_dir}/review_report.md)。建议下一步：
 
         ❯ 1. 生成变更日志 (Generate Changelog)
-             代码无重大问题，准备发布
+             Tab-to-Execute: /changelog-generator {output_dir}
           2. 修复关键问题 (Fix Critical Issues)
-             发现 [N] 个阻断性问题，需要修复
+             Reject command, then type: /planning-with-files:plan {output_dir}
           3. 手动验证 (Manual Verification)
-             建议人工复核复杂逻辑
+             Reject command, then type: exit
         ────────────────────────────────────────────────────────────────────────────────
         ```
-2.  **Use `AskUserQuestion` to prompt**:
-    -   **Question**: "请选择下一步行动 (Select next step):"
-    -   **Options**: ["Generate Changelog", "Fix Issues", "Manual Verification"]
-3.  **Action**:
-    -   If "Generate Changelog": `RunCommand` -> `/changelog-generator {output_dir}` (requires_approval: true)
-    -   If "Fix Issues": `RunCommand` -> `/planning-with-files:plan {output_dir}` (to plan fixes)
-    -   If "Manual Verification": Stop and let user act.
+2.  **Action**:
+    -   **Zero-Friction (Tab-to-Execute)**: IMMEDIATELY use `RunCommand` to propose Option 1 (`/changelog-generator {output_dir}`).
+    -   **User Choice**:
+        -   If user accepts (Tab/Enter): Proceed to Changelog.
+        -   If user rejects: They can type other commands (e.g., `/planning-with-files:plan` to fix issues).
+    -   **DO NOT** use `AskUserQuestion`.

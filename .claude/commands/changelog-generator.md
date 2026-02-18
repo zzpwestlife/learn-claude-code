@@ -37,16 +37,15 @@ You are a **Changelog Specialist**.
     Changelog 已更新至 `{target_file}`。下一步：
 
     ❯ 1. 生成提交信息 (Generate Commit Message)
-         进入最后提交阶段
+         Tab-to-Execute: /commit-message-generator {output_dir}
       2. 退出 (Exit)
-         结束流程
+         Reject command, then type: exit
     ────────────────────────────────────────────────────────────────────────────────
     ```
 
-2.  Use `AskUserQuestion` to prompt:
-    -   **Question**: "请选择下一步行动 (Select next step):"
-    -   **Options**: ["Generate Commit Message", "Exit"]
-
-3.  If User says **Generate Commit Message**:
-    -   **Action**: Use `RunCommand` tool to execute `/commit-message-generator {output_dir}`.
-    -   **Important**: Set `requires_approval: true`. This allows the user to simply confirm (Tab/Enter) to proceed.
+2.  **Action**:
+    -   **Zero-Friction (Tab-to-Execute)**: IMMEDIATELY use `RunCommand` to propose Option 1 (`/commit-message-generator {output_dir}`).
+    -   **User Choice**:
+        -   If user accepts (Tab/Enter): Proceed to Commit.
+        -   If user rejects: Exit.
+    -   **DO NOT** use `AskUserQuestion`.

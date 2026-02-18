@@ -82,27 +82,20 @@ type(scope): subject
     ────────────────────────────────────────────────────────────────────────────────
     ←  ✔ Analyze  ✔ Generate  ☐ Commit  →
 
-    请选择提交方式：
+    推荐提交 (Recommended): Option 1
 
     ❯ 1. 使用标准提交 (Option 1: Standard)
-         [Option 1 Preview]
+         Tab-to-Execute: git commit -m "..."
       2. 使用详细提交 (Option 2: Detailed)
-         [Option 2 Preview]
+         Reject command, then copy-paste Option 2
       3. 手动修改 (Edit Manually)
-         复制内容自行提交
+         Reject command, then type: git commit -m "..."
     ────────────────────────────────────────────────────────────────────────────────
     ```
 
-2.  **Prompt User**: Use `AskUserQuestion` to prompt:
-    -   **Question**: "请选择提交方式 (Select commit message style):"
-    -   **Options**: 
-        -   "Commit with Option 1"
-        -   "Commit with Option 2"
-        -   "Edit Manually"
-        -   "Edit manually"
-
-3.  **Action**:
-    -   If user chooses an option: Use `RunCommand` to execute:
-        `git commit -m "CHOSEN_MESSAGE"`
-        (Ensure quotes are escaped properly).
-    -   **Important**: Set `requires_approval: true` so the user can review the final command.
+2.  **Action**:
+    -   **Zero-Friction (Tab-to-Execute)**: IMMEDIATELY use `RunCommand` to propose Option 1 (`git commit -m "..."`).
+    -   **User Choice**:
+        -   If user accepts (Tab/Enter): Commit with Option 1.
+        -   If user rejects: They can copy-paste Option 2 or type manually.
+    -   **DO NOT** use `AskUserQuestion`.

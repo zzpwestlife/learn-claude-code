@@ -81,18 +81,19 @@ allowed-tools:
 
         Prompt 优化完成并已保存至 `{output_dir}/prompt.md`。下一步：
 
-84→        ❯ 1. 继续规划 (Proceed to Planning)
-85→             执行 `/planning-with-files:plan {output_dir}`
-86→          2. 修改 Prompt (Revise Prompt)
-87→             输入反馈进行调整
-88→        ────────────────────────────────────────────────────────────────────────────────
+        ❯ 1. 继续规划 (Proceed to Planning)
+             Tab-to-Execute: /planning-with-files:plan {output_dir}
+          2. 修改 Prompt (Revise Prompt)
+             Reject command, then type: revise prompt
+        ────────────────────────────────────────────────────────────────────────────────
         ```
 
 6.  **Action**:
-    -   Use `AskUserQuestion` to capture the user's choice.
-    -   **Option 1 (Proceed)**: If selected, IMMEDIATELY call `RunCommand` with `/planning-with-files:plan {output_dir}` (pass the directory path). Set `requires_approval: true`.
-    -   **Option 2 (Revise)**: If selected, ask for specific feedback and loop back to Phase 2.
-    -   **Custom Input**: If user types feedback directly, loop back to Phase 2.
+    -   **Zero-Friction (Tab-to-Execute)**: IMMEDIATELY use `RunCommand` to propose Option 1 (`/planning-with-files:plan {output_dir}`).
+    -   **User Choice**:
+        -   If user accepts (Tab/Enter): Proceed to Planning.
+        -   If user rejects: They can ask for revisions.
+    -   **DO NOT** use `AskUserQuestion` unless the user explicitly asks for help.
 
 ## 第四阶段：后续行动 (Follow-up)
 (Merged into Phase 3)
