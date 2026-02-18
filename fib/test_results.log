@@ -1,0 +1,25 @@
+test_base_cases (test_fibonacci.TestFibonacci.test_base_cases)
+测试基础情况 F(0) 和 F(1) ... ok
+test_boolean_input (test_fibonacci.TestFibonacci.test_boolean_input)
+测试布尔值输入抛出 TypeError（边界情况） ... ok
+test_float_input (test_fibonacci.TestFibonacci.test_float_input)
+测试浮点数输入抛出 TypeError ... ok
+test_large_number (test_fibonacci.TestFibonacci.test_large_number)
+测试较大数值 F(50)，验证性能和正确性 ... ok
+test_medium_numbers (test_fibonacci.TestFibonacci.test_medium_numbers)
+测试中等数值，验证算法正确性 ... ok
+test_negative_input (test_fibonacci.TestFibonacci.test_negative_input)
+测试负数输入抛出 ValueError ... ok
+test_sequence_consistency (test_fibonacci.TestFibonacci.test_sequence_consistency)
+测试递推关系 F(n) = F(n-1) + F(n-2) ... ok
+test_small_numbers (test_fibonacci.TestFibonacci.test_small_numbers)
+测试小数值 F(5) 和 F(10) ... ok
+test_string_input (test_fibonacci.TestFibonacci.test_string_input)
+测试字符串输入抛出 TypeError ... ok
+test_zero (test_fibonacci.TestFibonacci.test_zero)
+测试边界情况 F(0) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.000s
+
+OK

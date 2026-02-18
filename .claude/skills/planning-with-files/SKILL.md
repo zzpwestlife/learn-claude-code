@@ -9,8 +9,8 @@ allowed-tools:
   - Bash
   - Glob
   - Grep
-  - WebFetch
-  - WebSearch
+  - webfetch
+  - websearch_web_search_exa
   - AskUserQuestion
   - RunCommand
   - LS

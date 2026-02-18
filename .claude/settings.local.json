@@ -9,22 +9,13 @@
       "Skill(optimize-prompt)",
       "Bash(tree:*)",
       "Skill(planning-with-files:planning-with-files)",
-      "Bash(gofmt:*)",
-      "Bash(go build:*)",
-      "Bash(go mod init:*)"
-    ]
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/format-go-code.sh"
-          }
-        ]
-      }
+      "Bash(test:*)",
+      "Bash(python3:*)",
+      "Bash(tee:*)",
+      "Bash(wc:*)",
+      "Bash(/Users/joeyzou/Code/OpenSource/learn-claude-code/.claude/skills/review-code/scripts/get-diff.sh)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
