@@ -6,7 +6,7 @@ allowed-tools:
   - AskUserQuestion
   - Read
   - Write
-  - mgrep
+  - Grep
   - RunCommand
   - LS
   - Glob

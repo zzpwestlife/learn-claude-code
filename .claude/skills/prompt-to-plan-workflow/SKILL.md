@@ -209,7 +209,7 @@ User: "Understand how authentication works in this codebase"
 ### Integration with Other Skills
 - **Prerequisite**: `/optimize-prompt` (Prompt engineering)
 - **Core**: `/planning-with-files:plan` (Manus-style planning)
-- **Follow-up**: `/claudeception` (Extract learnings after delivery)
+- **Follow-up**: `skill-architect` (Extract learnings after delivery)
 - **Parallel**: `constitution.md` (Quality governance)
 
 ### Session Recovery

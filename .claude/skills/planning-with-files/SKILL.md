@@ -9,14 +9,14 @@ allowed-tools:
   - Bash
   - Glob
   - Grep
-  - webfetch
-  - websearch_web_search_exa
+  - WebFetch
+  - WebSearch
   - AskUserQuestion
   - RunCommand
   - LS
 hooks:
   PostToolUse:
-    - matcher: "Write|Edit|SearchReplace|Bash|RunCommand"
+    - matcher: "Write|Edit|MultiEdit|Bash|RunCommand"
       hooks:
         - type: command
           command: |

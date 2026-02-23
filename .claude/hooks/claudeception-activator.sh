@@ -1,10 +1,7 @@
 #!/bin/bash
 # Skill Architect Activator (formerly Claudeception)
-# Prompts to Create or Evolve skills.
-# SILENT MODE: This script is now silent to avoid interrupting the workflow.
+# Prompts Claude to evaluate if new knowledge should be captured as skills.
 
-# Only run if DEBUG is set
-if [ -n "$DEBUG" ]; then
 cat << 'EOF'
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🧠 SKILL ARCHITECT: EVOLUTION CHECK
@@ -23,4 +20,3 @@ After completing this task, evaluate if you have gained new knowledge:
 This ensures your toolkit gets smarter over time.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-fi

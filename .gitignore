@@ -6,6 +6,7 @@ node_modules/
 .cursor
 
 # Python
+.venv/
 __pycache__/
 *.pyc
 *.pyo

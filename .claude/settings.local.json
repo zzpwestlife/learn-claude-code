@@ -15,7 +15,8 @@
       "Bash(wc:*)",
       "Bash(/Users/joeyzou/Code/OpenSource/learn-claude-code/.claude/skills/review-code/scripts/get-diff.sh)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(bash verify.sh)"
     ]
   }
 }

@@ -12,9 +12,10 @@ Your goal is to follow the "Simplicity Principle" and the guided steps defined i
 Follow the sequence:
 1.  **`/optimize-prompt`**: Optimize requirements.
 2.  **`/planning-with-files:plan`**: Create plan.
-3.  **`/review-code`**: Review implementation.
-4.  **`/changelog-generator`**: Update changelog.
-5.  **`/commit-message-generator`**: Generate commit message.
+3.  **`/planning-with-files:execute`**: Execute plan (atomic, phase-by-phase).
+4.  **`/review-code`**: Review implementation.
+5.  **`/changelog-generator`**: Update changelog.
+6.  **`/commit-message-generator`**: Generate commit message.
 
 ## 2. Tool Usage
 - **Skill Architect**: Use `Forge`, `Refine`, `Stitch` to manage skills.
