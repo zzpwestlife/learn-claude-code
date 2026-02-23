@@ -72,28 +72,17 @@ allowed-tools:
 2.  **生成**: 输出优化后的 Prompt (使用 Markdown 代码块包裹)。
 3.  **保存**: 将优化后的 Prompt 保存到用户指定的目录下的 `prompt.md` 文件中（例如 `fib/prompt.md`）。如果目录未指定，则保存到当前目录。
 4.  **解释**: 简要说明优化点 (Use structured "Optimization Notes" format with icons).
-5.  **Reflective Handoff (Visual TUI)**:
-    -   Display a clear TUI-style menu for the final decision.
-    -   Use the following format:
-        ```text
-        ────────────────────────────────────────────────────────────────────────────────
-        ←  ✔ Optimize  ☐ Plan  →
-
-        Prompt 优化完成并已保存至 `{output_dir}/prompt.md`。下一步：
-
-        ❯ 1. 继续规划 (Proceed to Planning)
-             Tab-to-Execute: /planning-with-files:plan {output_dir}
-          2. 修改 Prompt (Revise Prompt)
-             Reject command, then type: revise prompt
-        ────────────────────────────────────────────────────────────────────────────────
-        ```
+5.  **Reflective Handoff (Modern TUI)**:
+    -   Do not display the ASCII menu.
+    -   Instead, run the Modern TUI command:
+        `sh .claude/skills/modern-tui/scripts/run-tui.sh optimize-handoff --dir {output_dir}`
 
 6.  **Action**:
-    -   **Zero-Friction (Tab-to-Execute)**: IMMEDIATELY use `RunCommand` to propose Option 1 (`/planning-with-files:plan {output_dir}`).
-    -   **User Choice**:
-        -   If user accepts (Tab/Enter): Proceed to Planning.
-        -   If user rejects: They can ask for revisions.
-    -   **DO NOT** use `AskUserQuestion` unless the user explicitly asks for help.
+    -   Wait for the command to finish.
+    -   Read the output (`SELECTED: value`).
+    -   If `proceed`: Use `RunCommand` to propose `/planning-with-files:plan {output_dir}`.
+    -   If `revise`: Ask for details.
+    -   If `exit`: Stop.
 
 ## 第四阶段：后续行动 (Follow-up)
 (Merged into Phase 3)

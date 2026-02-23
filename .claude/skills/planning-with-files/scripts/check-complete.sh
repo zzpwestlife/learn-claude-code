@@ -88,6 +88,16 @@ if [ "$GLOBAL_COMPLETE" -eq 1 ] || { [ "$TOTAL" -gt 0 ] && [ "$COMPLETE" -ge "$T
     if [ "$PREV_COMPLETE" -lt "$TOTAL" ]; then
         echo "$TIMESTAMP: All phases completed ($COMPLETE/$TOTAL)" >> "$AUDIT_LOG"
     fi
+    echo ""
+    echo "<system-reminder>"
+    echo "✅ SYSTEM NOTICE: All phases in task_plan.md are complete."
+    echo "👉 ACTION REQUIRED: Run the Modern TUI Handoff."
+    echo "  1. Run command: 'sh .claude/skills/modern-tui/scripts/run-tui.sh execution-handoff --phase $TOTAL --file task_plan.md'"
+    echo "  2. Based on the user's selection (printed to stdout), proceed with the next step."
+    echo "     - If 'proceed', run the next command."
+    echo "     - If 'review', use 'ls -R' or 'cat' to show files."
+    echo "     - If 'pause', stop execution."
+    echo "</system-reminder>"
     exit 0
 fi
 
@@ -96,11 +106,14 @@ if [ "$COMPLETE" -gt "$PREV_COMPLETE" ]; then
     echo "$TIMESTAMP: Phase $COMPLETE completed (Previous: $PREV_COMPLETE)" >> "$AUDIT_LOG"
     echo "EVENT: PHASE_COMPLETE"
     echo ""
-    echo "🛑🛑🛑 STOP EXECUTION NOW 🛑🛑🛑"
-    echo "Phase $COMPLETE is marked as COMPLETE."
-    echo "You have reached a MANDATORY STOP POINT."
-    echo "DO NOT PROCEED to Phase $(($COMPLETE + 1))."
-    echo "WAIT for user instruction."
+    echo "<system-reminder>"
+    echo "🛑 STOP! EXECUTION PAUSE REQUIRED 🛑"
+    echo "You have completed a phase. You MUST STOP NOW."
+    echo "DO NOT proceed to the next phase."
+    echo "👉 ACTION REQUIRED: Run the Modern TUI Handoff."
+    echo "  1. Run command: 'sh .claude/skills/modern-tui/scripts/run-tui.sh execution-handoff --phase $COMPLETE --file task_plan.md'"
+    echo "  2. Based on the user's selection, proceed."
+    echo "</system-reminder>"
     exit 0
 fi
 
@@ -116,7 +129,14 @@ fi
 # TOTAL > 0, COMPLETE = 0, IN_PROGRESS = 0
 if [ "$TOTAL" -gt 0 ] && [ "$COMPLETE" -eq 0 ] && [ "$IN_PROGRESS" -eq 0 ]; then
     echo "EVENT: PLAN_READY"
-    # echo "Details: Plan created/updated, ready for Phase 1."
+    echo ""
+    echo "<system-reminder>"
+    echo "ℹ️ SYSTEM NOTICE: Plan detected (0 phases complete)."
+    echo "If you have finished creating/updating the plan:"
+    echo "👉 STOP IMMEDIATELY. Do not start Phase 1."
+    echo "👉 Run the Modern TUI Plan Handoff:"
+    echo "   'sh .claude/skills/modern-tui/scripts/run-tui.sh plan-handoff --file task_plan.md'"
+    echo "</system-reminder>"
     exit 0
 fi
 

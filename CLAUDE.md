@@ -34,25 +34,31 @@
 
 ## 3. TUI 交互标准 (Interaction Standards)
 
-### Execution Step TUI (Task Phase Handoff)
-All Task Phase 完成后的 Handoff 必须使用以下 ASCII 格式：
+### Modern TUI Handoff
+本项目使用 Modern TUI (Python + Rich) 进行交互。
+当完成一个 Phase 或 Step 时，**不要** 生成 ASCII 文本菜单。
+而是运行以下命令之一：
 
-```text
-────────────────────────────────────────────────────────────────────────────────
-←  ✔ Phase [X]  ☐ Phase [X+1]  →
+1.  **Prompt 优化完成**:
+    `sh .claude/skills/modern-tui/scripts/run-tui.sh optimize-handoff --dir {output_dir}`
 
-Phase [X] 已完成。下一步：
+2.  **规划完成 (Plan Ready)**:
+    `sh .claude/skills/modern-tui/scripts/run-tui.sh plan-handoff --file task_plan.md`
 
-❯ 1. 继续执行 (Proceed)
-     Tab-to-Execute: /planning-with-files:execute {output_dir}
-  2. 暂停/审查 (Pause & Review)
-     Reject command, then type: wait / exit
-  3. 提交更改 (Commit)
-     Reject command, then type: git commit
-────────────────────────────────────────────────────────────────────────────────
-```
+3.  **Phase 完成 (Execution Handoff)**:
+    `sh .claude/skills/modern-tui/scripts/run-tui.sh execution-handoff --phase {phase_num} --file task_plan.md`
+
+**Agent 行为规范**:
+1.  运行上述命令。
+2.  等待命令结束。
+3.  读取命令的输出（Stdout 中会有 `SELECTED: value`）。
+4.  根据用户的选择执行下一步：
+    -   `proceed` -> 执行下一个 Phase。
+    -   `review` -> 展示文件内容。
+    -   `revise` -> 询问用户修改意见。
+    -   `pause` / `exit` -> 停止。
 
 ## 4. 验证与强制机制 (Enforcement)
 - **Hook Verification**: 每次 `Write` 操作后，`check-complete.sh` 会自动运行。
-- **Stop Signal**: 如果脚本检测到 Task Phase 完成，会输出 `🛑 STOP EXECUTION NOW 🛑`。
-- **Protocol**: 见到此信号，**必须**立即停止当前推理链，展示 TUI，并使用 `RunCommand` 提议下一步操作（Tab-to-Execute）。
+- **Stop Signal**: 如果脚本检测到 Task Phase 完成，会输出 `<system-reminder>` 提示运行 Modern TUI。
+- **Protocol**: 见到此信号，**必须** 运行 TUI 命令。

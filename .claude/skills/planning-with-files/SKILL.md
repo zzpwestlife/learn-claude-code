@@ -69,36 +69,11 @@ hooks:
             fi
 
             if echo "$OUTPUT" | grep -q "ALL PHASES COMPLETE"; then
-              echo ""
-              echo "<system-reminder>"
-              echo "✅ SYSTEM NOTICE: All phases in task_plan.md are complete."
-              echo "👉 ACTION REQUIRED: Present the TUI Menu for completion."
-              echo "  1. Display the Visual TUI Handoff menu (All Phases Complete)."
-              echo "  2. PROPOSE the next logical step (Option 1) using 'RunCommand' (Tab-to-Execute)."
-              echo "     Command: '/review-code'"
-              echo "  3. Do NOT use 'AskUserQuestion' unless the user rejects the command."
-              echo "</system-reminder>"
+              echo "$OUTPUT"
             elif echo "$OUTPUT" | grep -q "EVENT: PHASE_COMPLETE"; then
-              echo ""
-              echo "<system-reminder>"
-              echo "🛑 STOP! EXECUTION PAUSE REQUIRED 🛑"
-              echo "You have completed a phase. You MUST STOP NOW."
-              echo "DO NOT proceed to the next phase."
-              echo "👉 ACTION REQUIRED: Present the TUI Menu for Phase Completion."
-              echo "  1. Display the Visual TUI Handoff menu (Phase [X] Complete)."
-              echo "  2. PROPOSE the next logical step (Option 1) using 'RunCommand' (Tab-to-Execute)."
-              echo "     Command: '/planning-with-files:execute {output_dir}'"
-              echo "  3. Do NOT use 'AskUserQuestion' unless the user rejects the command."
-              echo "</system-reminder>"
+              echo "$OUTPUT"
             elif echo "$OUTPUT" | grep -q "EVENT: PLAN_READY"; then
-              echo ""
-              echo "<system-reminder>"
-              echo "ℹ️ SYSTEM NOTICE: Plan detected (0 phases complete)."
-              echo "If you have finished creating/updating the plan:"
-              echo "👉 STOP IMMEDIATELY. Do not start Phase 1."
-              echo "👉 Present the TUI Menu to the user to confirm execution."
-              echo "👉 PROPOSE the command '/planning-with-files:execute {output_dir}' using 'RunCommand'."
-              echo "</system-reminder>"
+              echo "$OUTPUT"
             fi
   Stop:
     - hooks:
