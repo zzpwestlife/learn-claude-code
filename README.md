@@ -72,7 +72,7 @@ fib/
 ```
 
 > **💡 Tip**: 如果会话中断，您可以随时通过指定目录参数来恢复上下文：
-> `/planning-with-files:execute fib`
+> `/planning-with-files execute fib`
 
 ### 🤫 静默模式与文件优先 (Silent Mode & File-First)
 
@@ -86,8 +86,8 @@ fib/
 ```mermaid
 graph TD
     Start["/optimize-prompt 用户提示词"] --> Optimize["交互式问答, 生成 prompt.md"]
-    Optimize -->|Tab| Plan["/planning-with-files:plan<br/>(Step 2 Interview)"]
-    Plan -->|Tab| Execute["/planning-with-files:execute<br/>(Atomic Execution)"]
+    Optimize -->|Tab| Plan["/planning-with-files plan<br/>(Step 2 Interview)"]
+    Plan -->|Tab| Execute["/planning-with-files execute<br/>(Atomic Execution)"]
     Execute -->|Loop until done| Execute
     Execute -->|Tab| Review["/review-code<br/>(Reflective Handoff)"]
     Review -->|Tab| Changelog["/changelog-generator<br/>(Visual Confirmation)"]
@@ -112,10 +112,10 @@ graph TD
 1.  **`/optimize-prompt`** (Step 1): 
     -   **Socratic Analysis**: 采用苏格拉底提问法，深度挖掘需求。
     -   **Output**: 生成优化后的 Prompt。
-2.  **`/planning-with-files:plan`** (Step 2): 
+2.  **`/planning-with-files plan`** (Step 2): 
     -   **Phase 0 Interview**: 规划前强制进行架构与技术栈确认。
     -   **Output**: 生成 `task_plan.md`。
-3.  **`/planning-with-files:execute`** (Step 3): 
+3.  **`/planning-with-files execute`** (Step 3): 
     -   **Strict Atomic Execution**: 每次**严格**只执行一个任务阶段 (Task Phase)，绝不自动进入下一阶段。
     -   **Mandatory TUI Handoff**: 每阶段完成后必须暂停，显示 TUI 菜单等待用户明确指令（继续/暂停/提交）。
 4.  **`/review-code`**: 
@@ -151,7 +151,7 @@ graph TD
 ## ❓ 常见问题 (Troubleshooting)
 
 -   **Q: 为什么流程没有自动弹出下一步提示？**
-    A: FlowState 依赖 Claude Code 的 `RunCommand` 提议机制。如果因为某些原因没有自动弹出，您可以手动输入 `/planning-with-files:execute` 或直接按 `Tab` 键尝试。
+    A: FlowState 依赖 Claude Code 的 `RunCommand` 提议机制。如果因为某些原因没有自动弹出，您可以手动输入 `/planning-with-files execute` 或直接按 `Tab` 键尝试。
 -   **Q: TUI 菜单显示异常？**
     A: 请确保您的终端支持 UTF-8 编码和 ANSI 转义序列（推荐使用 iTerm2, VS Code Terminal, 或 Windows Terminal）。
 -   **Q: 如何手动触发特定阶段？**

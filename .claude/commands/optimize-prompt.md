@@ -4,9 +4,10 @@ argument-hint: [prompt_text | file_path] [output_dir]
 model: sonnet
 allowed-tools:
   - AskUserQuestion
+  - Skill
   - Read
   - Write
-  - mgrep
+  - Grep
   - RunCommand
   - LS
   - Glob
@@ -57,7 +58,10 @@ allowed-tools:
     -   *Bad*: "给我一个例子。"
     -   *Good*: "您能回忆一次您觉得非常完美的类似回复吗？它好在哪里？或者一次非常糟糕的回复，它犯了什么错误？"
 
-使用 `AskUserQuestion` 工具向用户提问。**注意：提问语言必须与用户 Prompt 的主要语言一致。**
+使用 `AskUserQuestion` 工具向用户提问。
+    - **TUI 优化**: 必须尽可能提供 `options` 选项，以便用户通过选择而非打字来回答。
+    - **选项设计**: 每个问题应包含 2-4 个具体的候选项（基于常见场景推断），以及一个 "其他" 选项。
+    - 仅在完全无法预设选项时才使用开放式文本输入。
 
 *   *中文场景示例*:
     -   "为了让 AI 更精准地捕捉您的意图，您能设想一个 AI 可能会误解的场景，并告诉我那个场景下您希望它怎么做吗？"
@@ -72,28 +76,16 @@ allowed-tools:
 2.  **生成**: 输出优化后的 Prompt (使用 Markdown 代码块包裹)。
 3.  **保存**: 将优化后的 Prompt 保存到用户指定的目录下的 `prompt.md` 文件中（例如 `fib/prompt.md`）。如果目录未指定，则保存到当前目录。
 4.  **解释**: 简要说明优化点 (Use structured "Optimization Notes" format with icons).
-5.  **Reflective Handoff (Visual TUI)**:
-    -   Display a clear TUI-style menu for the final decision.
-    -   Use the following format:
-        ```text
-        ────────────────────────────────────────────────────────────────────────────────
-        ←  ✔ Optimize  ☐ Plan  →
-
-        Prompt 优化完成并已保存至 `{output_dir}/prompt.md`。下一步：
-
-        ❯ 1. 继续规划 (Proceed to Planning)
-             Tab-to-Execute: /planning-with-files:plan {output_dir}
-          2. 修改 Prompt (Revise Prompt)
-             Reject command, then type: revise prompt
-        ────────────────────────────────────────────────────────────────────────────────
-        ```
+5.  **Reflective Handoff (Interactive Menu)**:
+    -   Use `AskUserQuestion` to present the final decision.
+    -   **Question**: "Prompt 优化完成并已保存至 `{output_dir}/prompt.md`。下一步？"
+    -   **Options**:
+        -   "Proceed to Planning (Start planning-with-files skill)"
+        -   "Revise Prompt (Provide feedback)"
 
 6.  **Action**:
-    -   **Zero-Friction (Tab-to-Execute)**: IMMEDIATELY use `RunCommand` to propose Option 1 (`/planning-with-files:plan {output_dir}`).
-    -   **User Choice**:
-        -   If user accepts (Tab/Enter): Proceed to Planning.
-        -   If user rejects: They can ask for revisions.
-    -   **DO NOT** use `AskUserQuestion` unless the user explicitly asks for help.
+    -   **Option 1 (Proceed)**: IMMEDIATELY invoke the `Skill` tool with `name="planning-with-files"`.
+    -   **Option 2 (Revise)**: Ask the user for specific feedback or revisions.
 
 ## 第四阶段：后续行动 (Follow-up)
 (Merged into Phase 3)

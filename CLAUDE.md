@@ -11,16 +11,16 @@
 ### Step 1: Optimization (Prompt Engineering)
 1. **Command**: `/optimize-prompt`
 2. **Action**: 交互式优化提示词 -> 生成 `prompt.md`。
-3. **Handoff**: 展示 TUI -> 用户选择 "Proceed to Planning" -> 执行 `/planning-with-files:plan`。
+3. **Handoff**: 展示 Text-Based 菜单 -> 用户选择 "Proceed to Planning" -> 执行 `/planning-with-files plan`。
 
 ### Step 2: Planning (Architecture & Task Breakdown)
-1. **Command**: `/planning-with-files:plan`
+1. **Command**: `/planning-with-files plan`
 2. **Action**: 读取 `prompt.md` -> 生成 `task_plan.md`, `findings.md`。
 3. **Constraint**: **STOP** immediately after file generation.
-4. **Handoff**: 展示 TUI -> 用户选择 "Execute Plan" -> 执行 `/planning-with-files:execute`。
+4. **Handoff**: 使用 `AskUserQuestion` 展示菜单 -> 用户选择 "Execute Plan" -> 执行 `/planning-with-files execute`。
 
 ### Step 3: Execution (The Loop - Task Phases)
-1. **Command**: `/planning-with-files:execute`
+1. **Command**: `/planning-with-files execute`
 2. **Action**: 读取 `task_plan.md` -> 执行当前 `in_progress` 的 **Task Phase**。
 3. **Completion**:
    - 完成该 Phase 的代码与测试。
@@ -29,30 +29,22 @@
    - 更新文件后，系统会触发 "STOP EXECUTION NOW" 警告。
    - **必须** 响应此警告，停止思考，展示 TUI。
 5. **Handoff**:
-   - 展示 "Phase [X] Complete" TUI 菜单。
+   - 使用 `AskUserQuestion` 展示 "Phase [X] Complete" 菜单。
    - 选项: [Continue], [Pause], [Review]。
 
 ## 3. TUI 交互标准 (Interaction Standards)
 
 ### Execution Step TUI (Task Phase Handoff)
-All Task Phase 完成后的 Handoff 必须使用以下 ASCII 格式：
+All Task Phase 完成后的 Handoff 必须使用 `AskUserQuestion` 展示交互式菜单：
 
-```text
-────────────────────────────────────────────────────────────────────────────────
-←  ✔ Phase [X]  ☐ Phase [X+1]  →
-
-Phase [X] 已完成。下一步：
-
-❯ 1. 继续执行 (Proceed)
-     Tab-to-Execute: /planning-with-files:execute {output_dir}
-  2. 暂停/审查 (Pause & Review)
-     Reject command, then type: wait / exit
-  3. 提交更改 (Commit)
-     Reject command, then type: git commit
-────────────────────────────────────────────────────────────────────────────────
-```
+1. **Continue Execution** (Proceed to next phase)
+   - Invoke `Skill` tool (planning-with-files) or execute next phase manually.
+2. **Pause / Review**
+   - Wait for user instructions.
+3. **Commit Changes**
+   - Run `git commit`.
 
 ## 4. 验证与强制机制 (Enforcement)
 - **Hook Verification**: 每次 `Write` 操作后，`check-complete.sh` 会自动运行。
 - **Stop Signal**: 如果脚本检测到 Task Phase 完成，会输出 `🛑 STOP EXECUTION NOW 🛑`。
-- **Protocol**: 见到此信号，**必须**立即停止当前推理链，展示 TUI，并使用 `RunCommand` 提议下一步操作（Tab-to-Execute）。
+- **Protocol**: 见到此信号，**必须**立即停止当前推理链，使用 `AskUserQuestion` 展示 TUI 菜单。

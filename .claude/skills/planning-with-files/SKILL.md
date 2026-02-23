@@ -74,9 +74,8 @@ hooks:
               echo "✅ SYSTEM NOTICE: All phases in task_plan.md are complete."
               echo "👉 ACTION REQUIRED: Present the TUI Menu for completion."
               echo "  1. Display the Visual TUI Handoff menu (All Phases Complete)."
-              echo "  2. PROPOSE the next logical step (Option 1) using 'RunCommand' (Tab-to-Execute)."
-              echo "     Command: '/review-code'"
-              echo "  3. Do NOT use 'AskUserQuestion' unless the user rejects the command."
+              echo "  2. Use 'AskUserQuestion' to get confirmation."
+              echo "  3. If confirmed, PROPOSE the next step (e.g. '/review-code') or start it manually."
               echo "</system-reminder>"
             elif echo "$OUTPUT" | grep -q "EVENT: PHASE_COMPLETE"; then
               echo ""
@@ -85,10 +84,10 @@ hooks:
               echo "You have completed a phase. You MUST STOP NOW."
               echo "DO NOT proceed to the next phase."
               echo "👉 ACTION REQUIRED: Present the TUI Menu for Phase Completion."
-              echo "  1. Display the Visual TUI Handoff menu (Phase [X] Complete)."
-              echo "  2. PROPOSE the next logical step (Option 1) using 'RunCommand' (Tab-to-Execute)."
-              echo "     Command: '/planning-with-files:execute {output_dir}'"
-              echo "  3. Do NOT use 'AskUserQuestion' unless the user rejects the command."
+              echo "  1. Use 'AskUserQuestion' to present the menu:"
+              echo "     - 'Continue Execution (Start next phase)'"
+              echo "     - 'Pause / Review'"
+              echo "  2. If 'Continue' is selected, IMMEDIATELY invoke the 'Skill' tool (name='planning-with-files') OR start executing the next phase manually."
               echo "</system-reminder>"
             elif echo "$OUTPUT" | grep -q "EVENT: PLAN_READY"; then
               echo ""
@@ -96,8 +95,10 @@ hooks:
               echo "ℹ️ SYSTEM NOTICE: Plan detected (0 phases complete)."
               echo "If you have finished creating/updating the plan:"
               echo "👉 STOP IMMEDIATELY. Do not start Phase 1."
-              echo "👉 Present the TUI Menu to the user to confirm execution."
-              echo "👉 PROPOSE the command '/planning-with-files:execute {output_dir}' using 'RunCommand'."
+              echo "👉 Use 'AskUserQuestion' to present the menu:"
+              echo "   - 'Execute Plan (Start Phase 1)'"
+              echo "   - 'Review Plan'"
+              echo "👉 If 'Execute' is selected, invoke 'Skill' tool (name='planning-with-files') OR start executing Phase 1."
               echo "</system-reminder>"
             fi
   Stop:
@@ -179,7 +180,7 @@ Your goal is to execute complex coding tasks by maintaining a PERSISTENT STATE i
     -   **GOAL**: ONLY create/update the plan.
     -   **FORBIDDEN**: DO NOT execute any tasks. DO NOT create code files (except plan files).
     -   **STOP**: Terminate immediately after writing the plan files.
-2.  **Execute** (Triggered by arg `execute` or command `/planning-with-files:execute`):
+2.  **Execute** (Triggered by arg `execute` or command `/planning-with-files execute`):
     -   **Arguments**: `execute [output_dir]`
     -   **VISUAL**: Start output with `[✔ Optimize] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
     -   **DIRECTORY CONTEXT**:
@@ -210,8 +211,12 @@ Your goal is to execute complex coding tasks by maintaining a PERSISTENT STATE i
             4.  **ONLY THEN** present the TUI Menu.
     -   **INTERACTIVE HANDOFF (MANDATORY)**:
         -   You MUST pause after updating `progress.md` and present options.
-        -   **Zero-Friction (Tab-to-Execute)**: IMMEDIATELY use `RunCommand` to propose the default next step.
-        -   **DO NOT** ask the user to type "continue/next" or use `AskUserQuestion` unless explicitly requested.
+        -   **Use `AskUserQuestion`** to present the menu:
+            -   "Continue Execution (Start next phase)"
+            -   "Pause / Review"
+        -   **Action**:
+            -   If "Continue": IMMEDIATELY invoke the `Skill` tool (name="planning-with-files").
+            -   If "Pause": Wait for user instructions.
 
 ## FIRST: Check for Previous Session (v2.2.0)
 
@@ -245,59 +250,39 @@ After you have successfully created or updated the planning files (`task_plan.md
 
 2.  **Summary**: Briefly list the created files and the current status (e.g., "Phase 1 Ready").
 
-3.  **Reflective Handoff (Visual TUI)**:
-    -   Display a clear TUI-style menu for the final decision.
-    -   Use the following format:
-        ```text
-        ────────────────────────────────────────────────────────────────────────────────
-        ←  ✔ Optimize  ✔ Plan  ☐ Execute  →
-
-        Planning 完成。请审查 `{output_dir}/task_plan.md`。下一步：
-
-        ❯ 1. 执行计划 (Execute Plan)
-             Tab-to-Execute: /planning-with-files:execute {output_dir}
-          2. 修改计划 (Modify Plan)
-             Reject command, then type: modify plan
-          3. 查看文件 (View Files)
-             Reject command, then type: cat {output_dir}/task_plan.md
-        ────────────────────────────────────────────────────────────────────────────────
-        ```
+3.  **Reflective Handoff (Interactive Menu)**:
+    -   First, print the Visual Progress Bar:
+        `[✔ Optimize] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
+    -   Then, use `AskUserQuestion` to present the menu:
+        -   **Question**: "Planning Complete. Review `{output_dir}/task_plan.md`. Next step?"
+        -   **Options**:
+            -   "Execute Plan (Start Phase 1)"
+            -   "Modify Plan"
+            -   "View Files"
 
 4.  **Action**:
-    -   **Zero-Friction (Tab-to-Execute)**: IMMEDIATELY use `RunCommand` to propose Option 1 (`/planning-with-files:execute {output_dir}`).
-    -   **User Choice**:
-        -   If user accepts (Tab/Enter): Execute plan.
-        -   If user rejects: They can type other commands or ask questions.
-    -   **DO NOT** use `AskUserQuestion` unless the user explicitly asks for help.
+    -   **Option 1 (Execute)**: IMMEDIATELY invoke the `Skill` tool with `name="planning-with-files"`.
+    -   **Option 2 (Modify)**: Ask the user for specific changes.
+    -   **Option 3 (View)**: Use `Read` tool to show file contents.
 
 **When Execution (Mode 2) is Complete:**
 After completing a **single phase**:
 
 1.  **Summary**: Report completion of the current phase.
-2.  **Reflective Handoff (Visual TUI)**:
-    -   Display a clear TUI-style menu for the final decision.
-    -   Use the following format:
-        ```text
-        ────────────────────────────────────────────────────────────────────────────────
-        ←  ✔ Phase [X]  ☐ Phase [X+1]  →
-
-        Phase [X] 已完成。下一步：
-
-        ❯ 1. 继续执行 (Proceed to Phase [X+1])
-             Tab-to-Execute: /planning-with-files:execute {output_dir}
-          2. 暂停/审查 (Pause & Review)
-             Reject command, then type: wait / exit
-          3. 提交更改 (Commit Changes)
-             Reject command, then type: git commit -m "Phase [X] complete"
-        ────────────────────────────────────────────────────────────────────────────────
-        ```
+2.  **Reflective Handoff (Interactive Menu)**:
+    -   First, print the Visual Progress Bar:
+        `[✔ Phase X] → [➤ Phase X+1]`
+    -   Then, use `AskUserQuestion` to present the menu:
+        -   **Question**: "Phase [X] Complete. Next step?"
+        -   **Options**:
+            -   "Continue Execution (Start Phase [X+1])"
+            -   "Pause / Review"
+            -   "Commit Changes"
 
 3.  **Action**:
-    -   **Zero-Friction (Tab-to-Execute)**: IMMEDIATELY use `RunCommand` to propose Option 1 (`/planning-with-files:execute {output_dir}`).
-    -   **User Choice**:
-        -   If user accepts (Tab/Enter): Proceed to next phase.
-        -   If user rejects: They can type `git commit` or simply ask to pause.
-    -   **DO NOT** use `AskUserQuestion` here. The proposed command IS the question.
+    -   **Option 1 (Continue)**: IMMEDIATELY invoke the `Skill` tool with `name="planning-with-files"`.
+    -   **Option 2 (Pause)**: Wait for user instructions.
+    -   **Option 3 (Commit)**: Use `RunCommand` to execute `git commit -m "Phase [X] complete"`.
 
 ## Important: Where Files Go
 
