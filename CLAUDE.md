@@ -11,13 +11,13 @@
 ### Step 1: Optimization (Prompt Engineering)
 1. **Command**: `/optimize-prompt`
 2. **Action**: 交互式优化提示词 -> 生成 `prompt.md`。
-3. **Handoff**: 展示 TUI -> 用户选择 "Proceed to Planning" -> 执行 `/planning-with-files:plan`。
+3. **Handoff**: 展示 Text-Based 菜单 -> 用户选择 "Proceed to Planning" -> 执行 `/planning-with-files:plan`。
 
 ### Step 2: Planning (Architecture & Task Breakdown)
 1. **Command**: `/planning-with-files:plan`
 2. **Action**: 读取 `prompt.md` -> 生成 `task_plan.md`, `findings.md`。
 3. **Constraint**: **STOP** immediately after file generation.
-4. **Handoff**: 展示 TUI -> 用户选择 "Execute Plan" -> 执行 `/planning-with-files:execute`。
+4. **Handoff**: 展示 Text-Based 菜单 -> 用户选择 "Execute Plan" -> 执行 `/planning-with-files:execute`。
 
 ### Step 3: Execution (The Loop - Task Phases)
 1. **Command**: `/planning-with-files:execute`
@@ -29,34 +29,24 @@
    - 更新文件后，系统会触发 "STOP EXECUTION NOW" 警告。
    - **必须** 响应此警告，停止思考，展示 TUI。
 5. **Handoff**:
-   - 展示 "Phase [X] Complete" TUI 菜单。
+   - 展示 "Phase [X] Complete" Text-Based 菜单。
    - 选项: [Continue], [Pause], [Review]。
 
 ## 3. TUI 交互标准 (Interaction Standards)
 
-### Modern TUI Handoff
-本项目使用 Modern TUI (Python + Rich) 进行交互。
-当完成一个 Phase 或 Step 时，**不要** 生成 ASCII 文本菜单。
-而是运行以下命令之一：
+### 3. TUI 交互标准 (Interaction Standards)
 
-1.  **Prompt 优化完成**:
-    `sh .claude/skills/modern-tui/scripts/run-tui.sh optimize-handoff --dir {output_dir}`
-
-2.  **规划完成 (Plan Ready)**:
-    `sh .claude/skills/modern-tui/scripts/run-tui.sh plan-handoff --file task_plan.md`
-
-3.  **Phase 完成 (Execution Handoff)**:
-    `sh .claude/skills/modern-tui/scripts/run-tui.sh execution-handoff --phase {phase_num} --file task_plan.md`
+本项目使用 Text-Based TUI (纯文本渲染) 进行交互，以确保在 Claude Code 环境下的兼容性和响应速度。
 
 **Agent 行为规范**:
-1.  运行上述命令。
-2.  等待命令结束。
-3.  读取命令的输出（Stdout 中会有 `SELECTED: value`）。
-4.  根据用户的选择执行下一步：
-    -   `proceed` -> 执行下一个 Phase。
-    -   `review` -> 展示文件内容。
-    -   `revise` -> 询问用户修改意见。
-    -   `pause` / `exit` -> 停止。
+1.  **Phase 完成 (Execution Handoff)**:
+    -   直接在对话框中打印 ASCII 菜单。
+    -   菜单应包含当前状态和下一步选项。
+    -   **关键**: 使用 `RunCommand` 预填默认选项的指令。
+
+2.  **Zero-Friction (Tab-to-Execute)**:
+    -   Agent **必须** 在展示菜单后立即调用 `RunCommand`。
+    -   用户只需按 Tab/Enter 即可执行。
 
 ## 4. 验证与强制机制 (Enforcement)
 - **Hook Verification**: 每次 `Write` 操作后，`check-complete.sh` 会自动运行。

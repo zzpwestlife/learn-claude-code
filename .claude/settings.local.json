@@ -16,7 +16,10 @@
       "Bash(/Users/joeyzou/Code/OpenSource/learn-claude-code/.claude/skills/review-code/scripts/get-diff.sh)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(bash verify.sh)"
+      "Bash(bash verify.sh)",
+      "Bash(sh .claude/skills/modern-tui/scripts/run-tui.sh optimize-handoff --dir tasks/fibonacci)",
+      "Bash(sh .claude/skills/modern-tui/scripts/run-tui.sh plan-handoff --file tasks/fibonacci/task_plan.md)",
+      "Bash(sh .claude/skills/modern-tui/scripts/run-tui.sh optimize-handoff --dir fibonacci)"
     ]
   }
 }

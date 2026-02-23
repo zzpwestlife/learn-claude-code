@@ -23,13 +23,12 @@ hooks:
             # Find project root by walking up to find .claude
             d="$PWD"; ROOT_DIR=""; while [ "$d" != "/" ]; do if [ -d "$d/.claude" ]; then ROOT_DIR="$d"; break; fi; d=$(dirname "$d"); done; if [ -z "$ROOT_DIR" ]; then ROOT_DIR="$PWD"; fi
             
-            SCRIPT_DIR="$ROOT_DIR/.claude/skills/planning-with-files/scripts"
-            CHECK_SCRIPT="$SCRIPT_DIR/check-complete.sh"
+            CHECK_SCRIPT="$ROOT_DIR/.claude/lib/check_complete.py"
             
             # Fallback logic if script not found via relative path
             if [ ! -f "$CHECK_SCRIPT" ]; then
-                if [ -f "$HOME/.claude/skills/planning-with-files/scripts/check-complete.sh" ]; then
-                    CHECK_SCRIPT="$HOME/.claude/skills/planning-with-files/scripts/check-complete.sh"
+                if [ -f "$HOME/.claude/lib/check_complete.py" ]; then
+                    CHECK_SCRIPT="$HOME/.claude/lib/check_complete.py"
                 fi
             fi
             
@@ -58,7 +57,7 @@ hooks:
             
             # Run check script safely
             if [ -f "$CHECK_SCRIPT" ]; then
-                OUTPUT=$(sh "$CHECK_SCRIPT" "$PLAN_FILE" 2>/dev/null || true)
+                OUTPUT=$(python3 "$CHECK_SCRIPT" "$PLAN_FILE" 2>/dev/null || true)
             else
                 OUTPUT=""
             fi
@@ -79,37 +78,19 @@ hooks:
     - hooks:
         - type: command
           command: |
-            SCRIPT_DIR="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/skills/planning-with-files}/scripts"
-
-            IS_WINDOWS=0
-            if [ "${OS-}" = "Windows_NT" ]; then
-              IS_WINDOWS=1
-            else
-              UNAME_S="$(uname -s 2>/dev/null || echo '')"
-              case "$UNAME_S" in
-                CYGWIN*|MINGW*|MSYS*) IS_WINDOWS=1 ;;
-              esac
-            fi
+            # Find project root
+            d="$PWD"; ROOT_DIR=""; while [ "$d" != "/" ]; do if [ -d "$d/.claude" ]; then ROOT_DIR="$d"; break; fi; d=$(dirname "$d"); done; if [ -z "$ROOT_DIR" ]; then ROOT_DIR="$PWD"; fi
+            
+            CHECK_SCRIPT="$ROOT_DIR/.claude/lib/check_complete.py"
             
             # Check completion status on session stop
-            sh "$SCRIPT_DIR/check-complete.sh" "task_plan.md" 2>/dev/null | grep -q "ALL PHASES COMPLETE"
-            if [ $? -eq 0 ]; then
-                echo ""
-                echo "🎉 **Plan Execution Complete!**"
-                echo "👉 Please run \`/review-code\` to proceed."
-            fi
-
-            if [ "$IS_WINDOWS" -eq 1 ]; then
-              if command -v pwsh >/dev/null 2>&1; then
-                pwsh -ExecutionPolicy Bypass -File "$SCRIPT_DIR/check-complete.ps1" 2>/dev/null ||
-                powershell -ExecutionPolicy Bypass -File "$SCRIPT_DIR/check-complete.ps1" 2>/dev/null ||
-                sh "$SCRIPT_DIR/check-complete.sh"
-              else
-                powershell -ExecutionPolicy Bypass -File "$SCRIPT_DIR/check-complete.ps1" 2>/dev/null ||
-                sh "$SCRIPT_DIR/check-complete.sh"
-              fi
-            else
-              sh "$SCRIPT_DIR/check-complete.sh"
+            if [ -f "$CHECK_SCRIPT" ]; then
+                python3 "$CHECK_SCRIPT" "task_plan.md" 2>/dev/null | grep -q "ALL PHASES COMPLETE"
+                if [ $? -eq 0 ]; then
+                    echo ""
+                    echo "🎉 **Plan Execution Complete!**"
+                    echo "👉 Please run \`/review-code\` to proceed."
+                fi
             fi
 ---
 
@@ -187,26 +168,6 @@ Your goal is to execute complex coding tasks by maintaining a PERSISTENT STATE i
         -   You MUST pause after updating `progress.md` and present options.
         -   **Zero-Friction (Tab-to-Execute)**: IMMEDIATELY use `RunCommand` to propose the default next step.
         -   **DO NOT** ask the user to type "continue/next" or use `AskUserQuestion` unless explicitly requested.
-
-## FIRST: Check for Previous Session (v2.2.0)
-
-**Before starting work**, check for unsynced context from a previous session:
-
-```bash
-# Linux/macOS
-$(command -v python3 || command -v python) ${CLAUDE_PLUGIN_ROOT}/scripts/session-catchup.py "$(pwd)"
-```
-
-```powershell
-# Windows PowerShell
-& (Get-Command python -ErrorAction SilentlyContinue).Source "$env:USERPROFILE\.claude\skills\planning-with-files\scripts\session-catchup.py" (Get-Location)
-```
-
-If catchup report shows unsynced context:
-1. Run `git diff --stat` to see actual code changes
-2. Read current planning files
-3. Update planning files based on catchup + git diff
-4. Then proceed with task
 
 ## Workflow Handoff (Zero-Friction + User Control)
 
