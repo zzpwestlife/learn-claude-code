@@ -61,7 +61,7 @@ If the change touches more than 3 files or crosses multiple modules, run a plann
 *   **Architecture**: Core logic isolation, clear layering
 
 **Output Format:**
-1.  **Visual Progress**: Start output with `[✔ Optimize] → [✔ Plan] → [✔ Execute] → [➤ Review] → [Changelog] → [Commit]`
+1.  **Visual Progress**: Start output with `[✔ Optimize] → [✔ Plan] → [✔ Execute] → [➤ Review] → [Changelog]`
 2.  Output Markdown report in English containing: Summary, Critical Issues, Improvement Suggestions, Code Style & Conventions, Positive Highlights.
 3.  **Save Report**: If `output_dir` is defined, save the review report to `output_dir/review_report.md`.
 4.  Provide specific code snippets and line numbers when possible.

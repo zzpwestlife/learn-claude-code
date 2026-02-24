@@ -35,14 +35,15 @@
       "Write",
       "Edit",
       "MultiEdit",
-      "Bash(git:add:*)",
-      "Bash(git:commit:*)"
+      "Bash(git:add:*)"
     ],
     "deny": [
       "Read(./.env*)",
       "Read(*.pem)",
       "Read(*.key)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(git:commit:*)",
+      "Bash(git:push:*)"
     ]
   }
 }

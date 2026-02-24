@@ -74,8 +74,8 @@ hooks:
               echo "✅ SYSTEM NOTICE: All phases in task_plan.md are complete."
               echo "👉 ACTION REQUIRED: Present the TUI Menu for completion."
               echo "  1. Display the Visual TUI Handoff menu (All Phases Complete)."
-              echo "  2. Use 'AskUserQuestion' to get confirmation."
-              echo "  3. If confirmed, PROPOSE the next step (e.g. '/review-code') or start it manually."
+              echo "  2. Use 'AskUserQuestion' to present arrow-key choices."
+              echo "  3. After selection, use 'RunCommand' to propose the chosen next step (e.g. '/review-code')."
               echo "</system-reminder>"
             elif echo "$OUTPUT" | grep -q "EVENT: PHASE_COMPLETE"; then
               echo ""
@@ -84,10 +84,10 @@ hooks:
               echo "You have completed a phase. You MUST STOP NOW."
               echo "DO NOT proceed to the next phase."
               echo "👉 ACTION REQUIRED: Present the TUI Menu for Phase Completion."
-              echo "  1. Use 'AskUserQuestion' to present the menu:"
+              echo "  1. Use 'AskUserQuestion' to present arrow-key choices:"
               echo "     - 'Continue Execution (Start next phase)'"
               echo "     - 'Pause / Review'"
-              echo "  2. If 'Continue' is selected, IMMEDIATELY invoke the 'Skill' tool (name='planning-with-files') OR start executing the next phase manually."
+              echo "  2. If 'Continue' is selected, use 'RunCommand' to propose /planning-with-files execute."
               echo "</system-reminder>"
             elif echo "$OUTPUT" | grep -q "EVENT: PLAN_READY"; then
               echo ""
@@ -95,10 +95,10 @@ hooks:
               echo "ℹ️ SYSTEM NOTICE: Plan detected (0 phases complete)."
               echo "If you have finished creating/updating the plan:"
               echo "👉 STOP IMMEDIATELY. Do not start Phase 1."
-              echo "👉 Use 'AskUserQuestion' to present the menu:"
+              echo "👉 Use 'AskUserQuestion' to present arrow-key choices:"
               echo "   - 'Execute Plan (Start Phase 1)'"
               echo "   - 'Review Plan'"
-              echo "👉 If 'Execute' is selected, invoke 'Skill' tool (name='planning-with-files') OR start executing Phase 1."
+              echo "👉 If 'Execute' is selected, use 'RunCommand' to propose /planning-with-files execute."
               echo "</system-reminder>"
             fi
   Stop:
@@ -215,7 +215,7 @@ Your goal is to execute complex coding tasks by maintaining a PERSISTENT STATE i
             -   "Continue Execution (Start next phase)"
             -   "Pause / Review"
         -   **Action**:
-            -   If "Continue": IMMEDIATELY invoke the `Skill` tool (name="planning-with-files").
+            -   If "Continue": use `RunCommand` to propose `/planning-with-files execute`.
             -   If "Pause": Wait for user instructions.
 
 ## FIRST: Check for Previous Session (v2.2.0)
@@ -252,7 +252,7 @@ After you have successfully created or updated the planning files (`task_plan.md
 
 3.  **Reflective Handoff (Interactive Menu)**:
     -   First, print the Visual Progress Bar:
-        `[✔ Optimize] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
+        `[✔ Optimize] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog]`
     -   Then, use `AskUserQuestion` to present the menu:
         -   **Question**: "Planning Complete. Review `{output_dir}/task_plan.md`. Next step?"
         -   **Options**:
@@ -261,12 +261,13 @@ After you have successfully created or updated the planning files (`task_plan.md
             -   "View Files"
 
 4.  **Action**:
-    -   **Option 1 (Execute)**: IMMEDIATELY invoke the `Skill` tool with `name="planning-with-files"`.
+    -   **Option 1 (Execute)**: use `RunCommand` to propose `/planning-with-files execute {output_dir}`.
     -   **Option 2 (Modify)**: Ask the user for specific changes.
     -   **Option 3 (View)**: Use `Read` tool to show file contents.
 
 **When Execution (Mode 2) is Complete:**
-After completing a **single phase**:
+
+### Case A: Single Phase Complete (More phases remain)
 
 1.  **Summary**: Report completion of the current phase.
 2.  **Reflective Handoff (Interactive Menu)**:
@@ -277,12 +278,30 @@ After completing a **single phase**:
         -   **Options**:
             -   "Continue Execution (Start Phase [X+1])"
             -   "Pause / Review"
-            -   "Commit Changes"
 
 3.  **Action**:
-    -   **Option 1 (Continue)**: IMMEDIATELY invoke the `Skill` tool with `name="planning-with-files"`.
+    -   **Option 1 (Continue)**: use `RunCommand` to propose `/planning-with-files execute {output_dir}`.
     -   **Option 2 (Pause)**: Wait for user instructions.
-    -   **Option 3 (Commit)**: Use `RunCommand` to execute `git commit -m "Phase [X] complete"`.
+
+### Case B: All Phases Complete (Project Done)
+
+1.  **Summary**: Report project completion.
+2.  **Reflective Handoff (Interactive Menu)**:
+    -   First, print the Visual Progress Bar:
+        `[✔ Execute] → [➤ Changelog] → [Commit] → [Done]`
+    -   Then, use `AskUserQuestion` to present the menu:
+        -   **Question**: "Project Complete! Next step?"
+        -   **Options**:
+            -   "Generate Changelog (Recommended)"
+            -   "Generate Commit Message"
+            -   "Update README"
+            -   "Done"
+
+3.  **Action**:
+    -   **Option 1 (Changelog)**: use `RunCommand` to propose `/changelog-generator {output_dir}`.
+    -   **Option 2 (Commit)**: use `RunCommand` to propose `/commit-message-generator`.
+    -   **Option 3 (README)**: Ask user for details or propose an edit.
+    -   **Option 4 (Done)**: Output summary and exit.
 
 ## Important: Where Files Go
 

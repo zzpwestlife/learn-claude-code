@@ -52,10 +52,11 @@ Use this workflow when:
 - Expected input/output format
 
 **Step 3**: User confirmation checkpoint
-- Use `AskUserQuestion` tool with options:
-  - "满意，进入规划 (Run /planning-with-files:plan)"
-  - "满意，结束 (Finish)"
-  - "不满意，需要修改 (Revise)"
+- Use `AskUserQuestion` to provide arrow-key choices:
+  - "满意，进入规划"
+  - "满意，结束"
+  - "不满意，需要修改"
+- If user chooses "满意，进入规划", use `RunCommand` to propose `/planning-with-files plan`.
 - **Critical**: Do NOT auto-proceed without user approval
 
 ### Phase 2: File-Based Planning (Skill: `/planning-with-files:plan`)
@@ -111,7 +112,9 @@ Use this workflow when:
   - Deliverables checklist
   - Constitution compliance verification
   - Test results summary
-  - Optional next steps (formatting, committing, etc.)
+- **Reflective Handoff (Menu)**:
+  - Use `AskUserQuestion` to present options (Changelog > Commit > README > Done).
+  - Recommended Next Step: `/changelog-generator`
 
 ## Verification
 
@@ -167,7 +170,7 @@ Assistant: 生成交付报告
   ├─ Deliverables: demo_math.py ✅, test_demo_math.py ✅
   ├─ Constitution Compliance: 9/9 ✅
   ├─ Test Results: 5/5 passed
-  ├─ Optional: pip install pytest, git commit
+  ├─ Optional: pip install pytest
 ```
 
 ## Notes

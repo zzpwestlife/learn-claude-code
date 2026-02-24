@@ -77,15 +77,15 @@ allowed-tools:
 3.  **保存**: 将优化后的 Prompt 保存到用户指定的目录下的 `prompt.md` 文件中（例如 `fib/prompt.md`）。如果目录未指定，则保存到当前目录。
 4.  **解释**: 简要说明优化点 (Use structured "Optimization Notes" format with icons).
 5.  **Reflective Handoff (Interactive Menu)**:
-    -   Use `AskUserQuestion` to present the final decision.
+    -   Use `AskUserQuestion` to present arrow-key choices.
     -   **Question**: "Prompt 优化完成并已保存至 `{output_dir}/prompt.md`。下一步？"
     -   **Options**:
-        -   "Proceed to Planning (Start planning-with-files skill)"
-        -   "Revise Prompt (Provide feedback)"
-
+        -   "Proceed to Planning"
+        -   "Revise Prompt"
+    
 6.  **Action**:
-    -   **Option 1 (Proceed)**: IMMEDIATELY invoke the `Skill` tool with `name="planning-with-files"`.
-    -   **Option 2 (Revise)**: Ask the user for specific feedback or revisions.
+    -   **Proceed**: Use `RunCommand` to propose `/planning-with-files plan {output_dir}`.
+    -   **Revise**: Ask the user for specific feedback or revisions.
 
 ## 第四阶段：后续行动 (Follow-up)
 (Merged into Phase 3)

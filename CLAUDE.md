@@ -11,13 +11,13 @@
 ### Step 1: Optimization (Prompt Engineering)
 1. **Command**: `/optimize-prompt`
 2. **Action**: 交互式优化提示词 -> 生成 `prompt.md`。
-3. **Handoff**: 展示 Text-Based 菜单 -> 用户选择 "Proceed to Planning" -> 执行 `/planning-with-files plan`。
+3. **Handoff**: 展示 Text-Based 菜单 -> 使用 `AskUserQuestion` 提供箭头选择 -> 选择后用 `RunCommand` 提议 `/planning-with-files plan`。
 
 ### Step 2: Planning (Architecture & Task Breakdown)
 1. **Command**: `/planning-with-files plan`
 2. **Action**: 读取 `prompt.md` -> 生成 `task_plan.md`, `findings.md`。
 3. **Constraint**: **STOP** immediately after file generation.
-4. **Handoff**: 使用 `AskUserQuestion` 展示菜单 -> 用户选择 "Execute Plan" -> 执行 `/planning-with-files execute`。
+4. **Handoff**: 使用 `AskUserQuestion` 提供箭头选择 -> 选择后用 `RunCommand` 提议 `/planning-with-files execute`。
 
 ### Step 3: Execution (The Loop - Task Phases)
 1. **Command**: `/planning-with-files execute`
@@ -29,20 +29,20 @@
    - 更新文件后，系统会触发 "STOP EXECUTION NOW" 警告。
    - **必须** 响应此警告，停止思考，展示 TUI。
 5. **Handoff**:
-   - 使用 `AskUserQuestion` 展示 "Phase [X] Complete" 菜单。
-   - 选项: [Continue], [Pause], [Review]。
+   - 使用 `AskUserQuestion` 提供箭头选择。
+   - 若选择继续，用 `RunCommand` 提议 `/planning-with-files execute`。
 
 ## 3. TUI 交互标准 (Interaction Standards)
 
 ### Execution Step TUI (Task Phase Handoff)
-All Task Phase 完成后的 Handoff 必须使用 `AskUserQuestion` 展示交互式菜单：
+All Task Phase 完成后的 Handoff 必须使用 `AskUserQuestion` 供箭头选择：
 
 1. **Continue Execution** (Proceed to next phase)
-   - Invoke `Skill` tool (planning-with-files) or execute next phase manually.
+   - Use `RunCommand` to propose `/planning-with-files execute`.
 2. **Pause / Review**
    - Wait for user instructions.
 3. **Commit Changes**
-   - Run `git commit`.
+   - (Removed per user request)
 
 ## 4. 验证与强制机制 (Enforcement)
 - **Hook Verification**: 每次 `Write` 操作后，`check-complete.sh` 会自动运行。
