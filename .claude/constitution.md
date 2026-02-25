@@ -1,9 +1,9 @@
 # Project Constitution (Universal Core Version)
 
-**Version: 2.4, Approved Date: 2026-02-24**
+**Version: 2.5, Approved Date: 2026-02-25**
 
 This document defines the unshakeable core development principles of this project. All code modifications must strictly adhere to these principles.
-This constitution applies to all technology stacks under this project (Go, PHP, Python, Frontend, DevOps, etc.). For language-specific implementation details, please refer to the [Appendices](#appendices).
+This constitution applies to all technology stacks under this project (Go, Frontend, DevOps, etc.). For language-specific implementation details, please refer to the [Appendices](#appendices).
 
 ---
 
@@ -110,7 +110,7 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 
 - **10.1 (Completeness):** Delivered code must be production-ready (Anti-Hackathon). Strictly prohibit leaving `TODO`s.
 - **10.2 (Environmental Hygiene):** Must clean up temporary files after operations end.
-- **10.3 (Branch Standards):** Strictly prohibit working directly on main branch (`main`/`master`).
+- **10.3 (Branch Standards):** Strictly prohibit leaking sensitive information (PII, Credentials) in logs, error messages, or test data.
 - **10.4 (Edge Case Handling):** Handle errors gracefully. No "Happy Path" only assumptions.
 - **10.5 (Staff Engineer Standard):** Ask yourself: "Would a staff engineer approve this?" Verify behavior changes, check logs, and demonstrate correctness before marking as done.
 
@@ -146,8 +146,6 @@ Any plans or code that violate "Non-Negotiable" clauses should be deemed "uncons
 ### Appendices
 
 - [Go Language Implementation Details](./docs/constitution/go_annex.md)
-- [PHP Language Implementation Details (Lumen)](./docs/constitution/php_annex.md)
-- [Python Language Implementation Details](./docs/constitution/python_annex.md)
 - (To be added: Frontend implementation details)
 
 ---

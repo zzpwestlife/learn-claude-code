@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Learn Claude Code Installation Script (Cross-Platform Enhanced)
+# Learn Claude Code Installation Script (Go-Only Edition)
 # Usage: ./install.sh [Target Project Path]
 
 set -e
@@ -276,33 +276,23 @@ handle_makefile_conflict() {
     # Prompt logic
     if [[ "$OS_TYPE" == "macOS" ]] && command -v osascript >/dev/null 2>&1; then
         BTN_CLICKED=$(osascript -e 'try
-            display dialog "Makefile 已存在: '"$(basename "$dest_file")"'\n\n请选择操作：" buttons {"跳过", "覆盖", "智能合并"} default button "智能合并" with icon caution
+            display dialog "Makefile 已存在: '"$(basename "$dest_file")"'\n\n请选择操作：" buttons {"跳过", "覆盖"} default button "跳过" with icon caution
             return button returned of result
         on error
             return "跳过"
         end try' 2>/dev/null)
         
-        if [ "$BTN_CLICKED" == "覆盖" ]; then action="overwrite";
-        elif [ "$BTN_CLICKED" == "智能合并" ]; then action="merge"; fi
+        if [ "$BTN_CLICKED" == "覆盖" ]; then action="overwrite"; fi
     else
-        echo -e "${YELLOW}Makefile exists. Choose: [s]Skip / [o]Overwrite / [m]Merge (Default: m)${NC}"
+        echo -e "${YELLOW}Makefile exists. Choose: [s]Skip / [o]Overwrite (Default: s)${NC}"
         read -r USER_RESP
         if [[ "$USER_RESP" =~ ^[Oo]$ ]]; then action="overwrite";
-        elif [[ "$USER_RESP" =~ ^[Ss]$ ]]; then action="skip";
-        else action="merge"; fi
+        else action="skip"; fi
     fi
     
     if [ "$action" == "overwrite" ]; then
         cp -v "$src" "$dest_file"
         log "INFO" "Makefile overwritten."
-    elif [ "$action" == "merge" ]; then
-        log "INFO" "Attempting smart merge for Makefile..."
-        if command -v python3 >/dev/null 2>&1; then
-            python3 "$SOURCE_DIR/scripts/merge_makefile.py" "$src" "$dest_file"
-            log "SUCCESS" "Makefile merged."
-        else
-            log "ERROR" "python3 not found, cannot merge. Skipping."
-        fi
     else
         log "INFO" "Makefile skipped."
     fi
@@ -312,7 +302,7 @@ handle_makefile_conflict() {
 # 4. Main Execution
 # ==========================================
 
-log "INFO" "🚀 Learn Claude Code Integration Wizard"
+log "INFO" "🚀 Learn Claude Code Integration Wizard (Go Edition)"
 
 detect_os
 check_tools
@@ -347,45 +337,9 @@ log "SUCCESS" "Target Project: $TARGET_DIR"
 # Initialize Backup after Target is known
 init_backup
 
-# --- Language Selection ---
-LANG_CHOICE=""
-DETECTED_LANG=""
-
-if [ -f "$TARGET_DIR/go.mod" ]; then DETECTED_LANG="Go";
-elif [ -f "$TARGET_DIR/composer.json" ]; then DETECTED_LANG="PHP";
-elif [ -f "$TARGET_DIR/requirements.txt" ] || [ -f "$TARGET_DIR/pyproject.toml" ]; then DETECTED_LANG="Python";
-fi
-
-if [ -n "$DETECTED_LANG" ]; then
-    log "INFO" "Detected language: $DETECTED_LANG"
-fi
-
-if [[ "$OS_TYPE" == "macOS" ]] && command -v osascript >/dev/null 2>&1; then
-    LANG_CHOICE=$(osascript -e 'try
-        choose from list {"Go", "PHP", "Python"} with prompt "Select Project Language:" default items {"'"${DETECTED_LANG:-Go}"'"} OK button name "OK" cancel button name "Cancel"
-    on error
-        return "Cancel"
-    end try' 2>/dev/null)
-    
-    if [ "$LANG_CHOICE" == "false" ] || [ "$LANG_CHOICE" == "Cancel" ]; then
-        log "WARN" "Operation cancelled by user."
-        exit 0
-    fi
-else
-    echo -e "Select Language (Go/PHP/Python) [Default: ${DETECTED_LANG:-Go}]:"
-    read -r USER_INPUT
-    LANG_CHOICE="${USER_INPUT:-${DETECTED_LANG:-Go}}"
-fi
-
-# Normalize Language
-if [[ "$LANG_CHOICE" =~ ^[Gg][Oo]$ ]]; then PROFILE="go"; LANG_NAME="Go";
-elif [[ "$LANG_CHOICE" =~ ^[Pp][Hh][Pp]$ ]]; then PROFILE="php"; LANG_NAME="PHP";
-elif [[ "$LANG_CHOICE" =~ ^[Pp][Yy][Tt][Hh][Oo][Nn]$ ]]; then PROFILE="python"; LANG_NAME="Python";
-else
-    log "ERROR" "Unsupported language: $LANG_CHOICE"
-    exit 1
-fi
-
+# --- Language Selection (Forced to Go) ---
+PROFILE="go"
+LANG_NAME="Go"
 log "INFO" "Selected Profile: $LANG_NAME"
 
 # ==========================================
@@ -430,18 +384,8 @@ fi
 # 4. Copy Annex
 log "INFO" "Copying $LANG_NAME Annex..."
 ensure_dir "$TARGET_DIR/.claude/constitution"
-case "$LANG_NAME" in
-    "Go")
-        safe_copy "$SOURCE_DIR/.claude/constitution/go_annex.md" "$TARGET_DIR/.claude/constitution/"
-        safe_copy "$SOURCE_DIR/profiles/go/Makefile" "$TARGET_DIR/"
-        ;;
-    "PHP")
-        safe_copy "$SOURCE_DIR/.claude/constitution/php_annex.md" "$TARGET_DIR/.claude/constitution/"
-        ;;
-    "Python")
-        safe_copy "$SOURCE_DIR/.claude/constitution/python_annex.md" "$TARGET_DIR/.claude/constitution/"
-        ;;
-esac
+safe_copy "$SOURCE_DIR/.claude/constitution/go_annex.md" "$TARGET_DIR/.claude/constitution/"
+safe_copy "$SOURCE_DIR/profiles/go/Makefile" "$TARGET_DIR/"
 
 # 5. Copy Commands
 log "INFO" "Copying Commands..."
@@ -451,8 +395,6 @@ if ls "$SOURCE_DIR/.claude/commands/"*.md 1> /dev/null 2>&1; then
         safe_copy "$file" "$TARGET_DIR/.claude/commands/"
     done
 fi
-
-
 
 # 6. Copy Hooks
 log "INFO" "Copying Hooks..."
@@ -546,7 +488,7 @@ fi
 log "INFO" "Setting permissions..."
 chmod +x "$TARGET_DIR/.claude/hooks/"* 2>/dev/null || true
 if [ -d "$TARGET_DIR/.claude/skills" ]; then
-    find "$TARGET_DIR/.claude/skills" -type f \( -name "*.sh" -o -name "*.py" -o -name "*.js" \) -exec chmod +x {} \;
+    find "$TARGET_DIR/.claude/skills" -type f \( -name "*.sh" -o -name "*.js" -o -name "*.py" \) -exec chmod +x {} \;
 fi
 
 # ==========================================
@@ -566,7 +508,7 @@ fi
 
 if [ $ERRORS -eq 0 ]; then
     log "SUCCESS" "Installation verified successfully!"
-    echo -e "\n${GREEN}🎉 Learn Claude Code Integration Complete!${NC}"
+    echo -e "\n${GREEN}🎉 Learn Claude Code Integration Complete (Go Edition)!${NC}"
     echo -e "Check ${BLUE}$TARGET_DIR/CLAUDE.md${NC} to get started."
     echo -e "Installation log saved to: ${BLUE}$LOG_FILE${NC}"
 else

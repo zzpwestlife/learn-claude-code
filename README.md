@@ -1,7 +1,7 @@
 # Learn Claude Code & AI 原生开发工作流实战
 
 本项目包含两大部分核心内容：
-1. **Learn Claude Code 学习套件**：一套标准化的 Claude Code 配置工具与最佳实践。
+1. **Learn Claude Code 学习套件**：一套标准化的 Claude Code 配置工具与最佳实践（Go 语言专用版）。
 2. **AI 原生开发工作流实战课程**：极客时间《AI 原生开发工作流实战》课程的全套文档与资源。
 
 ---
@@ -23,9 +23,8 @@
 │   ├── commands/           # 自定义 Slash 命令
 │   ├── hooks/              # 自动化钩子
 │   └── skills/             # 扩展技能
-├── profiles/               # 多语言配置模板 (Go/PHP/Python)
+├── profiles/               # 语言配置模板 (Go)
 ├── constitution.md         # 项目核心宪法文件
-├── AGENTS.md               # 项目上下文总入口 (Context Entry)
 ├── CLAUDE.md               # Claude Code 兼容入口 (Redirect)
 ├── install.sh              # 自动化安装脚本
 └── README.md               # 项目说明文档
@@ -59,14 +58,55 @@
 
 ## 🛠 Learn Claude Code 学习套件 (Tool Suite)
 
-**Learn Claude Code** 是一个标准化的 Claude Code 配置套件，旨在帮助开发者快速将最佳实践集成到自己的项目中。
+**Learn Claude Code** 是一个标准化的 Claude Code 配置套件，旨在帮助开发者快速将最佳实践集成到自己的项目中。本版本经过精简重构，专注于 **Golang** 开发环境的优化。
 
 ### 核心特性
 
 1.  **规则基石**: `constitution.md` 定义了不可动摇的开发原则。
 2.  **角色化 Agent**: 预设 Architect, Code Reviewer 等专家角色。
-3.  **多语言支持**: 提供 Go, PHP, Python 的标准化配置模板 (`profiles/`)。
-4.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中。
+3.  **Golang 原生支持**: 提供深度优化的 Go 语言配置模板 (`profiles/go`)，集成 `gofmt`, `goimports`, `golangci-lint` 等工具链。
+4.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
+5.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中。
+
+### Golang 开发指南
+
+本套件为 Golang 项目提供了开箱即用的最佳实践配置。
+
+#### 1. 快速集成
+
+如果你已经克隆了本仓库，可以直接运行 `install.sh` 脚本。它会自动将配置安装到你的 Go 项目中。
+
+```bash
+# 用法: ./install.sh <你的目标 Go 项目路径>
+./install.sh ../my-go-project
+```
+
+#### 2. 构建与运行
+
+安装完成后，你的项目将获得标准化的 Makefile 支持（位于项目根目录）：
+
+- **构建项目**:
+  ```bash
+  make build
+  ```
+  该命令会编译项目并生成可执行文件。
+
+- **运行测试**:
+  ```bash
+  make test
+  ```
+  运行所有单元测试。
+
+- **代码格式化与检查**:
+  ```bash
+  make lint
+  ```
+  执行代码风格检查和静态分析。
+
+- **清理构建产物**:
+  ```bash
+  make clean
+  ```
 
 ### 评审与元信息约定
 
@@ -105,29 +145,6 @@ OUTPUT: <该文件对外提供的能力/接口/副作用>
 POS: <该文件在系统中的位置/角色>
 ```
 
-#### 快速实践：最小示例模块
-
-- 创建业务模块目录（示例）：`modules/example-module/`
-- 在模块目录中放置 `README.md`（按“模块 README 模板”填写 Role/Logic/Constraints 与 Submodules）
-- 在源码文件头部添加三行注释（按“源文件头部三行模板”填写 INPUT/OUTPUT/POS）
-- 提交前运行评审命令，确保模块元信息完整：参考 `.claude/commands/review-code.md`
-
-### 快速开始
-
-**本地集成（推荐）**
-
-如果你已经克隆了本仓库，可以直接运行 `install.sh` 脚本。它会自动检测目标项目的语言，并安装对应的配置文件。
-
-```bash
-# 用法: ./install.sh <你的目标项目路径>
-./install.sh ../my-awesome-project
-```
-
-脚本支持 **Smart Clean Root** 策略，将大部分配置隐藏在 `.claude/` 目录下，并支持 **Makefile 智能合并**。
-
-✅ **跨平台支持**：脚本自动识别 macOS/Linux 环境，适配 sed/grep 等工具差异。
-🛡️ **安全机制**：内置自动备份与回滚功能，安装失败自动恢复，详细日志记录在 `install_claude_code.log`。
-
 ### 🤖 智能引导工作流 (Smart Guided Workflow)
 
 本项目内置了一套无缝衔接的 AI 开发工作流，通过智能引导将**提示词优化**、**方案规划**、**代码实现**、**代码审查**、**变更日志**与**提交信息**串联起来。
@@ -139,26 +156,6 @@ POS: <该文件在系统中的位置/角色>
 3.  **`/review-code`**: 智能代码审查 -> 引导变更日志
 4.  **`/changelog-generator`**: 生成 CHANGELOG.md -> 引导提交信息
 5.  **`/commit-message-generator`**: 生成标准 Commit Message
-
-**技能自我进化 (Skill Architect)**:
-当你在使用任何工具时，系统会自动评估你的操作。如果你修复了一个 Bug、发现了一个更好的 Prompt 或创建了一个新工具，`Skill Architect` 会引导你将其沉淀下来。
-- **Forge**: 将新能力封装为标准 Skill。
-- **Refine**: 将经验（Fixes/Preferences）注入现有 Skill。
-- **Stitch**: 自动更新 Skill 文档，让工具越用越聪明。
-
-**进化示例**：
-```bash
-# 1. 创建新技能 (Forge)
-python3 .claude/skills/skill-architect/scripts/architect.py forge "video-downloader" --desc "视频下载工具"
-
-# 2. 沉淀经验 (Refine)
-# 当你发现下载某个网站需要特殊参数时，记录下来：
-python3 .claude/skills/skill-architect/scripts/architect.py refine "video-downloader" "fix" "下载 B 站视频时必须使用 --cookies-from-browser 参数"
-
-# 3. 结果
-# 系统会自动将这条经验写入 video-downloader/SKILL.md。
-# 下次 Agent 使用该技能时，会自动看到这条提示，避免踩坑。
-```
 
 **体验方式**：
 ```bash

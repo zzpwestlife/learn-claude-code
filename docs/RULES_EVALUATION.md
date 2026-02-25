@@ -12,12 +12,11 @@
 ### 1.1 结构与命名
 - **优点**: 两个文件结构清晰，使用了 Markdown 的标准层级。`CLAUDE.md` 的 "验证先行（Verification First）" 理念非常先进。
 - **缺点**: 
-    - `constitution.md` 的标题直接标注 "(适用于 Go 项目)"，这破坏了其作为"宪法"的通用性。宪法应当是跨语言的通用原则。
     - `CLAUDE.md` 中的命令部分 (`make ...`) 是硬编码的，对于非 Go 项目或不使用 Makefile 的项目不适用。
 
 ### 1.2 冗余与模块化
 - **问题**: 
-    - `constitution.md` 中混杂了通用原则（如 KISS, SOLID）和特定语言规范（如 `gofumpt`, `errgroup`）。这导致当引入 Python 或 Frontend 项目时，需要修改或复制整份宪法。
+    - `constitution.md` 中曾混杂了通用原则（如 KISS, SOLID）和特定语言规范。这导致维护困难。
     - **耦合度过高**: 核心原则与技术栈实现细节强耦合。
 
 **改进建议**:
@@ -46,7 +45,7 @@
 ## 3. 可扩展性与可维护性评估
 
 ### 3.1 架构适应性
-- **风险**: 当前架构对 Go 语言项目支持极好，但对多语言环境支持较差。
+- **风险**: 当前架构深度优化了 Go 语言支持，这符合项目聚焦 Golang 的战略。
 - **配置管理**: `CLAUDE.md` 缺乏版本号，虽然 `constitution.md` 有版本号，但缺乏两者之间的兼容性矩阵。
 
 ### 3.2 文档与协作
@@ -58,8 +57,8 @@
 ## 4. 公司级通用性适配
 
 ### 4.1 多团队/多项目适配
-- **现状**: 评分 **C**。目前的规则强绑定 Go 技术栈。
-- **目标**: 评分 **A**。支持 Backend (Go/Python/Java), Frontend (React/Vue), Mobile 等。
+- **现状**: 评分 **A**。目前的规则深度适配 Go 技术栈。
+- **目标**: 保持在 Golang 领域的最佳实践领先地位。
 
 ### 4.2 合规性
 - **建议**: 增加版权头 (License Header) 和开源合规性的检查要求。
@@ -70,15 +69,15 @@
 
 ### 阶段 1：解耦与重构（高优先级）
 1.  **重构 `constitution.md`**: 
-    - 剥离所有 Go 特定内容到 `constitution-go.md`。
+    - 剥离所有 Go 特定内容到 `docs/constitution/go_annex.md`。
     - 保留 10 大核心原则，并使其语言无关化。
 2.  **更新 `CLAUDE.md`**: 
     - 将命令部分改为模板或指向 `README.md`。
-    - 增强对多语言宪法的支持。
+    - 增强对 Go 语言宪法附录的支持。
 
 ### 阶段 2：增强与补全（中优先级）
 1.  **新增安全原则**: 在宪法中加入安全优先（Security First）条款。
-2.  **建立技术附录库**: 创建 `rules/go.md`, `rules/python.md`, `rules/frontend.md` 模板。
+2.  **完善技术附录**: 持续优化 `docs/constitution/go_annex.md`。
 
 ### 阶段 3：工具化（低优先级）
 1.  **Linter 集成**: 编写脚本自动检查代码是否符合宪法（如文件行数检查）。
@@ -89,5 +88,5 @@
 
 我们将立即执行 Phase 1 和 Phase 2 的部分内容：
 1.  创建通用版 `constitution.md`。
-2.  创建特定语言扩展 `docs/constitution/go-annex.md`。
+2.  创建特定语言扩展 `docs/constitution/go_annex.md`。
 3.  升级 `CLAUDE.md` 以适应新结构。

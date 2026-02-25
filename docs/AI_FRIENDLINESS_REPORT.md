@@ -1,6 +1,6 @@
 # 项目文档 "AI 友好度" 评估报告
 
-**评估日期**: 2026-01-28
+**评估日期**: 2026-02-25
 **评估对象**: `learn-claude-code` 项目内所有 Markdown 及相关文档文件
 **评估人**: Claude Code Agent
 
@@ -23,7 +23,7 @@
     *   关键术语和缩写应有定义或引用。
 
 4.  **机器可读格式 (Machine-Readable Format)**:
-    *   代码片段必须使用带语言标识的 Markdown 代码块 (e.g., \`\`\`python)。
+    *   代码片段必须使用带语言标识的 Markdown 代码块 (e.g., \`\`\`go)。
     *   命令和参数应使用内联代码格式 (e.g., `npm install`)。
     *   关键配置项和列表应使用结构化列表或表格。
 
@@ -46,7 +46,7 @@
     *   `.claude/skills/*/SKILL.md`: 技能定义。
 
 3.  **扩展文档 (Extended Documentation)**:
-    *   `docs/constitution/*_annex.md`: 语言特定实施细则。
+    *   `docs/constitution/go_annex.md`: Golang 实施细则。
     *   `docs/templates/*.md`: 模板文件。
 
 4.  **课程资料 (Course Material)**:
@@ -73,8 +73,7 @@
 ### 3.3 扩展文档
 | 文件 | AI 友好度 | 评价 | 优化建议 |
 | :--- | :--- | :--- | :--- |
-| **python_annex.md** | **优秀** | 条款清晰，代码规范具体 (Black, isort)，包含明确的禁止项。 | 无。 |
-| **php-7.0-app/README.md** | **良好** | 明确指出了 PHP 7.0 兼容性要求和 Docker 测试命令。 | 建议添加 `composer` 安装的具体命令示例。 |
+| **go_annex.md** | **优秀** | 条款清晰，代码规范具体 (gofmt, golangci-lint)，包含明确的禁止项。 | 无。 |
 
 ### 3.4 课程资料
 | 文件 | AI 友好度 | 评价 | 优化建议 |
@@ -90,7 +89,7 @@
 2.  **路径标准化**: 在所有文档中引用文件路径时，尽量使用相对于项目根目录的路径（如 `docs/constitution/go_annex.md`），避免使用绝对路径或模糊描述。
 
 ### 中优先级 (Medium Priority)
-3.  **代码块语言标识**: 扫描所有 Markdown 文件，确保每一个代码块 (\`\`\`) 后面都紧跟语言标识符 (如 `bash`, `python`, `go`)，这有助于 AI 正确解析和高亮代码。
+3.  **代码块语言标识**: 扫描所有 Markdown 文件，确保每一个代码块 (\`\`\`) 后面都紧跟语言标识符 (如 `bash`, `go`)，这有助于 AI 正确解析和高亮代码。
 4.  **关键词增强**: 在 Agent 的 `description` 字段中，显式添加 "触发关键词" (Trigger Keywords)，例如 "当用户提到 X, Y, Z 时使用此 Agent"。
 
 ### 低优先级 (Low Priority)
@@ -106,6 +105,5 @@
 
 **建议立即执行的行动**:
 1.  (已完成) 检查 Agent 文件 (`test-validator.md`, `code-scribe.md`)，补全 `<example>` 示例并修复上下文错误。
-2.  (已完成) 修复 `php-7.0-app/README.md` 安装说明缺失。
-3.  (已完成) 修复 `CONFIG_ANALYSIS_REPORT.md` 中的绝对路径和未标记代码块。
-4.  (持续进行) 确保 `install.sh` 安装的文档与仓库中最新版本保持一致。
+2.  (已完成) 修复 `CONFIG_ANALYSIS_REPORT.md` 中的绝对路径和未标记代码块。
+3.  (持续进行) 确保 `install.sh` 安装的文档与仓库中最新版本保持一致。
