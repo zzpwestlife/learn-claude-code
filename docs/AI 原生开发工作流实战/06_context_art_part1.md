@@ -21,7 +21,7 @@
 
 `CLAUDE.md` 的价值在于, 它将那些 高频、普适、关乎项目核心规范 的指令, 从需要开发者反复输入的 "动态提示", 沉淀为了 AI Agent 会自动遵循的 "静态配置". 这不仅仅是效率的提升, 更是 人机协作模式的规范化和工程化.
 
-![](../docs/assets/images/06_image.png)
+![](./assets/images/06_image.png)
 
 ## `AGENTS.md`: 从 "项目私约" 到 "行业标准" 的演进
 
@@ -45,7 +45,7 @@
 
 正是在这样的背景下,  `AGENTS.md` 应运而生. 它不再是某一家公司的 "私有协议", 而是由 OpenAI、Google 等多家 AI 巨头和社区共同倡议的一个 开放标准  (下图是截至 2025.10 月份, 支持 `AGENTS.md` 的 Code Agent 不完全列表).
 
-![](../docs/assets/images/06_image_2.png)
+![](./assets/images/06_image_2.png)
 
 它的核心理念极其简单而深刻:
 
@@ -92,7 +92,7 @@
 
 `AGENTS.md` 的愿景, 正是要 打破 "巴别塔", 成为一个跨 Agent 的 "行业标准". 无论你今天用的是 Claude Code, 明天用的是 Gemini CLI, 还是后天社区推出的新工具, 它们都应该能自动地、优先地去寻找并理解 `AGENTS.md`. 这也与我们专栏的核心思想不谋而合:  学习通用的方法论, 而非特定工具的 "奇技淫巧".
 
-![](../docs/assets/images/06_image_3.png)
+![](./assets/images/06_image_3.png)
 
 ### 如何看待 `CLAUDE.md` 与 `AGENTS.md` 的关系?
 
@@ -100,7 +100,7 @@
 
 我们必须先明确一个重要的技术事实: 截至目前, Claude Code 并没有在其文档中声明对 `AGENTS.md` 的原生、自动发现支持.  它的核心上下文机制, 依然是 `CLAUDE.md`. 因此, 现阶段的最佳实践, 是 让它们协同工作.
 
-![](../docs/assets/images/06_image_4.png)
+![](./assets/images/06_image_4.png)
 
 * `AGENTS.md` 作为 "公有契约": 将那些 通用的、不依赖于特定 Agent 功能 的核心指令放在 `AGENTS.md` 中. 例如项目技术栈、构建 / 测试命令、Git 规范等. 这份文件是你希望 任何 一个 AI Agent 都能理解的基础信息.
 * `CLAUDE.md` 作为 "私有扩展": 将那些 依赖于 Claude Code 特有高级功能 的指令放在 `CLAUDE.md` 中. 例如, 定义一个只有 Claude Code 才能理解的 Sub-agent , 或者配置一个 Hook.
@@ -136,7 +136,7 @@
 
 当你启动 Claude Code 时, 它会像剥洋葱一样, 从外到内, 依次加载四个不同层级的 `CLAUDE.md` 文件, 并将它们的内容拼接在一起, 形成最终的 "长期记忆".
 
-![](../docs/assets/images/06_image_5.png)
+![](./assets/images/06_image_5.png)
 
 上图以 Linux 路径为例, Windows 和 macOS 的 Enterprise Policy 路径有所不同
 
@@ -303,7 +303,7 @@
 
 此时,  /init 指令就派上了用场. 它是一个强大的脚手架 (Scaffolding) 或引导 (Bootstrap) 工具. 只需在项目根目录下运行 Claude Code, 并执行 /init 指令:
 
-![](../docs/assets/images/06_image_6.png)
+![](./assets/images/06_image_6.png)
 
 Claude Code 会立即分析你的项目情况, 并为你 生成一份包含标准结构和最佳实践建议的 `CLAUDE.md` 模板文件 , 我们以一个名为 go-web-demo 的 Go 空项目为例, 当在 Claude Code 中执行 /init 后, 它的执行过程如下:
 
@@ -536,7 +536,7 @@ The application supports these GitHub URL formats:
 
 **你只需在 Claude Code 的输入行, 以 # 开头, 直接写下你想永久记住的这条规则. 按下回车后, Claude Code 不会将这句话作为普通的提示发送给 AI Agent, 而是会立即弹出一个交互式菜单, 让你选择 要将这条 "记忆" 存放到哪个 `CLAUDE.md` 文件中**:
 
-![](../docs/assets/images/06_image_7.png)
+![](./assets/images/06_image_7.png)
 
 你只需用箭头选择 Project Memory , 按下回车, 这条规则就会被自动地、永久地 追加 到你选择的 `CLAUDE.md` 文件中了.
 
@@ -552,7 +552,7 @@ The application supports these GitHub URL formats:
 
 Claude Code 会给出一个 CLAUDE.md 文件列表, 并让你选择要编辑的 CLAUDE.md.
 
-![](../docs/assets/images/06_image_8.png)
+![](./assets/images/06_image_8.png)
 
 一旦选择, Claude Code 会立即 在你系统默认的文本编辑器  (由 $EDITOR 环境变量决定) 中, 打开该 `CLAUDE.md` 文件, 并等待你的编辑和调整.
 
@@ -665,7 +665,7 @@ Claude Code 会给出一个 CLAUDE.md 文件列表, 并让你选择要编辑的 
 
 ## 本讲小结
 
-![](../docs/assets/images/06_image_9.png)
+![](./assets/images/06_image_9.png)
 
 今天, 我们一起深入探索了 AI 原生开发中至关重要的 "上下文的艺术". 我们解决了 AI 的 "失忆症", 学会了如何为它构建一个持久的、智能的 "记忆宫殿".
 

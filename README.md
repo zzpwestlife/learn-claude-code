@@ -11,10 +11,11 @@
 ### 核心特性
 
 1.  **规则基石**: `.claude/constitution/constitution.md` 定义了不可动摇的开发原则。
-2.  **角色化 Agent**: 预设 Architect, Code Reviewer 等专家角色。
-3.  **Golang 原生支持**: 提供深度优化的 Go 语言配置模板 (`profiles/go`)，集成 `gofmt`, `goimports`, `golangci-lint` 等工具链。
-4.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
-5.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中。
+2.  **认知架构**: 深度集成**奥卡姆剃刀**（做减法）、**费曼技巧**（做加法）与**苏格拉底提问法**（做验证），构建自我调节的 AI 思维模型。
+3.  **角色化 Agent**: 预设 Architect, Code Reviewer 等专家角色。
+4.  **Golang 原生支持**: 提供深度优化的 Go 语言配置模板 (`.claude/profiles/go`)，集成 `gofmt`, `goimports`, `golangci-lint` 等工具链。
+5.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
+6.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中，支持 macOS 原生 GUI 交互与智能文件合并（Smart Merge）。
 
 ---
 
@@ -169,10 +170,23 @@ Claude Code 启动时会按照以下路径加载配置：
 graph TD
     A["CLAUDE.md<br/>(项目根目录入口)"] -->|"@.claude/AGENTS.md"| B[".claude/AGENTS.md<br/>(主配置)"]
     B -->|"@.claude/constitution/constitution.md"| C[".claude/constitution/constitution.md<br/>(核心原则)"]
-    B -->|"@.claude/rules/workflow-protocol.md"| D[".claude/rules/workflow-protocol.md<br/>(工作流规范)"]
-    B -->|"@.claude/rules/coding-standards.md"| E[".claude/rules/coding-standards.md<br/>(编码标准)"]
-    B -->|"@.claude/rules/operational-standards.md"| F[".claude/rules/operational-standards.md<br/>(操作规范)"]
+    C -->|"Art. 13 Cognitive Architecture"| D["认知架构 (Mental Models)"]
+    D -.->|"Occam's Razor"| E("减法: 存在性审查")
+    D -.->|"Feynman Technique"| F("加法: 费曼技巧")
+    D -.->|"Socratic Method"| G("验证: 第一性原理")
+    B -->|"@.claude/rules/workflow-protocol.md"| H[".claude/rules/workflow-protocol.md<br/>(工作流规范)"]
 ```
+
+### 🧠 认知架构 (Cognitive Architecture)
+
+本项目不仅仅是一堆工具，更是一套植入 AI 的思维操作系统。我们在 `constitution.md` 中强制执行以下心理模型：
+
+1.  **奥卡姆剃刀 (Occam's Razor)**: 严格审查每一个新增的 Agent、Skill 或依赖。如果不能证明其必要性，则予以剔除。
+2.  **费曼技巧 (Feynman Technique)**: 要求 Spec 和代码必须能被"大一新生"（AI 新手）看懂。如果 AI 生成错误，视为"教学"（Spec）失败。
+3.  **苏格拉底提问法 (Socratic Method)**: 通过不断的"为什么"追问，挑战隐含假设，回归第一性原理。
+
+*   📄 **白皮书**: [Mental Model Application Whitepaper](.claude/docs/mental_model_whitepaper.md)
+*   ✅ **检查清单**: [Mental Model Checklist](.claude/checklists/mental_model_checklist.md)
 
 ### 技能自我进化 (Skill Architect)
 

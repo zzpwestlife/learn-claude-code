@@ -34,7 +34,7 @@
 
 我们可以用一张图来更直观地感受这三大摩擦力是如何消耗我们的精力的:
 
-<img src="../docs/assets/images/00_image.png" style="zoom: 50%;" />
+<img src="./assets/images/00_image.png" style="zoom: 50%;" />
 
 
 
@@ -66,7 +66,7 @@
 
 其工作流如下图所示: 
 
-<img src="../docs/assets/images/00_image_2.png" style="zoom:50%;" />
+<img src="./assets/images/00_image_2.png" style="zoom:50%;" />
 
 
 
@@ -78,7 +78,7 @@
 
 其工作流演变为: 
 
-<img src="../docs/assets/images/00_image_3.png" style="zoom:50%;" />
+<img src="./assets/images/00_image_3.png" style="zoom:50%;" />
 
 看到了吗?开发者从一个事必躬亲的 "执行者", 转变为一个运筹帷幄的 "指挥家" 与 "审批者". AI 则从一个 "问答机器人" 进化为了一个能够自主探索的 "智能体". 这, 就是工作流的革命. 
 
@@ -90,7 +90,7 @@
 
 
 
-<img src="../docs/assets/images/00_image_4.png" style="zoom:50%;" />
+<img src="./assets/images/00_image_4.png" style="zoom:50%;" />
 
 
 
@@ -154,7 +154,7 @@ spec -> plan/tasks -> code/tests
 
 
 
-<img src="../docs/assets/images/00_image_5.png" style="zoom:50%;" />
+<img src="./assets/images/00_image_5.png" style="zoom:50%;" />
 
 
 
@@ -202,7 +202,7 @@ AI 会犯错吗? 当然会. 它生成的代码可能会有 Bug, 它的重构可�
 
 为了帮助你系统地完成这次思维升维和技能升级, 我将这个课程精心设计为四个递进的模块, 它就像一张清晰的地图, 将引导你从零开始, 一步步成为 AI 原生开发的专家. 
 
-![](../docs/assets/images/00_image_6.png)
+![](./assets/images/00_image_6.png)
 
 
 

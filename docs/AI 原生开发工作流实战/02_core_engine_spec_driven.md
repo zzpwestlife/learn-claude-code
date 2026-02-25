@@ -36,7 +36,7 @@
 
 我们可以用一张图来直观地感受这场 "权力反转" 带来的颠覆性变化:
 
-![](../docs/assets/images/02_image.png)
+![](./assets/images/02_image.png)
 
 在这场反转中:
 
@@ -99,7 +99,7 @@
 
 理论总是有些枯燥, 现在让我们看看一个真实的、业界领先的开源项目 ——GitHub 的 spec-kit 是如何通过一系列标准化的 Slash Commands  (斜杠指令) 来实现上述四个阶段的. spec-kit 是规范驱动开发思想的一个杰出实现, 而 Claude Code 等 AI Agent 正是执行这套流程的理想工具.
 
-![](../docs/assets/images/02_image_2.png)
+![](./assets/images/02_image_2.png)
 
 让我们以 spec-kit README 中的 "照片相册应用" 为例, 走一遍这个流程:
 
@@ -123,7 +123,7 @@ SDD 的引入, 不仅改变了项目的启动流程, 更从根本上重塑了我
 
 我们熟悉的敏捷开发, 其核心是一个以代码为中心的 Code -> Test -> Refactor 循环.
 
-![](../docs/assets/images/02_image_3.png)
+![](./assets/images/02_image_3.png)
 
 这个循环非常高效, 但它的半径很小, 始终围绕着 "实现" 这个层面. 当需求发生较大变更时, 这个小循环往往需要被打破, 回到更上游的设计阶段, 成本很高.
 
@@ -132,7 +132,7 @@ SDD 的引入, 不仅改变了项目的启动流程, 更从根本上重塑了我
 
 而在 SDD 范式下, 开发循环被提升到了一个更高的维度, 变成了一个以 "规范" 为中心的 `Spec -> Generate -> Validate` 循环.
 
-![](../docs/assets/images/02_image_4.png)
+![](./assets/images/02_image_4.png)
 
 在这个新循环中, 开发者的主要工作不再是直接编写和重构海量代码, 而是:
 

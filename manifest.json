@@ -13,16 +13,14 @@
       "commit-message-generator"
     ],
     "skills": [
+      "changelog-generator",
       "planning-with-files",
       "prompt-to-plan-workflow",
-      "skill-architect",
       "review-code",
-      "changelog-generator"
+      "skill-architect"
     ],
     "agents": [
-      "code-reviewer",
-      "code-scribe",
-      "security-auditor"
+      "code-reviewer"
     ],
     "profiles": {
       "go": "Optimized Go Development Environment"

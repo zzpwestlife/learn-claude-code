@@ -138,6 +138,17 @@ This constitution applies to all technology stacks under this project (Go, Front
 
 ---
 
+## Article 13: Cognitive Architecture Principle
+
+**Core:** Apply mental models (Occam's Razor, Feynman Technique, Socratic Method) to reduce complexity, increase clarity, and validate assumptions.
+
+- **13.1 (Occam's Razor):** "Entities should not be multiplied beyond necessity." Rigorously question the existence of every new Agent, Skill, or Dependency.
+- **13.2 (Feynman Technique):** "If you can't explain it simply, you don't understand it." Spec and Code must be self-explanatory to a novice.
+- **13.3 (Socratic Method):** Use probing questions ("Why?", "What is the evidence?", "What are the alternatives?") to challenge assumptions and validate First Principles (see Art. 1.5).
+- **13.4 (Cognitive Review):** Use the [Mental Model Checklist](../checklists/mental_model_checklist.md) during planning and review phases.
+
+---
+
 ## Governance
 
 This constitution has the highest priority. Before implementation, all code modifications must undergo "Constitution Check".
@@ -146,6 +157,8 @@ Any plans or code that violate "Non-Negotiable" clauses should be deemed "uncons
 ### Appendices
 
 - [Go Language Implementation Details](./go_annex.md)
+- [Mental Model Whitepaper](../docs/mental_model_whitepaper.md)
+- [Mental Model Checklist](../checklists/mental_model_checklist.md)
 - (To be added: Frontend implementation details)
 
 ---

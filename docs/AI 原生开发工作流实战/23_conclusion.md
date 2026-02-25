@@ -1,4 +1,4 @@
-![](../docs/assets/images/99_image.png)
+![](./assets/images/99_image.png)
 
 你好, 我是 Tony Bai. 
 
@@ -16,7 +16,7 @@
 
 这张航海图, 可以被浓缩为一条清晰的 "道" 到 "术" 再回归 "道" 的升维路径:
 
-![](../docs/assets/images/99_image_2.png)
+![](./assets/images/99_image_2.png)
 
 * 我们从 "道" 出发, 在 概念篇, 建立了 "AI 原生开发" 与 "规范驱动开发 (SDD) " 的宏大世界观, 明确了我们在这场变革中的新角色 —— 规范的设计者、工作流的指挥家、质量的治理者.
 
@@ -36,7 +36,7 @@
 
 目前, 在这个领域, 有几支 "舰队" 已经出现在地平线上. 它们的目标, 就是将我们手动实践的这套流程, 变得更加自动化、标准化.
 
-![](../docs/assets/images/99_image_3.png)
+![](./assets/images/99_image_3.png)
 
 
 

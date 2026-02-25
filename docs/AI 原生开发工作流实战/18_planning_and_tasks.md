@@ -22,7 +22,7 @@
 
 在开始之前, 让我们再次明确我们在整个工作流中的位置. 
 
-![](../docs/assets/images/18_image.png)
+![](./assets/images/18_image.png)
 
 我们的任务, 就是承接上一讲生成的 specs/001-core-functionality/spec.md, 生成后续所有编码工作所依赖的精确 "施工图" 和 "任务清单".
 
@@ -284,7 +284,7 @@ type Resource struct {
 
 在你批准后, 这份凝聚了 AI 架构能力的 "设计图" 就完成了. 它不仅满足了需求, 还通过了我们的 "宪法" 审查. 
 
-![](../docs/assets/images/18_image_2.png)
+![](./assets/images/18_image_2.png)
 
 【重要提示: 不要跳过审查! 】
 

@@ -495,19 +495,19 @@ cecho "$BLUE" "📦 Installing Go Development Profile..."
 # But let's prompt just in case, or check for go.mod?
 # Assuming user wants it since they are using this repo.
 
-PROFILE_DIR="profiles/go"
+PROFILE_DIR=".claude/profiles/$DEFAULT_PROFILE"
 
 # Install .claude overlay from profile
 if [ -d "$PROFILE_DIR/.claude" ]; then
-    for dir in "$PROFILE_DIR/.claude"/*; do
-        dirname=$(basename "$dir")
+    for item in "$PROFILE_DIR/.claude"/*; do
+        dirname=$(basename "$item")
         # Handle files at .claude root (like AGENTS.md)
-        if [ -f "$dir" ]; then
-             safe_install "$dir" "$CLAUDE_ROOT/$dirname"
-        elif [ -d "$dir" ]; then
+        if [ -f "$item" ]; then
+             safe_install "$item" "$CLAUDE_ROOT/$dirname"
+        elif [ -d "$item" ]; then
              ensure_dir "$CLAUDE_ROOT/$dirname"
-             for item in "$dir"/*; do
-                 safe_install "$item" "$CLAUDE_ROOT/$dirname/$(basename "$item")"
+             for subitem in "$item"/*; do
+                 safe_install "$subitem" "$CLAUDE_ROOT/$dirname/$(basename "$subitem")"
              done
         fi
     done
