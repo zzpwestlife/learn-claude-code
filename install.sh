@@ -48,11 +48,17 @@ gui_choose() {
     done
     list_str+="}"
     
+    # Determine default item (use 2nd option if available, otherwise 1st)
+    local default_item="${options[0]}"
+    if [ ${#options[@]} -ge 2 ]; then
+        default_item="${options[1]}"
+    fi
+    
     # Call osascript
     SELECTED_OPTION=$(osascript -e 'try
         tell application "System Events"
             activate
-            set result to choose from list '"$list_str"' with prompt "'"$prompt"'" default items {"'"${options[0]}"'"}
+            set result to choose from list '"$list_str"' with prompt "'"$prompt"'" default items {"'"$default_item"'"}
             if result is false then
                 return ""
             else
@@ -83,7 +89,6 @@ if [ -z "$TARGET_DIR" ]; then
     
     # GUI Mode for macOS
     if [[ "$(uname)" == "Darwin" ]]; then
-        cecho "$BLUE" "Where would you like to install FlowState (Go Edition)?"
         gui_choose "Where would you like to install FlowState?" \
             "1) Current Directory ($(pwd))" \
             "2) Specify a different project path"
@@ -173,41 +178,6 @@ backup_file() {
         cp "$file" "$backup"
         cecho "$YELLOW" "  ⚠️  Backed up: $(basename "$file")"
     fi
-}
-
-# --- Helper Functions for GUI ---
-
-# Usage: gui_choose "Prompt" "Option1" "Option2" ...
-# Returns selected option in $SELECTED_OPTION
-gui_choose() {
-    local prompt="$1"
-    shift
-    local options=("$@")
-    
-    # Construct AppleScript list
-    local list_str="{"
-    for i in "${!options[@]}"; do
-        list_str+="\"${options[$i]}\""
-        if [ $i -lt $((${#options[@]} - 1)) ]; then
-            list_str+=", "
-        fi
-    done
-    list_str+="}"
-    
-    # Call osascript
-    SELECTED_OPTION=$(osascript -e 'try
-        tell application "System Events"
-            activate
-            set result to choose from list '"$list_str"' with prompt "'"$prompt"'" default items {"'"${options[0]}"'"}
-            if result is false then
-                return ""
-            else
-                return item 1 of result
-            end if
-        end tell
-    on error
-        return ""
-    end try' 2>/dev/null)
 }
 
 # Usage: smart_merge_json src dest
@@ -462,30 +432,18 @@ safe_install() {
 
 cecho "$BLUE" "🚀 Installing Core Components..."
 
-# 1. Install .claude/ contents
+# 1. Install .claude/ contents (Base Layer)
 ensure_dir "$CLAUDE_ROOT"
-ensure_dir "$CLAUDE_ROOT/agents"
-ensure_dir "$CLAUDE_ROOT/commands"
-ensure_dir "$CLAUDE_ROOT/hooks"
-ensure_dir "$CLAUDE_ROOT/skills"
-ensure_dir "$CLAUDE_ROOT/constitution"
 
-# Core Constitution
-# Explicitly handled to ensure correct placement, though the loop would catch it too.
-safe_install ".claude/constitution/constitution.md" "$CLAUDE_ROOT/constitution/constitution.md"
-
-# Agents, Commands, Hooks, Skills (Core)
-for dir in agents commands hooks skills constitution; do
-    if [ -d ".claude/$dir" ]; then
-        for item in ".claude/$dir"/*; do
-            [ -e "$item" ] || continue
-            # constitution.md is already handled explicitly, skip it to avoid double copy or error
-            if [[ "$dir" == "constitution" && "$(basename "$item")" == "constitution.md" ]]; then
-                continue
-            fi
-            safe_install "$item" "$CLAUDE_ROOT/$dir/$(basename "$item")"
-        done
+# Install all files and directories from .claude recursively
+for item in ".claude"/*; do
+    basename=$(basename "$item")
+    # Skip profiles directory as it is handled separately/specifically later
+    if [ "$basename" == "profiles" ]; then
+        continue
     fi
+    
+    safe_install "$item" "$CLAUDE_ROOT/$basename"
 done
 
 # 2. Install Go Profile
@@ -519,9 +477,8 @@ safe_install "$PROFILE_DIR/Makefile" "$TARGET_DIR/Makefile"
 
 # 3. Permissions
 cecho "$BLUE" "🔒 Setting permissions..."
-find "$CLAUDE_ROOT/hooks" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
-find "$CLAUDE_ROOT/skills" -name "*.py" -exec chmod +x {} \; 2>/dev/null || true
-find "$CLAUDE_ROOT/skills" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
+find "$CLAUDE_ROOT" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
+find "$CLAUDE_ROOT" -name "*.py" -exec chmod +x {} \; 2>/dev/null || true
 
 echo ""
 cecho "$GREEN" "✅ Installation Complete!"
