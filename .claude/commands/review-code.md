@@ -1,13 +1,15 @@
 ---
-description: Review specified code files or directories, or perform Git incremental review. Automatically detects language and applies corresponding standards.
-argument-hint: [path_to_review | diff]
+description: Review specified code files or directories, or perform Git incremental review. Automatically detects language and applies best practices. Supports output directory.
+argument-hint: [path_to_review | diff] [output_dir]
 model: sonnet
 allowed-tools:
   - AskUserQuestion
   - Read
   - Grep
   - Glob
+  - RunCommand
   - Bash(go vet *, flake8 *, git diff *, git log *)
+  - Write
 ---
 
 You are a senior code reviewer. Your task is to review code, automatically detect the project language, and apply corresponding standards.
@@ -21,8 +23,13 @@ You are a senior code reviewer. Your task is to review code, automatically detec
 6. If parameter path contains `.php` files → PHP
 
 **Mode Detection:**
-If argument "$1" is "diff" or empty, perform **Git incremental review**.
-Otherwise, perform **full file review** on path "$1".
+1. **Analyze Arguments**:
+   - Check if the last argument is a directory path that looks like an "output directory" (e.g., `fib`, `tasks/xyz`). If so, set it as `output_dir`.
+   - The first argument determines the mode: "diff" (or empty) for incremental, or a file/path for full review.
+
+2. **Execution**:
+   - If argument "$1" is "diff" or empty, perform **Git incremental review**.
+   - Otherwise, perform **full file review** on path "$1".
 
 **Complex Change Threshold:**
 If the change touches more than 3 files or crosses multiple modules, run a planning step first (/plan) to clarify scope and acceptance criteria.
@@ -33,48 +40,53 @@ If the change touches more than 3 files or crosses multiple modules, run a plann
     - Python: Run `flake8 $1`
     - PHP: Read code directly
 2.  **Read Code**: Recursively read code files in the specified path.
-3.  **Module Metadata Check**:
-    - Verify module directory README exists and includes: Role, Logic, Constraints, and a submodule index.
-    - Verify each source file starts with three header lines: INPUT (dependencies), OUTPUT (provided capabilities), POS (position in the system).
-    - Record missing or inaccurate metadata in the review report with file paths.
+3.  **Code Structure Check**:
+    - Verify code clarity, readability, and modularity.
 
 ### Mode B: Git Incremental Review (Diff Mode)
 1.  **Get Changes**:
     - Run `git diff main...HEAD` (try master if main doesn't exist) to view all changes.
     - Run `git log main..HEAD` to understand commit history.
 2.  **Read Changes**: Carefully analyze diff content.
-3.  **Metadata in Changes**: For changed modules and files, apply the same Module Metadata Check as in Mode A.
 
 ---
 
 **General Instructions:**
-1.  **Read Constitution**: Read and internalize core principles from `constitution.md`.
-2.  **Read Language Annex** (by detected result):
-    - Go: `docs/constitution/go_annex.md`
-    - Python: `docs/constitution/python_annex.md`
-    - PHP: `docs/constitution/php_annex.md`
-3.  **Read General Guidelines**: Reference review tone and structure requirements from `.claude/agents/code-reviewer.md`.
+1.  **Read General Guidelines**: Reference review tone and structure requirements from `.claude/agents/code-reviewer.md`.
 
 **Review Focus (General):**
 *   **Simplicity**: stdlib first, dependency hygiene
-*   **Test Quality**: Table-driven tests (Go) / Pytest Parametrize (Python) / PHPUnit (PHP)
 *   **Clarity**: No ignored errors, proper error handling, dependency injection
 *   **Style & Structure**: Follow project formatting tools, file/function size limits
 *   **Architecture**: Core logic isolation, clear layering
 
-**Output Format:**
-Output Markdown report in English containing: Summary, Critical Issues, Improvement Suggestions, Code Style & Conventions, Positive Highlights.
-Provide specific code snippets and line numbers when possible.
+**Output Format (Silent Mode):**
+1.  **Visual Progress**: Start output with `[✔ Optimize] → [✔ Plan] → [✔ Execute] → [➤ Review] → [Changelog]`
+2.  **Save Report**: Always save the full Markdown report to `{output_dir}/review_report.md`.
+3.  **Chat Summary**: 
+    -   If report > 20 lines, **DO NOT** print the full report in chat.
+    -   Instead, print a **concise summary** (Critical Issues & Highlights) and the file link: `Full report saved to: [review_report.md](file://...)`.
+    -   If critical issues found, highlight them clearly.
 
 ## Workflow Handoff
 After the review is complete:
-1.  **Mandatory Check**:
-    -   If critical issues are found: Ask if user wants to fix them first.
-    -   If NO critical issues (or user accepts risks): **IMMEDIATELY** prompt for changelog generation.
-2.  **Use `AskUserQuestion` to prompt**:
-    -   **Question**: "代码审查通过（或已确认）！是否执行 `/changelog-generator` 更新变更日志？"
-    -   **Options**: ["Yes", "No"]
-3.  If User says **Yes**:
-    -   **Action**: Use `RunCommand` tool to execute `/changelog-generator`.
-    -   **Important**: Set `requires_approval: true` so the user can see and confirm the command (press Tab/Enter) without typing it manually.
+
+1.  **Reflective Handoff (Interactive Menu)**:
+    -   **Mandatory**: You **MUST** use `AskUserQuestion` to present options (support bilingual).
+    -   **Question**: `代码审查完成 (Report saved to {output_dir}/review_report.md)。下一步？`
+    -   **Options**:
+        1.  **Generate Changelog**
+            -   **Label**: `Generate Changelog (生成变更日志)`
+            -   **Action**: Call `RunCommand(command="/changelog-generator {output_dir}", requires_approval=False)`
+        2.  **Fix Critical Issues**
+            -   **Label**: `Fix Critical Issues (修复关键问题)`
+            -   **Action**: Call `RunCommand(command="/planning-with-files plan {output_dir}", requires_approval=False)` (to plan fixes)
+        3.  **Manual Verification**
+            -   **Label**: `Manual Verification (手动验证)`
+            -   **Action**: Wait for user input.
+
+2.  **Action (Interactive Navigation)**:
+    -   **IMMEDIATELY** after the user selects an option, you **MUST** use `RunCommand` to execute the corresponding command.
+    -   **Zero Friction**: You **MUST** set `requires_approval=False` for these follow-up commands to allow one-click execution.
+    -   Example: If user selects "Generate Changelog", you call `RunCommand(command="/changelog-generator {output_dir}", requires_approval=False)`.
 

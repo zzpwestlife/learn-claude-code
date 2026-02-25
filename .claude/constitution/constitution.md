@@ -145,7 +145,7 @@ Any plans or code that violate "Non-Negotiable" clauses should be deemed "uncons
 
 ### Appendices
 
-- [Go Language Implementation Details](./docs/constitution/go_annex.md)
+- [Go Language Implementation Details](./go_annex.md)
 - (To be added: Frontend implementation details)
 
 ---

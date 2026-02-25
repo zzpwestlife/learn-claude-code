@@ -24,7 +24,7 @@
 │   ├── hooks/              # 自动化钩子
 │   └── skills/             # 扩展技能
 ├── profiles/               # 语言配置模板 (Go)
-├── constitution.md         # 项目核心宪法文件
+├── constitution.md         # (Redirect) 指向 .claude/constitution/constitution.md
 ├── CLAUDE.md               # Claude Code 兼容入口 (Redirect)
 ├── install.sh              # 自动化安装脚本
 └── README.md               # 项目说明文档
@@ -62,7 +62,7 @@
 
 ### 核心特性
 
-1.  **规则基石**: `constitution.md` 定义了不可动摇的开发原则。
+1.  **规则基石**: `.claude/constitution/constitution.md` 定义了不可动摇的开发原则。
 2.  **角色化 Agent**: 预设 Architect, Code Reviewer 等专家角色。
 3.  **Golang 原生支持**: 提供深度优化的 Go 语言配置模板 (`profiles/go`)，集成 `gofmt`, `goimports`, `golangci-lint` 等工具链。
 4.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。

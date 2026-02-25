@@ -5,6 +5,7 @@ model: sonnet
 allowed-tools:
   - Bash
   - AskUserQuestion
+  - RunCommand
 ---
 
 !git status --porcelain
@@ -40,8 +41,8 @@ You are a **Senior Code Auditor & Commit Message Specialist**. Your task is to a
 - Analyze the output of `git status` and `git diff`.
 - **CRITICAL**: If `git diff --staged` is empty:
     - If there are unstaged changes, use `AskUserQuestion` to ask: "检测到没有暂存的文件 (No staged files). 是否需要我先为您执行 `git add .` ?"
-    - If `git add .` is approved, assume the user ran it (or ask them to run it) and proceed. *Note: In this command context, you cannot run `git add` interactively and expect the `!git diff` context to update instantly in the same turn without tool use. So, just advise the user or output a message saying "Please stage your changes first."*
-    - **Better approach for this command**: If empty, strictly output: "⚠️ **没有检测到暂存的更改 (No staged changes)**。\n请先使用 `git add <file>` 暂存文件，或者告诉我想提交什么内容。" and stop.
+    - If user says **Yes**: Use `RunCommand` to propose `git add .` (with `requires_approval: true`).
+    - If `git status` is completely clean, output: "⚠️ **没有检测到更改 (No changes)**。" and stop.
 
 ## 2. 分析变更 (Analyze Changes)
 - Identify the **Scope**: Which module/component is affected? (e.g., `auth`, `ui`, `api`).
@@ -50,6 +51,9 @@ You are a **Senior Code Auditor & Commit Message Specialist**. Your task is to a
 
 ## 3. 生成输出 (Generate Output)
 Output a Markdown report containing:
+
+### Visual Progress
+`[✔ Optimize] → [✔ Plan] → [✔ Execute] → [✔ Review] → [✔ Changelog] → [✔ Message]`
 
 ### 📋 变更摘要 (Change Summary)
 (用中文简要描述修改了什么，为什么修改)
@@ -71,27 +75,27 @@ type(scope): subject
 <footer>
 ```
 
-### 💡 提交建议 (Suggestions)
-- If the diff contains unrelated changes, suggest splitting the commit.
-- If specific files seem to be accidental (e.g., `.DS_Store`, `debug.log`), warn the user.
+## 4. 提交引导 (Commit Handoff)
 
-# 示例 (Example)
-**Diff**: Modified `src/components/Button.tsx` (changed color) and `src/components/Button.test.tsx` (updated snapshot).
+**IMPORTANT**: Since auto-commit is restricted, you MUST display the command for easy copying.
 
-**Output**:
-### 📋 变更摘要
-更新了 Button 组件的样式颜色，并同步更新了测试快照。
-
-### 🚀 推荐的 Commit Message
-**选项 1: 标准模式**
-```text
-style(ui): update button component color scheme
+```bash
+git commit -m "..."
 ```
 
-**选项 2: 详细模式**
-```text
-style(ui): update button component color scheme
+1.  **Reflective Handoff (Interactive Menu)**:
+    -   **Mandatory**: You **MUST** use `AskUserQuestion` to present options (support bilingual).
+    -   **Question**: `Commit Message 已生成。请手动复制并提交。下一步？`
+    -   **Options**:
+        1.  **Done (Finish)**
+            -   **Label**: `Done (完成)`
+            -   **Action**: Wait for user input (or exit).
+        2.  **Regenerate Message**
+            -   **Label**: `Regenerate Message (重新生成)`
+            -   **Action**: Wait for user instructions.
 
-Updated the primary button color to match the new design system specs.
-Verified with updated snapshot tests.
-```
+2.  **Action (Interactive Navigation)**:
+    -   **IMMEDIATELY** after the user selects an option, you **MUST** use `RunCommand` to execute the corresponding command.
+    -   **Zero Friction**: You **MUST** set `requires_approval=False` for follow-up commands (like regeneration).
+    -   Example: If user selects "Regenerate Message", you call `RunCommand(command="/commit-message-generator", requires_approval=False)`.
+

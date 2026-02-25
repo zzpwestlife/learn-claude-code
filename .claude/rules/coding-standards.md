@@ -33,11 +33,8 @@ Apply "Simplicity Principle" to the execution itself.
 - **Test Writing**: Prioritize table-driven tests.
 - **Production Mindset**: Handle edge cases; do not assume "happy path".
 
-### 2.3 Scenario-Specific Rules
-- **Prompt Engineering**: Follow structured prompt standards in `.claude/constitution/prompt_engineering_annex.md`.
-
-### 2.4 Code Review Workflow
-- Pre‑flight: read `constitution.md` and the language annex under `docs/constitution/`.
+### 2.3 Code Review Workflow
+- Pre‑flight: read `.claude/constitution/constitution.md` and the language annex under `.claude/constitution/`.
 - Scope guard: if a change touches more than 3 files or crosses multiple modules, run a planning step (/plan) first and define acceptance criteria.
 - Mode selection: use `.claude/commands/review-code.md` to choose between Diff Mode (incremental) or Full Path Review.
 - Static analysis: run language‑specific checks (Go: go vet, Python: flake8, PHP: manual read).
@@ -45,30 +42,3 @@ Apply "Simplicity Principle" to the execution itself.
 - Evidence‑based: only call online documentation (e.g., Context7) when local specs and annexes are insufficient.
 - SubAgent usage: delegate heavy searches to SubAgents to preserve current session context and avoid context window overload.
 - Delivery hygiene: after review and fixes, clean temporary artifacts and ensure `.gitignore` prevents local outputs from being committed.
-
-## 3. Module Metadata Templates
-
-**Module README Template**
-```
-# <Module Name>
-
-## Role
-<What this module represents in the system>
-
-## Logic
-<What this module does and how it works>
-
-## Constraints
-<Rules, limits, or invariants that callers must follow>
-
-## Submodules
-- <submodule-a>: <purpose>
-- <submodule-b>: <purpose>
-```
-
-**Source File Header Template**
-```
-INPUT: <dependencies>
-OUTPUT: <provided capabilities>
-POS: <position in the system>
-```

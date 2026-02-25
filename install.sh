@@ -153,12 +153,18 @@ ensure_dir "$CLAUDE_ROOT/skills"
 ensure_dir "$CLAUDE_ROOT/constitution"
 
 # Core Constitution
-safe_install ".claude/constitution.md" "$CLAUDE_ROOT/constitution.md"
+# Explicitly handled to ensure correct placement, though the loop would catch it too.
+safe_install ".claude/constitution/constitution.md" "$CLAUDE_ROOT/constitution/constitution.md"
 
 # Agents, Commands, Hooks, Skills (Core)
 for dir in agents commands hooks skills constitution; do
     if [ -d ".claude/$dir" ]; then
         for item in ".claude/$dir"/*; do
+            [ -e "$item" ] || continue
+            # constitution.md is already handled explicitly, skip it to avoid double copy or error
+            if [[ "$dir" == "constitution" && "$(basename "$item")" == "constitution.md" ]]; then
+                continue
+            fi
             safe_install "$item" "$CLAUDE_ROOT/$dir/$(basename "$item")"
         done
     fi

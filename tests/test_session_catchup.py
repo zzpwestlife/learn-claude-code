@@ -14,15 +14,10 @@ sys.path.append(str(SCRIPT_DIR))
 # Import the module to be tested
 import importlib.util
 
-# Check if script exists, otherwise skip (in case of partial install)
-if (SCRIPT_DIR / "session-catchup.py").exists():
-    spec = importlib.util.spec_from_file_location("session_catchup", SCRIPT_DIR / "session-catchup.py")
-    session_catchup = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(session_catchup)
-else:
-    session_catchup = None
+spec = importlib.util.spec_from_file_location("session_catchup", SCRIPT_DIR / "session-catchup.py")
+session_catchup = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(session_catchup)
 
-@unittest.skipIf(session_catchup is None, "session-catchup.py not found")
 class TestSessionCatchup(unittest.TestCase):
 
     def setUp(self):

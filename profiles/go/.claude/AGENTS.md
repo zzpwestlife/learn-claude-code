@@ -23,7 +23,7 @@ Common project commands for the `Makefile`.
 
 ## Guidelines
 
-> **⚠️ Constitution**: This project strictly follows [constitution.md](.claude/constitution.md).
+> **⚠️ Constitution**: This project strictly follows [constitution.md](.claude/constitution/constitution.md).
 > All code modifications must comply with its **11 core principles** and relevant **language annexes** (e.g., [Go Annex](.claude/constitution/go_annex.md)).
 
 ### Git & Version Control

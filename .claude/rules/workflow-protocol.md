@@ -7,7 +7,6 @@
   - **Plan First**: Generate `task_plan.md` (equivalent to `tasks/todo.md`) with checkable items.
   - **Stop on Deviation**: If execution deviates, **STOP IMMEDIATELY** and re-plan. No blind trial-and-error.
   - **Verify Plan**: Confirm intent with user before writing code.
-  - **Explicit Workflow Control**: Before executing any planning workflow, confirm with the user whether they want to proceed from prompt optimization → planning → execution, or skip directly to a specific phase.
 
 ### 1.2 Execution Loop
 - **Track Progress**: Mark items in `task_plan.md` as `[x]` in real-time.

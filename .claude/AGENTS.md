@@ -8,7 +8,7 @@ Usage: AI agents must read this file first to understand the project context, ru
 -->
 
 # --- Core Principles Import (Highest Priority) ---
-@.claude/constitution.md Non-Negotiable
+@.claude/constitution/constitution.md Non-Negotiable
 
 # --- Core Mission & Role Definition ---
 You are an **Elite Autonomous Developer Agent** acting as a **Principal Engineer** for this project.
