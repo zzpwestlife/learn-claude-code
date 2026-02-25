@@ -103,7 +103,7 @@ Agent Skills 的设计哲学, 可以用四个词来概括: 可组合 (Composable
 
 我们可以通过一个三层信息加载模型来理解其精髓:
 
-![](../assets/images/13_image.png)
+![](../docs/assets/images/13_image.png)
 
 这个三层模型, 就像是为 AI 设计的一套高效的 "记忆检索系统", 让我们来逐层剖析:
 
@@ -123,7 +123,7 @@ Agent Skills 的设计哲学, 可以用四个词来概括: 可组合 (Composable
 
 要真正理解 Agent Skills 的独特价值, 我们还必须将它置于一个更广阔的能力版图中. 这张版图主要由三种强大的扩展方式构成: 我们已经掌握的 Slash Commands, 正在学习的 Agent Skills, 以及我们即将在下一讲深入的 Sub-agents. 它们看似相似, 但定位和适用场景却截然不同.
 
-![](../assets/images/13_image_2.png)
+![](../docs/assets/images/13_image_2.png)
 
 简单来说, 如何选择?
 
@@ -232,7 +232,7 @@ allowed-tools: Read, Grep, Glob
 
 接下来, 你可能会在 Claude Code 的思考阶段看到类似这样的内部思考过程, 包括读取 Go 代码、读取 `constitution.md` 以及匹配我们的 go-code-reviewer Skill 的操作:
 
-![](../assets/images/13_image_3.png)
+![](../docs/assets/images/13_image_3.png)
 
 
 
@@ -342,7 +342,7 @@ pdf/
     └── ...           # 其他辅助脚本
 ```
 
-![](../assets/images/13_image_4.png)
+![](../docs/assets/images/13_image_4.png)
 
 ### 工作流解读
 

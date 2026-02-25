@@ -21,7 +21,7 @@
 
 在深入技术细节之前, 我们必须先清晰地分辨 Hooks 与我们已经学过的 Slash Commands 之间的根本区别. 这两种能力扩展方式, 代表了两种截然不同的自动化哲学.
 
-![](../assets/images/11_image.png)
+![](../docs/assets/images/11_image.png)
 
 两种能力扩展方式的哲学对比
 
@@ -37,7 +37,7 @@
 
 Claude Code 为我们开放了多个核心的 Hook 事件. 让我们通过一个典型的 AI 工作流程, 来看看它们各自的位置和作用.
 
-![](../assets/images/11_image_2.png)
+![](../docs/assets/images/11_image_2.png)
 
 这张图揭示了几个最重要的 Hook 事件: 
 
@@ -118,23 +118,23 @@ Claude Code 为我们开放了多个核心的 Hook 事件. 让我们通过一个
 
 在 Claude Code 会话中, 输入 /hooks. 这是一个交互式的命令, 它会引导你完成 Hook 的配置, 并将最终结果保存到 settings.json 中.
 
-![](../assets/images/11_image_3.png)
+![](../docs/assets/images/11_image_3.png)
 
 ### 第二步: 选择 Hook 事件与 Matcher
 
 在上图的 Select hook event 菜单中, 选择 PostToolUse 事件, 进入 Tool Matcher 配置页面:
 
-![](../assets/images/11_image_4.png)
+![](../docs/assets/images/11_image_4.png)
 
 当前没有配置任何 matcher, 在 "Add new matcher…" 上回车, 进入 Add new matcher for PostToolUse 页面 (如下图) . 我们输入 Edit|Write|MultiEdit, 因为我们只关心文件被编辑的事件.
 
-![](../assets/images/11_image_5.png)
+![](../docs/assets/images/11_image_5.png)
 
 
 
 回车确认后, 完成该 matcher 添加:
 
-![](../assets/images/11_image_6.png)
+![](../docs/assets/images/11_image_6.png)
 
 ### 第三步: 编写 Hook 响应命令
 
@@ -164,17 +164,17 @@ PostToolUse 事件传递的 JSON 结构大致如下:
 
 在上图中的 "Add new hook…" 的提示下, 我们回车进入 hook command 配置页面: 
 
-![](../assets/images/11_image_7.png)
+![](../docs/assets/images/11_image_7.png)
 
 输入以下命令: 
 
-![](../assets/images/11_image_8.png)
+![](../docs/assets/images/11_image_8.png)
 
-![](../assets/images/11_image_9.png)
+![](../docs/assets/images/11_image_9.png)
 
 这个命令是一个完整的 Bash 命令链, 用分号 ; 分隔多个语句. 让我们来逐段拆解这个命令的含义: 
 
-![](../assets/images/11_image_10.png)
+![](../docs/assets/images/11_image_10.png)
 
 注: 输入命令时无需加 \ 转义字符, Claude Code 在保存配置时, 会自动增加转义字符.
 
@@ -183,13 +183,13 @@ PostToolUse 事件传递的 JSON 结构大致如下:
 
 回车后, 系统会问你将这个配置保存在哪里: 
 
-![](../assets/images/11_image_11.png)
+![](../docs/assets/images/11_image_11.png)
 
 我们选择 Project settings, 这样这个自动化格式化的规则, 就能被提交到 Git 仓库, 成为团队所有成员共享的最佳实践.
 
 按下 Esc 退出配置菜单. 现在, 你的 `./.claude/settings.json` 文件里, 应该已经自动生成了如下内容: 
 
-![](../assets/images/11_image_12.png)
+![](../docs/assets/images/11_image_12.png)
 
 ### 第五步: 验证效果
 
@@ -216,7 +216,7 @@ $claude --debug
 
 启动后, claude code 会显示 debug 文件的路径: 
 
-![](../assets/images/11_image_13.png)
+![](../docs/assets/images/11_image_13.png)
 
 你在继续和 Claude Code 交互之前, 可以用 tail 命令监视调试文件的输出内容.
 
@@ -379,7 +379,7 @@ Matcher:  输入 Edit|Write|MultiEdit, 因为我们只关心有破坏性的写�
 
 这里的 $CLAUDE\_PROJECT\_DIR 是一个内置的已知环境变量, Claude Code 会在执行该 Hook command 时, 将其替换为项目当前的根目录路径.
 
-![](../assets/images/11_image_14.png)
+![](../docs/assets/images/11_image_14.png)
 
 保存分配后, 你可以在 settings.json 中看到如下 Hook 配置: 
 
@@ -409,7 +409,7 @@ Matcher:  输入 Edit|Write|MultiEdit, 因为我们只关心有破坏性的写�
 @greeting.go 在文件末尾加上 "AddPreToolUseHook" 空函数实现
 ```
 
-![](../assets/images/11_image_15.png)
+![](../docs/assets/images/11_image_15.png)
 
 你会看到, AI 在提议 Write 工具后, 并不会弹出权限请求, 而是会直接告诉你, 它的操作被一个 PreToolUse Hook 阻止了, 并展示出我们设置的错误信息. 它甚至可能会接着提议: "好的, 我明白了. 那么我将先创建一个名为 add-pre-tool-use-hook 的新分支, 可以吗?".
 

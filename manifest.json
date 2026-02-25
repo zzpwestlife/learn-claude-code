@@ -1,0 +1,31 @@
+{
+  "name": "FlowState (Go)",
+  "version": "1.0.0",
+  "description": "A Zero-Friction Workflow plugin for Claude Code, optimized for Go development.",
+  "author": "Learn Claude Code Team",
+  "license": "MIT",
+  "repository": "https://github.com/learn-claude-code/ai-workflow-go",
+  "components": {
+    "commands": [
+      "optimize-prompt",
+      "review-code",
+      "changelog-generator",
+      "commit-message-generator"
+    ],
+    "skills": [
+      "planning-with-files",
+      "prompt-to-plan-workflow",
+      "skill-architect",
+      "review-code",
+      "changelog-generator"
+    ],
+    "agents": [
+      "code-reviewer",
+      "code-scribe",
+      "security-auditor"
+    ],
+    "profiles": {
+      "go": "Optimized Go Development Environment"
+    }
+  }
+}

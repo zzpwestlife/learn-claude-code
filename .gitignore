@@ -28,3 +28,4 @@ settings.local.json
 .env
 .claude/tmp/
 
+/ai-workflow

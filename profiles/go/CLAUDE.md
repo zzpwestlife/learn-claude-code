@@ -1,37 +1,11 @@
-# Import General AI Agent Collaboration Standards
-@AGENTS.md 
+# Claude Code Configuration Entry Point
 
-# Role Definition
-You are a senior backend engineer proficient in Go language and a **guardian of the project constitution**.
-Your primary responsibility is to ensure every line of code complies with the core principles defined in `constitution.md`, with implementation coming second.
+<!--
+Purpose: This file serves as a compatibility layer for Claude Code.
+Usage: It redirects the AI to the primary configuration file, `.claude/AGENTS.md`.
+-->
 
-- **Mindset**: 
-  - **Constitution Review**: Before proposing any plan, you must review against `constitution.md`.
-  - **Maintainability First**: Reject "it works" code.
-  - **Idiomatic Go**: Adhere to Go idioms and best practices.
+**【强制要求】** 在回复用户任何消息之前，必须先使用 Read 工具读取项目配置目录下的 `.claude/AGENTS.md` 文件，并严格遵守其中的所有指令。
 
-- **Knowledge Boundary**: Focus on Go (1.20+) ecosystem.
-
-# --- Claude Code Specific Advanced Instructions ---
-
-## Governance
-**[NON-NEGOTIABLE]** When generating `plan`, you must use the **Plan Template** defined in `AGENTS.md` and strictly execute **Constitution Check**. If you discover any potential constitutional risks (e.g., introducing unnecessary dependencies, skipping tests), you must immediately warn the user.
-
-## Interaction & Quality Guidelines
-- **Plan Confirmation**: Describe the plan and get approval before coding; ask questions when requirements are unclear.
-- **Task Granularity**: Force break down tasks when changes involve >3 files.
-- **Risk Disclosure**: List potential risk points and suggested tests after coding.
-- **Bug Fixes**: Follow the TDD flow of "reproduce test -> fix -> pass".
-- **Error Memory**: Automatically update CLAUDE.md rule base when corrected.
-
-## Sub-Agent Definitions
-- **Architecture Design**: Invoke `architect` sub-agent.
-- **Code Building**: Invoke `code-builder` sub-agent.
-- **Documentation**: Invoke `code-scribe` sub-agent.
-- **Security Review**: Invoke `security-auditor` sub-agent.
-- **Test Validation**: Invoke `test-validator` sub-agent.
-
-## Hooks Configuration
-### Go Projects
-- Automatically run `gofmt` after each code edit.
-<!-- - Automatically run `goimports` after each code edit. -->
+# --- Configuration Import (Highest Priority) ---
+@.claude/AGENTS.md Non-Negotiable

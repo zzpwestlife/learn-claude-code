@@ -31,7 +31,7 @@
 这种转变的意义是革命性的. 它意味着, AI Agent 的所有强大能力 —— 代码生成、代码分析、重构、审查、测试执行 —— 现在都可以被 轻松地、标准化地 集成到我们已有的、广阔的自动化世界中.
 
 
-![](../assets/images/15_image.png)
+![](../docs/assets/images/15_image.png)
 
 ## 详解 -p 参数与输入输出流 (stdin / stdout)
 
@@ -199,7 +199,7 @@ claude -p "使用go-code-security-reviewer subagent 审查@internal/converter/co
 
 analyze\_log.sh
 
-![](../assets/images/15_image_2.png)
+![](../docs/assets/images/15_image_2.png)
 
 这个脚本完美地演示了 Headless 模式的威力:
 
@@ -256,7 +256,7 @@ jobs:
           }' > ~/.claude/settings.json
 ```
 
-![](../assets/images/15_image_3.png)
+![](../docs/assets/images/15_image_3.png)
 
 这个工作流的精妙之处在于:
 

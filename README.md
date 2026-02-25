@@ -77,8 +77,12 @@
 如果你已经克隆了本仓库，可以直接运行 `install.sh` 脚本。它会自动将配置安装到你的 Go 项目中。
 
 ```bash
-# 用法: ./install.sh <你的目标 Go 项目路径>
-./install.sh ../my-go-project
+# 标准安装（复制模式，推荐生产环境）
+./install.sh <你的目标 Go 项目路径>
+# 示例: ./install.sh ../my-go-project
+
+# 开发安装（软链接模式，推荐开发调试）
+./install.sh --dev <你的目标 Go 项目路径>
 ```
 
 #### 2. 构建与运行

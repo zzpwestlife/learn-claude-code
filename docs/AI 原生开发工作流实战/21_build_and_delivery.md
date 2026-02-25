@@ -20,7 +20,7 @@
 
 今天, 我们将完成从 "想法" 到 "可交付产物" 的最后冲刺. 
 
-![](../assets/images/21_image.png)
+![](../docs/assets/images/21_image.png)
 
 
 
@@ -580,7 +580,7 @@ The command will set `DOCKER_TAG={provided_tag}` before running make docker-buil
 
 完成这一步, 才到了我们这一讲真正的 "画龙点睛" 之笔. 它实现了能力的 完美闭环:
 
-![](../assets/images/21_image_2.png)
+![](../docs/assets/images/21_image_2.png)
 
 现在, 你的团队中任何一个成员, 甚至是新来的实习生, 都不用再去关心 Dockerfile 或 Makefile 的复杂细节. 他们只需要在 Claude Code 中输入一个简单的:
 
