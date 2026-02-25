@@ -4,28 +4,7 @@ dist/
 node_modules/
 .trae/
 tmp.log
-generated_images/
-install_claude_code.log
-plugin_dist/
-
-# Auto Claude data directory
-.auto-claude/
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Local Settings
-.claude/settings.local.json
 settings.local.json
-
-# Temporary Files
-*.bak
-*.swp
 *.tmp
 .env
-.claude/tmp/
-
-/ai-workflow
+*.pyc
