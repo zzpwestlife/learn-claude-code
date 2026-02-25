@@ -1,6 +1,6 @@
 # Project Constitution (Universal Core Version)
 
-**Version: 2.4, Approved Date: 2026-02-09**
+**Version: 2.4, Approved Date: 2026-02-24**
 
 This document defines the unshakeable core development principles of this project. All code modifications must strictly adhere to these principles.
 This constitution applies to all technology stacks under this project (Go, PHP, Python, Frontend, DevOps, etc.). For language-specific implementation details, please refer to the [Appendices](#appendices).
@@ -14,6 +14,8 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 - **1.1 (YAGNI):** Only implement explicitly requested features, don't speculate on future needs.
 - **1.2 (Minimal Dependencies):** Prioritize language standard libraries or mature community standard libraries. Introducing new dependencies requires rigorous evaluation.
 - **1.3 (Anti-over-engineering):** Simple functions and data structures are better than complex abstractions. Avoid over-design.
+- **1.4 (No Laziness):** Find root causes. No temporary fixes. Senior developer standards. If a fix feels hacky: "Knowing everything I know now, implement the elegant solution".
+- **1.5 (First Principles):** Solve problems by breaking them down to basic truths, not by analogy. Question "why" until the root constraint is found.
 
 ---
 
@@ -75,7 +77,9 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 
 **Core:** Establish a closed-loop mechanism for learning from mistakes.
 
-- **7.1 (Experience Documentation):** After fixing important bugs, must summarize root causes. Operational learnings go to **AGENTS.md**, while engineering principles go to **constitution.md**.
+- **7.1 (Self-Improvement Loop):** After ANY correction from the user, convert the mistake into a rule and append to `.claude/lessons.md`.
+- **7.2 (Pre-load Knowledge):** Always read `.claude/lessons.md` at the start of a session to prevent recurring mistakes.
+- **7.3 (Ruthless Iteration):** Ruthlessly iterate on these lessons until mistake rate drops.
 
 ---
 
@@ -84,10 +88,10 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 **Core:** Think before acting.
 
 - **8.1 (Adaptive Planning):** Planning is mandatory but scalable. Complex tasks require detailed plans; trivial tasks require clear intent.
-- **8.2 (Iteration Scoping):** Explicitly define the boundaries of the current task. Focus on the immediate objective and avoid expanding scope unrelated to the current request.
-- **8.3 (User Confirmation):** Plans must include objectives, steps, verification methods, and be confirmed.
-- **8.4 (Constitution Check):** Before generating any plan, self-check against this constitution (Constitution Check).
-- **8.5 (Pre-Review Planning):** For complex changes (touching > 3 files or crossing multiple modules), perform a planning step before code review, define objectives, steps, verification methods, and acceptance criteria.
+- **8.2 (Strategic Planning):** For non-trivial tasks (3+ steps), must generate `task_plan.md`.
+- **8.3 (Stop on Deviation):** If execution deviates from the plan, **STOP IMMEDIATELY** and re-plan. No blind trial-and-error.
+- **8.4 (User Confirmation):** Plans must include objectives, steps, verification methods, and be confirmed.
+- **8.5 (Constitution Check):** Before generating any plan, self-check against this constitution (Constitution Check).
 
 ---
 
@@ -108,6 +112,7 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 - **10.2 (Environmental Hygiene):** Must clean up temporary files after operations end.
 - **10.3 (Branch Standards):** Strictly prohibit working directly on main branch (`main`/`master`).
 - **10.4 (Edge Case Handling):** Handle errors gracefully. No "Happy Path" only assumptions.
+- **10.5 (Staff Engineer Standard):** Ask yourself: "Would a staff engineer approve this?" Verify behavior changes, check logs, and demonstrate correctness before marking as done.
 
 ---
 
@@ -122,6 +127,17 @@ This constitution applies to all technology stacks under this project (Go, PHP, 
 
 ---
 
+## Article 12: Workflow Control & Handoff Principle - Non-Negotiable
+
+**Core:** Human-in-the-loop control is absolute. AI must pause for confirmation at critical boundaries.
+
+- **12.1 (Atomic Execution):** Tasks must be broken down into atomic steps (Optimization, Planning, Execution Phase, Review, Changelog). AI is strictly prohibited from executing more than one step/phase per turn.
+- **12.2 (Mandatory Handoff):** Upon completing ANY workflow step or task phase, AI **must** stop execution and present a TUI (Text User Interface) menu using `AskUserQuestion`.
+- **12.3 (Explicit Continuation):** AI cannot proceed to the next step/phase without explicit user selection (e.g., "Continue Execution" or "Next Step").
+- **12.4 (Bilingual Options):** All handoff menus must provide bilingual (English/Chinese) descriptions to ensure clarity.
+
+---
+
 ## Governance
 
 This constitution has the highest priority. Before implementation, all code modifications must undergo "Constitution Check".
@@ -129,17 +145,11 @@ Any plans or code that violate "Non-Negotiable" clauses should be deemed "uncons
 
 ### Appendices
 
-- [Go Language Implementation Details](docs/constitution/go_annex.md)
-- [PHP Language Implementation Details (Lumen)](docs/constitution/php_annex.md)
-- [Python Language Implementation Details](docs/constitution/python_annex.md)
+- [Go Language Implementation Details](./docs/constitution/go_annex.md)
+- [PHP Language Implementation Details (Lumen)](./docs/constitution/php_annex.md)
+- [Python Language Implementation Details](./docs/constitution/python_annex.md)
 - (To be added: Frontend implementation details)
 
 ---
 
 ## Changelog
-
-| Version | Date       | Changes                                                                                         |
-| ------- | ---------- | ------------------------------------------------------------------------------------------------ |
-| 2.3     | 2026-02-08 | Adjusted Article 8.2 to "Iteration Scoping" to better fit maintenance/evolution scenarios.       |
-| 2.4     | 2026-02-09 | Updated Article 8.1 to "Adaptive Planning" to allow scalable planning for trivial tasks.         |
-                                    |

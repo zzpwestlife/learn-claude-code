@@ -398,7 +398,7 @@ log "INFO" "Installing core files..."
 ensure_dir "$TARGET_DIR/.claude"
 
 # 1. Copy Constitution
-safe_copy "$SOURCE_DIR/constitution.md" "$TARGET_DIR/.claude/"
+safe_copy "$SOURCE_DIR/.claude/constitution.md" "$TARGET_DIR/.claude/"
 
 # 1.1 Specs dir
 if [ ! -d "$TARGET_DIR/specs" ]; then
@@ -432,14 +432,14 @@ log "INFO" "Copying $LANG_NAME Annex..."
 ensure_dir "$TARGET_DIR/.claude/constitution"
 case "$LANG_NAME" in
     "Go")
-        safe_copy "$SOURCE_DIR/docs/constitution/go_annex.md" "$TARGET_DIR/.claude/constitution/"
+        safe_copy "$SOURCE_DIR/.claude/constitution/go_annex.md" "$TARGET_DIR/.claude/constitution/"
         safe_copy "$SOURCE_DIR/profiles/go/Makefile" "$TARGET_DIR/"
         ;;
     "PHP")
-        safe_copy "$SOURCE_DIR/docs/constitution/php_annex.md" "$TARGET_DIR/.claude/constitution/"
+        safe_copy "$SOURCE_DIR/.claude/constitution/php_annex.md" "$TARGET_DIR/.claude/constitution/"
         ;;
     "Python")
-        safe_copy "$SOURCE_DIR/docs/constitution/python_annex.md" "$TARGET_DIR/.claude/constitution/"
+        safe_copy "$SOURCE_DIR/.claude/constitution/python_annex.md" "$TARGET_DIR/.claude/constitution/"
         ;;
 esac
 

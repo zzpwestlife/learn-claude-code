@@ -12,7 +12,7 @@
 # Guidelines
 
 > **⚠️ Constitution**: This project strictly follows [constitution.md](../../constitution.md).
-> All code modifications must comply with its **11 core principles** and relevant **language annexes** (e.g., [Go Annex](../../docs/constitution/go_annex.md)).
+> All code modifications must comply with its **11 core principles** and relevant **language annexes** (e.g., [Go Annex](../../.claude/constitution/go_annex.md)).
 
 ## Git & Version Control
 - **Commit Messages**: **[STRICT]** Conventional Commits (type(scope): subject).
@@ -58,4 +58,4 @@ When creating plans, you **MUST** include the following "Constitution Check" sec
 - **Core**: Follow [constitution.md](../../constitution.md) principles.
   - **Limits**: Files < 200 lines, functions < 20 lines, single lines < 80 chars.
   - **Changes**: Minimal diff modifications only.
-- **Go**: See [Go Annex](../../docs/constitution/go_annex.md) (gofumpt, errgroup, no global variables).
+- **Go**: See [Go Annex](../../.claude/constitution/go_annex.md) (gofumpt, errgroup, no global variables).

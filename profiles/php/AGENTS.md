@@ -10,7 +10,7 @@
 # Guidelines
 
 > **⚠️ Constitution**: This project strictly follows [constitution.md](../../constitution.md).
-> All code modifications must comply with its **11 core principles** and relevant **language annexes** (e.g., [PHP Annex](../../docs/constitution/php_annex.md)).
+> All code modifications must comply with its **11 core principles** and relevant **language annexes** (e.g., [PHP Annex](../../.claude/constitution/php_annex.md)).
 
 ## Git & Version Control
 - **Commit Messages**: **[STRICT]** Conventional Commits (type(scope): subject).
@@ -52,7 +52,7 @@ When creating plans, you **MUST** include the following "Constitution Check" sec
 
 ## Code Style & Patterns
 - **Core**: Follow [constitution.md](../../constitution.md) principles.
-- **PHP**: See [PHP Annex](../../docs/constitution/php_annex.md).
+- **PHP**: See [PHP Annex](../../.claude/constitution/php_annex.md).
 - **Architecture**:
   - **Controller**: Only handles request/response, no business logic.
   - **Service**: Business logic.
