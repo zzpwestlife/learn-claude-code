@@ -489,6 +489,7 @@ safe_install "$PROFILE_DIR/Makefile" "$TARGET_DIR/Makefile"
 cecho "$BLUE" "🔒 Setting permissions..."
 find "$CLAUDE_ROOT" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
 find "$CLAUDE_ROOT" -name "*.py" -exec chmod +x {} \; 2>/dev/null || true
+find "$CLAUDE_ROOT" -name "superpowers-session-start" -exec chmod +x {} \; 2>/dev/null || true
 
 echo ""
 cecho "$GREEN" "✅ Installation Complete!"
@@ -499,4 +500,4 @@ echo "Profile: Go"
 echo "----------------------------------------"
 echo "To get started:"
 echo "1. cd $TARGET_DIR"
-echo "2. Run: /optimize-prompt (to test the workflow)"
+echo "2. Run: /brainstorm (to test the workflow)"

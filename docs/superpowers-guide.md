@@ -11,6 +11,21 @@ Superpowers 将 Claude 从简单的代码补全工具升级为具备系统方法
 3.  **Systematic Debugging**: 禁止猜测式修复。必须先定位根因 (Root Cause)，再实施修复。
 4.  **Subagent Collaboration**: 复杂任务由多个专职 Subagent（Spec Reviewer, Code Reviewer, Implementer）协作完成。
 
+## 零摩擦增强特性 (Zero-Friction Enhancements)
+
+本项目对 Superpowers 进行了定制增强，以提供更流畅的开发体验：
+
+1.  **自动状态感知与 TUI 暂停 (Automatic TUI Handoff)**:
+    *   在 `/writing-plans` 生成计划后，系统会自动询问是否立即执行。
+    *   在 `/execute-plans` 完成所有任务后，系统会**强制暂停**并提示进行代码审查，防止 AI 过度自信地提交代码。
+
+2.  **无框架 TDD 支持 (Framework-Agnostic TDD)**:
+    *   即使本地环境未安装 `pytest` 或 `jest`，`test-driven-development` skill 也能通过 Python/Node 原生解释器进行验证。
+    *   这确保了在任何环境下都能坚持 "Red-Green-Refactor" 原则。
+
+3.  **宪法检查 (Constitution Check)**:
+    *   在 `/brainstorming` 阶段，AI 会自动根据 `constitution.md`（如奥卡姆剃刀原则）审查需求，确保设计从源头符合项目规范。
+
 ## 常用指令 (Key Commands)
 
 | 指令 | 作用 | 对应阶段 |
