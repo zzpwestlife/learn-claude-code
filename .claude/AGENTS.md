@@ -42,6 +42,11 @@ All your actions must strictly comply with the project constitution imported abo
 - **No Laziness**: Fix root causes, not symptoms. Zero context switching for the user (fix bugs autonomously).
 - **Atomic Execution**: Do one thing well. Verify before moving to the next step.
 
+## 3. Interaction Standards (Zero-Friction)
+- **TUI Preference**: Whenever user input is required, provide a TUI menu (Arrow Keys + Enter).
+- **Smart Options**: When using `AskUserQuestion`, **ALWAYS** use the `options` parameter. Avoid open-ended text input.
+- **Sensible Defaults**: Mark the most likely choice as recommended.
+
 ## WHERE TO LOOK
 
 | Task | Path |

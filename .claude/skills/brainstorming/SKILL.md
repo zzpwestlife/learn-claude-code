@@ -49,16 +49,16 @@ digraph brainstorming {
     "Ask clarifying questions" [shape=box];
     "Propose 2-3 approaches" [shape=box];
     "Present design sections" [shape=box];
-    "User approves design?" [shape=diamond];
+    "User approves design? (AskUserQuestion)" [shape=diamond];
     "Write design doc" [shape=box];
     "Invoke writing-plans skill" [shape=doublecircle];
 
     "Explore project context" -> "Ask clarifying questions";
     "Ask clarifying questions" -> "Propose 2-3 approaches";
     "Propose 2-3 approaches" -> "Present design sections";
-    "Present design sections" -> "User approves design?";
-    "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Write design doc" [label="yes"];
+    "Present design sections" -> "User approves design? (AskUserQuestion)";
+    "User approves design? (AskUserQuestion)" -> "Present design sections" [label="no, revise"];
+    "User approves design? (AskUserQuestion)" -> "Write design doc" [label="yes"];
     "Write design doc" -> "Invoke writing-plans skill";
 }
 ```
@@ -78,11 +78,19 @@ digraph brainstorming {
 - Propose 2-3 different approaches with trade-offs
 - Present options conversationally with your recommendation and reasoning
 - Lead with your recommended option and explain why
+- **MANDATORY TUI HANDOFF:**
+  - You MUST use `AskUserQuestion` with `options` for the user to select the preferred approach.
+  - NEVER ask "Do you agree?" or "Which one do you prefer?" in text.
+  - NEVER wait for free-text input. Force a selection.
 
 **Presenting the design:**
 - Once you believe you understand what you're building, present the design
 - Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced
 - Ask after each section whether it looks right so far
+- **MANDATORY TUI HANDOFF:**
+  - You MUST use `AskUserQuestion` with `options` (e.g., "Approve Design", "Revise Design").
+  - NEVER ask "Does this look good?" in text.
+
 - Cover: architecture, components, data flow, error handling, testing
 - Be ready to go back and clarify if something doesn't make sense
 

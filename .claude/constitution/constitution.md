@@ -99,12 +99,26 @@ This constitution applies to all technology stacks under this project (Go, Front
 
 **Core:** Facts over assumptions (Evidence > Assumptions).
 
-- **9.1 (Validation-Driven):** Technical decisions must be based on test results or monitoring data.
-- **9.2 (Source Verification):** When citing third-party libraries or documentation, must verify credibility.
+- **9.1 (Log Analysis):** Always base debugging on actual logs and error messages, not guesses.
+- **9.2 (Reproduction):** Ensure bugs are reproducible before fixing.
+- **9.3 (Verification):** Verify fixes with tests or reproduction scripts.
+- **9.4 (Validation-Driven):** Technical decisions must be based on test results or monitoring data.
+- **9.5 (Source Verification):** When citing third-party libraries or documentation, must verify credibility.
 
 ---
 
-## Article 10: Delivery Standards Principle
+## Article 10: Zero-Friction & TUI-First Principle
+
+**Core:** User interaction must be frictionless. Minimize typing; maximize selection.
+
+- **10.1 (TUI Preference):** Whenever user input is required (in scripts or Agent interactions), provide a TUI (Text User Interface) menu navigable with arrow keys and Enter. Avoid free-text input unless absolutely necessary.
+- **10.2 (Smart Defaults):** Always provide a sensible default option that can be selected with a single Enter.
+- **10.3 (Option-Based Interaction):** Agents must use multiple-choice options (AskUserQuestion with options) rather than open-ended questions whenever possible.
+- **10.4 (Unified Entry):** Complex workflows should be encapsulated in TUI-driven scripts to reduce command memorization.
+
+---
+
+## Article 11: Delivery Standards Principle
 
 **Core:** Start with planning, end with completion.
 
@@ -116,7 +130,7 @@ This constitution applies to all technology stacks under this project (Go, Front
 
 ---
 
-## Article 11: Security & Privacy Principle - Non-Negotiable
+## Article 12: Security & Privacy Principle - Non-Negotiable
 
 **Core:** Security is not an add-on feature, it is a fundamental attribute.
 
@@ -127,7 +141,7 @@ This constitution applies to all technology stacks under this project (Go, Front
 
 ---
 
-## Article 12: Workflow Control & Handoff Principle - Non-Negotiable
+## Article 13: Workflow Control & Handoff Principle - Non-Negotiable
 
 **Core:** Human-in-the-loop control is absolute. AI must pause for confirmation at critical boundaries.
 
@@ -138,7 +152,7 @@ This constitution applies to all technology stacks under this project (Go, Front
 
 ---
 
-## Article 13: Cognitive Architecture Principle
+## Article 14: Cognitive Architecture Principle
 
 **Core:** Apply mental models (Occam's Razor, Feynman Technique, Socratic Method) to reduce complexity, increase clarity, and validate assumptions.
 

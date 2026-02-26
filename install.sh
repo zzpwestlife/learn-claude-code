@@ -97,71 +97,47 @@ done
 if [ -z "$TARGET_DIR" ]; then
     cecho "$BLUE" "Where would you like to install FlowState (Go Edition)?"
     
-    # GUI Mode for macOS
+    user_path=""
+    
+    # Try macOS native folder selection dialog first
     if [[ "$(uname)" == "Darwin" ]]; then
-        gui_choose "Where would you like to install FlowState?" \
-            "1) Current Directory ($(pwd))" \
-            "2) Specify a different project path"
+        cecho "$BLUE" "Opening Finder to select project directory..."
+        # Use osascript to show folder selection dialog
+        selected_path=$(osascript -e 'try
+            tell application "System Events"
+                activate
+                set folderPath to choose folder with prompt "Select Project Directory for FlowState Installation"
+                POSIX path of folderPath
+            end tell
+        on error
+            return ""
+        end try' 2>/dev/null)
         
-        choice=""
-        # Need to escape the parenthesis for regex matching if it's special, but here it's just string matching
-        if [[ "$SELECTED_OPTION" == 1\)* ]]; then
-            choice="1"
-        elif [[ "$SELECTED_OPTION" == 2\)* ]]; then
-            choice="2"
+        if [ -n "$selected_path" ]; then
+            user_path=${selected_path%/}
+            cecho "$GREEN" "Selected: $user_path"
+        else
+            cecho "$YELLOW" "Selection cancelled. Falling back to manual input."
         fi
-    else
-        # CLI Fallback
-        echo "  1) Current Directory ($(pwd))"
-        echo "  2) Specify a different project path"
-        echo ""
-        read -p "Your choice [1/2]: " choice
+    fi
+
+    # Fallback to manual input (if not macOS or user cancelled)
+    if [ -z "$user_path" ]; then
+        read -e -p "Enter project path: " user_path
     fi
     
-    case "$choice" in
-        2)
-            user_path=""
-            
-            # Try macOS native folder selection dialog first
-            if [[ "$(uname)" == "Darwin" ]]; then
-                cecho "$BLUE" "Opening Finder to select project directory..."
-                # Use osascript to show folder selection dialog
-                # Redirect stderr to /dev/null to suppress error if user cancels
-                selected_path=$(osascript -e 'try
-                    tell application "System Events"
-                        activate
-                        set folderPath to choose folder with prompt "Select Project Directory for FlowState Installation"
-                        POSIX path of folderPath
-                    end tell
-                on error
-                    return ""
-                end try' 2>/dev/null)
-                
-                if [ -n "$selected_path" ]; then
-                    # Remove trailing slash if present (osascript returns path with trailing slash)
-                    user_path=${selected_path%/}
-                    cecho "$GREEN" "Selected: $user_path"
-                else
-                    cecho "$YELLOW" "Selection cancelled or failed. Falling back to manual input."
-                fi
-            fi
+    # Resolve absolute path
+    if [[ "$user_path" != /* ]]; then
+        TARGET_DIR="$(pwd)/$user_path"
+    else
+        TARGET_DIR="$user_path"
+    fi
 
-            # Fallback to manual input if no path selected (or not on macOS)
-            if [ -z "$user_path" ]; then
-                read -e -p "Enter project path: " user_path
-            fi
-            
-            # Resolve absolute path
-            if [[ "$user_path" != /* ]]; then
-                TARGET_DIR="$(pwd)/$user_path"
-            else
-                TARGET_DIR="$user_path"
-            fi
-            ;;
-        *)
-            TARGET_DIR="$(pwd)"
-            ;;
-    esac
+    # Prevent installing to current directory
+    if [[ "$(cd "$TARGET_DIR" 2>/dev/null && pwd)" == "$(pwd)" ]]; then
+         cecho "$RED" "Error: Cannot install to the current source directory."
+         exit 1
+    fi
 fi
 
 if [ ! -d "$TARGET_DIR" ]; then
@@ -313,14 +289,16 @@ safe_install() {
         if [ -e "$dest" ]; then
             # If directory, merge (recursive copy)
             if [ "$is_dir" = true ]; then
-                # For directories, we just copy contents recursively
-                # This might need refinement if we want to prompt for every conflicting file inside
-                # But typically merging folders is safe-ish.
-                # Let's keep simple recursive copy for folders for now, or iterate?
-                # Iterating is safer but slower. Let's rely on cp -R for now, or just warn.
-                # Actually, safe_install calls itself recursively in the main loop for top-level dirs.
-                # If we are here, it means we are copying a directory that was passed directly to safe_install.
-                cp -R "$src/"* "$dest/"
+                # Try rsync first for exclusion support
+                if command -v rsync >/dev/null 2>&1; then
+                    rsync -a --exclude='.git' "$src/" "$dest/"
+                elif command -v tar >/dev/null 2>&1; then
+                    # Tar fallback with exclusion
+                    (cd "$src" && tar --exclude='.git' -cf - .) | (cd "$dest" && tar -xf -)
+                else
+                    # Fallback to cp (warning: will include .git if present)
+                    cp -R "$src/"* "$dest/"
+                fi
                 cecho "$GREEN" "  ✅ Merged directory $(basename "$src")"
             else
                 # File conflict detection
@@ -429,7 +407,14 @@ safe_install() {
             fi
         else
             if [ "$is_dir" = true ]; then
-                 cp -R "$src" "$dest"
+                if command -v rsync >/dev/null 2>&1; then
+                    rsync -a --exclude='.git' "$src/" "$dest/"
+                elif command -v tar >/dev/null 2>&1; then
+                    mkdir -p "$dest"
+                    (cd "$src" && tar --exclude='.git' -cf - .) | (cd "$dest" && tar -xf -)
+                else
+                    cp -R "$src" "$dest"
+                fi
             else
                  cp "$src" "$dest"
             fi
@@ -449,7 +434,7 @@ ensure_dir "$CLAUDE_ROOT"
 for item in ".claude"/*; do
     basename=$(basename "$item")
     # Skip profiles directory as it is handled separately/specifically later
-    if [ "$basename" == "profiles" ]; then
+    if [ "$basename" == "profiles" ] || [ "$basename" == "tmp" ]; then
         continue
     fi
     

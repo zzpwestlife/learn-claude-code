@@ -65,6 +65,12 @@ When batch complete:
 - Show what was implemented
 - Show verification output
 - Say: "Ready for feedback."
+- **MANDATORY TUI HANDOFF:**
+  - You MUST use `AskUserQuestion` with `options` to confirm next batch.
+  - Options:
+    1. "Continue Execution (Next Batch)" (Recommended)
+    2. "Review Changes (Diff)"
+    3. "Pause Execution (Wait)"
 
 ### Step 4: Continue
 Based on feedback:

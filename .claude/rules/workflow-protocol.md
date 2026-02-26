@@ -66,6 +66,8 @@
 ## 3. TUI 交互标准 (Interaction Standards)
 
 **Universal Rule**: 每一个工作流步骤 (Step) 结束后，**必须**展示 TUI 菜单并等待用户指令。严禁自动跳过。所有菜单必须支持**中英双语**。
+**Strict Prohibition**: 严禁在文本回复中询问 "Do you want to proceed?" 或 "Which option do you prefer?"。**必须**使用 `AskUserQuestion` 工具来呈现选项。
+**Visual Consistency**: 当呈现多个复杂方案时，先用 Markdown 表格或列表对比方案，然后**立即**调用 `AskUserQuestion`，将方案转化为选项。
 
 **关键机制 (Key Mechanism): Interactive Navigation**
 1. **Ask**: 使用 `AskUserQuestion` 提供**方向键 (Arrow Keys)** 选择。
@@ -73,6 +75,7 @@
 3. **Zero Friction**: 对于标准工作流命令（如 `/plan`, `/execute`, `/review`），必须设置 `requires_approval: false`，实现**一键直达**。
 
 ### 3.1 Step 1: Optimization -> Planning
+- **Visual**: `[> Optimize] -> [Plan] -> [Execute] -> [Review] -> [Changelog]`
 - **Trigger**: `prompt.md` 生成完毕。
 - **Menu Options**:
   1. **Start Planning**
@@ -83,6 +86,7 @@
      - **Action**: Wait for user input
 
 ### 3.2 Step 2: Planning -> Execution
+- **Visual**: `[Optimize] -> [> Plan] -> [Execute] -> [Review] -> [Changelog]`
 - **Trigger**: `task_plan.md` 生成完毕。
 - **Menu Options**:
   1. **Execute Plan**
@@ -93,6 +97,7 @@
      - **Action**: Wait for user input
 
 ### 3.3 Step 3: Execution Loop (Phase Handoff)
+- **Visual**: `[Optimize] -> [Plan] -> [> Execute] -> [Review] -> [Changelog]`
 - **Trigger**: 单个 Task Phase 完成 (Phase Completed)。
 - **Menu Options**:
   1. **Continue Execution**
@@ -105,6 +110,7 @@
      - **Action**: Wait for user input
 
 ### 3.4 Step 3 -> Step 4: Execution Done -> Review
+- **Visual**: `[Optimize] -> [Plan] -> [Execute] -> [> Review] -> [Changelog]`
 - **Trigger**: 所有 Phase 完成 (All Phases Complete)。
 - **Menu Options**:
   1. **Proceed to Code Review**
@@ -115,6 +121,7 @@
      - **Action**: Call `RunCommand(command="/changelog-generator", requires_approval=False)`
 
 ### 3.5 Step 4: Review -> Changelog
+- **Visual**: `[Optimize] -> [Plan] -> [Execute] -> [Review] -> [> Changelog]`
 - **Trigger**: 代码审查报告生成完毕。
 - **Menu Options**:
   1. **Generate Changelog**
@@ -125,6 +132,7 @@
      - **Action**: Propose `/planning-with-files plan` (to plan fixes)
 
 ### 3.6 Error Recovery & Fix Loop (通用修复循环)
+- **Visual**: `[Optimize] -> [Plan] -> [> Execute] -> [Review] -> [Changelog]`
 - **Trigger**: 错误修复完成 (Fix Applied) 或 审查问题已解决 (Issues Resolved)。
 - **Menu Options**:
   1. **Resume / Retry**
@@ -135,6 +143,7 @@
      - **Action**: Wait for user input
 
 ### 3.7 Step 5: Changelog -> Commit
+- **Visual**: `[Optimize] -> [Plan] -> [Execute] -> [Review] -> [> Changelog] -> [Commit]`
 - **Trigger**: CHANGELOG.md 更新完毕。
 - **Menu Options**:
   1. **Generate Commit Message**

@@ -33,6 +33,13 @@ description: "在用户请求代码审查、Review 变更或生成 CODE_REVIEW.m
         *   **Code Style**：风格问题（可选）。
         *   **Positive Highlights**：亮点。
 
+4.  **MANDATORY TUI HANDOFF**：
+    *   报告生成后，**必须**使用 `AskUserQuestion` 提供后续操作选项。
+    *   选项：
+        1. "Generate Changelog (Create CHANGELOG.md)" (Recommended)
+        2. "Fix Issues (Create Fix Plan)"
+        3. "Re-run Review (Check Again)"
+
 ## 工具脚本
 
 - `scripts/get-diff.sh`: 自动选择 staged 或 unstaged diff 并输出。

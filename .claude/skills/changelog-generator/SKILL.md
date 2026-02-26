@@ -32,6 +32,11 @@ description: "在用户请求生成变更日志、Changelog 或总结差异时�
 2.  Agent 运行: `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py`
 3.  Agent 获取到 Diff 输出，分析发现新增了登录功能。
 4.  Agent 编辑 `CHANGELOG.md`，添加 "## [Unreleased] - ✨ 新增用户登录功能..."。
+5.  **MANDATORY TUI HANDOFF:**
+    - Changelog 生成后，**必须**使用 `AskUserQuestion`。
+    - 选项：
+      1. "Generate Commit Message (Commit Changes)" (Recommended)
+      2. "Edit Changelog (Refine)"
 
 ## 前置条件 (Prerequisites)
 

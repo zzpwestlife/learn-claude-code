@@ -98,6 +98,15 @@ git commit -m "feat: add specific feature"
 
 After saving the plan, offer execution choice:
 
+**MANDATORY TUI HANDOFF:**
+- You MUST use `AskUserQuestion` with `options` for the user to select the next step.
+- NEVER ask "Do you want to proceed?" in text.
+- Options:
+  1. "Execute Plan (Start Implementation)" (Recommended)
+  2. "Review Plan (Read File)"
+  3. "Refine Plan (Edit File)"
+- If user selects "Execute Plan", use `RunCommand` to invoke `/execute-plan`.
+
 > "Plan created at docs/plans/YYYY-MM-DD-feature.md. Ready to execute? (y/n)"
 
 
