@@ -2,12 +2,8 @@
   "hooks": {
     "UserPromptSubmit": [
       {
-        "hooks": [
-          {
-            "type": "command",
-            "command": ".claude/hooks/claudeception-activator.sh"
-          }
-        ]
+        "type": "command",
+        "command": ".claude/hooks/claudeception-activator.sh"
       }
     ],
     "Notification": []
