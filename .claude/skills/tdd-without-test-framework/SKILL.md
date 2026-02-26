@@ -7,7 +7,7 @@ description: |
   or coding standards mandate TDD but environment setup incomplete, (3) need to verify
   "red phase" (test fails) before implementation, (4) CI/CD will install framework but
   local dev environment lacks it. Works for Python (pytest/unittest), JavaScript
-  (jest/mocha), Go (testing package). Maintains test-first discipline without blocking
+  (jest/mocha), Go (manual verification scripts). Maintains test-first discipline without blocking
   on environment setup.
 author: Claude Code
 version: 1.0.0
@@ -100,18 +100,18 @@ ReferenceError: multiply is not defined
 
 **Go Example**:
 ```bash
-# Verify function is missing
+# Verify function is missing (Red Phase)
 $ go build ./...
-# math.go:10:2: undefined: multiply
+# ./main.go: undefined: Multiply
 # ✅ Red phase confirmed
 ```
 
 **Step 3**: (Optional) Test function would fail if it existed
 ```bash
-# Python: Import succeeds but function returns wrong value
-$ python3 -c "from demo_math import multiply; assert multiply(3,4) == 999"
-AssertionError
-# ✅ Confirms test logic is correct
+# Go: Create a temporary main.go to assert behavior
+$ echo 'package main; import "fmt"; func main() { if 1==1 { panic("Force Fail") } }' > verify_temp.go && go run verify_temp.go
+panic: Force Fail
+# ✅ Confirms test harness works
 ```
 
 ### Phase 3: Implement Function (Green Phase)
@@ -127,6 +127,8 @@ def multiply(a, b):
 ### Phase 4: Verify Green Phase (Implementation Works)
 
 **Step 5**: Manually test all test scenarios
+
+**Python Example**:
 ```bash
 # Python: Verify all test cases manually
 $ python3 -c "
@@ -138,6 +140,45 @@ assert multiply(0, 100) == 0, 'Test 4 failed'
 print('✅ All tests passed')
 "
 ✅ All tests passed
+```
+
+**Go Example (Table-Driven Verification)**:
+```go
+// create verify.go
+package main
+
+import (
+	"fmt"
+	"os"
+	// "your/pkg/math" // Import actual package
+)
+
+func multiply(a, b int) int { return a * b } // Mock for demo
+
+func main() {
+	cases := []struct {
+		name     string
+		a, b     int
+		expected int
+	}{
+		{"Positive", 3, 4, 12},
+		{"Zero", 0, 100, 0},
+		{"Negative", -3, 7, -21},
+	}
+
+	for _, tc := range cases {
+		if got := multiply(tc.a, tc.b); got != tc.expected {
+			fmt.Printf("❌ %s failed: expected %d, got %d\n", tc.name, tc.expected, got)
+			os.Exit(1)
+		}
+	}
+	fmt.Println("✅ All tests passed")
+}
+```
+```bash
+$ go run verify.go
+✅ All tests passed
+$ rm verify.go # Cleanup
 ```
 
 **Step 6**: Document verification in progress.md
@@ -289,13 +330,14 @@ node -e "const {func} = require('./module')"
 node -e "const {func} = require('./module'); console.assert(func(1,2) === 3)"
 ```
 
-**Go (testing)**:
+**Go (Manual Table-Driven)**:
 ```bash
-# Red: Build error
+# Red: Build error (Undefined)
 go build ./...
 
-# Green: Manual test (create temp main.go)
-echo 'package main; import "fmt"; import "./math"; func main() { fmt.Println(math.Multiply(3,4)) }' | go run -
+# Green: Scripted Table-Driven Test
+# Create verify.go with struct slice cases (see Phase 4)
+go run verify.go && rm verify.go
 ```
 
 ### Constitution Compliance

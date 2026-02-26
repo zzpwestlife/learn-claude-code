@@ -29,12 +29,23 @@
 
 **前置要求**: Claude Code CLI, Python 3.8+, Git.
 
-如果你已经克隆了本仓库，可以直接运行 `install.sh` 脚本。它会自动将配置安装到你的 Go 项目中。
+推荐使用一键安装脚本：
+
+**macOS / Linux / Windows (Git Bash):**
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/learn-claude-code/learn-claude-code/main/install.sh)"
+```
+
+**Windows (PowerShell):**
+```powershell
+irm https://raw.githubusercontent.com/learn-claude-code/learn-claude-code/main/install.ps1 | iex
+```
+
+如果你已经克隆了本仓库，也可以手动运行：
 
 ```bash
 # 标准安装（复制模式，推荐生产环境）
 ./install.sh <你的目标 Go 项目路径>
-# 示例: ./install.sh ../my-go-project
 
 # 开发安装（软链接模式，推荐开发调试）
 ./install.sh --dev <你的目标 Go 项目路径>

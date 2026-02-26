@@ -23,6 +23,16 @@ else
     NC='\033[0m'
 fi
 
+# Detect Python interpreter
+if command -v python3 >/dev/null 2>&1; then
+    PYTHON_CMD="python3"
+elif command -v python >/dev/null 2>&1; then
+    PYTHON_CMD="python"
+else
+    echo -e "${RED}Error: Python 3 is required but not found.${NC}"
+    exit 1
+fi
+
 cecho() {
     local color="$1"
     local message="$2"
@@ -185,7 +195,7 @@ smart_merge_json() {
     local src="$1"
     local dest="$2"
     
-    python3 -c "
+    $PYTHON_CMD -c "
 import sys, json, os
 
 src_path = '$src'
@@ -238,7 +248,7 @@ smart_merge_text() {
     
     # Append missing lines
     # We use python for safer line handling than pure bash/grep
-    python3 -c "
+    $PYTHON_CMD -c "
 import sys
 
 src_path = '$src'

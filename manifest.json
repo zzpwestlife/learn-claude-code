@@ -1,26 +1,54 @@
 {
-  "name": "FlowState (Go)",
+  "name": "FlowState Workflow",
   "version": "1.0.0",
   "description": "A Zero-Friction Workflow plugin for Claude Code, optimized for Go development.",
-  "author": "Learn Claude Code Team",
+  "author": "Joeyzou",
   "license": "MIT",
-  "repository": "https://github.com/learn-claude-code/ai-workflow-go",
+  "repository": "https://github.com/learn-claude-code",
   "components": {
     "commands": [
+      "archive-task",
+      "changelog-generator",
+      "commit-message-generator",
       "optimize-prompt",
       "review-code",
-      "changelog-generator",
-      "commit-message-generator"
+      "tidy-memory"
     ],
     "skills": [
       "changelog-generator",
       "planning-with-files",
       "prompt-to-plan-workflow",
       "review-code",
-      "skill-architect"
+      "skill-architect",
+      "tdd-without-test-framework"
     ],
     "agents": [
+      "changelog-generator",
       "code-reviewer"
+    ],
+    "hooks": [
+      "claudeception-activator.sh",
+      "go/format-go-code.sh"
+    ],
+    "rules": [
+      "coding-standards",
+      "operational-standards",
+      "workflow-protocol"
+    ],
+    "constitution": [
+      "constitution",
+      "go_annex",
+      "prompt_engineering_annex"
+    ],
+    "checklists": [
+      "mental_model_checklist"
+    ],
+    "docs": [
+      "mental_model_dashboard",
+      "mental_model_whitepaper"
+    ],
+    "scripts": [
+      "tidy-memory.sh"
     ],
     "profiles": {
       "go": "Optimized Go Development Environment"
