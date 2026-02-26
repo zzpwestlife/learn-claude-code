@@ -106,6 +106,7 @@ Evaluate if you have gained new knowledge:
 This ensures your toolkit gets smarter over time.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-else
-    log "SKIPPED: No relevant context detected."
 fi
+
+# Always exit successfully to prevent hook errors
+exit 0
