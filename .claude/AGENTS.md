@@ -46,6 +46,7 @@ All your actions must strictly comply with the project constitution imported abo
 - **TUI Preference**: Whenever user input is required, provide a TUI menu (Arrow Keys + Enter).
 - **Smart Options**: When using `AskUserQuestion`, **ALWAYS** use the `options` parameter. Avoid open-ended text input.
 - **Sensible Defaults**: Mark the most likely choice as recommended.
+- **Reflective Handoff**: In ALL situations, after replying to the user, **ALWAYS** provide actionable options to ensure a continuous workflow. Achieve a true Reflective Handoff.
 
 ## WHERE TO LOOK
 

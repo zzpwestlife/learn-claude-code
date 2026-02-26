@@ -4,10 +4,7 @@ dist/
 node_modules/
 .trae/
 tmp.log
-settings.local.json
 *.tmp
 .env
 *.pyc
 tests/*
-CODE_REVIEW.md
-review_report.md

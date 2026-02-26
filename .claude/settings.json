@@ -2,14 +2,22 @@
   "hooks": {
     "SessionStart": [
       {
-        "type": "command",
-        "command": ".claude/hooks/superpowers-session-start"
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/superpowers-session-start"
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
       {
-        "type": "command",
-        "command": ".claude/hooks/claudeception-activator.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/claudeception-activator.sh"
+          }
+        ]
       }
     ],
     "Notification": []
