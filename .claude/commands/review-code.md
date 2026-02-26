@@ -62,10 +62,10 @@ If the change touches more than 3 files or crosses multiple modules, run a plann
 
 **Output Format (Silent Mode):**
 1.  **Visual Progress**: Start output with `[✔ Optimize] → [✔ Plan] → [✔ Execute] → [➤ Review] → [Changelog]`
-2.  **Save Report**: Always save the full Markdown report to `{output_dir}/review_report.md`.
+2.  **Save Report**: Always save the full Markdown report to `{output_dir}/CODE_REVIEW.md`.
 3.  **Chat Summary**: 
     -   If report > 20 lines, **DO NOT** print the full report in chat.
-    -   Instead, print a **concise summary** (Critical Issues & Highlights) and the file link: `Full report saved to: [review_report.md](file://...)`.
+    -   Instead, print a **concise summary** (Critical Issues & Highlights) and the file link: `Full report saved to: [CODE_REVIEW.md](file://...)`.
     -   If critical issues found, highlight them clearly.
 
 ## Workflow Handoff
@@ -73,7 +73,7 @@ After the review is complete:
 
 1.  **Reflective Handoff (Interactive Menu)**:
     -   **Mandatory**: You **MUST** use `AskUserQuestion` to present options (support bilingual).
-    -   **Question**: `代码审查完成 (Report saved to {output_dir}/review_report.md)。下一步？`
+    -   **Question**: `代码审查完成 (Report saved to {output_dir}/CODE_REVIEW.md)。下一步？`
     -   **Options**:
         1.  **Generate Changelog**
             -   **Label**: `Generate Changelog (生成变更日志)`

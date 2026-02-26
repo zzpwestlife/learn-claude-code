@@ -9,3 +9,5 @@ settings.local.json
 .env
 *.pyc
 tests/*
+CODE_REVIEW.md
+review_report.md

@@ -70,12 +70,20 @@ if [ "$SHOULD_RUN" = "false" ] && [ -d "docs/plans" ]; then
     fi
 fi
 
-# Check review_report.md
-if [ "$SHOULD_RUN" = "false" ] && [ -f "review_report.md" ]; then
-    AGE=$(get_file_age "review_report.md")
-    if [ "$AGE" -lt "$THRESHOLD" ]; then
-        SHOULD_RUN=true
-        REASON="review_report.md generated ${AGE}s ago"
+# Check CODE_REVIEW.md (or legacy review_report.md)
+if [ "$SHOULD_RUN" = "false" ]; then
+    if [ -f "CODE_REVIEW.md" ]; then
+        AGE=$(get_file_age "CODE_REVIEW.md")
+        if [ "$AGE" -lt "$THRESHOLD" ]; then
+            SHOULD_RUN=true
+            REASON="CODE_REVIEW.md generated ${AGE}s ago"
+        fi
+    elif [ -f "review_report.md" ]; then
+         AGE=$(get_file_age "review_report.md")
+         if [ "$AGE" -lt "$THRESHOLD" ]; then
+             SHOULD_RUN=true
+             REASON="review_report.md generated ${AGE}s ago"
+         fi
     fi
 fi
 

@@ -7,7 +7,7 @@
 系统通过 Hook 脚本 (`.claude/hooks/claudeception-activator.sh`) 实时监测项目上下文，当检测到以下事件时自动触发：
 1.  **任务完成**: `CHANGELOG.md` 在最近 5 分钟内被更新。
 2.  **计划达成**: `docs/plans/` 下的最新计划全部勾选完成且最近被修改。
-3.  **审查结束**: `review_report.md` 生成。
+3.  **审查结束**: `CODE_REVIEW.md` (或 `review_report.md`) 生成。
 
 **触发效果**:
 当满足条件时，系统会输出 "SKILL ARCHITECT: EVOLUTION CHECK" 提示，引导您将新获得的知识固化为 Skill。
