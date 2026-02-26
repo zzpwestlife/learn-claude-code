@@ -80,7 +80,7 @@ After the review is complete:
             -   **Action**: Call `RunCommand(command="/changelog-generator {output_dir}", requires_approval=False)`
         2.  **Fix Critical Issues**
             -   **Label**: `Fix Critical Issues (修复关键问题)`
-            -   **Action**: Call `RunCommand(command="/planning-with-files plan {output_dir}", requires_approval=False)` (to plan fixes)
+            -   **Action**: Call `RunCommand(command="/write-plan {output_dir}", requires_approval=False)` (to plan fixes)
         3.  **Manual Verification**
             -   **Label**: `Manual Verification (手动验证)`
             -   **Action**: Wait for user input.

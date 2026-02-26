@@ -40,7 +40,7 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/architect.py refine <name> <type> "<conten
 ```
 
 **Parameters:**
-- `name`: The name of the skill (e.g., `planning-with-files`)
+- `name`: The name of the skill (e.g., `writing-plans`)
 - `type`: One of `preference`, `fix`, `prompt`
 - `content`: The text to save
 

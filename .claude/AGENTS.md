@@ -32,7 +32,7 @@ All your actions must strictly comply with the project constitution imported abo
 > Note: These rules are also stored in Project Memory for quick access.
 
 ## 1. Workflow Orchestration
-- **Plan First**: For any task >3 steps, create/update `task_plan.md`. STOP if implementation deviates from plan.
+- **Plan First**: For any task >3 steps, create/update a plan in `docs/plans/`. STOP if implementation deviates from plan.
   > *Lifecycle*: After task completion, use `/archive-task` to move plans to `.claude/archive/`.
 - **Verification**: Never mark complete without proof (logs, tests, diffs). "Would a staff engineer approve this?"
 - **Self-Improvement**: After any correction, update `.claude/lessons.md`. Check this file at session start.
@@ -56,7 +56,7 @@ All your actions must strictly comply with the project constitution imported abo
 | Add Hook | `.claude/hooks/` |
 | Configure permissions | `.claude/settings.json` |
 | Add Skill | `.claude/skills/` |
-| Task Tracking | `task_plan.md` |
+| Task Tracking | `docs/plans/` |
 | Lessons Learned | `.claude/lessons.md` |
 
 ## ANTI-PATTERNS

@@ -1,133 +1,89 @@
 #!/bin/bash
-# Check if all phases in task_plan.md are complete
+# Check if all tasks in the latest plan file are complete
+# Supports both "Phase" (legacy) and "Task" (new) formats
 # Tracks state in .claude/tmp/phase_state to detect transitions
-# Writes detailed status to .claude/tmp/planning_status.md
-# Output to stdout ONLY on significant events (Phase Complete, All Complete)
 
-PLAN_FILE="${1:-task_plan.md}"
-
-# Generate a unique state file path based on the plan file path
-# This ensures that different projects/directories have isolated state
-PLAN_ABS_PATH=$(cd "$(dirname "$PLAN_FILE")" && pwd)/$(basename "$PLAN_FILE")
-PLAN_HASH=$(echo "$PLAN_ABS_PATH" | md5sum 2>/dev/null | awk '{print $1}')
-if [ -z "$PLAN_HASH" ]; then
-    # Fallback for macOS (md5) or if md5sum is missing
-    PLAN_HASH=$(echo "$PLAN_ABS_PATH" | md5 -q 2>/dev/null)
-fi
-if [ -z "$PLAN_HASH" ]; then
-    # Fallback if both fail (unlikely but safe)
-    PLAN_HASH="default"
-fi
-
-STATE_FILE=".claude/tmp/phase_state_${PLAN_HASH}"
-AUDIT_LOG=".claude/audit/planning.log"
+PLAN_DIR="docs/plans"
 STATUS_FILE=".claude/tmp/planning_status.md"
+AUDIT_LOG=".claude/audit/planning.log"
 
 # Ensure dirs exist
-mkdir -p "$(dirname "$STATE_FILE")"
 mkdir -p "$(dirname "$AUDIT_LOG")"
 mkdir -p "$(dirname "$STATUS_FILE")"
 
-if [ ! -f "$PLAN_FILE" ]; then
-    # No plan, nothing to do
+# Find latest plan
+PLAN_FILE=""
+if [ -d "$PLAN_DIR" ]; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        PLAN_FILE=$(find "$PLAN_DIR" -name "*.md" -type f -exec stat -f "%m %N" {} + | sort -rn | head -n 1 | cut -d ' ' -f 2-)
+    else
+        PLAN_FILE=$(find "$PLAN_DIR" -name "*.md" -type f -exec stat -c "%Y %n" {} + | sort -rn | head -n 1 | cut -d ' ' -f 2-)
+    fi
+fi
+
+if [ -z "$PLAN_FILE" ]; then
+    # No plan found
     exit 0
 fi
 
+# Generate unique state file
+PLAN_ABS_PATH=$(cd "$(dirname "$PLAN_FILE")" && pwd)/$(basename "$PLAN_FILE")
+PLAN_HASH=$(echo "$PLAN_ABS_PATH" | md5sum 2>/dev/null | awk '{print $1}')
+if [ -z "$PLAN_HASH" ]; then
+    PLAN_HASH=$(echo "$PLAN_ABS_PATH" | md5 -q 2>/dev/null)
+fi
+if [ -z "$PLAN_HASH" ]; then
+    PLAN_HASH="default"
+fi
+STATE_FILE=".claude/tmp/phase_state_${PLAN_HASH}"
+mkdir -p "$(dirname "$STATE_FILE")"
+
 # --- ANALYSIS ---
 
-# 1. Check Global Status
-GLOBAL_COMPLETE=0
-if grep -iE "\*\*Status:\*\*.*complete" "$PLAN_FILE" >/dev/null; then
-    GLOBAL_COMPLETE=1
-fi
+# Count total checkable items (- [ ])
+TOTAL_ITEMS=$(grep -c "\- \[.\]" "$PLAN_FILE" || true)
 
-# 2. Count phases
-TOTAL=$(grep -c "^### Phase" "$PLAN_FILE" || true)
+# Count completed items (- [x])
+COMPLETED_ITEMS=$(grep -c "\- \[x\]" "$PLAN_FILE" || true)
 
-# 3. Count completed phases (regex specific to phase lines)
-COMPLETE=$(grep -iE "^### Phase.*(\[complete\]|\[x\])" "$PLAN_FILE" | wc -l | tr -d ' ')
-
-# 4. Count in-progress
-IN_PROGRESS=$(grep -ic "\[in_progress\]" "$PLAN_FILE" || true)
+# Count incomplete items (- [ ])
+INCOMPLETE_ITEMS=$(grep -c "\- \[ \]" "$PLAN_FILE" || true)
 
 # --- STATUS FILE GENERATION ---
 {
     echo "# Planning Status"
     echo "Time: $(date)"
-    echo "- Total Phases: $TOTAL"
-    echo "- Completed: $COMPLETE"
-    echo "- In Progress: $IN_PROGRESS"
+    echo "Plan: $(basename "$PLAN_FILE")"
+    echo "- Total Items: $TOTAL_ITEMS"
+    echo "- Completed: $COMPLETED_ITEMS"
+    echo "- Remaining: $INCOMPLETE_ITEMS"
     echo ""
-    echo "## Details"
-    grep "^### Phase" "$PLAN_FILE"
+    echo "## Recent Activity"
+    tail -n 5 "$AUDIT_LOG" 2>/dev/null || echo "No recent activity."
 } > "$STATUS_FILE"
 
 # --- STATE TRACKING ---
-
-# Load Previous State
-PREV_COMPLETE=0
+PREV_COMPLETED=0
 if [ -f "$STATE_FILE" ]; then
-    PREV_COMPLETE=$(cat "$STATE_FILE")
-    # Basic validation
-    if ! [[ "$PREV_COMPLETE" =~ ^[0-9]+$ ]]; then
-        PREV_COMPLETE=0
+    PREV_COMPLETED=$(cat "$STATE_FILE")
+    if ! [[ "$PREV_COMPLETED" =~ ^[0-9]+$ ]]; then
+        PREV_COMPLETED=0
     fi
 fi
 
-# Update state file
-echo "$COMPLETE" > "$STATE_FILE"
+# Update state
+echo "$COMPLETED_ITEMS" > "$STATE_FILE"
 
 # --- EVENT DETECTION ---
-
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
 
-# Case 1: Global Complete or All Phases Complete
-if [ "$GLOBAL_COMPLETE" -eq 1 ] || { [ "$TOTAL" -gt 0 ] && [ "$COMPLETE" -ge "$TOTAL" ]; }; then
-    echo "ALL PHASES COMPLETE"
-    # Log if strictly new
-    if [ "$PREV_COMPLETE" -lt "$TOTAL" ]; then
-        echo "$TIMESTAMP: All phases completed ($COMPLETE/$TOTAL)" >> "$AUDIT_LOG"
+# Detect Completion
+if [ "$TOTAL_ITEMS" -gt 0 ] && [ "$INCOMPLETE_ITEMS" -eq 0 ]; then
+    echo "ALL TASKS COMPLETE"
+    if [ "$PREV_COMPLETED" -lt "$TOTAL_ITEMS" ]; then
+        echo "$TIMESTAMP: All tasks completed ($COMPLETED_ITEMS/$TOTAL_ITEMS) in $(basename "$PLAN_FILE")" >> "$AUDIT_LOG"
     fi
-    exit 0
+elif [ "$COMPLETED_ITEMS" -gt "$PREV_COMPLETED" ]; then
+    echo "TASK PROGRESS: $COMPLETED_ITEMS/$TOTAL_ITEMS"
+    echo "$TIMESTAMP: Progress update ($COMPLETED_ITEMS/$TOTAL_ITEMS) in $(basename "$PLAN_FILE")" >> "$AUDIT_LOG"
 fi
-
-# Case 2: Phase Completion Event
-if [ "$COMPLETE" -gt "$PREV_COMPLETE" ]; then
-    echo "$TIMESTAMP: Phase $COMPLETE completed (Previous: $PREV_COMPLETE)" >> "$AUDIT_LOG"
-    echo "EVENT: PHASE_COMPLETE"
-    
-    # Extract next phase title
-    NEXT_NUM=$((COMPLETE + 1))
-    NEXT_PHASE=$(grep "^### Phase" "$PLAN_FILE" | sed -n "${NEXT_NUM}p" | sed 's/^### //')
-    if [ -n "$NEXT_PHASE" ]; then
-        echo "NEXT_PHASE: $NEXT_PHASE"
-    fi
-
-    echo ""
-    echo "🛑🛑🛑 STOP EXECUTION NOW 🛑🛑🛑"
-    echo "Phase $COMPLETE is marked as COMPLETE."
-    echo "ACTION REQUIRED: You MUST use AskUserQuestion to present the 'Continue Execution' menu (Direction Keys + Enter)."
-    echo "Options: [Continue to Phase $(($COMPLETE + 1))] [Pause / Review]"
-    echo "DO NOT automatically proceed. Use RunCommand(requires_approval=False) for zero friction."
-    exit 0
-fi
-
-# Case 3: Revert (Log but maybe don't stop execution? Or warn?)
-if [ "$COMPLETE" -lt "$PREV_COMPLETE" ]; then
-    echo "$TIMESTAMP: Phase reverted to $COMPLETE (Previous: $PREV_COMPLETE)" >> "$AUDIT_LOG"
-    # echo "EVENT: PHASE_REVERT"
-    # Silent on revert to allow correction without nagging
-    exit 0
-fi
-
-# Case 4: Plan Ready (Start of Phase 1)
-# TOTAL > 0, COMPLETE = 0, IN_PROGRESS = 0
-if [ "$TOTAL" -gt 0 ] && [ "$COMPLETE" -eq 0 ] && [ "$IN_PROGRESS" -eq 0 ]; then
-    echo "EVENT: PLAN_READY"
-    # echo "Details: Plan created/updated, ready for Phase 1."
-    exit 0
-fi
-
-# Case 5: In Progress (Silent)
-# No output = No interruption
-exit 0

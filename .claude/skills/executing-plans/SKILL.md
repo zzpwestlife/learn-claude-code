@@ -7,29 +7,24 @@ hooks:
       hooks:
         - type: command
           command: |
-            SCRIPT_DIR="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude}/scripts"
-            # Find the latest plan file in docs/plans/
-            LATEST_PLAN=$(ls -t docs/plans/*.md 2>/dev/null | head -n 1)
+            SCRIPT_DIR=".claude/scripts"
+            OUTPUT=$(sh "$SCRIPT_DIR/check-complete.sh" 2>/dev/null)
             
-            if [ -n "$LATEST_PLAN" ]; then
-              OUTPUT=$(sh "$SCRIPT_DIR/check-complete.sh" "$LATEST_PLAN" 2>/dev/null)
-              
-              # Concise output: only show status if changed or complete
-              if echo "$OUTPUT" | grep -q "ALL PHASES COMPLETE"; then
-                echo ""
-                echo "<system-reminder>"
-                echo "✅ SYSTEM NOTICE: All tasks in $LATEST_PLAN are complete."
-                echo "👉 ACTION REQUIRED: You MUST now use 'AskUserQuestion' to prompt the user:"
-                echo "  '所有计划任务已执行完成！是否进行代码审查？'"
-                echo "  Options: ['Yes', 'No']"
-                echo "  If Yes: Use RunCommand tool to execute '/review-code'."
-                echo "</system-reminder>"
-              elif [ -n "$OUTPUT" ]; then
-                 # Write detailed status to a temp file to keep chat clean
-                 mkdir -p .claude/tmp
-                 echo "$OUTPUT" > .claude/tmp/planning_status.md
-                 echo "Planning Status Updated: [View Status](file:///Users/admin/openSource/learn-claude-code/.claude/tmp/planning_status.md)"
-              fi
+            # Concise output: only show status if changed or complete
+            if echo "$OUTPUT" | grep -q "ALL TASKS COMPLETE"; then
+              echo ""
+              echo "<system-reminder>"
+              echo "✅ SYSTEM NOTICE: All tasks in the active plan are complete."
+              echo "👉 ACTION REQUIRED: You MUST now use 'AskUserQuestion' to prompt the user:"
+              echo "  '所有计划任务已执行完成！是否进行代码审查？'"
+              echo "  Options: ['Yes', 'No']"
+              echo "  If Yes: Use RunCommand tool to execute '/review-code'."
+              echo "</system-reminder>"
+            elif [ -n "$OUTPUT" ]; then
+               # Write detailed status to a temp file to keep chat clean
+               mkdir -p .claude/tmp
+               # check-complete.sh already writes to .claude/tmp/planning_status.md
+               echo "Planning Status Updated: [View Status](file:///Users/admin/openSource/learn-claude-code/.claude/tmp/planning_status.md)"
             fi
 ---
 

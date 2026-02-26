@@ -210,6 +210,8 @@ graph TD
 - **Refine**: 将经验（Fixes/Preferences）注入现有 Skill。
 - **Stitch**: 自动更新 Skill 文档。
 
+详细机制请参考: [Smart Skill Architect Documentation](docs/smart-skill-architect.md)
+
 ---
 
 ## 🧑‍💻 开发者指南 (Developer Guide)
@@ -229,7 +231,7 @@ graph TD
 ## ❓ 常见问题 (Troubleshooting)
 
 -   **Q: 为什么流程没有自动弹出下一步提示？**
-    A: 尝试手动输入 `/planning-with-files execute` 或直接按 `Enter`。
+    A: 尝试手动输入 `/execute-plan` 或直接按 `Enter`。
 -   **Q: TUI 菜单显示异常？**
     A: 确保终端支持 UTF-8 和 ANSI 转义序列。
 

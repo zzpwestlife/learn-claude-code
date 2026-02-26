@@ -88,7 +88,7 @@ This constitution applies to all technology stacks under this project (Go, Front
 **Core:** Think before acting.
 
 - **8.1 (Adaptive Planning):** Planning is mandatory but scalable. Complex tasks require detailed plans; trivial tasks require clear intent.
-- **8.2 (Strategic Planning):** For non-trivial tasks (3+ steps), must generate `task_plan.md`.
+- **8.2 (Strategic Planning):** For non-trivial tasks (3+ steps), must generate a plan in `docs/plans/` (e.g. `docs/plans/YYYY-MM-DD-feature.md`).
 - **8.3 (Stop on Deviation):** If execution deviates from the plan, **STOP IMMEDIATELY** and re-plan. No blind trial-and-error.
 - **8.4 (User Confirmation):** Plans must include objectives, steps, verification methods, and be confirmed.
 - **8.5 (Constitution Check):** Before generating any plan, self-check against this constitution (Constitution Check).

@@ -4,12 +4,12 @@
 ### 1.1 Strategic Planning (Non-Negotiable)
 - **Trigger**: Any non-trivial task (3+ steps or architectural changes).
 - **Protocol**:
-  - **Plan First**: Generate `task_plan.md` (equivalent to `tasks/todo.md`) with checkable items.
+  - **Plan First**: Generate a plan in `docs/plans/` (e.g. `docs/plans/2025-02-14-feature.md`) with checkable items.
   - **Stop on Deviation**: If execution deviates, **STOP IMMEDIATELY** and re-plan. No blind trial-and-error.
   - **Verify Plan**: Confirm intent with user before writing code.
 
 ### 1.2 Execution Loop
-- **Track Progress**: Mark items in `task_plan.md` as `[x]` in real-time.
+- **Track Progress**: Mark items in the active plan file (in `docs/plans/`) as `[x]` in real-time.
 - **Autonomous Remediation**: Fix bugs autonomously by analyzing logs/tests.
 - **Mandatory Handoff**: Upon completing a Phase, **STOP** and present a TUI menu (Continue/Review). Never auto-proceed to the next Phase.
 
@@ -35,33 +35,33 @@
 - **Interactive Navigation (交互式导航)**: 所有的 Handoff 必须使用 `AskUserQuestion` 提供方向键选择，然后自动提议下一步。对于安全的流程转换（如进入下一阶段），应设置 `RunCommand(requires_approval=False)`，确保用户只需使用 **方向键 + Enter** 即可直接执行，无需二次确认。
 - **Resilient Recovery (弹性恢复)**: 即使在执行过程中遇到错误或中断（如 Code Review 发现问题），一旦修复完成，**必须**立即恢复交互式导航，通过 `AskUserQuestion` 提供下一步选项，绝不让用户退回到手动输入模式。
 - **File-First (文件优先)**: 所有长内容（>10 行）必须写入文件，聊天窗口仅保留摘要。 
-- **Source of Truth (单一真理)**: `task_plan.md` 是任务状态的唯一真理。必须先更新文件，再宣称 Phase 完成。
+- **Source of Truth (单一真理)**: `docs/plans/` 下的最新计划文件是任务状态的唯一真理。必须先更新文件，再宣称 Phase 完成。
 
 ## 2. 工作流规范 (Workflow Specification)
 
 ### Step 1: Optimization (Prompt Engineering)
 1. **Command**: `/optimize-prompt`
 2. **Action**: 交互式优化提示词 -> 生成 `prompt.md`。
-3. **Handoff**: 展示 Text-Based 菜单 -> 使用 `AskUserQuestion` 提供箭头选择 -> 选择后用 `RunCommand` 提议 `/planning-with-files plan`。
+3. **Handoff**: 展示 Text-Based 菜单 -> 使用 `AskUserQuestion` 提供箭头选择 -> 选择后用 `RunCommand` 提议 `/write-plan`。
 
 ### Step 2: Planning (Architecture & Task Breakdown)
-1. **Command**: `/planning-with-files plan`
-2. **Action**: 读取 `prompt.md` -> 生成 `task_plan.md`, `findings.md`。
+1. **Command**: `/write-plan`
+2. **Action**: 读取 `docs/design/` -> 生成 `docs/plans/YYYY-MM-DD-feature.md`。
 3. **Constraint**: **STOP** immediately after file generation.
-4. **Handoff**: 使用 `AskUserQuestion` 提供箭头选择 -> 选择后用 `RunCommand` 提议 `/planning-with-files execute`。
+4. **Handoff**: 使用 `AskUserQuestion` 提供箭头选择 -> 选择后用 `RunCommand` 提议 `/execute-plan`。
 
 ### Step 3: Execution (The Loop - Task Phases)
-1. **Command**: `/planning-with-files execute`
-2. **Action**: 读取 `task_plan.md` -> 执行当前 `in_progress` 的 **Task Phase**。
+1. **Command**: `/execute-plan`
+2. **Action**: 读取最新计划文件 -> 执行当前 `in_progress` 的 **Task Phase**。
 3. **Completion**:
    - 完成该 Phase 的代码与测试。
-   - 更新 `task_plan.md` (Mark Phase as `[x]`).
+   - 更新计划文件 (Mark Phase as `[x]`).
 4. **MANDATORY STOP (关键控制点)**:
    - 更新文件后，系统会触发 "STOP EXECUTION NOW" 警告。
    - **必须** 响应此警告，停止思考，展示 TUI。
 5. **Handoff**:
    - 使用 `AskUserQuestion` 提供箭头选择。
-   - 若选择继续，用 `RunCommand` 提议 `/planning-with-files execute`。
+   - 若选择继续，用 `RunCommand` 提议 `/execute-plan`。
 
 ## 3. TUI 交互标准 (Interaction Standards)
 
@@ -80,18 +80,18 @@
 - **Menu Options**:
   1. **Start Planning**
      - **Label**: `Start Planning (进入规划阶段)`
-     - **Action**: Call `RunCommand(command="/planning-with-files plan", requires_approval=False)`
+     - **Action**: Call `RunCommand(command="/write-plan", requires_approval=False)`
   2. **Refine Prompt**
      - **Label**: `Refine Prompt (继续优化)`
      - **Action**: Wait for user input
 
 ### 3.2 Step 2: Planning -> Execution
 - **Visual**: `[Optimize] -> [> Plan] -> [Execute] -> [Review] -> [Changelog]`
-- **Trigger**: `task_plan.md` 生成完毕。
+- **Trigger**: 计划文件生成完毕。
 - **Menu Options**:
   1. **Execute Plan**
      - **Label**: `Execute Plan (开始执行计划)`
-     - **Action**: Call `RunCommand(command="/planning-with-files execute", requires_approval=False)`
+     - **Action**: Call `RunCommand(command="/execute-plan", requires_approval=False)`
   2. **Review Plan**
      - **Label**: `Review Plan (审查计划)`
      - **Action**: Wait for user input
@@ -103,7 +103,7 @@
   1. **Continue Execution**
      - **Label**: `Continue Execution (Start Next Phase)`
      - **Description**: `开始 [Next Phase Title]` (Dynamic)
-     - **Action**: Call `RunCommand(command="/planning-with-files execute", requires_approval=False)`
+     - **Action**: Call `RunCommand(command="/execute-plan", requires_approval=False)`
   2. **Pause / Review**
      - **Label**: `Pause / Review`
      - **Description**: `暂停执行，审查代码`
@@ -129,7 +129,7 @@
      - **Action**: Propose `/changelog-generator`
   2. **Fix Issues**
      - **Label**: `Fix Issues (修复问题)`
-     - **Action**: Propose `/planning-with-files plan` (to plan fixes)
+     - **Action**: Propose `/write-plan` (to plan fixes)
 
 ### 3.6 Error Recovery & Fix Loop (通用修复循环)
 - **Visual**: `[Optimize] -> [Plan] -> [> Execute] -> [Review] -> [Changelog]`
@@ -137,7 +137,7 @@
 - **Menu Options**:
   1. **Resume / Retry**
      - **Label**: `Resume Workflow (恢复流程)` / `Re-run Review (重新审查)`
-     - **Action**: Propose previous command (e.g. `/planning-with-files execute` or `/review-code`)
+     - **Action**: Propose previous command (e.g. `/execute-plan` or `/review-code`)
   2. **Manual Check**
      - **Label**: `Manual Check (手动检查)`
      - **Action**: Wait for user input

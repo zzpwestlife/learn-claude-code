@@ -1,6 +1,6 @@
 # Superpowers Guide
 
-[Superpowers](https://github.com/obra/superpowers) 是目前 Claude Code 生态中最成熟的 Skill 管理和工作流增强方案。本项目已完全集成 Superpowers，替代了原有的 `planning-with-files`。
+[Superpowers](https://github.com/obra/superpowers) 是目前 Claude Code 生态中最成熟的 Skill 管理和工作流增强方案。本项目已完全集成 Superpowers，全面升级了开发工作流。
 
 ## 核心理念 (Core Philosophy)
 
@@ -36,12 +36,11 @@ Superpowers 将 Claude 从简单的代码补全工具升级为具备系统方法
 | `/systematic-debugging` | 系统化调试。包含复现、根因分析、修复、验证四个阶段。 | Debugging |
 | `/requesting-code-review` | 请求代码审查。在合并代码前进行质量检查。 | Review |
 
-## 工作流变更 (Workflow Changes)
+## 工作流升级 (Workflow Upgrade)
 
-原有的 `planning-with-files` 工作流已被 Superpowers 取代：
+FlowState 工作流基于 Superpowers 构建：
 
-*   **旧流程**: `/optimize-prompt` -> `/planning-with-files plan` -> `/planning-with-files execute`
-*   **新流程**: `/brainstorming` -> `/writing-plans` -> `/execute-plans` (或 `/subagent-driven-development`)
+* **标准流程**: `/brainstorming` -> `/writing-plans` -> `/execute-plans` (或 `/subagent-driven-development`)
 
 ## 调试指南 (Debugging Guide)
 

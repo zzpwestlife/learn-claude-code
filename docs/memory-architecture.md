@@ -71,7 +71,7 @@ A: 这是 User 级别的记忆存储目录。如果您的环境支持 Auto Memor
 A:
 1. 仅将**高频、通用**的规则放入 Core Memory。
 2. 细节知识放入 `lessons.md` 或文档。
-3. 任务完成后及时归档 `task_plan.md`。
+3. 任务完成后及时归档 `docs/plans/` 下的计划文件。
 
 **Q: User 和 Project 级别怎么分？**
 - **User**: "我喜欢 TypeScript" (跨项目通用)。
