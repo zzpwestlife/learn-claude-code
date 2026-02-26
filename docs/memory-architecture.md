@@ -10,7 +10,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **Layer 1** | **Core Memory (潜意识)** | Agent System Context | User / Project | 核心规则、个人偏好、绝对禁令 |
 | **Layer 2** | **Project Lessons (经验)** | `.claude/lessons.md` | Project | 踩坑记录、纠错总结、最佳实践 |
-| **Layer 3** | **Task Context (工作台)** | `task_plan.md` | Task | 当前任务状态、临时发现 |
+| **Layer 3** | **Task Context (工作台)** | `docs/plans/*.md` | Task | 当前任务状态、实施计划 |
 | **Layer 4** | **Advanced (扩展能力)** | `.claude/skills/` & Plugins | Global / Project | 技能进化 (Claudeception)、海量回溯 (claude-mem) |
 
 ---
@@ -37,8 +37,8 @@
 ### Layer 3: Task Context (当前任务)
 **特点**: 随用随弃，任务完成后归档。
 **使用方法**:
-- **创建**: 开始任务时自动生成 `task_plan.md`。
-- **归档**: 任务完成后运行 `/archive-task`，移动到 `.claude/archive/`。
+- **创建**: 开始任务时使用 `/writing-plans` 生成 `docs/plans/YYYY-MM-DD-feature.md`。
+- **归档**: 任务完成后运行 `/finishing-a-development-branch` 自动处理。
 
 ### Layer 4: Advanced (进阶/扩展)
 **定位**: 可选的增强模块，用于复杂场景。

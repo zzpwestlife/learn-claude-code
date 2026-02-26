@@ -7,20 +7,34 @@
   "repository": "https://github.com/learn-claude-code",
   "components": {
     "commands": [
+      "brainstorming",
+      "writing-plans",
+      "execute-plans",
+      "systematic-debugging",
       "archive-task",
       "changelog-generator",
       "commit-message-generator",
-      "optimize-prompt",
       "review-code",
       "tidy-memory"
     ],
     "skills": [
+      "brainstorming",
       "changelog-generator",
-      "planning-with-files",
-      "prompt-to-plan-workflow",
+      "dispatching-parallel-agents",
+      "executing-plans",
+      "finishing-a-development-branch",
+      "receiving-code-review",
+      "requesting-code-review",
       "review-code",
       "skill-architect",
-      "tdd-without-test-framework"
+      "subagent-driven-development",
+      "systematic-debugging",
+      "test-driven-development",
+      "using-git-worktrees",
+      "using-superpowers",
+      "verification-before-completion",
+      "writing-plans",
+      "writing-skills"
     ],
     "agents": [
       "changelog-generator",

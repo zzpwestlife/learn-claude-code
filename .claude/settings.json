@@ -1,5 +1,11 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": ".claude/hooks/superpowers-session-start"
+      }
+    ],
     "UserPromptSubmit": [
       {
         "type": "command",

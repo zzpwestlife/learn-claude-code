@@ -56,16 +56,16 @@ irm https://raw.githubusercontent.com/learn-claude-code/learn-claude-code/main/i
 安装完成后，在你的项目根目录下：
 
 ```bash
-/optimize-prompt "实现一个 Python 斐波那契数列工具" fib
+/brainstorm "实现一个 Python 斐波那契数列工具"
 ```
 
 **后续的所有操作，您只需要使用 ⬆️⬇️ 和 Enter 即可完成：**
 
 ```text
-? [FlowState] Phase 1 提示词优化已完成。下一步做什么？ (Use arrow keys)
- » 🟢 继续执行 (Execute Plan)
+? [FlowState] Design 阶段已完成。下一步做什么？ (Use arrow keys)
+ » 🟢 继续执行 (Write Plan)
    ⚪️ 查看生成的文件 (Review Files)
-   ⚪️ 修改需求 (Refine Prompt)
+   ⚪️ 修改需求 (Refine Spec)
    ⚪️ 退出 (Exit)
 ```
 
@@ -83,10 +83,11 @@ irm https://raw.githubusercontent.com/learn-claude-code/learn-claude-code/main/i
 
 ```mermaid
 graph TD
-    Start["/optimize-prompt 用户提示词"] --> Optimize["交互式问答, 生成 prompt.md"]
-    Optimize -->|Select & Enter| Plan["/planning-with-files plan<br/>(Step 2 Interview)"]
-    Plan -->|Select & Enter| Execute["/planning-with-files execute<br/>(Atomic Execution)"]
+    Start["/brainstorm 用户提示词"] --> Optimize["苏格拉底式问答, 生成 design.md"]
+    Optimize -->|Select & Enter| Plan["/write-plan<br/>(Detailed Planning)"]
+    Plan -->|Select & Enter| Execute["/execute-plan<br/>(Subagent Execution)"]
     Execute -->|Loop until done| Execute
+    Execute -->|On Failure| Debug["/systematic-debugging<br/>(Root Cause Analysis)"]
     Execute -->|Select & Enter| Review["/review-code<br/>(Reflective Handoff)"]
     Review -->|Select & Enter| Changelog["/changelog-generator<br/>(Visual Confirmation)"]
     Changelog -->|Select & Enter| Commit["/commit-message-generator<br/>(Reflective Selection)"]
@@ -94,21 +95,24 @@ graph TD
 ```
 
 **全程可视化进度**:
-`[✔ Step 1: Optimize] → [✔ Step 2: Plan] → [➤ Step 3: Execute] → [Step 4: Review] → [Changelog] → [Commit]`
+`[✔ Design] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
 
 ### 🛠️ 核心命令详解
 
-1.  **`/optimize-prompt`** (Step 1): 苏格拉底式需求挖掘，生成 `prompt.md`。
-2.  **`/planning-with-files plan`** (Step 2): 架构确认与任务规划，生成 `task_plan.md`。
-3.  **`/planning-with-files execute`** (Step 3): 原子化执行任务阶段，强制 TUI 交接。
-4.  **`/review-code`**: 智能代码审查与修复引导。
-5.  **`/changelog-generator`**: 自动更新 CHANGELOG.md。
-6.  **`/commit-message-generator`**: 生成符合规范的 Commit Message。
+1.  **`/brainstorm`** (Design): 苏格拉底式需求挖掘与架构设计。
+2.  **`/write-plan`** (Plan): 生成详细的实施计划与微任务。
+3.  **`/execute-plan`** (Execute): 批量执行开发任务，自动触发 TDD 流程。
+4.  **`/systematic-debugging`**: (Debug) 遇到问题时的标准化调试流程。
+5.  **`/review-code`**: (Review) 智能代码审查与修复引导。
+6.  **`/changelog-generator`**: 自动更新 CHANGELOG.md。
+7.  **`/commit-message-generator`**: 生成符合规范的 Commit Message。
 
 ### 📂 统一生成物管理 (Artifact Management)
 
-推荐指定输出目录（如 `fib`）来管理中间文件，保持根目录整洁：
-`fib/prompt.md`, `fib/task_plan.md`, `fib/review_report.md` 等。
+Superpowers 将自动管理以下文档：
+- `docs/design/`: 需求分析与设计文档
+- `docs/plans/`: 实施计划与任务清单
+- `docs/logs/`: 调试日志与分析报告
 
 ### 🤫 静默模式与文件优先 (Silent Mode & File-First)
 
