@@ -28,6 +28,9 @@ All your actions must strictly comply with the project constitution imported abo
 @.claude/rules/coding-standards.md Non-Negotiable
 @.claude/rules/operational-standards.md Non-Negotiable
 
+# --- Skill Imports (Capabilities) ---
+@.claude/skills/auto-doc/SKILL.md
+
 # --- Critical Directives (Memory-Enhanced) ---
 > Note: These rules are also stored in Project Memory for quick access.
 

@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""
+@module: scripts.tui_menu
+@desc: Provides an interactive TUI (Text User Interface) menu for executing common project commands.
+@input: User keyboard input (Arrow keys, Enter)
+@output: Executes shell commands via subprocess
+@role: User Interface / Controller
+"""
 import curses
 import subprocess
 import os
