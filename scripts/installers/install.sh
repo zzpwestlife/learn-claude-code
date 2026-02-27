@@ -448,7 +448,7 @@ cecho "$BLUE" "📦 Installing Go Development Profile..."
 # But let's prompt just in case, or check for go.mod?
 # Assuming user wants it since they are using this repo.
 
-PROFILE_DIR=".claude/profiles/$DEFAULT_PROFILE"
+PROFILE_DIR="templates/$DEFAULT_PROFILE"
 
 # Install .claude overlay from profile
 if [ -d "$PROFILE_DIR/.claude" ]; then
