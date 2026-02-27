@@ -53,7 +53,7 @@
 -   **格式**：
     ```python
     """
-    @module: scripts.tui_menu
+    @module: src.cli.tui
     @desc: 交互式菜单控制器
     @input: 用户按键输入
     @output: Shell 命令

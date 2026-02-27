@@ -11,14 +11,16 @@ This document describes the high-level architecture of `learn-claude-code`.
 | :--- | :--- | :--- |
 | `.claude/` | **Agent Configuration**: Defines custom agents, skills, and project rules. | Markdown, JSON |
 | `claude_plugins/` | **Extensions**: Custom MCP servers and language support. | Go, Shell |
+| `config/` | **Configuration**: Global project configuration. | JSON |
 | `docs/` | **Knowledge Base**: Guides, tutorials, and design documents. | Markdown, Mermaid |
-| `scripts/` | **Automation**: Utility scripts for workflow automation and TUI interfaces. | Python, Bash |
+| `scripts/` | **Automation**: Installer and utility scripts. | Bash |
+| `src/` | **Source Code**: Core logic and CLI tools. | Python |
 
 ## Data Flow
 1.  **User Input**: Commands or queries via terminal.
 2.  **Agent Processing**: Claude Code agents (configured in `.claude/`) interpret intent.
-3.  **Execution**: Agents invoke tools or run scripts from `scripts/`.
-4.  **Feedback**: Results are displayed via TUI (`scripts/tui_menu.py`) or standard output.
+3.  **Execution**: Agents invoke tools or run scripts from `scripts/` or `src/`.
+4.  **Feedback**: Results are displayed via TUI (`src/cli/tui.py`) or standard output.
 
 ## Key Design Decisions
 -   **Fractional Lazy Loading**: Context is split into directory-specific `CLAUDE.md` files to optimize token usage.
