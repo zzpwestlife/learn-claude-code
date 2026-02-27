@@ -17,7 +17,7 @@ You write test cases (pressure scenarios with subagents), watch them fail (basel
 
 **REQUIRED BACKGROUND:** You MUST understand superpowers:test-driven-development before using this skill. That skill defines the fundamental RED-GREEN-REFACTOR cycle. This skill adapts TDD to documentation.
 
-**Official guidance:** For Anthropic's official skill authoring best practices, see anthropic-best-practices.md. This document provides additional patterns and guidelines that complement the TDD-focused approach in this skill.
+**Official guidance:** For Anthropic's official skill authoring best practices, see references/anthropic-best-practices.md. This document provides additional patterns and guidelines that complement the TDD-focused approach in this skill.
 
 ## What is a Skill?
 
@@ -71,19 +71,21 @@ API docs, syntax guides, tool documentation (office docs)
 
 ## Directory Structure
 
-
 ```
 skills/
   skill-name/
     SKILL.md              # Main reference (required)
-    supporting-file.*     # Only if needed
+    scripts/              # Executable code (Python/Bash)
+    references/           # Supplementary context (schemas, cheatsheets)
+    assets/               # Templates or static files used in output
 ```
 
 **Flat namespace** - all skills in one searchable namespace
 
 **Separate files for:**
-1. **Heavy reference** (100+ lines) - API docs, comprehensive syntax
-2. **Reusable tools** - Scripts, utilities, templates
+1. **Heavy reference** (100+ lines) - API docs, comprehensive syntax (in `references/`)
+2. **Reusable tools** - Scripts, utilities (in `scripts/`)
+3. **Templates** - Output templates, static files (in `assets/`)
 
 **Keep inline:**
 - Principles and concepts

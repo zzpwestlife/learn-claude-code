@@ -1,6 +1,6 @@
 ---
 name: "review-code"
-description: "在用户请求代码审查、Review 变更或生成 CODE_REVIEW.md 时触发，读取 Git 差异并按规范输出中文审查报告。"
+description: "在用户请求代码审查、Review 变更或生成 CODE_REVIEW.md 时触发。读取 Git 差异并按规范输出中文审查报告。Do not use for simple syntax fixes or formatting issues."
 ---
 
 # Code Review Skill
@@ -25,6 +25,7 @@ description: "在用户请求代码审查、Review 变更或生成 CODE_REVIEW.m
 
 3.  **输出报告**：
     *   在当前目录下生成/更新名为 `CODE_REVIEW.md` 的文件。
+    *   **MANDATORY**: 生成前必须读取 `assets/report-template.md`，并严格遵循其结构。
     *   **语言必须使用中文**。
     *   报告结构：
         *   **Summary**：变更概览。
@@ -49,7 +50,7 @@ description: "在用户请求代码审查、Review 变更或生成 CODE_REVIEW.m
 ## 参考资料
 
 - `references/review-checklist.md`: 审查清单与常见问题提示。
-- `references/report-template.md`: CODE_REVIEW.md 模板。
+- `assets/report-template.md`: CODE_REVIEW.md 模板。
 
 ## 测试策略
 

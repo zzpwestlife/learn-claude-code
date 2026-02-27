@@ -486,3 +486,32 @@ echo "----------------------------------------"
 echo "To get started:"
 echo "1. cd $TARGET_DIR"
 echo "2. Run: /brainstorm (to test the workflow)"
+
+# --- Post-Install Actions ---
+
+if [ -t 0 ]; then
+    while true; do
+        echo ""
+        read -p "Do you want to enter the project directory now? [y/n] " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            cd "$TARGET_DIR" || exit 1
+            
+            # Check if the script is being sourced
+            if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
+                cecho "$GREEN" "  📂 Changed directory to: $TARGET_DIR"
+            else
+                # If executed, spawn a new shell
+                cecho "$GREEN" "  🚀 Spawning new shell in: $TARGET_DIR"
+                exec "${SHELL:-/bin/bash}"
+            fi
+            break
+        elif [[ $REPLY =~ ^[Nn]$ ]]; then
+            break
+        else
+            cecho "$RED" "Invalid input. Please enter 'y' or 'n'."
+        fi
+    done
+fi
+
+
