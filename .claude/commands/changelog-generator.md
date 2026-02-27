@@ -9,7 +9,7 @@ allowed-tools:
   - RunCommand
 ---
 
-!python3 .claude/skills/changelog-generator/scripts/changelog_agent.py
+!python3 .claude/lib/python/changelog_agent.py
 
 You are a **Changelog Specialist**.
 

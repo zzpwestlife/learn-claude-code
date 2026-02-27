@@ -18,25 +18,25 @@ The **Skill Architect** is the meta-skill responsible for the entire lifecycle o
 
 ## 🛠 Core Tools
 
-The architect provides a unified CLI tool located at `${CLAUDE_PLUGIN_ROOT}/scripts/architect.py`.
+The architect provides a unified CLI tool located at `${CLAUDE_PLUGIN_ROOT}/lib/python/architect.py`.
 
 ### 1. Forge (Create New Skill)
 Use this when you want to encapsulate a new capability into a reusable skill.
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/architect.py forge <name> --desc "<description>"
+python3 ${CLAUDE_PLUGIN_ROOT}/lib/python/architect.py forge <name> --desc "<description>"
 ```
 
 **Example:**
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/architect.py forge "yt-dlp" --desc "A wrapper for video downloading"
+python3 ${CLAUDE_PLUGIN_ROOT}/lib/python/architect.py forge "yt-dlp" --desc "A wrapper for video downloading"
 ```
 
 ### 2. Refine (Evolve Existing Skill)
 Use this to save "wisdom" (preferences, bug fixes, prompts) into a skill. This updates the `evolution.json` and automatically restitches the `SKILL.md`.
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/architect.py refine <name> <type> "<content>"
+python3 ${CLAUDE_PLUGIN_ROOT}/lib/python/architect.py refine <name> <type> "<content>"
 ```
 
 **Parameters:**
@@ -46,14 +46,14 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/architect.py refine <name> <type> "<conten
 
 **Example:**
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/architect.py refine "yt-dlp" "fix" "Use --cookies-from-browser for 403 errors"
+python3 ${CLAUDE_PLUGIN_ROOT}/lib/python/architect.py refine "yt-dlp" "fix" "Use --cookies-from-browser for 403 errors"
 ```
 
 ### 3. Stitch (Manual Update)
 Manually force a re-generation of `SKILL.md` from the template and `evolution.json`.
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/architect.py stitch <name>
+python3 ${CLAUDE_PLUGIN_ROOT}/lib/python/architect.py stitch <name>
 ```
 
 ## 🧠 Evolution Workflow

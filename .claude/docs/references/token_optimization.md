@@ -1,11 +1,11 @@
 # Token Optimization & Context Management Whitepaper
 
-**Version**: 1.0 (2026-02-27)  
+**Version**: 1.2 (2026-02-27)  
 **Status**: Implemented  
-**Impact**: Active Token Reduction ~41.5%
+**Impact**: Active Token Reduction ~80.0%
 
 ## 1. Executive Summary
-This document outlines the systematic approach used to optimize the `.claude/` configuration directory. By implementing a "Hot/Cold Data Separation" strategy, we reduced the active context load from ~79k tokens to ~42k tokens while maintaining 100% functional integrity through explicit referencing.
+This document outlines the systematic approach used to optimize the `.claude/` configuration directory. By implementing a "Hot/Cold Data Separation" strategy, we reduced the active context load from ~79k tokens to ~15.6k tokens while maintaining 100% functional integrity through explicit referencing.
 
 ## 2. Core Philosophy: JIT (Just-In-Time) Context
 The central principle is **"Load what you need, when you need it."**
@@ -24,7 +24,7 @@ We consolidated fragmented rule files (`workflow-protocol.md`, `coding-standards
 - **Reference**: `.claude/constitution/constitution_full.md` (Full text). Backup for detailed interpretation.
 
 ### 3.3 Skill Refactoring (The "Trigger-Only" Pattern)
-We applied a standardized template to high-cost skills (`tdd`, `debugging`, `subagent`):
+We applied a standardized template to high-cost skills (`tdd`, `debugging`, `subagent`, `git`, `review`, `dispatch`):
 
 | Section | Location | Content |
 | :--- | :--- | :--- |
@@ -36,6 +36,25 @@ We applied a standardized template to high-cost skills (`tdd`, `debugging`, `sub
 - `SKILL.md`: "NO PRODUCTION CODE WITHOUT FAILING TEST", Red-Green-Refactor steps.
 - `tdd_full.md`: Detailed rationale, "Why order matters", "Common Rationalizations".
 
+### 3.4 Phase 2 Optimizations (Secondary Skills)
+We extended JIT optimization to secondary skills:
+- `receiving-code-review`
+- `dispatching-parallel-agents`
+- `brainstorming`
+- `using-git-worktrees`
+- `review-code` (Command)
+
+### 3.5 Phase 3 Optimizations (Source Isolation)
+We isolated executable source code from the active context:
+- **Action**: Moved `.py` and `.sh` scripts to `.claude/lib/`.
+- **Impact**: Agent knows *how* to call scripts (via arguments) but doesn't waste tokens reading their implementation details unless debugging them.
+- **Affected**: `architect.py`, `changelog_agent.py`, `check-complete.sh`, `statusline.sh`.
+
+### 3.6 Phase 4 Optimizations (Agent Definitions)
+We refined the Agent definitions themselves:
+- **Files**: `code-reviewer.md`, `changelog-generator.md`.
+- **Optimization**: Reduced to "Role", "Goal", and "Workflow" bullets. Detailed instructions moved to `docs/references/agents/`.
+
 ## 4. Safety Mechanisms (Integrity Verification)
 
 To ensure no functionality is lost, we implemented:
@@ -45,6 +64,7 @@ To ensure no functionality is lost, we implemented:
 2.  **Context Efficiency Directive**: Added to `AGENTS.md` to instruct the Agent on the JIT strategy.
     > `Read-on-Demand: Do NOT read full skill/doc files unless executing that specific task.`
 3.  **Automated Monitoring**: `token-analyzer.py` script distinguishes between Active and Reference tokens.
+4.  **Hook Verification**: Verified that critical hooks (e.g., `PostToolUse` for plan checking) point to the correct new paths in `lib/`.
 
 ## 5. Token Analysis Tool
 

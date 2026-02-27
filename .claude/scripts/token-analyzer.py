@@ -21,7 +21,10 @@ def analyze_directory(directory):
             "archive" in file_path or 
             "tmp" in file_path or 
             "docs/references" in file_path or
-            "_full.md" in file_path
+            "_full.md" in file_path or
+            "lib/" in file_path or
+            "docs/whitepapers" in file_path or
+            "docs/mental_model" in file_path
         )
             
         with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:

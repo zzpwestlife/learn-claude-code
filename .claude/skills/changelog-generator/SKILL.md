@@ -21,7 +21,7 @@ description: "在用户请求生成变更日志、Changelog 或总结差异时�
 
 获取当前分支（包括未提交的变更）与主分支 (`main` 或 `master`) 之间的所有代码差异。
 
-- **命令**: `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py`
+- **命令**: `python3 .claude/lib/python/changelog_agent.py`
 - **输出**: 标准输出 (stdout) 显示完整的 `git diff` 内容。Agent 应读取此输出进行分析。
 
 ## 示例 (Examples)
@@ -29,7 +29,7 @@ description: "在用户请求生成变更日志、Changelog 或总结差异时�
 **Agent 操作流程示例**:
 
 1.  Agent 收到用户请求："生成 Changelog"。
-2.  Agent 运行: `python3 .claude/skills/changelog-generator/scripts/changelog_agent.py`
+2.  Agent 运行: `python3 .claude/lib/python/changelog_agent.py`
 3.  Agent 获取到 Diff 输出，分析发现新增了登录功能。
 4.  Agent 编辑 `CHANGELOG.md`，添加 "## [Unreleased] - ✨ 新增用户登录功能..."。
 5.  **MANDATORY TUI HANDOFF:**

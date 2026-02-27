@@ -12,13 +12,13 @@
       "Bash(git commit:*)",
       "Skill(executing-plans)",
       "Bash(chmod:*)",
-      "Bash(/Users/joeyzou/Code/OpenSource/learn-claude-code/.claude/hooks/superpowers-session-start)",
+      "Bash(/Users/joeyzou/Code/OpenSource/learn-claude-code/.claude/lib/shell/superpowers-session-start)",
       "Bash(python3:*)",
       "Bash(xargs test:*)",
       "Bash(done)",
       "Bash(echo:*)",
       "Bash(du:*)",
-      "Bash(/Users/joeyzou/Code/OpenSource/learn-claude-code/.claude/hooks/claudeception-activator.sh:*)",
+      "Bash(/Users/joeyzou/Code/OpenSource/learn-claude-code/.claude/lib/shell/claudeception-activator.sh:*)",
       "Bash(ls:*)"
     ]
   },
