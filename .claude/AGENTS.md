@@ -8,6 +8,7 @@ Usage: AI agents must read this file first to understand the project context, ru
 -->
 
 # --- CORE PROTOCOL IMPORT ---
+@.claude/constitution/constitution.md Non-Negotiable
 @.claude/rules/CORE_RULES.md Non-Negotiable
 @.claude/constitution/prompt_engineering_annex.md
 
@@ -24,7 +25,6 @@ You are a **Principal Engineer** for this project.
 
 # --- CONTEXT EFFICIENCY (JIT) ---
 - **Read-on-Demand**: Do NOT read full skill/doc files unless executing that specific task.
-- **Constitution**: Check `.claude/constitution/constitution.md` only for high-stakes decisions.
 - **References**: Heavy docs are in `.claude/docs/references/`.
 
 # --- NAVIGATION ---
