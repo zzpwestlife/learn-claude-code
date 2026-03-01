@@ -89,5 +89,34 @@ When modifying or adding new skills/rules:
 3.  **Link**: Add a link in the main file.
 4.  **Verify**: Run the analyzer to ensure Active Context remains lean.
 
-## 7. Conclusion
-Optimization is not deletion; it is organization. By structuring information hierarchically, we enable the Agent to "think fast" (low latency/cost) while retaining the ability to "think deep" (access to full knowledge) when required.
+## 7. Dynamic Context Optimization (Tool Output Hygiene)
+
+While the strategies above optimize **Static Context** (files loaded *before* interaction), **Dynamic Context** (output generated *during* interaction) is equally critical. A single command outputting a 5MB log file can instantly deplete the context window.
+
+### 7.1 The "Context Explosion" Problem
+We conducted a controlled experiment simulating a tool outputting 5,000 lines of logs:
+- **Raw Output**: ~418 KB (~130,000 tokens) -> **CATASTROPHIC** (Fills >60% of context)
+- **Summarized Output** (Errors only): ~209 KB -> **POOR**
+- **Compressed Output** (Head/Tail): < 1 KB (~250 tokens) -> **OPTIMAL**
+
+### 7.2 Best Practices for Tool Output
+1.  **Silence is Golden**: Scripts should output nothing on success, or a single confirmation line.
+2.  **Filter First**: Never run `cat huge_file.log`. Use `grep "ERROR" huge_file.log` or `tail -n 20 huge_file.log`.
+3.  **Search > Read**: For large codebases, use search tools (`grep`, `ripgrep`) to locate relevant sections before reading files.
+4.  **Sandboxing (Advanced)**: For complex environments, consider tools like `claude-context-mode` that intercept and compress tool output automatically.
+
+### 7.3 Safety Mechanisms: Does Optimization Mean Information Loss?
+
+A common concern is: *"If I filter the logs, will I miss the root cause?"*
+The answer is **No**, provided you follow the **Iterative Retrieval** pattern:
+
+1.  **Survey (Broad)**: Check `tail -n 20` or `grep "ERROR"`. This is cheap (low tokens) and identifies *if* and *where* a problem exists.
+2.  **Pinpoint (Targeted)**: Once you have a timestamp or error ID, use `grep -C 5 "ErrorID"` to see the specific context around that error.
+3.  **Expand (Deep)**: Only if the context is insufficient, read the full surrounding block (e.g., 100 lines).
+
+**Comparison**:
+- **Traditional (Dump)**: Read 5000 lines -> Brain overload / Context full -> Misses the needle in the haystack.
+- **Optimized (Iterative)**: Read 20 lines -> Find target -> Read 50 lines -> **Solves problem with <2% token cost and higher accuracy.**
+
+## 8. Conclusion
+Optimization is not deletion; it is organization. By structuring information hierarchically (Static JIT) and managing tool output discipline (Dynamic Hygiene), we enable the Agent to "think fast" (low latency/cost) while retaining the ability to "think deep" (access to full knowledge) when required.

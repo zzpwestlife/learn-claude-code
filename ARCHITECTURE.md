@@ -24,6 +24,8 @@ This document describes the high-level architecture of `learn-claude-code`.
 
 ## Key Design Decisions
 -   **Fractional Lazy Loading**: Context is split into directory-specific `CLAUDE.md` files to optimize token usage.
+-   **Dual Persona Strategy**: Enforces separation of concerns by switching personas between "Opus (Builder)" and "Codex (Critic)" for implementation vs. review.
+-   **Dynamic Context Hygiene**: Implements strict output filtering rules (grep/head/tail) to prevent context window pollution.
 -   **Auto-Doc**: Documentation is recursively maintained via **File Inventory** tables inside `CLAUDE.md` and structured headers.
 -   **Single Source of Truth**: Merged `INDEX.md` functionality into `CLAUDE.md` to streamline context loading.
 -   **FlowState Workflow**: Strict adherence to atomic execution and TUI-based handoffs.

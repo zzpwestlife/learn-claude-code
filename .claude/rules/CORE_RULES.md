@@ -29,3 +29,10 @@
 - **SubAgent Strategy**: Delegate exploration, research, and parallel tasks to subagents.
 - **Concise Comms**: Redirect long logs to `.claude/tmp/logs.md`. No polite fillers.
 - **Cross-Platform**: Support both macOS (BSD) and Linux (GNU) in all scripts.
+
+## 5. Dynamic Context Hygiene (Token Optimization)
+- **Silence is Golden**: Scripts MUST output nothing on success (or single line confirmation).
+- **Filter First**: NEVER `cat` large files (>100 lines). Use `grep`, `head`, `tail` to extract relevant sections.
+- **Search > Read**: Prefer `SearchCodebase` or `grep` over `Read` for exploration.
+- **Iterative Retrieval**: Start with a summary/search; ONLY read full content if specific details are needed.
+- **Truncation Awareness**: If output is truncated, explicitly state "Output truncated, use filter to see more."

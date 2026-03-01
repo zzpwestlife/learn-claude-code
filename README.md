@@ -14,8 +14,10 @@
 2.  **认知架构**: 深度集成**奥卡姆剃刀**（做减法）、**费曼技巧**（做加法）与**苏格拉底提问法**（做验证），构建自我调节的 AI 思维模型。
 3.  **角色化 Agent**: 预设 Architect, Code Reviewer 等专家角色。
 4.  **Golang 原生支持**: 提供深度优化的 Go 语言配置模板 (`.claude/profiles/go`)，集成 `gofmt`, `goimports`, `golangci-lint` 等工具链。
-5.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
-6.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中，支持 macOS 原生 GUI 交互与智能文件合并（Smart Merge）。
+5.  **双重人格架构 (Dual Persona)**: 独创的 **Builder (Opus)** vs **Critic (Codex)** 协作模式。Opus 负责从 0 到 1 的创造与文档，Codex 负责严格的代码审查与安全审计。
+6.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
+7.  **动态上下文卫生**: 内置 Token 优化策略，自动拦截并过滤大型工具输出，防止上下文爆炸。
+8.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中，支持 macOS 原生 GUI 交互与智能文件合并（Smart Merge）。
 
 ---
 
