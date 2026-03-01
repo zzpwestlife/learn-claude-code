@@ -82,7 +82,7 @@ graph TD
     Plan -->|Select & Enter| Execute["/execute-plan<br/>(Subagent Execution)"]
     Execute -->|Loop until done| Execute
     Execute -->|On Failure| Debug["/systematic-debugging<br/>(Root Cause Analysis)"]
-    Execute -->|Select & Enter| Review["/review-code<br/>(Reflective Handoff)"]
+    Execute -->|Start Fresh| Review["/new -> /review-code<br/>(Fresh Context & Opus)"]
     Review -->|Select & Enter| Changelog["/changelog-generator<br/>(Visual Confirmation)"]
     Changelog -->|Select & Enter| Commit["/commit-message-generator<br/>(Reflective Selection)"]
     Commit --> Finish[Done]
