@@ -19,6 +19,20 @@ To achieve a true "Code Review," we must simulate an independent auditor. This i
 
 ### A. Fresh Context (The `/new` Command)
 By starting a new session (`/new`), you force the AI to:
+- **Ignore History**: It won't see your previous "struggle" or justifications.
+- **Rely on Artifacts**: It can only judge the code based on what is committed and documented.
+- **Simulate a New Hire**: If the AI needs chat history to understand the code, your code is not self-documenting.
+
+### B. SubAgent Review (The Parallel Critic)
+Alternatively, you can dispatch a specialized subagent (e.g., `model: opus`) within the current session.
+- **Pros**: Zero friction; keeps the conversation flow; good for quick sanity checks.
+- **Cons**: Still shares the parent's context window; potential for "context leakage".
+
+### Recommendation: The Hybrid Strategy
+1.  **During Development**: Use SubAgent (`@code-reviewer`) for fast, iterative feedback.
+2.  **Before Merge**: **MANDATORY** `/new` -> `/review-code` to ensure the code stands on its own.
+
+> **Deep Dive**: See [Review Strategy Comparison](review_strategy_comparison.md) for a detailed analysis of `/new` vs. SubAgent.
 - Read the code from scratch, just like a human reviewer would.
 - Rely **only** on the code and documentation present in the files.
 - Identify clarity issues: If the AI can't understand the code without the previous conversation history, the code is likely hard to maintain.

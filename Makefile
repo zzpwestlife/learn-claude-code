@@ -6,3 +6,7 @@ test:
 
 run:
 	python3 src/cli/tui.py
+
+clean-user-config:
+	@chmod +x scripts/clean_user_config.sh
+	@./scripts/clean_user_config.sh

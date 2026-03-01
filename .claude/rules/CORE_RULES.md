@@ -36,3 +36,8 @@
 - **Search > Read**: Prefer `SearchCodebase` or `grep` over `Read` for exploration.
 - **Iterative Retrieval**: Start with a summary/search; ONLY read full content if specific details are needed.
 - **Truncation Awareness**: If output is truncated, explicitly state "Output truncated, use filter to see more."
+
+## 6. Context Isolation (AI Flow State)
+- **Project-Level Only**: DO NOT use user-level (`~/.claude/`) configuration for project-specific rules or tools.
+- **Dependency Isolation**: All MCP servers and Skills MUST be defined within the repository (`.claude/`), ensuring reproducibility.
+- **Minimal Global Context**: Keep the global context empty or restricted to OS-level utilities only.
