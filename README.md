@@ -13,7 +13,8 @@
 5.  **双重人格架构 (Dual Persona)**: 独创的 **Builder (Opus)** vs **Critic (Codex)** 协作模式。Opus 负责从 0 到 1 的创造与文档，Codex 负责严格的代码审查与安全审计。
 6.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
 7.  **动态上下文卫生**: 内置 Token 优化协议 (`.claude/rules/CORE_RULES.md`)，指导 Agent 主动过滤大型输出，防止上下文爆炸。
-8.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中，支持 macOS 原生 GUI 交互与智能文件合并（Smart Merge）。
+8.  **递归需求分析 (Recursive Analysis)**: 在 `/brainstorm` 阶段强制引入**多轮结构化采访**机制，通过递归追问（Recursive Interview）消除需求歧义，确保 Design 文档的绝对精准。
+9.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中，支持 macOS 原生 GUI 交互与智能文件合并（Smart Merge）。
 
 ---
 
@@ -75,8 +76,11 @@ make install
 
 ```mermaid
 graph TD
-    Start["/brainstorm 用户提示词"] --> Optimize["苏格拉底式问答, 生成 design.md"]
-    Optimize -->|Select & Enter| Plan["/write-plan<br/>(Detailed Planning)"]
+    Start["/brainstorm 用户提示词"] --> Interview["递归需求采访<br/>(Recursive Interview Loop)"]
+    Interview -->|Loop until clear| Interview
+    Interview -->|Requirements Locked| Optimize["生成 design.md"]
+    Optimize -->|Select & Enter| PreFlight["Pre-flight Check<br/>(Scope Verification)"]
+    PreFlight --> Plan["/write-plan<br/>(Detailed Planning)"]
     Plan -->|Select & Enter| Execute["/execute-plan<br/>(Subagent Execution)"]
     Execute -->|Loop until done| Execute
     Execute -->|On Failure| Debug["/systematic-debugging<br/>(Root Cause Analysis)"]
@@ -87,13 +91,13 @@ graph TD
 ```
 
 **全程可视化进度**:
-`[✔ Design] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
+`[✔ Interview] → [✔ Design] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
 
 ### 🛠️ 核心命令详解
 
 | 命令 | 描述 | 适用场景 |
 | :--- | :--- | :--- |
-| `/brainstorm` | **创意引擎**：启动任务，进行需求分析与设计，生成 `design.md`。 | 新功能开发、复杂问题探索 |
+| `/brainstorm` | **创意引擎**：启动任务，进行**多轮需求采访**与设计，生成 `design.md`。 | 新功能开发、复杂问题探索 |
 | `/optimize-prompt` | **提示词优化师**：交互式优化你的 Prompt，确保最佳 AI 表现。 | 任务指令模糊、需要高质量输出时 |
 | `/write-plan` | **架构师**：将设计文档转化为详细的实施步骤 (`todo.md`)。 | 确定方案后，开始编码前 |
 | `/execute-plan` | **执行者**：自动执行计划中的任务，支持断点续传。 | 编码阶段，批量任务处理 |

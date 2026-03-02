@@ -9,8 +9,11 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 **Path**: `docs/plans/YYYY-MM-DD-<feature-name>.md`
 
 ## Structure
-1. **Header**: Goal, Architecture, Tech Stack.
-2. **Tasks**: Bite-sized (2-5 mins).
+1. **Pre-flight Check**:
+   - Confirm understanding of the Design.
+   - If ambiguous, use `AskUserQuestion` to clarify BEFORE planning.
+2. **Header**: Goal, Architecture, Tech Stack.
+3. **Tasks**: Bite-sized (2-5 mins).
    - Files (Create/Modify/Test)
    - Step 1: Write failing test
    - Step 2: Verify failure

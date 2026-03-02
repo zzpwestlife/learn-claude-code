@@ -10,7 +10,11 @@ description: "You MUST use this before any creative work. Explores user intent, 
 
 ## Process
 1. **Explore**: Check files, docs, context.
-2. **Clarify**: Ask ONE question at a time.
+2. **Structured Interview (Iterative)**:
+   - Use `AskUserQuestion` to conduct a comprehensive interview.
+   - Focus on: **Goal** (What), **Context** (Why), **Constraints** (Limits), **Success Criteria** (Done).
+   - **LOOP**: If answers are vague or raise new questions, CONTINUE asking.
+   - Do NOT proceed until you are confident you can design the solution without guessing.
 3. **Constitution Check**: Verify against `constitution.md` (Simplicity, Security).
 4. **Propose**: 2-3 approaches with trade-offs.
    - **MANDATORY TUI**: Use `AskUserQuestion` to select approach.
@@ -20,7 +24,7 @@ description: "You MUST use this before any creative work. Explores user intent, 
 7. **Transition**: Invoke `writing-plans` skill.
 
 ## Key Rules
-- **One Question**: Don't overwhelm.
+- **Interview First**: Always clarify requirements BEFORE proposing solutions.
 - **Multiple Choice**: Prefer over open-ended.
 - **YAGNI**: Remove unnecessary features.
 - **Next Step**: ALWAYS `writing-plans`. Never direct implementation.
