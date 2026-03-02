@@ -19,7 +19,11 @@
       "Bash(echo:*)",
       "Bash(du:*)",
       "Bash(/Users/joeyzou/Code/OpenSource/learn-claude-code/.claude/lib/shell/claudeception-activator.sh:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(go mod:*)",
+      "Bash(go test:*)",
+      "Bash(go run:*)",
+      "Bash(git mv:*)"
     ]
   },
   "hooks": {

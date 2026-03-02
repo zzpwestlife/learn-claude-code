@@ -1,22 +1,18 @@
 # Learn Claude Code & AI 原生开发工作流实战
 
-本项目包含两大部分核心内容：
-1. **Learn Claude Code 学习套件**：一套标准化的 Claude Code 配置工具与最佳实践（Go 语言专用版）。
-2. **AI 原生开发工作流实战课程**：极客时间《AI 原生开发工作流实战》课程的全套文档与资源。
-
 ## 🛠 Learn Claude Code 学习套件 (Tool Suite)
 
 **Learn Claude Code** 是一个标准化的 Claude Code 配置套件，旨在帮助开发者快速将最佳实践集成到自己的项目中。本版本经过精简重构，专注于 **Golang** 开发环境的优化。
 
 ### 核心特性
 
-1.  **规则基石**: `.claude/constitution/constitution.md` 定义了不可动摇的开发原则。
+1.  **规则基石**: `.claude/constitution/constitution.md` 与 `.claude/rules/CORE_RULES.md` 共同定义了不可动摇的开发原则与工程规范。
 2.  **认知架构**: 深度集成**奥卡姆剃刀**（做减法）、**费曼技巧**（做加法）与**苏格拉底提问法**（做验证），构建自我调节的 AI 思维模型。
 3.  **角色化 Agent**: 预设 Architect, Code Reviewer 等专家角色。
-4.  **Golang 原生支持**: 提供深度优化的 Go 语言配置模板 (`.claude/profiles/go`)，集成 `gofmt`, `goimports`, `golangci-lint` 等工具链。
+4.  **Golang 原生支持**: 提供深度优化的 Go 语言开发规范 (`.claude/constitution/go_annex.md`) 与自动化格式化钩子 (`.claude/hooks/go/format-go-code.sh`)，集成 `gofmt`, `goimports`, `gofumpt` 等最佳实践工具链。
 5.  **双重人格架构 (Dual Persona)**: 独创的 **Builder (Opus)** vs **Critic (Codex)** 协作模式。Opus 负责从 0 到 1 的创造与文档，Codex 负责严格的代码审查与安全审计。
 6.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
-7.  **动态上下文卫生**: 内置 Token 优化策略，自动拦截并过滤大型工具输出，防止上下文爆炸。
+7.  **动态上下文卫生**: 内置 Token 优化协议 (`.claude/rules/CORE_RULES.md`)，指导 Agent 主动过滤大型输出，防止上下文爆炸。
 8.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中，支持 macOS 原生 GUI 交互与智能文件合并（Smart Merge）。
 
 ---
@@ -55,10 +51,10 @@ make install
 /brainstorm "实现一个 Python 斐波那契数列工具"
 ```
 
-**后续的所有操作，您只需要使用 ⬆️⬇️ 和 Enter 即可完成：**
+**后续的所有操作，您只需要使用方向键 和 Enter 即可完成：**
 
 ```text
-? [FlowState] Design 阶段已完成。下一步做什么？ (Use arrow keys)
+[FlowState] Design 阶段已完成。下一步做什么？ (Use arrow keys)
  » 🟢 继续执行 (Write Plan)
    ⚪️ 查看生成的文件 (Review Files)
    ⚪️ 修改需求 (Refine Spec)
@@ -72,7 +68,7 @@ make install
 本插件采用 **Zero-Friction (零摩擦)** 交互设计：
 
 1.  **全流程智能引导**: 系统主动提示下一步操作。
-2.  **方向键导航**: 使用 ↑/↓ 选择，Enter 确认。
+2.  **方向键导航**: 使用方向键选择，Enter 确认。
 3.  **一键直达**: 确认后自动执行命令，无需手动输入。
 
 ### 📊 工作流全景 (Interactive Workflow)
@@ -94,3 +90,44 @@ graph TD
 `[✔ Design] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
 
 ### 🛠️ 核心命令详解
+
+| 命令 | 描述 | 适用场景 |
+| :--- | :--- | :--- |
+| `/brainstorm` | **创意引擎**：启动任务，进行需求分析与设计，生成 `design.md`。 | 新功能开发、复杂问题探索 |
+| `/optimize-prompt` | **提示词优化师**：交互式优化你的 Prompt，确保最佳 AI 表现。 | 任务指令模糊、需要高质量输出时 |
+| `/write-plan` | **架构师**：将设计文档转化为详细的实施步骤 (`todo.md`)。 | 确定方案后，开始编码前 |
+| `/execute-plan` | **执行者**：自动执行计划中的任务，支持断点续传。 | 编码阶段，批量任务处理 |
+| `/review-code` | **审查员**：对代码进行深度审查（增量 Diff 或全量）。 | 提交代码前，尤其是 Pull Request 前 |
+| `/changelog-generator` | **日志专家**：自动分析 Git Diff，更新 `CHANGELOG.md`。 | 版本发布、功能合并后 |
+| `/commit-message-generator` | **提交助手**：生成符合 Conventional Commits 规范的提交信息。 | 准备 git commit 时 |
+| `/archive-task` | **归档员**：将当前任务的计划文件归档，保持工作区整洁。 | 任务完成后 |
+| `/tidy-memory` | **记忆整理**：整理项目的核心记忆，优化上下文。 | 长期项目维护，定期执行 |
+
+### 📂 目录结构说明
+
+```text
+.claude/
+├── agents/         # Agent 角色定义 (Architect, Reviewer, etc.)
+├── checklists/     # 检查清单 (Mental Model Checklist)
+├── commands/       # 自定义命令脚本 (MCP/Slash Commands)
+├── constitution/   # 项目宪法与核心原则 (Constitution)
+├── docs/           # 详细文档与参考资料
+├── hooks/          # Git Hooks (Pre-commit formatting)
+├── lib/            # 共享库代码 (Python/Shell)
+├── rules/          # 具体工程规则 (Core Rules)
+├── scripts/        # 实用脚本 (Installers, Analyzers)
+└── skills/         # 智能体技能库 (Python/Node 驱动的高级能力)
+```
+
+### 🤝 贡献指南 (Contributing)
+
+欢迎提交 Issue 或 Pull Request 来改进此工作流配置。请确保遵循 `.claude/rules/CORE_RULES.md` 中的工程规范。
+
+1.  **Fork** 本项目。
+2.  创建你的特性分支 (`git checkout -b feature/AmazingFeature`)。
+3.  提交你的更改 (`git commit -m 'feat(core): Add some AmazingFeature'`)。
+4.  推送到分支 (`git push origin feature/AmazingFeature`)。
+5.  开启一个 **Pull Request**。
+
+---
+**Learn Claude Code** is licensed under the MIT License.
