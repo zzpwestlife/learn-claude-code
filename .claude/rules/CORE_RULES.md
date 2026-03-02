@@ -12,7 +12,7 @@
 - **Surgical Changes**: Touch ONLY necessary files. Clean up only your own mess.
 - **Strict Typing**: NO `any` type or `eslint-disable`. Use explicit types.
 - **Clean Code**: Delete unused code immediately; NO commented-out obsolete code.
-- **File Limits**: Single file < 200 lines; functions < 20 lines. Hard wrap at 120 chars.
+- **File Limits**: Single file < 200 lines; functions < 20 lines. Hard wrap at 100 chars.
 - **Metadata**: Source files MUST start with 3 header lines: INPUT, OUTPUT, POS.
 - **Self-Documenting**: Naming explains "What"; comments explain "Why".
 

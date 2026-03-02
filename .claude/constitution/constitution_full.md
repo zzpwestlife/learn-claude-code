@@ -57,7 +57,7 @@ This constitution applies to all technology stacks under this project (Go, Front
 - **5.1 (Minimal Changes):** When modifying code, follow the principle of minimal changes. Only modify necessary parts, avoid irrelevant changes, reduce regression risk.
 - **5.2 (File Size):** Single file line count **should** be under 200 lines. Significant exceedance requires justification or refactoring plan.
 - **5.3 (Function Size):** Single function or method line count **should** be under 20 lines.
-- **5.4 (Line Width Limit):** Single line code **should** not exceed 80 characters, with a hard limit of 120 characters.
+- **5.4 (Line Width Limit):** Single line code **should** not exceed 80 characters, with a hard limit of 100 characters.
 - **5.5 (Code Evolution):** Delete old code directly, strictly prohibit keeping commented-out obsolete code.
 - **5.6 (Module Metadata):** Each module directory must include a README describing Role, Logic, Constraints, and a submodule index. Each source file should start with three header lines: INPUT (dependencies), OUTPUT (provided capabilities), POS (position in the system). When code changes, these metadata must be updated accordingly.
 

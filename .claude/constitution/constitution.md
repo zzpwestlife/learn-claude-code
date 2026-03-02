@@ -27,7 +27,7 @@
 - **5.1 Minimal Changes**: Touch only necessary files.
 - **5.2 File Size**: < 200 lines.
 - **5.3 Func Size**: < 20 lines.
-- **5.4 Line Width**: < 120 chars.
+- **5.4 Line Width**: < 100 chars.
 - **5.5 Evolution**: Delete old code; NO commented-out blocks.
 - **5.6 Metadata**: Header lines: INPUT, OUTPUT, POS.
 
