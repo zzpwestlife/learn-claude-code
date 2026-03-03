@@ -1,10 +1,8 @@
-# Learn Claude Code & AI 原生开发工作流实战
-
-## 🛠 Learn Claude Code 学习套件 (Tool Suite)
+# 🛠 Learn Claude Code 学习套件 (Tool Suite)
 
 **Learn Claude Code** 是一个标准化的 Claude Code 配置套件，旨在帮助开发者快速将最佳实践集成到自己的项目中。本版本基于 [Obra Superpowers](https://github.com/obra/superpowers), 经过精简重构，专注于 **Golang** 开发环境的优化。
 
-### 核心特性
+## 核心特性
 
 1.  **规则基石**: `.claude/constitution/constitution.md` 与 `.claude/rules/CORE_RULES.md` 共同定义了不可动摇的开发原则与工程规范。它们通过 `CLAUDE.md` -> `.claude/AGENTS.md` 链式加载，作为 **Non-Negotiable (不可协商)** 的上下文强制生效，确保 AI 始终遵循项目宪法。
 2.  **认知架构**: 深度集成**奥卡姆剃刀**（做减法）、**费曼技巧**（做加法）与**苏格拉底提问法**（做验证），构建自我调节的 AI 思维模型 (`.claude/constitution/prompt_engineering_annex.md`)。
@@ -93,7 +91,7 @@ graph TD
 **全程可视化进度**:
 `[✔ Interview] → [✔ Design] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
 
-### 🛠️ 核心命令详解
+## 🛠️ 核心命令详解
 
 | 命令 | 描述 | 适用场景 |
 | :--- | :--- | :--- |
@@ -107,7 +105,7 @@ graph TD
 | `/archive-task` | **归档员**：将当前任务的计划文件归档，保持工作区整洁。 | 任务完成后 |
 | `/tidy-memory` | **记忆整理**：整理项目的核心记忆，优化上下文。 | 长期项目维护，定期执行 |
 
-### 📂 目录结构说明
+## 📂 目录结构说明
 
 ```text
 .claude/
