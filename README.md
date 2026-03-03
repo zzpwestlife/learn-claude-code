@@ -2,16 +2,16 @@
 
 ## 🛠 Learn Claude Code 学习套件 (Tool Suite)
 
-**Learn Claude Code** 是一个标准化的 Claude Code 配置套件，旨在帮助开发者快速将最佳实践集成到自己的项目中。本版本经过精简重构，专注于 **Golang** 开发环境的优化。
+**Learn Claude Code** 是一个标准化的 Claude Code 配置套件，旨在帮助开发者快速将最佳实践集成到自己的项目中。本版本基于 [Obra Superpowers](https://github.com/obra/superpowers), 经过精简重构，专注于 **Golang** 开发环境的优化。
 
 ### 核心特性
 
-1.  **规则基石**: `.claude/constitution/constitution.md` 与 `.claude/rules/CORE_RULES.md` 共同定义了不可动摇的开发原则与工程规范。
-2.  **认知架构**: 深度集成**奥卡姆剃刀**（做减法）、**费曼技巧**（做加法）与**苏格拉底提问法**（做验证），构建自我调节的 AI 思维模型。
-3.  **角色化 Agent**: 预设 Architect, Code Reviewer 等专家角色。
+1.  **规则基石**: `.claude/constitution/constitution.md` 与 `.claude/rules/CORE_RULES.md` 共同定义了不可动摇的开发原则与工程规范。它们通过 `CLAUDE.md` -> `.claude/AGENTS.md` 链式加载，作为 **Non-Negotiable (不可协商)** 的上下文强制生效，确保 AI 始终遵循项目宪法。
+2.  **认知架构**: 深度集成**奥卡姆剃刀**（做减法）、**费曼技巧**（做加法）与**苏格拉底提问法**（做验证），构建自我调节的 AI 思维模型 (`.claude/constitution/prompt_engineering_annex.md`)。
+3.  **角色化 Agent**: 预设 Architect, Code Reviewer 等专家角色，配置位于 `.claude/agents/` 目录。
 4.  **Golang 原生支持**: 提供深度优化的 Go 语言开发规范 (`.claude/constitution/go_annex.md`) 与自动化格式化钩子 (`.claude/hooks/go/format-go-code.sh`)，集成 `gofmt`, `goimports`, `gofumpt` 等最佳实践工具链。
-5.  **双重人格架构 (Dual Persona)**: 独创的 **Builder (Opus)** vs **Critic (Codex)** 协作模式。Opus 负责从 0 到 1 的创造与文档，Codex 负责严格的代码审查与安全审计。
-6.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
+5.  **双重人格架构 (Dual Persona)**: 独创的 **Builder (Opus)** vs **Critic (Codex)** 协作模式。Opus 负责从 0 到 1 的创造与文档，Codex 负责严格的代码审查与安全审计 (`.claude/agents/code-reviewer.md`)。
+6.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），位于 `.claude/skills/` 目录，提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
 7.  **动态上下文卫生**: 内置 Token 优化协议 (`.claude/rules/CORE_RULES.md`)，指导 Agent 主动过滤大型输出，防止上下文爆炸。
 8.  **递归需求分析 (Recursive Analysis)**: 在 `/brainstorm` 阶段强制引入**多轮结构化采访**机制，通过递归追问（Recursive Interview）消除需求歧义，确保 Design 文档的绝对精准。
 9.  **自动化集成**: 通过 `install.sh` 一键将配置注入到你的项目中，支持 macOS 原生 GUI 交互与智能文件合并（Smart Merge）。
@@ -123,15 +123,3 @@ graph TD
 └── skills/         # 智能体技能库 (Python/Node 驱动的高级能力)
 ```
 
-### 🤝 贡献指南 (Contributing)
-
-欢迎提交 Issue 或 Pull Request 来改进此工作流配置。请确保遵循 `.claude/rules/CORE_RULES.md` 中的工程规范。
-
-1.  **Fork** 本项目。
-2.  创建你的特性分支 (`git checkout -b feature/AmazingFeature`)。
-3.  提交你的更改 (`git commit -m 'feat(core): Add some AmazingFeature'`)。
-4.  推送到分支 (`git push origin feature/AmazingFeature`)。
-5.  开启一个 **Pull Request**。
-
----
-**Learn Claude Code** is licensed under the MIT License.
