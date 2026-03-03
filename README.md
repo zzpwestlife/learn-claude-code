@@ -11,6 +11,7 @@
 5.  **自动化闭环 (Automation Loop)**: 内置 **Session Recovery** 与 **Skill Audit** 机制。
     *   `/audit-skills`: 智能分析日志，自动发现工作流缺口并推荐新技能。
     *   `/recover`: 一键恢复上下文（基于 `SessionEnd` Hook 自动生成的摘要），快速回到工作状态。
+    *   `/find-skills`: 智能技能导航，解决“工具太多不知道用哪个”的难题。
 6.  **双重人格架构 (Dual Persona)**: 独创的 **Builder (Opus)** vs **Critic (Codex)** 协作模式。Opus 负责从 0 到 1 的创造与文档，Codex 负责严格的代码审查与安全审计 (`.claude/agents/code-reviewer.md`)。
 7.  **智能体技能库**: 内置 Python 驱动的高级技能（如 `changelog-generator`, `skill-architect`），位于 `.claude/skills/` 目录，提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
 8.  **动态上下文卫生**: 内置 Token 优化协议 (`.claude/rules/CORE_RULES.md`)，指导 Agent 主动过滤大型输出，防止上下文爆炸。
