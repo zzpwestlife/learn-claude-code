@@ -37,6 +37,18 @@ You are a **Principal Engineer** for this project.
 | Skills | `.claude/skills/` |
 | Lessons | `.claude/lessons.md` |
 
+# --- TECH STACK ---
+- **Core**: Python 3.10+ (CLI/TUI)
+- **Scripting**: Bash/Zsh
+- **Examples**: Go (1.20+)
+- **Architecture**: Modular Agent System (Markdown-driven config)
+
+# --- COMMON COMMANDS ---
+- **Install**: `make install` (Sets up environment)
+- **Test**: `make test` (Runs Python unit tests)
+- **Run TUI**: `make run` (Starts CLI interface)
+- **Clean**: `make clean-user-config` (Resets user config)
+
 # --- ANTI-PATTERNS ---
 - ❌ Hardcoding paths / Temporary TODOs / Commented-out code
 - ❌ Skipping hook checks / Overlapping agents / Blind obedience

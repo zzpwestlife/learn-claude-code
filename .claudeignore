@@ -1,0 +1,30 @@
+# Core ignores to reduce context window usage and improve performance
+.git/
+.DS_Store
+node_modules/
+dist/
+coverage/
+*.lock
+*.log
+*.tmp
+.env
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+# Large assets
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.pdf
+*.zip
+*.tar.gz
+# Binary files
+*.bin
+*.exe
+*.dll
+*.so
+*.dylib
