@@ -41,3 +41,9 @@
 - **Project-Level Only**: DO NOT use user-level (`~/.claude/`) configuration for project-specific rules or tools.
 - **Dependency Isolation**: All MCP servers and Skills MUST be defined within the repository (`.claude/`), ensuring reproducibility.
 - **Minimal Global Context**: Keep the global context empty or restricted to OS-level utilities only.
+
+## 7. Documentation & Copywriting (Chinese Guidelines)
+- **Strict Adherence**: All Chinese documentation MUST follow `docs/zh-copywriting-guidelines.md`.
+- **Spaces**: Always add spaces between Chinese and English/Numbers (e.g., "使用 GitHub 登录").
+- **Punctuation**: Use full-width punctuation for Chinese sentences (e.g., "，" not ",").
+- **No Repetition**: Do not repeat punctuation marks (e.g., "！！").
