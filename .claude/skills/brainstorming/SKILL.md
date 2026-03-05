@@ -9,7 +9,10 @@ description: "You MUST use this before any creative work. Explores user intent, 
 **HARD GATE**: NO implementation until design is approved.
 
 ## Process
-1. **Explore**: Check files, docs, context.
+1. **Explore & Research**: 
+   - Check files, docs, context.
+   - **MANDATORY**: Create `docs/research/YYYY-MM-DD-<topic>.md` analyzing existing patterns, dependencies, and constraints.
+   - Ensure you understand the "intricacies" before designing.
 2. **Structured Interview (Iterative)**:
    - Use `AskUserQuestion` to conduct a comprehensive interview.
    - Focus on: **Goal** (What), **Context** (Why), **Constraints** (Limits), **Success Criteria** (Done).

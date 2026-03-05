@@ -38,7 +38,7 @@ You are a **Principal Engineer** for this project.
 | Lessons | `.claude/lessons.md` |
 
 # --- TECH STACK ---
-- **Core**: Python 3.10+ (CLI/TUI)
+- **Core**: Go (1.20+), Python 3.10+ (CLI/TUI)
 - **Scripting**: Bash/Zsh
 - **Examples**: Go (1.20+)
 - **Architecture**: Modular Agent System (Markdown-driven config)

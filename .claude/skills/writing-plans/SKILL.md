@@ -22,9 +22,11 @@ description: Use when you have a spec or requirements for a multi-step task, bef
    - Step 5: Commit
 
 ## Handoff (MANDATORY TUI)
+Point the user to the generated plan file (`docs/plans/...`) and ask them to **Annotate** it directly.
+
 Use `AskUserQuestion` to offer:
-1. **Execute Plan** (`/execute-plan`)
-2. **Review Plan**
-3. **Refine Plan**
+1. **Execute Plan** (Only if annotated/approved)
+2. **Review Plan** (I will read your annotations)
+3. **Refine Plan** (Interactive mode)
 
 > For detailed template and examples, see `.claude/docs/references/skills/writing_plans_full.md`
