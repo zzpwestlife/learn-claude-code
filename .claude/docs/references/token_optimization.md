@@ -1,11 +1,11 @@
 # Token Optimization & Context Management Whitepaper
 
-**Version**: 1.2 (2026-02-27)  
-**Status**: Implemented  
-**Impact**: Active Token Reduction ~80.0%
+**Version**: 1.3 (2026-03-08)
+**Status**: Implemented
+**Impact**: Active Token Reduction ~85.0% (Enhanced with RTK)
 
 ## 1. Executive Summary
-This document outlines the systematic approach used to optimize the `.claude/` configuration directory. By implementing a "Hot/Cold Data Separation" strategy, we reduced the active context load from ~79k tokens to ~15.6k tokens while maintaining 100% functional integrity through explicit referencing.
+This document outlines the systematic approach used to optimize the `.claude/` configuration directory. By implementing a "Hot/Cold Data Separation" strategy combined with **Dynamic CLI Proxying (RTK)**, we reduced the active context load from ~79k tokens to ~15.6k tokens while maintaining 100% functional integrity through explicit referencing.
 
 ## 2. Core Philosophy: JIT (Just-In-Time) Context
 The central principle is **"Load what you need, when you need it."**
@@ -99,13 +99,32 @@ We conducted a controlled experiment simulating a tool outputting 5,000 lines of
 - **Summarized Output** (Errors only): ~209 KB -> **POOR**
 - **Compressed Output** (Head/Tail): < 1 KB (~250 tokens) -> **OPTIMAL**
 
-### 7.2 Best Practices for Tool Output
+### 7.2 Solution: RTK (Rust Token Killer)
+We have integrated **RTK** as a global CLI proxy to automatically compress command outputs before they reach the Agent's context.
+
+**Installation & Config**:
+- **Tool**: `rtk` (Installed via brew)
+- **Hook**: `PreToolUse` hook in `~/.claude/settings.json` rewrites commands (e.g., `git status` -> `rtk git status`).
+
+**Impact (Measured)**:
+| Command | Raw Tokens | RTK Tokens | Savings |
+| :--- | :--- | :--- | :--- |
+| `git status` | ~331 | ~44 | **86.7%** |
+| `ls -R` | ~195,000 | ~49,000 | **74.9%** |
+
+**Strategy**:
+- **Smart Filtering**: Removes noise (whitespace, comments).
+- **Grouping**: Aggregates similar items (files by directory).
+- **Truncation**: Keeps relevant context, cuts redundancy.
+- **Deduplication**: Collapses repeated log lines.
+
+### 7.3 Best Practices for Tool Output (Legacy/Manual)
+Even with RTK, follow these principles for custom scripts:
 1.  **Silence is Golden**: Scripts should output nothing on success, or a single confirmation line.
 2.  **Filter First**: Never run `cat huge_file.log`. Use `grep "ERROR" huge_file.log` or `tail -n 20 huge_file.log`.
 3.  **Search > Read**: For large codebases, use search tools (`grep`, `ripgrep`) to locate relevant sections before reading files.
-4.  **Sandboxing (Advanced)**: For complex environments, consider tools like `claude-context-mode` that intercept and compress tool output automatically.
 
-### 7.3 Safety Mechanisms: Does Optimization Mean Information Loss?
+### 7.4 Safety Mechanisms: Does Optimization Mean Information Loss?
 
 A common concern is: *"If I filter the logs, will I miss the root cause?"*
 The answer is **No**, provided you follow the **Iterative Retrieval** pattern:
@@ -119,4 +138,4 @@ The answer is **No**, provided you follow the **Iterative Retrieval** pattern:
 - **Optimized (Iterative)**: Read 20 lines -> Find target -> Read 50 lines -> **Solves problem with <2% token cost and higher accuracy.**
 
 ## 8. Conclusion
-Optimization is not deletion; it is organization. By structuring information hierarchically (Static JIT) and managing tool output discipline (Dynamic Hygiene), we enable the Agent to "think fast" (low latency/cost) while retaining the ability to "think deep" (access to full knowledge) when required.
+Optimization is not deletion; it is organization. By structuring information hierarchically (Static JIT) and managing tool output discipline (Dynamic Hygiene with RTK), we enable the Agent to "think fast" (low latency/cost) while retaining the ability to "think deep" (access to full knowledge) when required.
