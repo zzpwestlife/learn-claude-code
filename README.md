@@ -127,3 +127,6 @@ graph TD
 └── skills/         # 智能体技能库 (Python/Node 驱动的高级能力)
 ```
 
+## 📚 文档与指南
+
+- [**Claude Code Golang LSP 配置指南**](docs/guides/claude-code-lsp-setup.md): 开启 `ENABLE_LSP_TOOL`，让 Claude Code 拥有 IDE 级的代码跳转与补全能力 (50ms 响应)。
