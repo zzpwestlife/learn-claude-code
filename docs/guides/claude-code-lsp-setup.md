@@ -115,12 +115,13 @@ export ENABLE_LSP_TOOL=1
 ## 常见问题
 
 **Q: 遇到 `Extra inputs are not permitted` 报错怎么办？**
-A: 这是一个已知的 Claude Code 客户端 Bug (通常在 v2.1.69 左右版本)。
-   *   **原因**：客户端发送了 API 不支持的 `defer_loading` 参数。
+A: 这通常是由于启用了过多的 MCP 工具导致 Claude 的上下文窗口（Context Window）被占满。
+   *   **原因**：每个启用的 MCP 工具都会占用一定的 token。当启用的 MCP 工具过多时，可能会超出上下文限制，导致此报错。
+   *   **验证方法**：使用 `/context` 命令查看当前的 Context Usage。如果 `MCP tools` 的占用比例过高，或者总 Token 数接近上限，即确认是此问题。
    *   **解决方法**：
-       1.  尝试升级 Claude Code 到最新版：`npm install -g @anthropic-ai/claude-code`
-       2.  如果升级无效，请暂时在配置文件或环境变量中**移除** `ENABLE_LSP_TOOL`，直到官方修复此 Bug。
-       3.  检查并修复 npm 权限问题（如果在运行命令时遇到 EPERM 错误）。
+       1.  **禁用不必要的 MCP**：使用 `/mcp` 管理工具，禁用当前会话不需要的 MCP 服务器。
+       2.  **重启会话**：尝试使用 `/compact` 或重启 Claude Code 会话来清理上下文。
+       3.  **检查 defer_loading（次要原因）**：在极少数情况下，也可能是 Claude Code v2.1.69+ 引入新特性 `defer_loading` (延迟加载) 时的兼容性问题，导致旧版插件不支持。此时可尝试升级插件。
 
 **Q: 开启 LSP 后 Claude 反应变慢？**
 A: 初始化 LSP 可能需要几秒钟（特别是大项目索引时），但之后的查询应该是毫秒级的。

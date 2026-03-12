@@ -55,6 +55,16 @@ We refined the Agent definitions themselves:
 - **Files**: `code-reviewer.md`, `changelog-generator.md`.
 - **Optimization**: Reduced to "Role", "Goal", and "Workflow" bullets. Detailed instructions moved to `docs/references/agents/`.
 
+### 3.7 Phase 5 Optimizations (System Tools - MCP)
+In Claude Code v2.1.69+, we leverage the **Tool Search / Defer Loading** mechanism to solve the "System Context Explosion" problem.
+
+- **Problem**: Loading 50+ MCP tools at startup consumes ~10% of context (30k+ tokens) and degrades tool selection accuracy.
+- **Solution**: Use `defer_loading: true` for non-critical tools.
+- **Strategy**:
+    - **Core Tools (Hot)**: Keep 3-5 high-frequency tools loaded (e.g., `bash`, `edit`).
+    - **Extended Tools (Cold)**: Set `defer_loading: true` for all other tools (Search, Jira, GitHub, etc.).
+- **Impact**: Reduces System Context from ~30k tokens to <1k tokens. Tools are discovered on-demand via Regex or BM25 search.
+
 ## 4. Safety Mechanisms (Integrity Verification)
 
 To ensure no functionality is lost, we implemented:

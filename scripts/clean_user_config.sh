@@ -1,15 +1,16 @@
 #!/bin/bash
 
 # ==============================================================================
-# Script: clean_user_config.sh
-# Purpose: Backup and clean User-Level Claude Configuration to enforce "Context Isolation".
+# Script: clean_user_config.sh (Now acts as: UNINSTALL CLAUDE CODE)
+# Purpose: COMPLETELY uninstall Claude Code (Official & Unofficial) and all configurations.
 # Usage: ./clean_user_config.sh
 # ==============================================================================
 
 set -e
 
+# Configuration
 USER_CONFIG_DIR="$HOME/.claude"
-BACKUP_DIR="$HOME/.claude_backup_$(date +%Y%m%d_%H%M%S)"
+BACKUP_DIR="$HOME/.claude_backup_full_$(date +%Y%m%d_%H%M%S)"
 
 # Colors
 GREEN='\033[0;32m'
@@ -17,121 +18,150 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-echo -e "${YELLOW}WARNING: This script will remove User-Level Claude configurations to enforce Context Isolation.${NC}"
-echo -e "${YELLOW}Your current configuration will be backed up to: ${BACKUP_DIR}${NC}\n"
+echo -e "${RED}======================================================================${NC}"
+echo -e "${RED}DANGER: This script will COMPLETELY UNINSTALL Claude Code and remove ALL data.${NC}"
+echo -e "${RED}======================================================================${NC}"
+echo -e "${YELLOW}Targeting for removal:${NC}"
+echo -e "  1. [NPM] @anthropic-ai/claude-code (Official Package)"
+echo -e "  2. [NPM] @futupb/ft-claude-code (Unofficial/Fork Package)"
+echo -e "  3. [BREW] claude-code-tool-manager (Tool Manager)"
+echo -e "  4. [CONFIG] $USER_CONFIG_DIR (All chats, settings, keys, history)"
+echo ""
 
-# 1. Identify items to remove (Whitelist approach: Keep ONLY essential system configs)
-# We will backup EVERYTHING, but only delete specific targets that cause context pollution.
-# Targets:
-# - config.json (Often contains global MCP servers)
-# - commands/ (Global custom commands)
-# - tools/ (Global tools)
-# - CLAUDE.md (Global instructions)
-# - mcp-servers/ (If exists)
-
-# Check if directory exists
-if [ ! -d "$USER_CONFIG_DIR" ]; then
-    echo "User config directory $USER_CONFIG_DIR does not exist. Nothing to clean."
-    exit 0
-fi
-
-# 2. Interactive Confirmation
-read -p "Do you want to proceed with backup and cleanup? (y/N) " -n 1 -r
+# Interactive Confirmation
+read -p "Are you sure you want to completely uninstall EVERYTHING? (y/N) " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo "Operation cancelled."
     exit 0
 fi
 
-# 3. Create Backup
-echo -e "\n${GREEN}[1/3] Creating backup...${NC}"
-mkdir -p "$BACKUP_DIR"
-cp -R "$USER_CONFIG_DIR/"* "$BACKUP_DIR/"
-echo "Backup complete."
+# ==============================================================================
+# 1. Uninstall NPM Packages
+# ==============================================================================
+echo -e "\n${GREEN}[1/4] Uninstalling NPM packages...${NC}"
 
-# 4. Perform Cleanup
-echo -e "\n${GREEN}[2/3] Cleaning up user context...${NC}"
-
-# Function to safely delete if exists
-safe_delete() {
-    local target="$1"
-    if [ -e "$USER_CONFIG_DIR/$target" ]; then
-        echo "Removing $target..."
-        rm -rf "$USER_CONFIG_DIR/$target"
+if command -v npm >/dev/null 2>&1; then
+    # Try removing official package
+    echo "Attempting to remove @anthropic-ai/claude-code..."
+    if npm list -g @anthropic-ai/claude-code >/dev/null 2>&1; then
+        npm uninstall -g @anthropic-ai/claude-code || echo -e "${YELLOW}Warning: Failed to uninstall @anthropic-ai/claude-code (check permissions?)${NC}"
     else
-        echo "$target not found, skipping."
+        echo "Package @anthropic-ai/claude-code not found."
     fi
-}
-
-# --- DELETION LIST ---
-
-# === 1. Essential Configs (PRESERVE) ===
-# These files contain authentication, history, and essential UI config.
-# - settings.json: Contains ANTHROPIC_AUTH_TOKEN. Deleting this logs you out.
-# - ft-settings.json: First-time settings and preferences.
-# - history.jsonl: Contains your chat history. Preserved for reference.
-# - scripts/statusline.sh: Your custom terminal status line. Preserved for UX.
-
-# === 2. Context Pollution Sources (DELETE) ===
-# These files actively inject unwanted context into the AI's window.
-safe_delete "CLAUDE.md"         # Global Context/Rules (Major pollution source)
-safe_delete "config.json"       # Global MCP/Tool definitions (Major pollution source)
-safe_delete "prompts"           # Global custom prompts
-safe_delete "mcp-servers"       # Global MCP server configurations
-safe_delete "plugins"           # Global plugins (e.g., woven-into-context tools)
-safe_delete "tools"             # Global tool definitions
-safe_delete "commands"          # Global custom slash commands
-safe_delete "hooks"             # Global hooks (PreToolUse/PostToolUse) - Major pollution source
-
-# === 3. Project Artifacts Leaked to Global (DELETE) ===
-# These should live in specific project directories, not global.
-safe_delete "projects"          # Project metadata/lists
-safe_delete "plans"             # Planning documents
-safe_delete "todos"             # Todo lists
-safe_delete "tasks"             # Task tracking
-safe_delete "scripts"           # (Handled specially below to preserve statusline.sh)
-
-# === 4. System Cache & Telemetry (DELETE for "Fresh Start") ===
-# These don't inject context, but deleting them ensures a pristine environment.
-# They will be automatically regenerated by Claude Code as needed.
-safe_delete "session-env"       # Snapshot of environment variables from previous sessions
-safe_delete "telemetry"         # Anonymous usage data sent to Anthropic
-safe_delete "usage-data"        # Local usage statistics
-safe_delete "statsig"           # Feature flags and experiment configurations
-safe_delete "teams"             # Team configurations (if you don't use Teams)
-safe_delete "stats-cache.json"  # Cached statistics
-safe_delete "debug"             # Debug logs
-safe_delete "bench"             # Benchmark results
-safe_delete "cache"             # General cache
-safe_delete "paste-cache"       # Clipboard cache
-safe_delete "file-history"      # History of edited files
-safe_delete "shell-snapshots"   # Saved terminal states
-safe_delete "transcripts"       # Old conversation transcripts
-safe_delete ".DS_Store"         # macOS system metadata
-
-# Clean scripts but preserve statusline.sh
-if [ -d "$USER_CONFIG_DIR/scripts" ]; then
-    echo "Cleaning scripts/ (preserving statusline.sh)..."
-    # Find and delete everything EXCEPT statusline.sh
-    find "$USER_CONFIG_DIR/scripts" -type f ! -name "statusline.sh" -delete
-    # Remove empty directories if any
-    find "$USER_CONFIG_DIR/scripts" -type d -empty -delete
+    
+    # Try removing unofficial package
+    echo "Attempting to remove @futupb/ft-claude-code..."
+    if npm list -g @futupb/ft-claude-code >/dev/null 2>&1; then
+        npm uninstall -g @futupb/ft-claude-code || echo -e "${YELLOW}Warning: Failed to uninstall @futupb/ft-claude-code (check permissions?)${NC}"
+    else
+        echo "Package @futupb/ft-claude-code not found."
+    fi
 else
-    echo "scripts/ not found, skipping."
+    echo -e "${YELLOW}npm not found. Skipping npm uninstall.${NC}"
 fi
 
-# === 5. Surgical Cleaning of settings.json (Remove Hooks) ===
-# settings.json often contains hooks pointing to deleted files (e.g., claude-bench).
-# We must remove the "hooks" key to prevent "File not found" errors on startup.
-if [ -f "$USER_CONFIG_DIR/settings.json" ]; then
-    echo "Cleaning hooks from settings.json..."
-    python3 "$(dirname "$0")/clean_settings_json.py" "$USER_CONFIG_DIR/settings.json"
+# ==============================================================================
+# 2. Uninstall Homebrew Packages
+# ==============================================================================
+echo -e "\n${GREEN}[2/4] Uninstalling Homebrew packages...${NC}"
+
+if command -v brew >/dev/null 2>&1; then
+    if brew list --cask | grep -q "claude-code-tool-manager"; then
+        echo "Removing claude-code-tool-manager..."
+        brew uninstall --cask claude-code-tool-manager || echo -e "${YELLOW}Warning: Failed to remove claude-code-tool-manager${NC}"
+    else
+        echo "claude-code-tool-manager not found in brew."
+    fi
+
+    # Check for 'claude-code' cask (The main CLI installed via brew)
+    if brew list --cask | grep -q "^claude-code$"; then
+        echo "Removing claude-code cask..."
+        brew uninstall --cask claude-code || echo -e "${YELLOW}Warning: Failed to remove claude-code cask${NC}"
+    else
+        echo "claude-code cask not found in brew."
+    fi
+
+    # Check for 'claude' formula (rare but possible)
+    if brew list --formula | grep -q "^claude$"; then
+        echo "Removing claude formula..."
+        brew uninstall claude || echo -e "${YELLOW}Warning: Failed to remove claude formula${NC}"
+    fi
+else
+    echo -e "${YELLOW}brew not found. Skipping brew uninstall.${NC}"
 fi
 
-# 6. Verification
-echo -e "\n${GREEN}[3/3] Verification...${NC}"
-echo "Remaining files in $USER_CONFIG_DIR:"
-ls -F "$USER_CONFIG_DIR"
+# ==============================================================================
+# 3. Backup Configuration (Safety First)
+# ==============================================================================
+if [ -d "$USER_CONFIG_DIR" ]; then
+    echo -e "\n${GREEN}[3/4] Backing up configuration (just in case)...${NC}"
+    echo "Backup location: $BACKUP_DIR"
+    mkdir -p "$BACKUP_DIR"
+    cp -R "$USER_CONFIG_DIR/"* "$BACKUP_DIR/" 2>/dev/null || echo "Backup warning: some files might be skipped."
+else
+    echo -e "\n${GREEN}[3/4] No configuration directory found to backup.${NC}"
+fi
 
-echo -e "\n${GREEN}SUCCESS: User-Level Context Cleaned!${NC}"
-echo -e "You are now ready for 'AI Flow State'. Ensure your project has a local .claude/ configuration."
+# ==============================================================================
+# 4. Remove Configuration Directory
+# ==============================================================================
+echo -e "\n${GREEN}[4/4] Removing configuration directory...${NC}"
+
+if [ -d "$USER_CONFIG_DIR" ]; then
+    rm -rf "$USER_CONFIG_DIR"
+    echo "Removed $USER_CONFIG_DIR"
+else
+    echo "$USER_CONFIG_DIR already gone."
+fi
+
+# ==============================================================================
+# 5. Final Verification
+# ==============================================================================
+echo -e "\n${GREEN}=== Uninstallation Complete ===${NC}"
+echo "Checking for leftovers..."
+
+REMAINING_ISSUES=0
+
+if command -v claude >/dev/null 2>&1; then
+    CLA_PATH=$(which claude)
+    echo -e "${RED}WARNING: 'claude' command still exists at: $CLA_PATH${NC}"
+    
+    # Aggressive Cleanup: Try to remove the binary/symlink manually
+    read -p "Do you want to FORCE DELETE $CLA_PATH? (y/N) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "Force deleting $CLA_PATH..."
+        rm -f "$CLA_PATH" || sudo rm -f "$CLA_PATH"
+        
+        # Verify again
+        if command -v claude >/dev/null 2>&1; then
+             echo -e "${RED}Failed to delete. Please remove manually.${NC}"
+             REMAINING_ISSUES=1
+        else
+             echo -e "${GREEN}Successfully force deleted 'claude'.${NC}"
+             REMAINING_ISSUES=0
+        fi
+    else
+        echo -e "You chose not to delete it. Please remove it manually."
+        REMAINING_ISSUES=1
+    fi
+else
+    echo -e "${GREEN}SUCCESS: 'claude' command is gone.${NC}"
+fi
+
+if [ -d "$USER_CONFIG_DIR" ]; then
+    echo -e "${RED}WARNING: $USER_CONFIG_DIR still exists.${NC}"
+    REMAINING_ISSUES=1
+else
+    echo -e "${GREEN}SUCCESS: Config directory is gone.${NC}"
+fi
+
+echo ""
+if [ $REMAINING_ISSUES -eq 0 ]; then
+    echo -e "${GREEN}All checks passed. Claude Code has been completely uninstalled.${NC}"
+else
+    echo -e "${YELLOW}Some components may still remain. Please check the warnings above.${NC}"
+fi
+
+echo -e "\nNote: If you have added any alias/export lines to your .zshrc or .bashrc, please remove them manually."

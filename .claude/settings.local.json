@@ -28,7 +28,9 @@
       "mcp__feishu-docs-mcp__get_feishu_document_raw_content",
       "Bash(find ~/.claude -name *.json)",
       "Bash(find /Users/admin -path \"*/f-feishu-mcp*\" -type f 2>/dev/null | head -20)",
-      "Bash(npm list -g @futu/f-feishu-mcp 2>/dev/null; npx --registry http://registry.npm.oa.com @futu/f-feishu-mcp --version 2>/dev/null | head -5)"
+      "Bash(npm list -g @futu/f-feishu-mcp 2>/dev/null; npx --registry http://registry.npm.oa.com @futu/f-feishu-mcp --version 2>/dev/null | head -5)",
+      "Bash(node -e \"const envPaths = require\\('/Users/admin/.npm/_npx/45b3c35805bcb350/node_modules/env-paths'\\); console.log\\(envPaths\\('f-feishu-mcp'\\)\\)\" 2>/dev/null || node -e \"import\\('/Users/admin/.npm/_npx/45b3c35805bcb350/node_modules/env-paths/index.js'\\).then\\(m => console.log\\(m.default\\('f-feishu-mcp'\\)\\)\\)\" 2>/dev/null)",
+      "mcp__feishu-docs-mcp__create_feishu_document"
     ]
   },
   "hooks": {
