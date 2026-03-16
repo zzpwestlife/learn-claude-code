@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/lib/shell/superpowers-session-start"
+            "command": ".claude/scripts/superpowers-session-start"
           }
         ]
       }
@@ -25,7 +25,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/lib/shell/claudeception-activator.sh"
+            "command": ".claude/scripts/claudeception-activator.sh"
           }
         ]
       }

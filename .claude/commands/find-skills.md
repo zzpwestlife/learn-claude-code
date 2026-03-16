@@ -5,7 +5,7 @@ allowed-tools:
   - Read
 ---
 
-!python3 .claude/lib/python/find_skills.py "$@"
+!python3 .claude/scripts/find_skills.py "$@"
 
 # Instruction
 If skills are found:

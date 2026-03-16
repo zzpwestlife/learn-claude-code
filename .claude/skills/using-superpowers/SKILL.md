@@ -12,7 +12,7 @@ description: Use when you need to access or modify user-defined superpowers (glo
 - **Local**: `.claude/superpowers.lock.json` (Project Lockfile)
 
 ## Process
-1. **Sync**: Run `python3 .claude/lib/python/sync-superpowers.py`.
+1. **Sync**: Run `python3 .claude/scripts/sync-superpowers.py`.
 2. **Read**: Check `superpowers.lock.json` for available tools.
 3. **Execute**: Use tools as defined in `AGENTS.md`.
 

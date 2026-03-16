@@ -46,7 +46,7 @@ We extended JIT optimization to secondary skills:
 
 ### 3.5 Phase 3 Optimizations (Source Isolation)
 We isolated executable source code from the active context:
-- **Action**: Moved `.py` and `.sh` scripts to `.claude/lib/`.
+- **Action**: Moved `.py` and `.sh` scripts to `.claude/scripts/`.
 - **Impact**: Agent knows *how* to call scripts (via arguments) but doesn't waste tokens reading their implementation details unless debugging them.
 - **Affected**: `architect.py`, `changelog_agent.py`, `check-complete.sh`, `statusline.sh`.
 
@@ -74,7 +74,7 @@ To ensure no functionality is lost, we implemented:
 2.  **Context Efficiency Directive**: Added to `AGENTS.md` to instruct the Agent on the JIT strategy.
     > `Read-on-Demand: Do NOT read full skill/doc files unless executing that specific task.`
 3.  **Automated Monitoring**: `token-analyzer.py` script distinguishes between Active and Reference tokens.
-4.  **Hook Verification**: Verified that critical hooks (e.g., `PostToolUse` for plan checking) point to the correct new paths in `lib/`.
+4.  **Hook Verification**: Verified that critical hooks (e.g., `PostToolUse` for plan checking) point to the correct new paths in `scripts/`.
 
 ## 5. Token Analysis Tool
 

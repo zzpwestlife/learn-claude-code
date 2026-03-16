@@ -7,4 +7,10 @@ tmp.log
 *.tmp
 .env
 *.pyc
-tests/*
+tests/
+
+# Claude Code Runtime
+.claude/audit/
+.claude/logs/
+.claude/tmp/
+.claude/docs/archive/

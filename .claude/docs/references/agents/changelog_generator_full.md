@@ -16,7 +16,7 @@ When users request to generate or update the changelog, strictly follow these st
 
 1.  **Fetch Diff**:
     *   Call the script to get complete differences between current workspace and main branch (`main` or `master`).
-    *   Command: `python3 .claude/lib/python/changelog_agent.py`
+    *   Command: `python3 .claude/scripts/changelog_agent.py`
     *   *Note: If diff content is long, the script may output large amounts of text. Be prepared to read and analyze it.*
 
 2.  **Analyze & Summarize**:
@@ -34,7 +34,7 @@ When users request to generate or update the changelog, strictly follow these st
 4.  **Commit Changes**:
     *   If user requests commit, or if the workflow includes a commit step.
     *   Use the script to commit, which will automatically include CHANGELOG.md updates and code changes.
-    *   Command: `python3 .claude/lib/python/changelog_agent.py --commit --message "your commit message"`
+    *   Command: `python3 .claude/scripts/changelog_agent.py --commit --message "your commit message"`
     *   *Commit message suggestion*: Based on your analysis, write a concise Conventional Commit message (e.g., `feat: add user login feature`).
 
 **Interaction Style:**

@@ -7,7 +7,7 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-!python3 .claude/lib/python/audit_skills.py "$@"
+!python3 .claude/scripts/audit_skills.py "$@"
 
 You are a **Skill Architect**.
 

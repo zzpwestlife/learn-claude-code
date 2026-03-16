@@ -121,7 +121,6 @@ graph TD
 ├── constitution/   # 项目宪法与核心原则 (Constitution)
 ├── docs/           # 详细文档与参考资料
 ├── hooks/          # Git Hooks (Pre-commit formatting)
-├── lib/            # 共享库代码 (Python/Shell)
 ├── rules/          # 具体工程规则 (Core Rules)
 ├── scripts/        # 实用脚本 (Installers, Analyzers)
 └── skills/         # 智能体技能库 (Python/Node 驱动的高级能力)

@@ -12,25 +12,16 @@
       "Bash(git commit:*)",
       "Skill(executing-plans)",
       "Bash(chmod:*)",
-      "Bash(/Users/joeyzou/Code/OpenSource/learn-claude-code/.claude/lib/shell/superpowers-session-start)",
       "Bash(python3:*)",
       "Bash(xargs test:*)",
       "Bash(done)",
       "Bash(echo:*)",
       "Bash(du:*)",
-      "Bash(/Users/joeyzou/Code/OpenSource/learn-claude-code/.claude/lib/shell/claudeception-activator.sh:*)",
       "Bash(ls:*)",
       "Bash(go mod:*)",
       "Bash(go test:*)",
       "Bash(go run:*)",
-      "Bash(git mv:*)",
-      "mcp__feishu-docs-mcp__convert_feishu_wiki_to_document_id",
-      "mcp__feishu-docs-mcp__get_feishu_document_raw_content",
-      "Bash(find ~/.claude -name *.json)",
-      "Bash(find /Users/admin -path \"*/f-feishu-mcp*\" -type f 2>/dev/null | head -20)",
-      "Bash(npm list -g @futu/f-feishu-mcp 2>/dev/null; npx --registry http://registry.npm.oa.com @futu/f-feishu-mcp --version 2>/dev/null | head -5)",
-      "Bash(node -e \"const envPaths = require\\('/Users/admin/.npm/_npx/45b3c35805bcb350/node_modules/env-paths'\\); console.log\\(envPaths\\('f-feishu-mcp'\\)\\)\" 2>/dev/null || node -e \"import\\('/Users/admin/.npm/_npx/45b3c35805bcb350/node_modules/env-paths/index.js'\\).then\\(m => console.log\\(m.default\\('f-feishu-mcp'\\)\\)\\)\" 2>/dev/null)",
-      "mcp__feishu-docs-mcp__create_feishu_document"
+      "Bash(git mv:*)"
     ]
   },
   "hooks": {

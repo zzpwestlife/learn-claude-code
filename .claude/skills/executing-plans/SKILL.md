@@ -7,7 +7,7 @@ hooks:
       hooks:
         - type: command
           command: |
-            SCRIPT_DIR=".claude/lib/shell"
+            SCRIPT_DIR=".claude/scripts"
             OUTPUT=$(sh "$SCRIPT_DIR/check-complete.sh" 2>/dev/null)
             if echo "$OUTPUT" | grep -q "ALL TASKS COMPLETE"; then
               echo "<system-reminder>✅ ALL TASKS COMPLETE. Use 'AskUserQuestion' to ask: 'Review Code?' (Yes/No). If Yes -> /review-code.</system-reminder>"
