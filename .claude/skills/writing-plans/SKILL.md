@@ -21,12 +21,12 @@ description: Use when you have a spec or requirements for a multi-step task, bef
    - Step 4: Verify pass
    - Step 5: Commit
 
-## Handoff (MANDATORY TUI)
-Point the user to the generated plan file (`docs/plans/...`) and ask them to **Annotate** it directly.
+## Transition (MANDATORY TUI)
+Once the plan is written, you MUST stop and ask for user approval.
 
 Use `AskUserQuestion` to offer:
-1. **Execute Plan** (Only if annotated/approved)
-2. **Review Plan** (I will read your annotations)
-3. **Refine Plan** (Interactive mode)
+1. **Execute Plan**: Invoke `executing-plans` skill (Only if approved).
+2. **Review Plan**: "I will read your annotations in the file".
+3. **Refine Plan**: "Let's discuss changes".
 
 > For detailed template and examples, see `.claude/docs/references/skills/writing_plans_full.md`

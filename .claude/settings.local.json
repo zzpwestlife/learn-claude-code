@@ -2,26 +2,21 @@
   "permissions": {
     "allow": [
       "mcp__sequential-thinking__sequentialthinking",
-      "mcp__web-search-prime__webSearchPrime",
       "mcp__fetch__fetch",
-      "Bash(npm install:*)",
-      "Bash(npm run build)",
+      "Bash(npm:*)",
       "Skill(optimize-prompt)",
       "Bash(tree:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
+      "Bash(git:*)",
       "Skill(executing-plans)",
       "Bash(chmod:*)",
       "Bash(python3:*)",
-      "Bash(xargs test:*)",
-      "Bash(done)",
+      "Bash(xargs:*)",
       "Bash(echo:*)",
       "Bash(du:*)",
       "Bash(ls:*)",
-      "Bash(go mod:*)",
-      "Bash(go test:*)",
-      "Bash(go run:*)",
-      "Bash(git mv:*)"
+      "Bash(go:*)",
+      "Bash(test:*)",
+      "Bash(done)"
     ]
   },
   "hooks": {

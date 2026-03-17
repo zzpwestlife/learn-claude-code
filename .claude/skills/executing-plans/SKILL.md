@@ -28,14 +28,18 @@ hooks:
    - Follow steps exactly.
    - Verify each task.
 3. **Report (MANDATORY TUI)**:
-   - Show progress.
-   - Ask: "Continue / Review / Pause".
+   - After each batch (3 tasks) or when blocked.
+   - Use `AskUserQuestion` to ask:
+     - **Continue**: Execute next batch.
+     - **Review Code**: Pause for manual review.
+     - **Pause**: Stop execution.
 4. **Complete**:
-   - Invoke `finishing-a-development-branch`.
+   - If ALL tasks done: Ask user to invoke `finishing-a-development-branch`.
 
 ## Rules
 - **Stop on Blocker**: Don't guess. Ask.
 - **Strict Adherence**: Follow plan steps exactly.
 - **Verification**: Never skip verification steps.
+- **TUI Handoff**: Always return control to user after a batch.
 
 > For detailed workflow diagrams, see `.claude/docs/references/skills/executing_plans_full.md`

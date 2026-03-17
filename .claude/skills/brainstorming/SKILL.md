@@ -24,7 +24,12 @@ description: "You MUST use this before any creative work. Explores user intent, 
 5. **Present Design**: Scale to complexity.
    - **MANDATORY TUI**: `AskUserQuestion` to approve/revise.
 6. **Document**: Save to `docs/design/YYYY-MM-DD-<topic>.md`.
-7. **Transition**: Invoke `writing-plans` skill.
+7. **Transition (MANDATORY TUI)**: 
+   - Ask the user if they are ready to proceed to planning.
+   - Use `AskUserQuestion` to offer:
+     - **Create Plan**: Invoke `writing-plans` skill.
+     - **Review Design**: Wait for user feedback on the design file.
+     - **Refine**: Continue brainstorming.
 
 ## Key Rules
 - **Interview First**: Always clarify requirements BEFORE proposing solutions.
