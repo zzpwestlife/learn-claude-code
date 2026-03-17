@@ -33,6 +33,13 @@ def run_command(cmd, cwd=None):
         print(e.output.decode('utf-8'))
         sys.exit(1)
 
+def run_command_output(cmd, cwd=None):
+    try:
+        result = subprocess.check_output(cmd, shell=True, cwd=cwd, stderr=subprocess.STDOUT)
+        return 0, result.decode('utf-8').strip()
+    except subprocess.CalledProcessError as e:
+        return e.returncode, e.output.decode('utf-8')
+
 def main():
     print("🚀 Superpowers Sync Tool")
     
@@ -79,8 +86,28 @@ def main():
             continue
             
         if skill_path in customized_files:
-            print(f"⚠️  [CUSTOMIZED] {skill_path} - Skipping auto-update. Please check manually.")
-            conflict_count += 1
+            # 3-way merge
+            upstream_rel_path = f"skills/{skill_name}/SKILL.md"
+            base_tmp_file = os.path.join(TEMP_DIR, f"base_{skill_name}_SKILL.md")
+            
+            # Extract base file content
+            code, out = run_command_output(f"git show {current_commit}:{upstream_rel_path}", cwd=TEMP_DIR)
+            if code == 0:
+                with open(base_tmp_file, 'w') as f:
+                    f.write(out)
+            else:
+                with open(base_tmp_file, 'w') as f:
+                    f.write("")
+                    
+            # git merge-file <current> <base> <other>
+            merge_code, _ = run_command_output(f"git merge-file {local_skill_path} {base_tmp_file} {upstream_skill_file}")
+            
+            if merge_code == 0:
+                print(f"✅ [AUTO-MERGED] {skill_path} - Clean merge.")
+                updated_count += 1
+            else:
+                print(f"⚠️  [CONFLICT] {skill_path} - Conflicts found, please resolve markers (<<<<<<<).")
+                conflict_count += 1
         else:
             # Safe to overwrite if not customized
             # But let's check if local exists first
@@ -114,12 +141,25 @@ def main():
     save_lock_file(lock_data)
     
     print("\n" + "="*40)
-    print(f"Summary: {updated_count} files updated, {conflict_count} customized files skipped.")
+    print(f"Summary: {updated_count} files updated, {conflict_count} files have conflicts.")
+    
     if conflict_count > 0:
-        print("👉 Please manually review the customized files against upstream changes.")
+        print("👉 Please manually resolve the conflict markers (<<<<<<<) in the affected files.")
         print(f"   Upstream source is currently in: {TEMP_DIR}")
+        print("   After resolving, run:")
+        print('   git add .claude/')
+        print('   git commit -m "chore(skills): sync superpowers with upstream, resolved conflicts"')
     else:
         shutil.rmtree(TEMP_DIR)
+        print("🤖 All files merged cleanly! Automating git commit...")
+        # Auto commit
+        commit_msg = f"chore(skills): sync superpowers with upstream ({upstream_commit[:7]})"
+        run_command_output(f"git add {CLAUDE_DIR}", cwd=PROJECT_ROOT)
+        code, out = run_command_output(f'git commit -m "{commit_msg}"', cwd=PROJECT_ROOT)
+        if code == 0:
+            print("✅ Successfully committed updates.")
+        else:
+            print(f"⚠️  Git commit returned non-zero (perhaps no actual changes): {out}")
         
 if __name__ == "__main__":
     main()

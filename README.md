@@ -36,32 +36,22 @@
 make install
 ```
 
-或者直接运行脚本：
-
-```bash
-# 标准安装（复制模式，推荐生产环境）
-./scripts/installers/install.sh <你的目标 Go 项目路径>
-
-# 开发安装（软链接模式，推荐开发调试）
-./scripts/installers/install.sh --dev <你的目标 Go 项目路径>
-```
-
 #### 2. 体验工作流 (The Flow Experience)
 
 安装完成后，在你的项目根目录下：
 
 ```bash
-/brainstorm "实现一个 Python 斐波那契数列工具"
+"帮我构思一个 Python 斐波那契数列工具"
+# 或者明确调用技能:
+# "使用 brainstorming 技能，实现一个 Python 斐波那契数列工具"
 ```
 
-**后续的所有操作，您只需要使用方向键和 Enter 即可完成：**
+**后续的所有操作，系统会根据你的意图自动加载相应的技能（如 writing-plans, executing-plans 等），您只需要自然地表达需求或使用方向键和 Enter 即可完成：**
 
 ```text
-[FlowState] Design 阶段已完成。下一步做什么？ (Use arrow keys)
- » 🟢 继续执行 (Write Plan)
-   ⚪️ 查看生成的文件 (Review Files)
-   ⚪️ 修改需求 (Refine Spec)
-   ⚪️ 退出 (Exit)
+[FlowState] 方案已确认。是否需要为您生成实施计划？ (Use arrow keys)
+ » 🟢 是的，请生成计划 (Invoke writing-plans skill)
+   ⚪️ 不，我还有其他想法
 ```
 
 **真正的 "Hands-free" 体验，让您专注于决策而非命令。**
@@ -78,33 +68,32 @@ make install
 
 ```mermaid
 graph TD
-    Start["/brainstorm 用户提示词"] --> Interview["递归需求采访<br/>(Recursive Interview Loop)"]
+    Start["表达需求<br/>(Intent: brainstorming)"] --> Interview["递归需求采访<br/>(Recursive Interview Loop)"]
     Interview -->|Loop until clear| Interview
     Interview -->|Requirements Locked| Optimize["生成 design.md"]
-    Optimize -->|Select & Enter| PreFlight["Pre-flight Check<br/>(Scope Verification)"]
-    PreFlight --> Plan["/write-plan<br/>(Detailed Planning)"]
-    Plan -->|Select & Enter| Execute["/execute-plan<br/>(Subagent Execution)"]
+    Optimize -->|Intent: write plan| Plan["制定详细计划<br/>(Intent: writing-plans)"]
+    Plan -->|Intent: execute| Execute["执行计划<br/>(Intent: executing-plans)"]
     Execute -->|Loop until done| Execute
-    Execute -->|On Failure| Debug["/systematic-debugging<br/>(Root Cause Analysis)"]
-    Execute -->|Start Fresh| Review["/new -> /review-code<br/>(Fresh Context & Opus)"]
+    Execute -->|On Failure| Debug["系统性调试<br/>(Intent: systematic-debugging)"]
+    Execute -->|Start Fresh| Review["/new -> /review-code<br/>(Fresh Context & Codex)"]
     Review -->|Select & Enter| Changelog["/changelog-generator<br/>(Visual Confirmation)"]
     Changelog -->|Select & Enter| Commit["/commit-message-generator<br/>(Reflective Selection)"]
     Commit --> Finish[Done]
 ```
 
 **全程可视化进度**:
-`[✔ Interview] → [✔ Design] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
+`[✔ Brainstorm] → [✔ Design] → [✔ Plan] → [➤ Execute] → [Review] → [Changelog] → [Commit]`
 
-## 🛠️ 核心命令详解
+## 🛠️ 核心能力详解
 
-| 命令 | 描述 | 适用场景 |
+| 能力 (Skill/Command) | 描述 | 适用场景 |
 | :--- | :--- | :--- |
-| `/brainstorm` | **创意引擎**：启动任务，进行**多轮需求采访**与设计，生成 `design.md`。 | 新功能开发、复杂问题探索 |
+| `brainstorming` (Skill) | **创意引擎**：启动任务，进行**多轮需求采访**与设计，生成 `design.md`。 | 新功能开发、复杂问题探索 |
 | `/optimize-prompt` | **提示词优化师**：交互式优化你的 Prompt，确保最佳 AI 表现。 | 任务指令模糊、需要高质量输出时 |
-| `/write-plan` | **架构师**：将设计文档转化为详细的实施步骤 (`todo.md`)。 | 确定方案后，开始编码前 |
+| `writing-plans` (Skill) | **架构师**：将设计文档转化为详细的实施步骤 (`todo.md`)。 | 确定方案后，开始编码前 |
 | `/audit-skills` | **技能审计师**：分析历史日志，发现高频操作并推荐新 Skill。 | 定期优化工作流、觉得操作繁琐时 |
 | `/recover` | **会话恢复专家**：智能分析 Git 状态与会话摘要，重建上下文。 | 每日开工、中断后恢复 |
-| `/execute-plan` | **执行者**：自动执行计划中的任务，支持断点续传。 | 编码阶段，批量任务处理 |
+| `executing-plans` (Skill) | **执行者**：自动执行计划中的任务，支持断点续传。 | 编码阶段，批量任务处理 |
 | `/review-code` | **审查员**：对代码进行深度审查（增量 Diff 或全量）。 | 提交代码前，尤其是 Pull Request 前 |
 | `/changelog-generator` | **日志专家**：自动分析 Git Diff，更新 `CHANGELOG.md`。 | 版本发布、功能合并后 |
 | `/commit-message-generator` | **提交助手**：生成符合 Conventional Commits 规范的提交信息。 | 准备 git commit 时 |

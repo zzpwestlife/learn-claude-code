@@ -38,20 +38,21 @@
     脚本会拉取上游最新代码，并生成差异报告 (Diff Report)。
 
 ### Phase 2: 评估与合并 (Assessment & Merge)
-3.  **自动合并**: 对于 `customized_files` 列表**之外**的文件，脚本直接覆盖更新。
-4.  **手动合并**: 对于 `customized_files` 列表**之内**的文件（如 `brainstorming/SKILL.md`），脚本会生成 `.rej` 文件或尝试 3-way merge，需要人工介入解决冲突。
-    *   *重点保留*: Constitution Check 逻辑, TUI 提示, TDD 环境适配。
-    *   *引入上游*: 新的 Prompt 技巧, Bug 修复。
+3.  **自动合并**: 脚本会对所有文件进行处理。对于 `customized_files` 列表**之内**的文件，脚本会自动使用 `git merge-file` 进行三方合并 (3-way merge)。
+    *   **无冲突 (Clean Merge)**: 自动合并完成，无缝继承上游与本地定制。
+    *   **有冲突 (Conflict)**: 脚本会提示冲突，并在文件中留下 `<<<<<<<` 标记。你需要手动介入解决冲突。
+        *   *重点保留*: Constitution Check 逻辑, TUI 提示, TDD 环境适配。
+        *   *引入上游*: 新的 Prompt 技巧, Bug 修复。
 
 ### Phase 3: 验证 (Verification)
-5.  **回归测试**:
+4.  **回归测试**:
     *   运行 `/brainstorm` 确保 Constitution Check 依然触发。
     *   运行 `/writing-plans` 确保 TUI Handoff 依然触发。
     *   运行 `/systematic-debugging` 确保新功能可用。
 
 ### Phase 4: 发布 (Release)
-6.  **更新 Lock File**: 脚本自动更新 `superpowers.lock.json` 中的 commit hash。
-7.  **提交代码**: Merge 到主分支。
+5.  **自动提交**: 如果合并过程**没有任何冲突**，脚本会自动更新 `superpowers.lock.json` 中的 commit hash，并自动执行 `git add` 和 `git commit`。
+    如果**存在冲突**，你需要手动解决冲突后，手动执行提交。
 
 ## 4. 回滚机制 (Rollback)
 
