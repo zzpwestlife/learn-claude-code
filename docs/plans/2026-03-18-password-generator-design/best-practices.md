@@ -1,88 +1,78 @@
-# Best Practices — Python CLI 密码生成器
+# 最佳实践 - 密码生成器
 
 ## 安全性
 
-### 为何使用 `secrets` 而非 `random`
+### `secrets` vs `random`
 
-| 维度 | `random` | `secrets` |
+| 属性 | `random` | `secrets` |
 |------|----------|-----------|
-| 算法 | 梅森旋转（伪随机，MT19937） | OS CSPRNG（`/dev/urandom`） |
-| 可预测性 | 知道种子即可预测所有后续值 | 不可预测 |
-| 适用场景 | 模拟、游戏、统计采样 | 密码、Token、会话 ID |
-| Python 文档 | 不推荐用于安全场景 | 官方推荐用于安全场景 |
+| 算法 | Mersenne Twister（伪随机） | OS 级 `/dev/urandom`（密码学安全） |
+| 预测性 | 可预测 | 不可预测 |
+| 适用场景 | 模拟、游戏 | 密码、令牌、安全密钥 |
 
-**结论**：密码生成器**必须**使用 `secrets.choice()`，而非 `random.choice()`。
+**结论**：密码生成必须使用 `secrets.choice()`，禁止使用 `random.choice()`。
 
-### 字符集设计注意事项
+### 字符集保证算法
 
-- **特殊字符集**：使用 `string.punctuation`（32 个标准 ASCII 标点），覆盖常见网站的密码要求
-- **避免自定义过滤**：不要额外排除"歧义字符"（0/O/l/1），保持最大熵值，此为 Out of Scope
-- **字符集均等权重**：`secrets.choice(charset)` 已保证每个字符等概率，无需额外加权
+**问题**：纯随机填充可能遗漏某个启用的字符类别。
+
+**解决方案**：
+1. 每个启用类别先各取 1 个字符（保证多样性）
+2. 剩余位置从合并池随机填充
+3. `secrets.SystemRandom().shuffle()` 打乱位置（保证前 N 个不是固定顺序）
+
+### 输出安全
+
+- 密码仅输出到 `stdout`，不写入文件
+- 不在日志或 `stderr` 中暴露生成的密码
+- `--help` 信息不包含示例密码
+
+---
+
+## 可用性
+
+### 默认值设计原则
+
+- 默认启用所有字符集（最强安全性）
+- 默认长度 16（符合现代密码标准，NIST SP800-63B）
+- 用户通过 `--no-*` 显式降低复杂度，而非显式启用
+
+### 最小长度约束
+
+- 最小长度为 4（等于启用字符集类别数，保证每类至少一个字符）
+- 实际推荐：≥12 位（普通账户），≥16 位（高价值账户）
+
+### 错误信息规范
+
+```
+错误: 密码长度必须 >= 4（当前: 3）
+错误: 至少需要启用一种字符集
+```
 
 ---
 
 ## 代码质量
 
-### 关注点分离（SoC）
+### 文件头（强制）
 
 ```python
-# ✅ 正确：生成函数不做 I/O
-def generate_password(charset: str, length: int) -> str:
-    return "".join(secrets.choice(charset) for _ in range(length))
-
-# ❌ 错误：不应在生成函数中 print 或 sys.exit
-def generate_password(...):
-    print(...)  # 禁止
+# INPUT: CLI 参数（--length, --no-upper, --no-lower, --no-digits, --no-special）
+# OUTPUT: 单个密码字符串，打印到 stdout
+# POS: scripts/passgen.py - 通用密码生成 CLI 工具
 ```
 
-### 错误处理模式
+### 函数长度约束
 
-```python
-# ✅ 在 main() 统一捕获，友好输出
-def main() -> int:
-    try:
-        charset = build_charset(args)
-    except ValueError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
-    ...
-    return 0
-```
+每个函数 < 20 行，职责单一：
+- `build_charset()` - 仅负责字符集构建
+- `generate_password()` - 仅负责生成逻辑
+- `parse_args()` - 仅负责参数定义与验证
+- `main()` - 仅负责串联调用
 
-### 入口模式
+### 禁止事项
 
-```python
-# ✅ 项目标准入口模式
-if __name__ == "__main__":
-    raise SystemExit(main())
-```
-
-### 类型注解规范
-
-```python
-# ✅ 所有函数必须有完整类型注解
-def build_charset(args: argparse.Namespace) -> str: ...
-def generate_password(charset: str, length: int) -> str: ...
-def parse_args() -> argparse.Namespace: ...
-def main() -> int: ...
-```
-
----
-
-## 性能与可移植性
-
-- **跨平台**：`secrets` 在 macOS（`/dev/urandom`）和 Linux（`/dev/urandom`）均可用，Python 3.6+
-- **无状态**：每次调用独立，无全局状态
-- **速度**：`secrets.choice` 对于 < 1000 字符的密码生成可忽略不计的延迟
-
----
-
-## 文件规范检查清单
-
-- [ ] 文件头 3 行 metadata（INPUT / OUTPUT / POS）
-- [ ] 文件总行数 < 200
-- [ ] 每个函数行数 < 20
-- [ ] 所有函数有类型注解
-- [ ] 无 `import random`（只用 `secrets`）
-- [ ] 无注释掉的代码
-- [ ] 无硬编码路径
+- ❌ 使用 `random` 模块
+- ❌ 写入任何文件（日志、临时文件）
+- ❌ 硬编码字符集（用 `string` 模块常量）
+- ❌ 函数超过 20 行
+- ❌ 文件超过 200 行
