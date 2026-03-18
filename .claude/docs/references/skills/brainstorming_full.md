@@ -67,12 +67,11 @@ digraph brainstorming {
 
 ## The Process
 
-**Understanding the idea:**
-- Check out the current project state first (files, docs, recent commits)
-- Ask questions one at a time to refine the idea
-- Prefer multiple choice questions when possible, but open-ended is fine too
-- Only one question per message - if a topic needs more exploration, break it into multiple questions
-- Focus on understanding: purpose, constraints, success criteria
+**Understanding the idea (Grill-Me Protocol):**
+- **Decision Tree Unpacking**: Do not treat the feature as a monolith. Break it down into a decision tree.
+- **Relentless Questioning**: Walk down each branch of the design tree. Ask questions about edge cases, failure modes, data dependencies, and state management. Do not accept vague answers.
+- **Autonomous Codebase Exploration**: Before asking the user "how is X implemented currently?", the AI **MUST** check out the current project state first to find the answer itself. Only ask the user when the codebase does not provide the answer or a product decision is needed.
+- **Goal**: Reach a state of **Shared Understanding** where no branch is left unresolved.
 
 **Exploring approaches:**
 - Propose 2-3 different approaches with trade-offs

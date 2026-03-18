@@ -15,7 +15,7 @@
 6.  **双重人格架构 (Dual Persona)**：独创的 **Builder (Opus)** vs **Critic (Codex)** 协作模式。Opus 负责从 0 到 1 的创造与文档，Codex 负责严格的代码审查与安全审计 (`.claude/agents/code-reviewer.md`)。
 7.  **智能体技能库**：内置 Python 驱动的高级技能（如 `changelog-generator`、`skill-architect`），位于 `.claude/skills/` 目录，提供自动变更日志、技能进化等能力（仅依赖系统 Python，无需额外配置）。
 8.  **动态上下文卫生**：内置 Token 优化协议 (`.claude/rules/CORE_RULES.md`)，指导 Agent 主动过滤大型输出，防止上下文爆炸。
-9.  **递归需求分析 (Recursive Analysis)**：在 `/brainstorm` 阶段强制引入**多轮结构化采访**机制，通过递归追问（Recursive Interview）消除需求歧义，确保 Design 文档的绝对精准。
+9.  **决策树压力测试 (Grill-Me Protocol)**：在 `/brainstorm` 阶段强制引入**多轮结构化拷问**机制。AI 会将需求拆解为决策树，并主动探索代码库以消除歧义。只有在所有边缘情况和分支都达成深度共识后，才会生成 Design 文档，从源头杜绝“想当然”的代码。
 10. **自动化集成**：通过 `install.sh` 一键将配置注入到你的项目中，支持 macOS 原生 GUI 交互与智能文件合并（Smart Merge）。
 
 ---
@@ -75,12 +75,14 @@ make install
 
 ```mermaid
 graph TD
-    Start["表达需求<br/>(Intent: brainstorming)"] --> Interview["递归需求采访<br/>(Recursive Interview Loop)"]
-    Interview -->|Loop until clear| Interview
-    Interview -->|Requirements Locked| Optimize["生成 design.md"]
-    Optimize -->|Intent: write plan| Plan["制定详细计划<br/>(Intent: writing-plans)"]
-    Plan -->|Intent: execute| Execute["执行计划<br/>(Intent: executing-plans)"]
-    Execute -->|Loop until done| Execute
+    Start["表达需求<br/>(Intent: brainstorming)"] --> Interview["决策树压力测试<br/>(Grill-Me Protocol)"]
+    Interview -->|Loop until branches resolved| Interview
+    Interview -->|Shared Understanding| Optimize["生成 design.md"]
+    Optimize -->|Intent: write plan| Plan["生成 BDD 状态文件<br/>(.local.md)"]
+    Plan -->|Intent: execute| Execute["Red-Green 循环执行<br/>(State-Driven)"]
+    Execute -->|Red Task| Red["编写失败测试"]
+    Red -->|Green Task| Green["实现功能通过测试"]
+    Green -->|Loop until done| Execute
     Execute -->|On Failure| Debug["系统性调试<br/>(Intent: systematic-debugging)"]
     Execute -->|Start Fresh| Review["/new -> /review-code<br/>(Fresh Context & Codex)"]
     Review -->|Select & Enter| Changelog["/changelog-generator<br/>(Visual Confirmation)"]
@@ -95,12 +97,12 @@ graph TD
 
 | 能力 (Skill/Command) | 描述 | 适用场景 |
 | :--- | :--- | :--- |
-| `brainstorming` (Skill) | **创意引擎**：启动任务，进行**多轮需求采访**与设计，生成 `design.md`。 | 新功能开发、复杂问题探索 |
+| `brainstorming` (Skill) | **创意引擎**：启动任务，进行**多轮结构化拷问 (Grill-Me)** 与决策树拆解，生成 `design.md`。 | 新功能开发、复杂问题探索 |
 | `/optimize-prompt` | **提示词优化师**：交互式优化你的 Prompt，确保最佳 AI 表现。 | 任务指令模糊、需要高质量输出时 |
-| `writing-plans` (Skill) | **架构师**：将设计文档转化为详细的实施步骤 (`todo.md`)。 | 确定方案后，开始编码前 |
+| `writing-plans` (Skill) | **架构师**：将设计文档转化为 **BDD 状态追踪文件** (`.local.md`)。 | 确定方案后，开始编码前 |
 | `/audit-skills` | **技能审计师**：分析历史日志，发现高频操作并推荐新 Skill。 | 定期优化工作流、觉得操作繁琐时 |
 | `/recover` | **会话恢复专家**：智能分析 Git 状态与会话摘要，重建上下文。 | 每日开工、中断后恢复 |
-| `executing-plans` (Skill) | **执行者**：自动执行计划中的任务，支持断点续传。 | 编码阶段，批量任务处理 |
+| `executing-plans` (Skill) | **执行者**：基于 `.local.md` 状态文件，执行 **Red-Green 循环**。 | 编码阶段，批量任务处理 |
 | `/review-code` | **审查员**：对代码进行深度审查（增量 Diff 或全量）。 | 提交代码前，尤其是 Pull Request 前 |
 | `/changelog-generator` | **日志专家**：自动分析 Git Diff，更新 `CHANGELOG.md`。 | 版本发布、功能合并后 |
 | `/commit-message-generator` | **提交助手**：生成符合 Conventional Commits 规范的提交信息。 | 准备 git commit 时 |
@@ -124,4 +126,5 @@ graph TD
 
 ## 📚 文档与指南
 
+- [**Agent BDD Loop (Red-Green) 工作流指南**](.claude/docs/guides/agent_bdd_loop.md): 详细介绍了基于状态追踪的红绿 Agent 开发模式，确保复杂任务的原子化执行与零 Laziness。
 - [**Claude Code Golang LSP 配置指南**](docs/guides/claude-code-lsp-setup.md): 开启 `ENABLE_LSP_TOOL`，让 Claude Code 拥有 IDE 级的代码跳转与补全能力 (50ms 响应)。

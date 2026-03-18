@@ -19,18 +19,20 @@ hooks:
 
 # Executing Plans
 
-**Core Principle**: Batch execution -> Checkpoints -> Review.
+**Core Principle**: State-Driven Execution -> Red-Green Loop -> Review.
 
 ## Process
-1. **Load Plan**: Read file. Review critically.
-2. **Execute Batch**:
-   - Default: 3 tasks.
-   - Follow steps exactly.
-   - Verify each task.
+1. **Load Plan & State**: 
+   - Read the main `docs/plans/*.md` file.
+   - **CRITICAL**: Locate and read the corresponding `docs/plans/*-state.local.md` tracking file.
+2. **Execute via Red-Green Loop**:
+   - Find the first uncompleted, unblocked task in the `.local.md` state file.
+   - If it's a **[Red]** task: Write the failing test FIRST. Run it. Verify it FAILS. Update state to `[x]`.
+   - If it's a **[Green]** task: Implement the minimal code to pass the test. Run it. Verify it PASSES. Update state to `[x]`.
 3. **Report (MANDATORY TUI)**:
-   - After each batch (3 tasks) or when blocked.
+   - After each logical chunk or when blocked.
    - Use `AskUserQuestion` to ask:
-     - **Continue**: Execute next batch.
+     - **Continue**: Execute next task in `.local.md`.
      - **Review Code**: Pause for manual review.
      - **Pause**: Stop execution.
 4. **Complete**:

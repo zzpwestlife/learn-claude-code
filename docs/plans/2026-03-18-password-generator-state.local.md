@@ -22,7 +22,7 @@ T1 (环境检查)
 - [x] **T2** — [Red] 创建 `tests/test_password_gen.py`，验证全部失败 *(Done — ImportError confirmed)*
 - [x] **T3** — [Green] 创建 `scripts/password_gen.py`，验证全部通过 *(Done — 7/7 PASSED)*
 - [x] **T4** — 手动验证 CLI 行为 + 文件行数检查 *(Done — 32/65 lines, CLI outputs verified)*
-- [ ] **T5** — `git commit` 提交 *(Blocked by: T4)*
+- [x] **T5** — `git commit` 提交 *(Done — 43ce7fd)*
 
 ---
 

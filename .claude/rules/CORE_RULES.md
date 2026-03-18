@@ -7,6 +7,7 @@
 - **Zero-Friction**: Prefer TUI menus (`AskUserQuestion` with `options`) over open-ended text.
 - **Root Cause Fixing**: Resolve the source of issues, not just symptoms. Zero hand-holding.
 - **Plan-First**: Mandatory plan in `docs/plans/` for tasks >3 steps. STOP on deviation.
+- **BDD & State Tracking**: For complex tasks, adopt the Red-Green Agent BDD loop. Maintain a `.local.md` state file tracking task dependencies and status. Read `.claude/docs/guides/agent_bdd_loop.md` for details.
 
 ## 2. Coding Standards
 - **Surgical Changes**: Touch ONLY necessary files. Clean up only your own mess.
