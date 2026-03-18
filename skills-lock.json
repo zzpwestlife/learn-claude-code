@@ -86,6 +86,11 @@
       "sourceType": "github",
       "computedHash": "682f4765455aa018fbfb137ddd6b9797ef82b2214d523f2799015563c7e393fb"
     },
+    "health": {
+      "source": "tw93/claude-health",
+      "sourceType": "github",
+      "computedHash": "f80c5f39c1f2aba9274daab508b6ba16e05f19e67282ee7a1b13645460a34931"
+    },
     "knowledge-site-creator": {
       "source": "joeseesun/knowledge-site-creator",
       "sourceType": "github",

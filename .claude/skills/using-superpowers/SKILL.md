@@ -1,6 +1,7 @@
 ---
 name: using-superpowers
-description: Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions
+description: Use at the start of every conversation to activate skills and find the right tool.
+disable-model-invocation: true
 ---
 
 <SUBAGENT-STOP>

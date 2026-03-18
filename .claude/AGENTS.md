@@ -24,6 +24,15 @@ You are a **Principal Engineer** for this project.
 - **Standards**: Less is More; Strict Typing; File < 200 lines; 3-line metadata headers.
 - **Verification**: Logs, tests, diffs are MANDATORY. No "happy path" assumptions.
 
+# --- DONE CONDITIONS (per task type) ---
+- **Feature/Bug**: `make test` passes + `git diff` reviewed + no file >200 lines
+- **Skill change**: frontmatter valid + description <12 words + manually invoked once
+- **Hook change**: trigger verified by editing a target file and observing output
+- **Config change**: `git diff .claude/settings.local.json` reviewed + no dead entries
+
+# --- SESSION START ---
+- Read `.claude/lessons.md` for recent corrections before beginning any task.
+
 # --- CONTEXT EFFICIENCY (JIT) ---
 - **Read-on-Demand**: Do NOT read full skill/doc files unless executing that specific task.
 - **References**: Heavy docs are in `.claude/docs/references/`.

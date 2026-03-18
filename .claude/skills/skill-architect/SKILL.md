@@ -1,6 +1,6 @@
 ---
 name: skill-architect
-description: The master skill for creating, evolving, and maintaining other skills. It unifies the lifecycle of skills from birth (Forge) to growth (Refine).
+description: Use when creating a new skill, refining an existing skill, or retiring an obsolete one.
 version: "1.0.0"
 user-invocable: true
 allowed-tools:

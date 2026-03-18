@@ -1,6 +1,7 @@
 ---
 name: brainstorming
-description: "You MUST use this before any creative work. Explores user intent, requirements and design before implementation."
+description: "Use before designing a new feature, system, or creative artifact - explores intent and requirements before implementation."
+disable-model-invocation: true
 ---
 
 # Brainstorming

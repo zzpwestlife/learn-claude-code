@@ -45,5 +45,4 @@ if command -v gofumpt >/dev/null 2>&1; then
     gofumpt -w "$FILE_PATH"
 fi
 
-# Output success message to stderr (visible in Claude's context)
-echo "Formatted Go file: $FILE_PATH" >&2
+exit 0

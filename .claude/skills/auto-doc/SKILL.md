@@ -1,6 +1,7 @@
 ---
 name: auto-doc
-description: Ensure documentation is always synchronized with code changes through a mandatory 3-layer update process.
+description: Use after code changes to sync docs - updates inline comments, README, and reference docs in one pass.
+disable-model-invocation: true
 ---
 
 # Auto-Doc Skill

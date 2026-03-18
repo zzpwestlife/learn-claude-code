@@ -13,7 +13,7 @@ hooks:
               echo "<system-reminder>✅ ALL TASKS COMPLETE. Use 'AskUserQuestion' to ask: 'Review Code?' (Yes/No). If Yes -> /review-code.</system-reminder>"
             elif [ -n "$OUTPUT" ]; then
                mkdir -p .claude/tmp
-               echo "Status Updated: [View Status](file:///Users/admin/openSource/learn-claude-code/.claude/tmp/planning_status.md)"
+               echo "Status Updated: [View Status]($CLAUDE_PROJECT_DIR/.claude/tmp/planning_status.md)"
             fi
 ---
 

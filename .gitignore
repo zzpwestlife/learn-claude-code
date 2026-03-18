@@ -14,3 +14,5 @@ tests/
 .claude/logs/
 .claude/tmp/
 .claude/docs/archive/
+.claude/settings.local.json
+settings.local.json

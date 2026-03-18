@@ -18,7 +18,7 @@
 
 ## 3. Workflow Protocol (Handoff & TUI)
 - **Universal Handoff**: After EVERY phase (Plan, Exec, Review), display a TUI menu via `AskUserQuestion`.
-- **Zero Friction Navigation**: Use `RunCommand(requires_approval=false)` for standard next-steps.
+- **Zero Friction Navigation**: Use `Bash` with pre-approved commands for standard next-steps.
 - **Mandatory Pauses**: Respond to "🛑 STOP EXECUTION NOW 🛑" signals immediately.
 - **Bilingual Options**: Provide bilingual (EN/CN) labels in `AskUserQuestion` options.
 - **Mode Selection**: Diff Mode for incremental changes; Full Path for deep refactoring.

@@ -1,6 +1,7 @@
 ---
 name: "adversarial-review"
-description: "Review code using adversarial agents (Skeptic, Architect, Minimalist). Use this skill when high reliability is required or to break confirmation bias."
+description: "Use when high reliability is required or to break confirmation bias - runs Skeptic, Architect, Minimalist agents."
+disable-model-invocation: true
 ---
 
 # Adversarial Review Skill
