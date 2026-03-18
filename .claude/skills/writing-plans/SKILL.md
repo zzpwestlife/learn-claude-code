@@ -9,9 +9,11 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 **Path**: `docs/plans/YYYY-MM-DD-<feature-name>.md`
 
 ## Structure
-1. **Pre-flight Check**:
-   - Confirm understanding of the Design.
-   - If ambiguous, use `AskUserQuestion` to clarify BEFORE planning.
+1. **Analyze & Create (AUTO-START)**:
+   - Read the design document.
+   - **IMMEDIATELY** generate the plan file `docs/plans/YYYY-MM-DD-<feature-name>.md`.
+   - **Do NOT wait** or ask for confirmation to write the plan (loading this skill IS confirmation).
+   - Only use `AskUserQuestion` if the design is critically missing or unintelligible.
 2. **Header**: Goal, Architecture, Tech Stack.
 3. **Tasks**: Bite-sized (2-5 mins).
    - Files (Create/Modify/Test)
@@ -22,11 +24,13 @@ description: Use when you have a spec or requirements for a multi-step task, bef
    - Step 5: Commit
 
 ## Transition (MANDATORY TUI)
-Once the plan is written, you MUST stop and ask for user approval.
+**STOP**: Do NOT auto-execute the plan.
+Use `AskUserQuestion` to ask "What's next?":
+1. **Execute Plan**: "Proceed to execution (Invoke executing-plans)"
+2. **Review Plan**: "I want to review/annotate the plan file"
+3. **Refine Plan**: "Let's discuss changes"
 
-Use `AskUserQuestion` to offer:
-1. **Execute Plan**: Invoke `executing-plans` skill (Only if approved).
-2. **Review Plan**: "I will read your annotations in the file".
-3. **Refine Plan**: "Let's discuss changes".
+## Rules
+- **TUI First**: NEVER start execution without explicit user approval via `AskUserQuestion`.
 
 > For detailed template and examples, see `.claude/docs/references/skills/writing_plans_full.md`

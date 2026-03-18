@@ -25,16 +25,17 @@ description: "You MUST use this before any creative work. Explores user intent, 
    - **MANDATORY TUI**: `AskUserQuestion` to approve/revise.
 6. **Document**: Save to `docs/design/YYYY-MM-DD-<topic>.md`.
 7. **Transition (MANDATORY TUI)**: 
-   - Ask the user if they are ready to proceed to planning.
+   - **STOP**: Do NOT auto-invoke the next skill.
    - Use `AskUserQuestion` to offer:
-     - **Create Plan**: Invoke `writing-plans` skill.
-     - **Review Design**: Wait for user feedback on the design file.
-     - **Refine**: Continue brainstorming.
+     - **Create Plan**: "Proceed to create implementation plan (Invoke writing-plans)"
+     - **Review Design**: "I want to review the design file first"
+     - **Refine**: "I have more ideas/changes"
 
 ## Key Rules
 - **Interview First**: Always clarify requirements BEFORE proposing solutions.
+- **TUI First**: NEVER proceed to planning without explicit user approval via `AskUserQuestion`.
 - **Multiple Choice**: Prefer over open-ended.
 - **YAGNI**: Remove unnecessary features.
-- **Next Step**: ALWAYS `writing-plans`. Never direct implementation.
+- **Next Step**: ALWAYS ask user before invoking `writing-plans`.
 
 > For detailed workflow diagrams, see `.claude/docs/references/skills/brainstorming_full.md`

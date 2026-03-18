@@ -54,6 +54,13 @@ make install
    ⚪️ 不，我还有其他想法
 ```
 
+**真实的交互体验**：在底层，这通过 Claude Code 的原生 `AskUserQuestion` 工具实现。你看到的界面类似于：
+
+```text
+⏺ User answered Claude's questions:
+  ⎿  · 设计确认 / Design approval? → 确认，进入规划阶段
+```
+
 **真正的 "Hands-free" 体验，让您专注于决策而非命令。**
 
 ### 🎮 交互模式 (Interaction Model)
