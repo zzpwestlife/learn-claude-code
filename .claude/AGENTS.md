@@ -42,7 +42,6 @@ You are a **Principal Engineer** for this project.
 # --- NAVIGATION ---
 | Task | Path |
 |------|------|
-| Agents | `.claude/agents/` |
 | Commands | `.claude/commands/` |
 | Hooks | `.claude/hooks/` |
 | Skills | `.claude/skills/` |

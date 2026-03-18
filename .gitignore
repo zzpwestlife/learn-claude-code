@@ -17,3 +17,4 @@ tests/
 .claude/settings.local.json
 settings.local.json
 docs/plans/
+tmp.log
