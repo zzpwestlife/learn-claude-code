@@ -30,7 +30,18 @@
         ]
       }
     ],
-    "Notification": []
+    "Notification": [],
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/log-skill.sh"
+          }
+        ]
+      }
+    ]
   },
   "permissions": {
     "defaultMode": "plan",

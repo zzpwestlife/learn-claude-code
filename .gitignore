@@ -3,7 +3,7 @@
 dist/
 node_modules/
 .trae/
-tmp.log
+*.log
 *.tmp
 .env
 *.pyc
@@ -17,4 +17,5 @@ tests/
 .claude/settings.local.json
 settings.local.json
 docs/plans/
-tmp.log
+.claude/skill-usage.log
+/.claude/eval_exports
