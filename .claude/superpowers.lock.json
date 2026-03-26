@@ -1,11 +1,10 @@
 {
   "repository": "https://github.com/obra/superpowers.git",
-  "last_synced_commit": "3cee13e516e91d44b957c1336c3d08c8a8392702",
-  "last_synced_date": "2026-03-17",
+  "last_synced_commit": "eafe962b18f6c5dc70fb7c8cc7e83e61f4cdde06",
+  "last_synced_date": "2026-03-26",
   "customized_files": [
     "skills/brainstorming/SKILL.md",
     "skills/writing-plans/SKILL.md",
-    "skills/executing-plans/SKILL.md",
-    "skills/test-driven-development/SKILL.md"
+    "skills/executing-plans/SKILL.md"
   ]
 }

@@ -146,20 +146,10 @@ def main():
     if conflict_count > 0:
         print("👉 Please manually resolve the conflict markers (<<<<<<<) in the affected files.")
         print(f"   Upstream source is currently in: {TEMP_DIR}")
-        print("   After resolving, run:")
-        print('   git add .claude/')
-        print('   git commit -m "chore(skills): sync superpowers with upstream, resolved conflicts"')
+        print("   After resolving, commit manually.")
     else:
         shutil.rmtree(TEMP_DIR)
-        print("🤖 All files merged cleanly! Automating git commit...")
-        # Auto commit
-        commit_msg = f"chore(skills): sync superpowers with upstream ({upstream_commit[:7]})"
-        run_command_output(f"git add {CLAUDE_DIR}", cwd=PROJECT_ROOT)
-        code, out = run_command_output(f'git commit -m "{commit_msg}"', cwd=PROJECT_ROOT)
-        if code == 0:
-            print("✅ Successfully committed updates.")
-        else:
-            print(f"⚠️  Git commit returned non-zero (perhaps no actual changes): {out}")
+        print("🤖 All files merged cleanly! Please review and commit manually.")
         
 if __name__ == "__main__":
     main()
