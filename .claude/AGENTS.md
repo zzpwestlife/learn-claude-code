@@ -35,6 +35,9 @@ You are a **Principal Engineer** for this project.
 # --- SESSION START ---
 - Read `.claude/lessons.md` for recent corrections before beginning any task.
 
+# --- COMPRESSION LOOP ---
+- Every 5-6 turns in a long task, proactively summarize current state: "Where are we? What is decided? What is the single most important unsolved issue?" to prevent context debt.
+
 # --- CONTEXT EFFICIENCY (JIT) ---
 - **Read-on-Demand**: Do NOT read full skill/doc files unless executing that specific task.
 - **References**: Heavy docs are in `.claude/docs/references/`.

@@ -16,6 +16,7 @@ description: Use when you have a spec or requirements for a multi-step task, bef
    - **Do NOT wait** or ask for confirmation to write the plan (loading this skill IS confirmation).
    - Only use `AskUserQuestion` if the design is critically missing or unintelligible.
 2. **Header**: Goal, Architecture, Tech Stack, BDD Scenarios.
+   - **MANDATORY**: Include an **Assumption Audit (假设审计)** section: "What assumptions did I make? If they are wrong, how does it change this plan?"
 3. **Tasks (Red-Green Loop)**: Bite-sized (2-5 mins) tracked in the `.local.md` file.
    - Files (Create/Modify/Test)
    - Step 1: [Red] Write failing BDD test
