@@ -15,7 +15,14 @@
       "Bash(go:*)",
       "Bash(test:*)",
       "mcp__filesystem__list_directory",
-      "Bash(pip3 install:*)"
+      "Bash(pip3 install:*)",
+      "Bash(mkdir -p /Users/admin/openSource/learn-claude-code/.claude/skills/review-code/autoresearch-review-code)",
+      "Bash(__NEW_LINE_e53ad197dfdbd385__ cp:*)",
+      "Bash(__NEW_LINE_e53ad197dfdbd385__ printf:*)",
+      "Bash(__NEW_LINE_e53ad197dfdbd385__ echo:*)",
+      "Bash(cat /Users/admin/openSource/learn-claude-code/.claude/skills/review-code/autoresearch-review-code/test-fixtures/*.go)",
+      "Bash(open:*)",
+      "mcp__filesystem__write_file"
     ]
   },
   "hooks": {

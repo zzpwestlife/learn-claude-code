@@ -1,0 +1,5 @@
+experiment	score	max_score	pass_rate	status	description
+0	16	25	64.0%	baseline	original skill — no Go-specific guidance
+1	25	25	100.0%	keep	added Go 特有检查项: defer/goroutine/context/%w/interface
+2	25	25	100.0%	discard	tried adding go test -race to goroutine check — no eval improvement
+3	25	25	100.0%	discard	considered removing lint-runner ref — no eval impact

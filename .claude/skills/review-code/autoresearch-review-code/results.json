@@ -1,0 +1,20 @@
+{
+  "skill_name": "review-code",
+  "status": "complete",
+  "current_experiment": 3,
+  "baseline_score": 16,
+  "best_score": 25,
+  "experiments": [
+    {"id": 0, "score": 16, "max_score": 25, "pass_rate": 64.0, "status": "baseline", "description": "original skill — no Go-specific guidance"},
+    {"id": 1, "score": 25, "max_score": 25, "pass_rate": 100.0, "status": "keep", "description": "added Go 特有检查项: defer/goroutine/context/%w/interface"},
+    {"id": 2, "score": 25, "max_score": 25, "pass_rate": 100.0, "status": "discard", "description": "tried go test -race mention — no eval improvement"},
+    {"id": 3, "score": 25, "max_score": 25, "pass_rate": 100.0, "status": "discard", "description": "considered removing lint-runner ref — no eval impact"}
+  ],
+  "eval_breakdown": [
+    {"name": "Severity Accuracy", "pass_count": 20, "total": 20},
+    {"name": "Go-specific Patterns", "pass_count": 20, "total": 20},
+    {"name": "Location Reference", "pass_count": 20, "total": 20},
+    {"name": "Report Structure", "pass_count": 20, "total": 20},
+    {"name": "No False Positives", "pass_count": 20, "total": 20}
+  ]
+}
