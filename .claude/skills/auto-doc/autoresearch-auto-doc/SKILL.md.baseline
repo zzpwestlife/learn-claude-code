@@ -21,10 +21,7 @@ disable-model-invocation: true
 | :--- | :---: | :---: | :---: |
 | Logic | ✅ | ❌ | ❌ |
 | I/O | ✅ | ✅ | ❌ |
-| Add File | ✅ | ✅ | ❌ |
-| Remove File | N/A | ✅ | ❌ |
+| Add/Del | ✅ | ✅ | ❌ |
 | Module | N/A | ✅ | ✅ |
-
-**Output format**: When directing doc updates, always name the level explicitly: "**Level 3 (File Header)**", "**Level 2 (CLAUDE.md)**", or "**Level 1 (ARCHITECTURE.md)**".
 
 > For detailed template and examples, see `.claude/docs/references/skills/auto_doc_full.md`

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autoresearch — auto-doc</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8f9fa; color: #2d3748; padding: 24px; }
+  h1 { font-size: 1.4rem; font-weight: 600; color: #1a202c; margin-bottom: 4px; }
+  .subtitle { color: #718096; font-size: 0.85rem; margin-bottom: 24px; }
+  .status-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 8px; }
+  .status-running { background: #bee3f8; color: #2b6cb0; }
+  .status-complete { background: #c6f6d5; color: #276749; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .card h2 { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #a0aec0; margin-bottom: 12px; }
+  .big-num { font-size: 2.2rem; font-weight: 700; color: #2d3748; }
+  .big-label { font-size: 0.8rem; color: #718096; margin-top: 2px; }
+  .chart-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  .chart-card h2 { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #a0aec0; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { text-align: left; padding: 8px 12px; background: #f7fafc; color: #718096; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid #e2e8f0; }
+  td { padding: 9px 12px; border-bottom: 1px solid #f0f4f8; }
+  tr:last-child td { border-bottom: none; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 600; }
+  .pill-baseline { background: #bee3f8; color: #2b6cb0; }
+  .pill-keep { background: #c6f6d5; color: #276749; }
+  .pill-discard { background: #fed7d7; color: #9b2c2c; }
+  .eval-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .eval-name { font-size: 0.8rem; width: 160px; flex-shrink: 0; }
+  .bar-track { flex: 1; background: #edf2f7; border-radius: 4px; height: 8px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; background: #68d391; transition: width 0.4s ease; }
+  .bar-pct { font-size: 0.75rem; color: #718096; width: 36px; text-align: right; }
+  #current-status { font-size: 0.82rem; color: #4a5568; padding: 10px 16px; background: #fffaf0; border-left: 3px solid #f6ad55; border-radius: 0 6px 6px 0; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<h1>Autoresearch <span id="skill-name">auto-doc</span> <span id="status-badge" class="status-badge status-running">running</span></h1>
+<p class="subtitle">Autonomous prompt optimization loop · 5 evals × 5 runs = max 25 pts per experiment</p>
+
+<div id="current-status">Loading...</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Baseline Score</h2>
+    <div class="big-num" id="baseline-score">—</div>
+    <div class="big-label">/ 25 pts</div>
+  </div>
+  <div class="card">
+    <h2>Best Score</h2>
+    <div class="big-num" id="best-score">—</div>
+    <div class="big-label">/ 25 pts</div>
+  </div>
+</div>
+
+<div class="chart-card">
+  <h2>Score Progression</h2>
+  <canvas id="progressChart" height="80"></canvas>
+</div>
+
+<div class="chart-card">
+  <h2>Experiment Log</h2>
+  <table id="exp-table">
+    <thead><tr><th>#</th><th>Score</th><th>Pass Rate</th><th>Status</th><th>Description</th></tr></thead>
+    <tbody id="exp-tbody"><tr><td colspan="5" style="color:#a0aec0;text-align:center;padding:20px">No experiments yet</td></tr></tbody>
+  </table>
+</div>
+
+<div class="chart-card">
+  <h2>Eval Breakdown</h2>
+  <div id="eval-bars"></div>
+</div>
+
+<script>
+let chart = null;
+
+function renderChart(experiments) {
+  const ctx = document.getElementById('progressChart').getContext('2d');
+  const labels = experiments.map(e => `Exp ${e.id}`);
+  const scores = experiments.map(e => e.pass_rate);
+  const colors = experiments.map(e => e.status === 'keep' ? '#68d391' : e.status === 'baseline' ? '#90cdf4' : '#fc8181');
+
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Pass Rate %',
+        data: scores,
+        borderColor: '#667eea',
+        backgroundColor: 'rgba(102,126,234,0.08)',
+        pointBackgroundColor: colors,
+        pointRadius: 6,
+        tension: 0.3,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { min: 0, max: 100, ticks: { callback: v => v + '%' }, grid: { color: '#f0f4f8' } },
+        x: { grid: { display: false } }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+async function refresh() {
+  try {
+    const r = await fetch('results.json?t=' + Date.now());
+    const d = await r.json();
+
+    document.getElementById('skill-name').textContent = d.skill_name;
+    const badge = document.getElementById('status-badge');
+    badge.textContent = d.status;
+    badge.className = 'status-badge ' + (d.status === 'complete' ? 'status-complete' : 'status-running');
+
+    const statusEl = document.getElementById('current-status');
+    if (d.status === 'complete') {
+      statusEl.textContent = `✅ Complete — ran ${d.experiments.length} experiments. Best: ${d.best_score}/25 (${Math.round(d.best_score/25*100)}%)`;
+    } else {
+      statusEl.textContent = `⏳ Running experiment ${d.current_experiment}...`;
+    }
+
+    if (d.baseline_score !== null) document.getElementById('baseline-score').textContent = d.baseline_score;
+    if (d.best_score !== null) document.getElementById('best-score').textContent = d.best_score;
+
+    if (d.experiments.length > 0) {
+      renderChart(d.experiments);
+      const tbody = document.getElementById('exp-tbody');
+      tbody.innerHTML = d.experiments.map(e => `
+        <tr>
+          <td>${e.id}</td>
+          <td>${e.score}/${e.max_score}</td>
+          <td>${e.pass_rate.toFixed(1)}%</td>
+          <td><span class="pill pill-${e.status}">${e.status}</span></td>
+          <td>${e.description}</td>
+        </tr>`).join('');
+    }
+
+    const barsEl = document.getElementById('eval-bars');
+    barsEl.innerHTML = d.eval_breakdown.map(ev => {
+      const pct = ev.total > 0 ? Math.round(ev.pass_count / ev.total * 100) : 0;
+      return `<div class="eval-bar">
+        <span class="eval-name">${ev.name}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        <span class="bar-pct">${pct}%</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('current-status').textContent = 'Waiting for data...';
+  }
+}
+
+refresh();
+setInterval(refresh, 10000);
+</script>
+</body>
+</html>
