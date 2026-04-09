@@ -1,6 +1,7 @@
 ---
 name: "skill-telemetry"
 description: "Records usage metrics for all skills via a PreToolUse hook. Automatically active."
+version: "1.0.0"
 ---
 
 # Skill Telemetry

@@ -1,6 +1,7 @@
 ---
 name: "review-code"
 description: "在用户请求代码审查、Review 变更或生成 CODE_REVIEW.md 时触发。读取 Git 差异并按规范输出中文审查报告。Do not use for simple syntax fixes or formatting issues."
+version: "1.0.0"
 ---
 
 # Code Review Skill

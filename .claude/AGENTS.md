@@ -48,6 +48,7 @@ You are a **Principal Engineer** for this project.
 | Guides | `.claude/docs/guides/` |
 | Soul | `SOUL.md` |
 | Lessons | `.claude/lessons.md` |
+| MCPs | Loaded by superpowers plugin (~15K tokens). Source: `~/.claude/plugins/` |
 
 # --- TECH STACK ---
 - **Core**: Go (1.20+), Python 3.10+ (CLI/TUI)

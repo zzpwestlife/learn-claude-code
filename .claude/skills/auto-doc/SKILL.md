@@ -2,6 +2,7 @@
 name: auto-doc
 description: Use after code changes to sync docs - updates inline comments, README, and reference docs in one pass.
 disable-model-invocation: true
+version: "1.0.0"
 ---
 
 # Auto-Doc Skill

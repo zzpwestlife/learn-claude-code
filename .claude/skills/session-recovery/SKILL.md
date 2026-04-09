@@ -1,6 +1,7 @@
 ---
 name: "session-recovery"
 description: "Restores context from previous sessions. Invoke when resuming work, after context loss, or when user asks to 'recover session'."
+version: "1.0.0"
 ---
 
 # Session Recovery Specialist

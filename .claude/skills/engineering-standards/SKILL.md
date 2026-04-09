@@ -1,6 +1,7 @@
 ---
 name: engineering-standards
-description: Comprehensive engineering standards covering TDD, systematic debugging, and verification protocols. Use this skill to ensure code quality, reliability, and maintainability throughout the development lifecycle.
+description: Apply before any feature, bug fix, or code review task.
+version: "1.0.0"
 ---
 
 # Engineering Standards

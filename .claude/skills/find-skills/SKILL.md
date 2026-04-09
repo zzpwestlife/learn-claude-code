@@ -1,6 +1,7 @@
 ---
 name: "find-skills"
 description: "Locates relevant skills or tools for a specific task. Invoke when the user is unsure which skill to use, asks for help finding a tool, or when no existing skill seems to match their request."
+version: "1.0.0"
 ---
 
 # Find Skills
