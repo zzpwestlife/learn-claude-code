@@ -15,7 +15,9 @@
       "Bash(go:*)",
       "Bash(test:*)",
       "Bash(pip3 install:*)",
-      "Bash(open:*)"
+      "Bash(open:*)",
+      "Bash(mkdir -p .claude/skills/executing-plans/assets/prompts)",
+      "Bash(cp .claude/skills/subagent-driven-development/assets/prompts/*.md .claude/skills/executing-plans/assets/prompts/)"
     ]
   },
   "hooks": {

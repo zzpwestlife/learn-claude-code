@@ -1,80 +1,84 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute in a separate session with review checkpoints
-version: "1.0.0"
+description: Execute implementation plans with review checkpoints.
+version: "2.0.0"
 ---
 
 # Executing Plans
 
-## Overview
+Load plan, execute tasks, review, finish branch. Supports sequential or subagent-parallel modes.
 
-Load plan, review critically, execute all tasks, report when complete.
+## Mode Selection
 
-**Announce at start:** "I'm using the executing-plans skill to implement this plan."
-
-**Note:** Tell your human partner that Superpowers works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use superpowers:subagent-driven-development instead of this skill.
+| Condition | Mode |
+|-----------|------|
+| Tasks independent + subagents available | **Subagent mode** (fresh agent per task) |
+| Tasks tightly coupled OR no subagents | **Sequential mode** (execute in current session) |
 
 ## The Process
 
 ### Step 1: Load and Review Plan
-1. Read plan file
-2. Review critically - identify any questions or concerns about the plan
-3. If concerns: Raise them with your human partner before starting
-4. If no concerns: Create TodoWrite and proceed
+
+1. Read plan file.
+2. Review critically — raise concerns before starting.
+3. Create task list and proceed.
 
 ### Step 2: Execute Tasks
 
+#### Sequential Mode
+
 For each task:
-1. Mark as in_progress
-2. Follow each step exactly (plan has bite-sized steps)
-3. Run verifications as specified
-4. Mark as completed
+1. Mark as `in_progress`.
+2. Follow each step exactly.
+3. Run verifications as specified.
+4. Mark as `completed`.
+5. After each chunk: run `git diff`, present TUI options (Continue / Review / Pause).
 
-### Step 3: Report (MANDATORY TUI & GIT DIFF)
+#### Subagent Mode
 
-After each logical chunk or when blocked, ensure the zero-friction goal:
-1. **Execute `git diff`** to show the user what changed.
-2. Use `AskUserQuestion` to ask:
-- **Continue**: Execute next task in `.local.md`.
-- **Review Code**: Pause for manual review.
-- **Pause**: Stop execution.
+For each task:
+1. Dispatch implementer subagent with full task text + context (see `assets/prompts/implementer-prompt.md`).
+2. If implementer asks questions — answer before proceeding.
+3. Dispatch spec reviewer (`assets/prompts/spec-reviewer-prompt.md`) — must pass before quality review.
+4. Dispatch code quality reviewer (`assets/prompts/code-quality-reviewer-prompt.md`).
+5. If issues found: implementer fixes → re-review until approved.
+6. Mark task complete.
 
-### Step 4: Complete Development
+**Implementer statuses:** DONE (proceed), DONE_WITH_CONCERNS (assess), NEEDS_CONTEXT (provide & re-dispatch), BLOCKED (escalate).
 
-After all tasks complete and verified:
-- Announce: "I'm using the finishing-a-development-branch skill to complete this work."
-- **REQUIRED SUB-SKILL:** Use superpowers:finishing-a-development-branch
-- Follow that skill to verify tests, present options, execute choice
+**Model selection:** Cheap model for 1-2 file mechanical tasks, standard for integration, capable for architecture/review.
 
-## When to Stop and Ask for Help
+### Step 3: Finish Branch
 
-**STOP executing immediately when:**
-- Hit a blocker (missing dependency, test fails, instruction unclear)
-- Plan has critical gaps preventing starting
-- You don't understand an instruction
-- Verification fails repeatedly
+After all tasks complete:
+
+1. **Verify tests pass** (`npm test` / `go test ./...` / `pytest`). Stop if failing.
+2. **Determine base branch** (`git merge-base HEAD main`).
+3. **Present 4 options:**
+   - Merge back to base branch locally
+   - Push and create a Pull Request
+   - Keep the branch as-is
+   - Discard this work (requires typed "discard" confirmation)
+4. **Clean up worktree** for merge/discard options; keep for PR/as-is.
+
+## When to Stop
+
+- Hit a blocker (missing dependency, test fails, instruction unclear).
+- Plan has critical gaps.
+- Verification fails repeatedly.
 
 **Ask for clarification rather than guessing.**
 
-## When to Revisit Earlier Steps
+## Red Flags
 
-**Return to Review (Step 1) when:**
-- Partner updates the plan based on your feedback
-- Fundamental approach needs rethinking
+**Never:**
+- Start on main/master without explicit consent.
+- Skip reviews (spec compliance OR code quality).
+- Dispatch parallel implementation subagents (conflicts).
+- Proceed with unfixed issues.
+- Force-push without explicit request.
 
-**Don't force through blockers** - stop and ask.
-
-## Remember
-- Review plan critically first
-- Follow plan steps exactly
-- Don't skip verifications
-- Reference skills when plan says to
-- Stop when blocked, don't guess
-- Never start implementation on main/master branch without explicit user consent
-
-## Integration
-
-**Required workflow skills:**
-- **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
-- **superpowers:writing-plans** - Creates the plan this skill executes
-- **superpowers:finishing-a-development-branch** - Complete development after all tasks
+**Always:**
+- Follow plan steps exactly.
+- Verify tests before offering finish options.
+- Get typed confirmation for discard.

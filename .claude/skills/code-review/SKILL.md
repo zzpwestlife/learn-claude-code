@@ -1,6 +1,7 @@
 ---
-name: "review-code"
-description: "在用户请求代码审查、Review 变更或生成 CODE_REVIEW.md 时触发。读取 Git 差异并按规范输出中文审查报告。Do not use for simple syntax fixes or formatting issues."
+name: code-review
+description: Perform, request, or respond to code reviews.
+version: "2.0.0"
 ---
 
 # Code Review Skill
@@ -35,7 +36,15 @@ description: "在用户请求代码审查、Review 变更或生成 CODE_REVIEW.m
     *   **文档**：注释、API 文档、README 更新。
     *   **规范一致性**：检查是否符合 `docs/constitution/` 下的相关规范。
 
-3.  **输出报告**：
+3.  **Go 特有检查项 (Go-Specific Checks)**：
+    当代码为 Go 时，在通用维度之外，**必须**额外检查以下惯用法：
+    - **资源泄漏 (defer)**：打开文件、DB 连接、HTTP 响应体后，必须紧跟 `defer x.Close()`。若缺失 → **Critical**。
+    - **并发安全 (goroutine)**：并发写入 map/slice 必须使用 `sync.Mutex`、`sync.RWMutex` 或 `sync.Map`。竞态条件 → **Critical**。
+    - **上下文传播 (context)**：HTTP handler 或长时间操作必须将 `r.Context()` 透传给下游，不得忽略 → **Suggestion**。
+    - **错误包装 (%w)**：`fmt.Errorf` 包装错误必须用 `%w` 而非 `%v`，以保持 `errors.Is`/`errors.As` 可用 → **Suggestion**。
+    - **接口精简**：接口超过 3 个方法时，检查是否违反 Go 小接口惯例（建议拆分）→ **Suggestion**。
+
+4.  **输出报告**：
     *   在当前目录下生成/更新名为 `CODE_REVIEW.md` 的文件。
     *   **MANDATORY**: 生成前必须读取 `assets/report-template.md`，并严格遵循其结构。
     *   **语言必须使用中文**。

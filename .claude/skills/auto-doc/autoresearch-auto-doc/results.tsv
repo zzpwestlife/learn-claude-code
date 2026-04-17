@@ -1,5 +1,0 @@
-experiment	score	max_score	pass_rate	status	description
-0	20	25	80.0%	baseline	original skill — no changes
-1	23	25	92.0%	keep	added explicit output format: name level (Level X) when directing updates
-2	25	25	100.0%	keep	split Add/Del into separate Add File and Remove File rows in trigger table
-3	25	25	100.0%	discard	tried adding 'create if none exists' note to Level 2 — no improvement, reverted
