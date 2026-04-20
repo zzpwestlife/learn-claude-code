@@ -48,3 +48,9 @@
 - **Spaces**: Always add spaces between Chinese and English/Numbers (e.g., "使用 GitHub 登录").
 - **Punctuation**: Use full-width punctuation for Chinese sentences (e.g., "，" not ",").
 - **No Repetition**: Do not repeat punctuation marks (e.g., "！！").
+
+## 8. Agent Behavioral Constraints
+- **Explicit Tool Execution**: If the user asks to use a specific tool or script (e.g., `./search.sh`), USE IT IMMEDIATELY. Do not explore the codebase on your own first.
+- **Browser & Screenshot Tasks**: Use the Playwright MCP server or `screencapture` (macOS). NEVER restart Chrome or close existing tabs. If DevTools fails, suggest launching Chrome with `--remote-debugging-port=9222`.
+- **Codebase Exploration Limits**: Set a strict limit (2-3 tool calls) when exploring. Summarize findings and ask for direction rather than exploring silently to avoid excessive delays.
+- **Task Verification**: Before claiming a task is complete, verify ALL items have been addressed. Double-check lists and task counts. Never claim completion without explicit verification.

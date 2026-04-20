@@ -1,72 +1,84 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute in a separate session with review checkpoints
-hooks:
-  PostToolUse:
-    - matcher: "Write|Edit|Bash"
-      hooks:
-        - type: command
-          command: |
-            SCRIPT_DIR=".claude/scripts"
-            OUTPUT=$(sh "$SCRIPT_DIR/check-complete.sh" 2>/dev/null)
-            if echo "$OUTPUT" | grep -q "ALL TASKS COMPLETE"; then
-              echo "<system-reminder>✅ ALL TASKS COMPLETE. Use 'AskUserQuestion' to ask: 'Review Code?' (Yes/No). If Yes -> /review-code.</system-reminder>"
-            elif [ -n "$OUTPUT" ]; then
-               mkdir -p .claude/tmp
-               echo "Status Updated: [View Status]($CLAUDE_PROJECT_DIR/.claude/tmp/planning_status.md)"
-            fi
+description: Execute implementation plans with review checkpoints.
+version: "2.0.0"
 ---
 
 # Executing Plans
 
-**Core Principle**: State-Driven Execution -> Red-Green Loop -> Review.
+Load plan, execute tasks, review, finish branch. Supports sequential or subagent-parallel modes.
+
+## Mode Selection
+
+| Condition | Mode |
+|-----------|------|
+| Tasks independent + subagents available | **Subagent mode** (fresh agent per task) |
+| Tasks tightly coupled OR no subagents | **Sequential mode** (execute in current session) |
 
 ## The Process
 
-### Step 1: Load Plan & State
-1. Read the main `docs/plans/*.md` file.
-2. **CRITICAL**: Locate and read the corresponding `docs/plans/*-state.local.md` tracking file.
-3. Review critically - identify any questions or concerns about the plan.
-4. If concerns: Raise them with your human partner before starting.
-5. If no concerns: Create TodoWrite and proceed.
+### Step 1: Load and Review Plan
 
-### Step 2: Execute via Red-Green Loop
-Find the first uncompleted, unblocked task in the `.local.md` state file.
-- If it's a **[Red]** task: Write the failing test FIRST. Run it. Verify it FAILS. Update state to `[x]`.
-- If it's a **[Green]** task: Implement the minimal code to pass the test. Run it. Verify it PASSES. Update state to `[x]`.
-- Follow each step exactly (plan has bite-sized steps).
-- Run verifications as specified.
+1. Read plan file.
+2. Review critically — raise concerns before starting.
+3. Create task list and proceed.
 
-### Step 3: Report (MANDATORY TUI)
-After each logical chunk or when blocked.
-Use `AskUserQuestion` to ask:
-- **Continue**: Execute next task in `.local.md`.
-- **Review Code**: Pause for manual review.
-- **Pause**: Stop execution.
+### Step 2: Execute Tasks
 
-### Step 4: Complete Development
-After all tasks complete and verified:
-- Announce: "I'm using the finishing-a-development-branch skill to complete this work."
-- **REQUIRED SUB-SKILL:** Use superpowers:finishing-a-development-branch
+#### Sequential Mode
 
-## When to Stop and Ask for Help
-**STOP executing immediately when:**
-- Hit a blocker (missing dependency, test fails, instruction unclear)
-- Plan has critical gaps preventing starting
-- You don't understand an instruction
-- Verification fails repeatedly
+For each task:
+1. Mark as `in_progress`.
+2. Follow each step exactly.
+3. Run verifications as specified.
+4. Mark as `completed`.
+5. After each chunk: run `git diff`, present TUI options (Continue / Review / Pause).
+
+#### Subagent Mode
+
+For each task:
+1. Dispatch implementer subagent with full task text + context (see `assets/prompts/implementer-prompt.md`).
+2. If implementer asks questions — answer before proceeding.
+3. Dispatch spec reviewer (`assets/prompts/spec-reviewer-prompt.md`) — must pass before quality review.
+4. Dispatch code quality reviewer (`assets/prompts/code-quality-reviewer-prompt.md`).
+5. If issues found: implementer fixes → re-review until approved.
+6. Mark task complete.
+
+**Implementer statuses:** DONE (proceed), DONE_WITH_CONCERNS (assess), NEEDS_CONTEXT (provide & re-dispatch), BLOCKED (escalate).
+
+**Model selection:** Cheap model for 1-2 file mechanical tasks, standard for integration, capable for architecture/review.
+
+### Step 3: Finish Branch
+
+After all tasks complete:
+
+1. **Verify tests pass** (`npm test` / `go test ./...` / `pytest`). Stop if failing.
+2. **Determine base branch** (`git merge-base HEAD main`).
+3. **Present 4 options:**
+   - Merge back to base branch locally
+   - Push and create a Pull Request
+   - Keep the branch as-is
+   - Discard this work (requires typed "discard" confirmation)
+4. **Clean up worktree** for merge/discard options; keep for PR/as-is.
+
+## When to Stop
+
+- Hit a blocker (missing dependency, test fails, instruction unclear).
+- Plan has critical gaps.
+- Verification fails repeatedly.
 
 **Ask for clarification rather than guessing.**
 
-## Rules
-- **Stop on Blocker**: Don't guess. Ask.
-- **Strict Adherence**: Follow plan steps exactly.
-- **Verification**: Never skip verification steps.
-- **TUI Handoff**: Always return control to user after a batch.
-- **Never start implementation on main/master branch** without explicit user consent.
+## Red Flags
 
-## Integration
-**Required workflow skills:**
-- **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
-- **superpowers:writing-plans** - Creates the plan this skill executes
-- **superpowers:finishing-a-development-branch** - Complete development after all tasks
+**Never:**
+- Start on main/master without explicit consent.
+- Skip reviews (spec compliance OR code quality).
+- Dispatch parallel implementation subagents (conflicts).
+- Proceed with unfixed issues.
+- Force-push without explicit request.
+
+**Always:**
+- Follow plan steps exactly.
+- Verify tests before offering finish options.
+- Get typed confirmation for discard.

@@ -3,7 +3,7 @@
 **Scope**: All Go language backend projects
 **Constitution Version**: 2.0+
 
-This annex defines the specific execution standards for the [Project Development Constitution](../../constitution.md) in Go projects.
+This annex defines the specific execution standards for the [Project Development Constitution](constitution.md) in Go projects.
 
 ---
 

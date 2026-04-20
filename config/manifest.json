@@ -19,22 +19,12 @@
     ],
     "skills": [
       "brainstorming",
-      "changelog-generator",
-      "dispatching-parallel-agents",
-      "executing-plans",
-      "finishing-a-development-branch",
-      "receiving-code-review",
-      "requesting-code-review",
-      "review-code",
-      "skill-architect",
-      "subagent-driven-development",
-      "systematic-debugging",
-      "test-driven-development",
-      "using-git-worktrees",
-      "using-superpowers",
-      "verification-before-completion",
       "writing-plans",
-      "writing-skills"
+      "executing-plans",
+      "test-driven-development",
+      "systematic-debugging",
+      "verification-before-completion",
+      "code-review"
     ],
     "agents": [
       "changelog-generator",
