@@ -77,3 +77,9 @@
 - **14.1 Occam's Razor**: Minimize entities.
 - **14.2 Feynman**: Explain simply.
 - **14.3 Socratic**: Question assumptions.
+
+## 15. Karpathy Coding Discipline
+- **15.1 Think Before Coding**: Explicitly state assumptions. If unsure, ask — never guess. When ambiguous, present multiple interpretations. When a simpler solution exists, push back. When confused, STOP and call it out.
+- **15.2 Simplicity First (Karpathy)**: No abstractions for single-use code. No unrequested "flexibility" or "configurability." No error handling for impossible scenarios. If 200 lines can become 50, rewrite. **Test**: Would a senior engineer call this over-engineered? If yes, simplify.
+- **15.3 Surgical Changes (Karpathy)**: Do NOT "improve" adjacent code, comments, or formatting. Do NOT refactor what isn't broken. Match existing style even if you'd write it differently. Flag dead code — don't delete it. Only remove imports/vars/functions made obsolete by YOUR changes. **Test**: Every changed line must trace back to the user's request.
+- **15.4 Goal-Driven Execution**: State goals, not instructions. "Write a test for invalid input, then make it pass" > "Add validation." For multi-step tasks, state a brief plan with verification per step: `[step] → verify: [check]`.

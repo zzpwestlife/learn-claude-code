@@ -1,16 +1,18 @@
 # CORE RULES & PROTOCOLS (Unified V1.0)
 
 ## 1. Engineering Principles (Simplicity & Quality)
-- **Simplicity First (YAGNI)**: Implement ONLY requested features; NO speculative abstractions. 
+- **Simplicity First (YAGNI)**: Implement ONLY requested features; NO speculative abstractions. No abstractions for single-use code. No unrequested "flexibility" or "configurability." If 200 lines can become 50, rewrite.
+- **Think Before Coding**: Explicitly state assumptions — unsure means ask, not guess. When ambiguous, present multiple interpretations. When a simpler solution exists, push back. When confused, STOP and call it out.
 - **Atomic Execution**: Perform ONE task phase per turn. Stop and handoff after completion.
 - **Evidence-Based**: Use logs, tests, and diffs for verification. NO "Happy Path" assumptions.
 - **Zero-Friction**: Prefer TUI menus (`AskUserQuestion` with `options`) over open-ended text.
 - **Root Cause Fixing**: Resolve the source of issues, not just symptoms. Zero hand-holding.
 - **Plan-First**: Mandatory plan in `docs/plans/` for tasks >3 steps. STOP on deviation.
+- **Goal-Driven Execution**: State goals, not instructions. "Write a test for invalid input, then make it pass" > "Add validation." For multi-step tasks: `[step] → verify: [check]`.
 - **BDD & State Tracking**: For complex tasks, adopt the Red-Green Agent BDD loop. Maintain a `.local.md` state file tracking task dependencies and status. Read `.claude/docs/guides/agent_bdd_loop.md` for details.
 
 ## 2. Coding Standards
-- **Surgical Changes**: Touch ONLY necessary files. Clean up only your own mess.
+- **Surgical Changes**: Touch ONLY necessary files. Do NOT "improve" adjacent code, comments, or formatting. Match existing style even if you'd write it differently. Flag dead code — don't delete it. Only remove imports/vars/functions made obsolete by YOUR changes. Every changed line must trace back to the user's request.
 - **Strict Typing**: NO `any` type or `eslint-disable`. Use explicit types.
 - **Clean Code**: Delete unused code immediately; NO commented-out obsolete code.
 - **File Limits**: Single file < 200 lines; functions < 20 lines. Hard wrap at 100 chars.
