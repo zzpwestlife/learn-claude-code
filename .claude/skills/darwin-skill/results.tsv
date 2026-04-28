@@ -21,3 +21,4 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-28	baseline	writing-plans	-	85.3	baseline	-	Baseline with sharpened rubric (dry_run; D8 estimated). Comparison refs: pre=016b13c, post=61d83ac	dry_run
 2026-04-28	baseline	executing-plans	-	85.3	baseline	-	Baseline with sharpened rubric (dry_run; D8 estimated). Comparison refs: pre=4c02d53, post=6baecaf	dry_run
 2026-04-28	baseline	verification-before-completion	-	89.0	baseline	-	Baseline with sharpened rubric (dry_run; D8 estimated). Comparison refs: pre=8037ee7, post=9fcca58	dry_run
+2026-04-28	baseline	test-driven-development	-	91.7	baseline	-	Baseline with sharpened rubric (dry_run; D8 estimated). Comparison refs: pre=b83e820, post=4c66a6a	dry_run
