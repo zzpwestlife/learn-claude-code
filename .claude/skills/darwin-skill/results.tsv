@@ -36,6 +36,7 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-28	1cea3d9	writing-plans	86.8	88.5	keep	边界条件覆盖+检查点设计 (D3/D4)	Stop on multi-subsystem spec; require AskUserQuestion confirmation before splitting into multiple plans	dry_run
 2026-04-28	82e717c	design-first	88.3	89.8	keep	边界条件覆盖 (D3)	Add mis-trigger routing to writing-plans/executing-plans/code-review	dry_run
 2026-04-28	303d283	design-first	89.8	91.3	keep	边界条件覆盖 (D3)	Add non-git fallback: request project/files/diff before proceeding with sizing/design	dry_run
+2026-04-28	a93bda8	design-first	91.3	94.8	keep	整体架构+指令具体性+Frontmatter (D7/D5/D1)	Add deliverables contract (R) + anti-anchoring + examples; shorten description	dry_run
 2026-04-28	18b38f0	verification-before-completion	89.0	89.8	keep	指令具体性 (D5)	Add mandatory evidence template (Claim/Command/Exit code/Evidence) for success claims	dry_run
 2026-04-28	2b528c6	verification-before-completion	89.8	90.8	keep	边界条件覆盖 (D3)	Add no-command/no-environment stop rule + alternative evidence ordering	dry_run
 2026-04-28	a8890bf	systematic-debugging	91.0	92.0	keep	边界条件覆盖 (D3)	Add no-repro/no-logs stop rule + minimum evidence checklist	dry_run
