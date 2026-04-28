@@ -31,6 +31,11 @@ Load plan, execute tasks, review, finish branch. Supports sequential or subagent
 
 ### Step 1: Load and Review Plan
 
+0. Triage (mis-trigger downgrade path):
+   - If there is no plan document to follow: STOP and route to `writing-plans` (or ask the user to provide the plan path).
+   - If the user only wants a review of code changes (no execution): STOP and route to `code-review`.
+   - If this is not a git repository but the plan requires `git diff` / branching operations: STOP and ask the user to run inside a git repo or provide an explicit patch/diff to work from.
+
 1. Read plan file.
 2. Review critically — raise concerns before starting.
 3. Create task list and proceed.
