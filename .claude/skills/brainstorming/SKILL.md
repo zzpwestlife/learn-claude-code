@@ -23,6 +23,7 @@ Start by understanding the current project context, then ask questions one at a 
 
 <HARD-GATE>
 Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
+Exception: If the Triage step determines brainstorming is not the right tool for this request, STOP and handle the request directly or route to the appropriate skill.
 </HARD-GATE>
 
 ## Anti-Pattern: "This Is Too Simple To Need A Design"
@@ -37,6 +38,7 @@ You MUST create a task for each of these items and complete them in order:
    - If the user is asking for factual info / explanation only: **STOP** and answer directly (do not run the design loop).
    - If the user only needs a small, localized edit (typo/formatting/minor config): **STOP** and propose the minimal change without a full design cycle.
    - If the user wants implementation but the requirements are already clear and approved: consider skipping to `writing-plans` instead.
+   - If you cannot tell which bucket this is: ask **ONE** clarifying question, then decide whether to proceed or downgrade.
 
 1. **Explore project context & Research** — Check files, docs, context. **MANDATORY**: Create `docs/research/YYYY-MM-DD-<topic>.md` analyzing existing patterns, dependencies, and constraints. Ensure you understand the "intricacies" before designing.
 2. **Offer visual companion** (if topic will involve visual questions) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
