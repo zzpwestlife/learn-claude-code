@@ -1,0 +1,19 @@
+timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-04-20	baseline	ielts	-	67.0	baseline	-	Initial evaluation	dry_run
+2026-04-20	efcf834	ielts	67.0	70.1	keep	Frontmatter质量 (D1)	Added name/description/trigger words frontmatter block	dry_run
+2026-04-20	604e128	ielts	70.1	83.6	keep	边界条件+指令具体性+实测表现 (D3/D5/D8)	Edge cases for feed + Modify flow + section inference + ielts_vocab schema	dry_run
+2026-04-20	8bc6158	ielts	83.6	85.0	keep	检查点设计 (D4)	Preview-before-append checkpoint for /ielts vocab	dry_run
+2026-04-20	70be8ff	ielts	85.0	88.0	keep	工作流清晰度 (D2)	anchor reset path + write preview + status empty-state handling	dry_run
+2026-04-20	fb0860b	ielts	88.0	89.5	keep	整体架构 (D7)	TL;DR quick reference table	dry_run
+2026-04-20	f119e31	ielts	89.5	90.5	keep	资源整合度 (D6)	Extract base path as documented constant	dry_run
+2026-04-20	baseline	english-immersion	-	57.4	baseline	-	Initial evaluation: D1=5.6 D2=9.0 D3=5.0 D4=2.8 D5=9.0 D6=3.5 D7=7.5 D8=15.0	dry_run
+2026-04-20	962ac98	english-immersion	57.4	58.8	keep	检查点设计 (D4)	Session-end trigger precision + 3-turns clarification + recovery fallback + deduplication	dry_run
+2026-04-20	9d744f8	english-immersion	58.8	59.8	keep	边界条件 (D3)	state.md fallback + mixed-input handling + backtracking spec	dry_run
+2026-04-20	bbdd6b6	english-immersion	59.8	59.8	revert	整体架构 (D7)	Integration map for IELTS hook — evaluator scored D7 4/10 (was 5), regressed	dry_run
+2026-04-20	06b5f06	english-immersion	59.8	59.8	revert	工作流清晰度 (D2)	3-condition intent heuristic — evaluator scored D2 4/10 (was 6), regressed	dry_run
+2026-04-20	74a2ed6	english-immersion	59.8	59.8	revert	指令具体性 (D5)	absorption_log schema + detector spec — evaluator scored D5 5/10 (was 6), regressed	dry_run
+2026-04-20	a99ab35	english-immersion	59.8	70.8	keep	Phase 2.5 rewrite	TL;DR table + errors_tagged schema + IELTS hook file-ownership table + absorption_log schema + concrete intent examples	dry_run
+2026-04-20	874a363	english-immersion	70.8	73.3	keep	D1+D8 round 1	Expand farewell trigger list + tighten frontmatter description	dry_run
+2026-04-20	a0fc883	english-immersion	73.3	73.1	keep	D1+D8 round 2	Trim frontmatter to <300 chars + add farewell decision tree + semantic-matching clarification	dry_run
+2026-04-20	f5aa748	english-immersion	73.1	73.1	keep	D6+D8	Farewell 4-step decision tree + reference file fallbacks (wittgenstein inline, taxonomy non-blocking)	dry_run
+2026-04-20	a03d6d9	english-immersion	73.1	75.5	keep	D3+D8	Session continuity after farewell + iCloud path fallback to .claude/english-immersion/tmp/	dry_run
