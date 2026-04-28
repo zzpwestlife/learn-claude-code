@@ -41,7 +41,10 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 ## Scope Check
 
-If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
+If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming.
+
+- If it wasn't: **STOP** and propose a decomposition (one plan per subsystem) and use `AskUserQuestion` to get user confirmation on the split **before** writing the plan.
+- Each plan should produce working, testable software on its own.
 
 ## File Structure
 
