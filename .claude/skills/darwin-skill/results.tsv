@@ -25,3 +25,4 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-28	baseline	code-review	-	82.3	baseline	-	Baseline with sharpened rubric (dry_run; D8 estimated). Comparison refs: pre=7939709, post=16c5fe5	dry_run
 2026-04-28	baseline	systematic-debugging	-	91.0	baseline	-	Baseline with sharpened rubric (dry_run; D8 estimated). Comparison refs: pre=d935ec9, post=89ac963	dry_run
 2026-04-28	baseline	design-first	-	88.3	baseline	-	Baseline with sharpened rubric (dry_run; D8 estimated). Comparison refs: pre=22414e0, post=72f0fba	dry_run
+2026-04-28	1d2a2e1	code-review	82.3	83.8	keep	边界条件覆盖 (D3)	Add Step0 no-diff stop condition + ask for explicit review target	dry_run
