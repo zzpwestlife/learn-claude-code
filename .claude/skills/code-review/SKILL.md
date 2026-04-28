@@ -1,6 +1,18 @@
 ---
 name: code-review
-description: Perform, request, or respond to code reviews.
+description: |
+  Invoke when:
+  - The user requests a code review, PR review, diff review, or audit of recent changes (correctness, security, maintainability).
+  - The user asks to review a specific commit/diff/file set and wants actionable findings and recommendations.
+
+  Do not use when:
+  - The user only wants a simple, localized syntax fix or formatting change (do not run a full review workflow).
+  - There is no diff / code change to review (ask for the target files/commit or use general explanation instead).
+  - The user is still deciding requirements/approach (use brainstorming / writing-plans).
+
+  Examples:
+  - "Review this git diff and provide a structured report of issues"
+  - "Do a security-focused review of the recent changes"
 version: "2.0.0"
 ---
 
