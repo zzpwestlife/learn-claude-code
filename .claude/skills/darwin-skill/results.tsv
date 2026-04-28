@@ -41,3 +41,6 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-28	3f43286	systematic-debugging	92.0	92.8	keep	指令具体性 (D5)	Add minimal repro report template (Steps/Expected/Actual/Env/Logs)	dry_run
 2026-04-28	1036107	test-driven-development	91.7	92.7	keep	边界条件覆盖 (D3)	Add no-test-runner stop rule before proceeding to GREEN	dry_run
 2026-04-28	6b73d17	test-driven-development	92.7	93.5	keep	指令具体性 (D5)	Add mandatory GREEN evidence fields (command/exit/evidence)	dry_run
+2026-04-28	f7c359e	executing-plans	88.3	89.8	keep	整体架构+检查点设计 (D7/D4)	Add Reusable Interface (R) contract + anti-anchoring; shorten description	dry_run
+2026-04-28	f7c359e	verification-before-completion	90.8	92.3	keep	整体架构+检查点设计 (D7/D4)	Add Output Contract artifacts + limitation template + anti-anchoring; shorten description	dry_run
+2026-04-28	f7c359e	test-driven-development	93.5	94.8	keep	整体架构+Frontmatter (D7/D1)	Add TDD evidence block contract + anti-anchoring; shorten description; mark rationale as appendix	dry_run
