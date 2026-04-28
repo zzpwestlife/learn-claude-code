@@ -1,17 +1,9 @@
 ---
 name: brainstorming
 description: |
-  Invoke when:
-  - The user asks to create or modify features, components, functionality, or behavior (requires design before implementation).
-  - The task has multiple viable approaches, unclear requirements, or meaningful risks/trade-offs that must be decided first.
-
-  Do not use when:
-  - The user only asks for factual information/explanations and no project change is requested.
-  - It is a small, localized edit (e.g., typo fix, minor formatting) where a full design loop would add unnecessary friction.
-
-  Examples:
-  - "Design a new notification system, then implement it"
-  - "Add a new feature that changes app behavior"
+  Invoke when the user wants to create/modify behavior and the requirements/approach are not yet decided.
+  Hard gate: if it’s pure explanation or a small localized edit, STOP and downgrade (no full design loop).
+  Output: research note + decision log + spec, with AskUserQuestion gates before implementation.
 version: "1.0.0"
 ---
 
@@ -29,6 +21,24 @@ Exception: If the Triage step determines brainstorming is not the right tool for
 ## Anti-Pattern: "This Is Too Simple To Need A Design"
 
 Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+
+## Reusable Interface (R) — Brainstorming Deliverables Contract
+
+This skill must produce *reusable artifacts* that downstream workflows can consume (e.g. `writing-plans`).
+
+**Minimum deliverables:**
+1) `docs/research/YYYY-MM-DD-<topic>.md` — current state / constraints / risks / 2-3 approaches
+2) `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` — the approved spec
+3) **Decision Log** (in the spec or a small section in the research doc):
+   - Decision
+   - Options considered (2-3)
+   - Why chosen
+
+## Anti-Anchoring（反锚定，MANDATORY）
+
+- Do not “over-question” to look thorough: focus on the 2–3 decisions that change scope/architecture/verification.
+- Do not design the whole universe: converge to an MVP spec first, then iterate.
+- Diagrams/templates are structure demos, not rituals. The goal is decisions + artifacts.
 
 ## Process & Checklist
 
@@ -57,6 +67,16 @@ You MUST create a task for each of these items and complete them in order:
 9. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below).
 10. **User reviews written spec** — execute `git diff HEAD~1` to show changes, then use `AskUserQuestion` to ask user to review the spec file before proceeding.
 11. **Transition to implementation** — invoke writing-plans skill to create implementation plan.
+
+## Examples (Anchors)
+
+**Should downgrade (no full design loop):**
+- "Fix a typo / formatting / minor config tweak"
+- "Explain how X works" (informational)
+
+**Should use brainstorming (design loop):**
+- "Add a new feature that changes app behavior"
+- "Introduce a new CI/build workflow where trade-offs and verification gates matter"
 
 ## Process Flow
 
