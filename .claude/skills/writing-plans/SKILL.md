@@ -29,6 +29,8 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 ## Structure & Creation
 1. **Analyze & Create (AUTO-START)**:
    - Read the design document.
+   - If there is no approved spec/design doc available: **STOP** and route to `brainstorming` (or ask the user to provide the spec path).
+   - If the user is asking to execute an existing plan rather than write one: **STOP** and route to `executing-plans`.
    - **IMMEDIATELY** generate the plan file `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`.
    - **AND** generate the State Tracking File `docs/superpowers/plans/YYYY-MM-DD-<feature-name>-state.local.md` (Refer to `.claude/docs/guides/agent_bdd_loop.md` for format).
    - **Do NOT wait** or ask for confirmation to write the plan (loading this skill IS confirmation).
