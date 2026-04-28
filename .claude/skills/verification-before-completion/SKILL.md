@@ -50,6 +50,17 @@ BEFORE claiming any status or expressing satisfaction:
 Skip any step = lying, not verifying
 ```
 
+### Evidence Template (MANDATORY)
+
+When making a success claim, include this minimal evidence block:
+
+```
+Claim: <what you are asserting>
+Command: <exact command you ran>
+Exit code: <numeric>
+Evidence: <1-3 lines from output showing pass/fail counts or key success signal>
+```
+
 ## Common Failures
 
 | Claim | Requires | Not Sufficient |
