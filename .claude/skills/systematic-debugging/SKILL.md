@@ -76,6 +76,16 @@ You MUST complete each phase before proceeding to the next.
    - Does it happen every time?
    - If not reproducible → gather more data, don't guess
 
+   **No-Repro / No-Logs Rule (MANDATORY):**
+   - If you cannot reproduce *and* you lack logs/metrics/traces: **STOP** — do not propose fixes.
+   - Request the minimum missing evidence (pick what applies):
+     - Exact command(s) run + full stdout/stderr
+     - Stack trace / panic / exception text (full)
+     - Environment: OS, language/runtime version, dependency lockfile, CI runner image
+     - Config/feature flags (sanitized), inputs/fixtures, seed values
+     - “Last known good” commit + current commit range
+   - Only after you can reproduce OR you have sufficient evidence to localize the failing component may you proceed.
+
 3. **Check Recent Changes**
    - What changed that could cause this?
    - Git diff, recent commits
