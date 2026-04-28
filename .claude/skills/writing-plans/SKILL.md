@@ -1,16 +1,9 @@
 ---
 name: writing-plans
 description: |
-  Invoke when:
-  - A spec or clear requirements exist and we need a step-by-step implementation plan (files, tasks, commands, tests) before touching code.
-
-  Do not use when:
-  - Requirements/approach are not approved yet (use brainstorming first).
-  - The goal is to execute an existing plan (use executing-plans).
-
-  Examples:
-  - "Here is the approved spec — write an implementation plan"
-  - "Turn this design doc into a task-by-task plan with test commands"
+  Invoke when there is an approved spec/requirements and we need a step-by-step implementation plan before touching code.
+  Hard gate: no spec → STOP and route to brainstorming; execution request → route to executing-plans.
+  Output: a plan file with minimal verification commands (test/lint/build) for each increment.
 version: "1.0.0"
 ---
 
@@ -18,13 +11,28 @@ version: "1.0.0"
 
 ## Overview
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
+Prefer **Detailed MVP plans** over “Comprehensive coverage”. Capture the shortest path to a verifiable increment, then iterate.
 
 Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
 **Context:** This should be run in a dedicated worktree (created by brainstorming skill).
+
+## Reusable Interface (R) — Plan Contract
+
+This skill must output a plan that other workflows can reuse (e.g. `executing-plans`, CI/Makefile flows).
+
+### Required outputs
+1) Plan file: `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
+2) Verification gate: each task/increment must include at least one runnable verification command (test/lint/build).
+   - If the repo/toolchain is unknown: explicitly state the limitation and ask for the exact command (do not invent one).
+
+## Anti-Anchoring（反锚定，MANDATORY）
+
+- 示例代码/命令是结构演示，不是模板；必须以仓库真实语言/真实测试框架为准。
+- 禁止为“显得全面”而罗列大量边界：只写会改变计划结构/验证门的关键边界。
+- spec 信息不足时：STOP 并 AskUserQuestion，而不是用假设填满计划。
 
 ## Structure & Creation
 1. **Analyze & Create (AUTO-START)**:
@@ -138,6 +146,7 @@ Every step must contain the actual content an engineer needs. These are **plan f
 - "Similar to Task N" (repeat the code — the engineer may be reading tasks out of order)
 - Steps that describe what to do without showing how (code blocks required for code steps)
 - References to types, functions, or methods not defined in any task
+- **Do not invent toolchain commands** (`pytest` / `npm test` / `go test`) unless the repo/spec explicitly indicates them. If unknown, ask for the exact verification command.
 
 ## Remember
 - Exact file paths always
