@@ -1,18 +1,9 @@
 ---
 name: systematic-debugging
 description: |
-  Invoke when:
-  - There is a bug, test failure, build failure, performance regression, or any unexpected behavior, and we must find root cause before proposing fixes.
-  - The user asks to debug an error message, failing test, crash, or flaky behavior, and expects a systematic investigation plan.
-
-  Do not use when:
-  - The user is requesting a new feature or behavior change (use brainstorming / writing-plans / tdd instead).
-  - The task is purely informational (no concrete failure symptoms to investigate).
-  - The user explicitly wants a quick hypothesis list (in that case, provide hypotheses but still recommend root-cause workflow).
-
-  Examples:
-  - "Investigate why this test fails and identify the root cause before changing code"
-  - "Debug this crash: reproduce, isolate, verify hypothesis, then propose minimal fix"
+  Invoke when there is a concrete failure (error message / failing command / crash / regression) and we must find root cause before fixes.
+  Hard gate: if we cannot reproduce AND we lack logs/traces, STOP and request the Minimal Repro Report inputs.
+  Output: must produce Minimal Repro Report + Debugging Evidence Block (command/exit/evidence/next).
 version: "1.0.0"
 ---
 
@@ -25,6 +16,36 @@ Random fixes waste time and create new bugs. Quick patches mask underlying issue
 **Core principle:** ALWAYS find root cause before attempting fixes. Symptom fixes are failure.
 
 **Violating the letter of this process is violating the spirit of debugging.**
+
+## Reusable Interface (R) — Debugging Contract
+
+This skill must produce *auditable artifacts* that other workflows can reuse (e.g. `executing-plans`, `verification-before-completion`).
+
+### Required Outputs (MANDATORY)
+
+1) **Minimal Repro Report**
+```
+Steps to reproduce:
+Expected:
+Actual:
+Environment (OS/runtime/deps):
+Logs / stack trace (full):
+```
+
+2) **Debugging Evidence Block**
+```
+Claim: 已完成 Phase <N> / 已定位到 <组件/函数/配置> 为最可能失败点
+Command: <复现命令 / 日志查询命令 / grep 命令>
+Exit code: <numeric>
+Evidence: <1-3 行关键输出（错误/堆栈/断言失败摘要）>
+Next: <下一条最小假设或需要的补充证据>
+```
+
+## Anti-Anchoring（反锚定，MANDATORY）
+
+- 无 repro 且无 logs/traces：**禁止**提出修复方案（只能索取证据/补齐最小复现报告）。
+- 禁止堆“可能原因列表”充数：最多给 2-3 个假设，每个必须配“如何验证”的命令。
+- 示例输出只是格式演示，不构成证据；禁止伪造/转述日志输出。
 
 ## The Iron Law
 
@@ -85,6 +106,12 @@ You MUST complete each phase before proceeding to the next.
      - Config/feature flags (sanitized), inputs/fixtures, seed values
      - “Last known good” commit + current commit range
    - Only after you can reproduce OR you have sufficient evidence to localize the failing component may you proceed.
+
+   **Minimum Evidence Request (Priority Order):**
+   1) Failing command + full stdout/stderr
+   2) Full stack trace / panic / exception
+   3) Environment versions + lockfile
+   4) Last known good commit + current commit range
 
    **Minimal Repro Report Template:**
    ```
