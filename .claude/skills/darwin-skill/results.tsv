@@ -38,3 +38,4 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-28	18b38f0	verification-before-completion	89.0	89.8	keep	指令具体性 (D5)	Add mandatory evidence template (Claim/Command/Exit code/Evidence) for success claims	dry_run
 2026-04-28	2b528c6	verification-before-completion	89.8	90.8	keep	边界条件覆盖 (D3)	Add no-command/no-environment stop rule + alternative evidence ordering	dry_run
 2026-04-28	a8890bf	systematic-debugging	91.0	92.0	keep	边界条件覆盖 (D3)	Add no-repro/no-logs stop rule + minimum evidence checklist	dry_run
+2026-04-28	3f43286	systematic-debugging	92.0	92.8	keep	指令具体性 (D5)	Add minimal repro report template (Steps/Expected/Actual/Env/Logs)	dry_run
