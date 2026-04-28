@@ -19,3 +19,6 @@ settings.local.json
 docs/plans/
 .claude/skill-usage.log
 /.claude/eval_exports
+
+# Local duplicate exports (kept untracked)
+docs/insights/
