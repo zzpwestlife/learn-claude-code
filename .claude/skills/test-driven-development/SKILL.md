@@ -1,18 +1,9 @@
 ---
 name: test-driven-development
 description: |
-  Invoke when:
-  - Implementing a new feature, fixing a bug, refactoring, or changing behavior, and you need to follow the Red-Green-Refactor loop.
-  - The user asks to "implement" or "fix" something in code and we want regression protection before/while changing production code.
-
-  Do not use when:
-  - The task is purely planning/design (use brainstorming / writing-plans).
-  - The change is non-code or low-risk configuration/doc edits where TDD is explicitly not required (unless the user requests it).
-  - A throwaway prototype is requested and the user explicitly accepts skipping tests.
-
-  Examples:
-  - "Fix this bug with a failing test first, then implement the minimal fix"
-  - "Add this feature using TDD: write failing tests, then make them pass"
+  Invoke for any behavior change (feature/bugfix/refactor).
+  Hard gate: RED must be observed (test fails for expected reason) before writing production code.
+  Reporting GREEN requires evidence (command + exit code + key pass lines).
 version: "1.0.0"
 ---
 
@@ -48,6 +39,27 @@ NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
 ```
 
 Write code before the test? Delete it. Start over.
+
+## Reusable Interface (R) — TDD Evidence Blocks
+
+This skill must output *auditable artifacts* (so other skills/workflows can reuse them).
+
+### Mandatory evidence format (aligned with verification-before-completion)
+
+When claiming RED or GREEN, include:
+
+```
+Claim: <RED observed / GREEN observed / refactor kept green>
+Command: <exact test command you ran>
+Exit code: <numeric>
+Evidence: <1-3 lines proving fail/pass (e.g., FAIL summary / PASS summary / 0 failures)>
+```
+
+## Anti-Anchoring (MANDATORY)
+
+- Code examples below are **structure demos**, not templates to blindly copy.
+- Always use the project’s real test runner, real command, and real output as the source of truth.
+- If you cannot run tests in this environment: STOP (No-Test-Runner Rule) — do not proceed to GREEN.
 
 **No exceptions:**
 - Don't keep it as "reference"
@@ -227,6 +239,8 @@ Next failing test for next feature.
 | **Shows intent** | Demonstrates desired API | Obscures what code should do |
 
 ## Why Order Matters
+
+> Appendix note: this section is rationale. During execution, prioritize the L1 loop and evidence blocks above.
 
 **"I'll write tests after to verify it works"**
 

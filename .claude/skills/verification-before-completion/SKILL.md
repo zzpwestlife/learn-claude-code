@@ -1,18 +1,11 @@
 ---
 name: verification-before-completion
 description: |
-  Invoke when:
-  - You are about to claim work is complete/fixed/passing, or about to commit/push/create a PR, and you need fresh verification evidence (tests/build/lint/etc).
-  - The user asks "is this fixed?", "does it pass?", "are we done?", or requests a success claim that must be backed by command output.
+  Invoke when you are about to make ANY success/completion claim (tests pass, bug fixed, build succeeds),
+  especially before committing/pushing/PR.
 
-  Do not use when:
-  - The user only asks for planning or design (use brainstorming / writing-plans).
-  - No verification command exists for the claim (state the limitation and propose the best available check).
-  - The task is purely informational and does not involve asserting code state.
-
-  Examples:
-  - "Before saying tests pass, run `pytest` and quote the output"
-  - "Before merging, run the full verification command and report exit code"
+  Requirement: include an Evidence Block (Claim / Command / Exit code / Evidence).
+  If you cannot run a real verification command in this environment: STOP and state the limitation.
 version: "1.0.0"
 ---
 
@@ -25,6 +18,41 @@ Claiming work is complete without verification is dishonesty, not efficiency.
 **Core principle:** Evidence before claims, always.
 
 **Violating the letter of this rule is violating the spirit of this rule.**
+
+## Reusable Interface (R) — Output Contract
+
+This skill is designed to be *callable* by other skills (e.g. `executing-plans`, `test-driven-development`, CI/Makefile flows).
+
+**Artifacts that must exist for any completion claim:**
+- Verification command (exact)
+- Exit code (numeric)
+- 1–3 lines of output that prove pass/fail
+- (If code changed) brief change evidence: `git diff --stat` or equivalent summary
+
+### Evidence Template (MANDATORY)
+
+When making a success claim, include this minimal evidence block:
+
+```
+Claim: <what you are asserting>
+Command: <exact command you ran>
+Exit code: <numeric>
+Evidence: <1-3 lines from output showing pass/fail counts or key success signal>
+```
+
+### Limitation Template (MANDATORY when you cannot run the command)
+
+```
+Limitation: I cannot run <command> here because <reason>.
+Need from you: <repo access / exact command / CI log / install approval>.
+Best available evidence now: <CI link/log excerpt OR repro steps/log excerpt OR diff-based hypothesis>.
+```
+
+## Anti-Anchoring (MANDATORY)
+
+- **Do not** paraphrase or fabricate command output.
+- Example outputs are formatting demos, not evidence.
+- If the verification command cannot be executed, you **must not** claim success.
 
 ## The Iron Law
 
@@ -48,17 +76,6 @@ BEFORE claiming any status or expressing satisfaction:
 5. ONLY THEN: Make the claim
 
 Skip any step = lying, not verifying
-```
-
-### Evidence Template (MANDATORY)
-
-When making a success claim, include this minimal evidence block:
-
-```
-Claim: <what you are asserting>
-Command: <exact command you ran>
-Exit code: <numeric>
-Evidence: <1-3 lines from output showing pass/fail counts or key success signal>
 ```
 
 ### No-Command / No-Environment Rule (MANDATORY)

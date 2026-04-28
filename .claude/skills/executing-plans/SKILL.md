@@ -20,6 +20,32 @@ version: "2.0.0"
 
 Load plan, execute tasks, review, finish branch. Supports sequential or subagent-parallel modes.
 
+## Reusable Interface (R) — Execution Transcript Contract
+
+This skill must produce artifacts that other skills (and humans) can audit and reuse.
+
+### Mandatory outputs
+
+1) **Task tracking**
+- Maintain a task list (TodoWrite) with `pending / in_progress / completed`.
+
+2) **Step evidence** (delegated to `verification-before-completion`)
+- Every completion/success claim MUST include an Evidence Block:
+  - Claim / Command / Exit code / Evidence
+
+3) **Chunk boundaries**
+- After each chunk of work: show a concise change summary (`git diff --stat` or equivalent).
+
+4) **Finish options**
+- Present the 4 finish options (merge / PR / keep / discard).
+- Discard requires typed confirmation.
+
+## Anti-Anchoring (MANDATORY)
+
+- A plan is a constraint, not a template to blindly copy.
+- Any example commands/outputs are formatting demos only; reality (repo state, CI, toolchain) always wins.
+- If the plan lacks verification commands, STOP and route to `verification-before-completion` to define the verification gate before executing.
+
 ## Mode Selection
 
 | Condition | Mode |
