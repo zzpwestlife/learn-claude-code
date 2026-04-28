@@ -1,6 +1,18 @@
 ---
 name: systematic-debugging
-description: Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes
+description: |
+  Invoke when:
+  - There is a bug, test failure, build failure, performance regression, or any unexpected behavior, and we must find root cause before proposing fixes.
+  - The user asks to debug an error message, failing test, crash, or flaky behavior, and expects a systematic investigation plan.
+
+  Do not use when:
+  - The user is requesting a new feature or behavior change (use brainstorming / writing-plans / tdd instead).
+  - The task is purely informational (no concrete failure symptoms to investigate).
+  - The user explicitly wants a quick hypothesis list (in that case, provide hypotheses but still recommend root-cause workflow).
+
+  Examples:
+  - "Investigate why this test fails and identify the root cause before changing code"
+  - "Debug this crash: reproduce, isolate, verify hypothesis, then propose minimal fix"
 version: "1.0.0"
 ---
 
