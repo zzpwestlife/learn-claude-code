@@ -1,18 +1,9 @@
 ---
 name: executing-plans
 description: |
-  Invoke when:
-  - There is an approved implementation plan and we need to execute it task-by-task with verification and review checkpoints.
-  - The user asks to "implement the plan", "execute tasks", or "carry out" a previously written plan (sequential or subagent-per-task).
-
-  Do not use when:
-  - Requirements/approach are not decided yet (use brainstorming).
-  - There is no plan document to follow (use writing-plans first).
-  - The user only wants an explanation or a review without making changes.
-
-  Examples:
-  - "Execute this plan step by step and show diffs between chunks"
-  - "Run the tasks in this implementation plan using subagents with review"
+  Invoke when there is an approved plan document and we must execute it step-by-step.
+  Required outputs: task tracking + chunk diffs + Evidence Blocks for success claims.
+  If no plan exists (or plan lacks verification commands): STOP and route to writing-plans / verification-before-completion.
 version: "2.0.0"
 ---
 
