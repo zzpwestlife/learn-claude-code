@@ -131,6 +131,10 @@ Vague name, tests mock not code
 npm test path/to/test.test.ts
 ```
 
+**No-Test-Runner Rule (MANDATORY):**
+- If you cannot run the test command in this environment (missing repo/deps/test runner/permissions): **STOP** — do not proceed to GREEN.
+- Ask for what you need (repo access, install approval, exact test command, CI logs) and only continue after you can execute the test and observe it fail for the expected reason.
+
 Confirm:
 - Test fails (not errors)
 - Failure message is expected
