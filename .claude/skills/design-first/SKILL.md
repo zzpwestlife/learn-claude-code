@@ -67,6 +67,7 @@ description: |
    - 若用户其实是要“把已批准 spec 写成实施计划”：停止并路由 `writing-plans`。
    - 若用户其实是要“执行已有计划”：停止并路由 `executing-plans`。
    - 若用户其实是要“审查代码改动”：停止并路由 `code-review`。
+   - 若当前目录不是 git 仓库、或 git 命令不可用：不要假设分支/提交/文件结构；改为让用户提供可用输入（项目目录、关键文件、或必要的 diff/patch），再继续定级与设计。
 
 1. **确认工作路径**：`pwd` 或 `git rev-parse --show-toplevel`（不要假设路径）
 2. **探索项目结构**：
