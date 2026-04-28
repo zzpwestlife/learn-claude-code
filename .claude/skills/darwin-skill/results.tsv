@@ -32,3 +32,4 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-28	31fa39b	executing-plans	85.3	86.8	keep	边界条件覆盖 (D3)	Add triage: no plan/review-only/non-git downgrade routes	dry_run
 2026-04-28	ad9128a	executing-plans	86.8	88.3	keep	边界条件覆盖 (D3)	Stop when plan lacks verification commands; route to verification-before-completion	dry_run
 2026-04-28	b622e8b	writing-plans	85.3	86.8	keep	边界条件覆盖 (D3)	Add mis-trigger downgrade: no approved spec -> brainstorming; execute request -> executing-plans	dry_run
+2026-04-28	1cea3d9	writing-plans	86.8	88.5	keep	边界条件覆盖+检查点设计 (D3/D4)	Stop on multi-subsystem spec; require AskUserQuestion confirmation before splitting into multiple plans	dry_run
