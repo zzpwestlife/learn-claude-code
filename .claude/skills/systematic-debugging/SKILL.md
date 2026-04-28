@@ -86,6 +86,15 @@ You MUST complete each phase before proceeding to the next.
      - “Last known good” commit + current commit range
    - Only after you can reproduce OR you have sufficient evidence to localize the failing component may you proceed.
 
+   **Minimal Repro Report Template:**
+   ```
+   Steps to reproduce:
+   Expected:
+   Actual:
+   Environment (OS/runtime/deps):
+   Logs / stack trace (full):
+   ```
+
 3. **Check Recent Changes**
    - What changed that could cause this?
    - Git diff, recent commits
