@@ -63,6 +63,11 @@ description: |
 
 ### 步骤
 
+0. **误触发检查（降级/路由）**：
+   - 若用户其实是要“把已批准 spec 写成实施计划”：停止并路由 `writing-plans`。
+   - 若用户其实是要“执行已有计划”：停止并路由 `executing-plans`。
+   - 若用户其实是要“审查代码改动”：停止并路由 `code-review`。
+
 1. **确认工作路径**：`pwd` 或 `git rev-parse --show-toplevel`（不要假设路径）
 2. **探索项目结构**：
    - 入口文件和配置（`package.json`/`pyproject.toml`/`go.mod`）
