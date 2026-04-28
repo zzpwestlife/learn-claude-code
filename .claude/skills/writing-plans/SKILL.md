@@ -1,6 +1,16 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code
+description: |
+  Invoke when:
+  - A spec or clear requirements exist and we need a step-by-step implementation plan (files, tasks, commands, tests) before touching code.
+
+  Do not use when:
+  - Requirements/approach are not approved yet (use brainstorming first).
+  - The goal is to execute an existing plan (use executing-plans).
+
+  Examples:
+  - "Here is the approved spec — write an implementation plan"
+  - "Turn this design doc into a task-by-task plan with test commands"
 version: "1.0.0"
 ---
 

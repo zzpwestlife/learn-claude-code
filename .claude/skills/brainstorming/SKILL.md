@@ -1,6 +1,17 @@
 ---
 name: brainstorming
-description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
+description: |
+  Invoke when:
+  - The user asks to create or modify features, components, functionality, or behavior (requires design before implementation).
+  - The task has multiple viable approaches, unclear requirements, or meaningful risks/trade-offs that must be decided first.
+
+  Do not use when:
+  - The user only asks for factual information/explanations and no project change is requested.
+  - It is a small, localized edit (e.g., typo fix, minor formatting) where a full design loop would add unnecessary friction.
+
+  Examples:
+  - "Design a new notification system, then implement it"
+  - "Add a new feature that changes app behavior"
 version: "1.0.0"
 ---
 
