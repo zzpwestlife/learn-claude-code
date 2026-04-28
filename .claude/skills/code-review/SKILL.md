@@ -1,18 +1,9 @@
 ---
 name: code-review
 description: |
-  Invoke when:
-  - The user requests a code review, PR review, diff review, or audit of recent changes (correctness, security, maintainability).
-  - The user asks to review a specific commit/diff/file set and wants actionable findings and recommendations.
-
-  Do not use when:
-  - The user only wants a simple, localized syntax fix or formatting change (do not run a full review workflow).
-  - There is no diff / code change to review (ask for the target files/commit or use general explanation instead).
-  - The user is still deciding requirements/approach (use brainstorming / writing-plans).
-
-  Examples:
-  - "Review this git diff and provide a structured report of issues"
-  - "Do a security-focused review of the recent changes"
+  Invoke when the user provides (or asks you to obtain) a concrete review target: PR link, git diff, commit range, or file set.
+  Hard gate: if there is no diff / not a git repo, STOP and ask for review inputs (diff/patch/files).
+  Output: must generate CODE_REVIEW.md (template) + a Review Evidence Block proving what was reviewed.
 version: "2.0.0"
 ---
 
@@ -32,6 +23,33 @@ version: "2.0.0"
 
 ## 一、执行代码审查 (Performing Code Review)
 
+### Reusable Interface (R) — Review Artifact Contract
+
+> 目的：对齐微信文章所说的“Skill 更像软件单元而非 prompt”，让审查结果**可审计、可复用、可路由**。
+
+#### Inputs（必须具备其一，否则 STOP）
+- `git diff --cached` 或 `git diff <range>` 的输出
+- PR 链接
+- patch 文件
+- 用户指定的文件内容（并明确“本次审查范围”）
+
+#### Outputs（必须全部具备）
+1) `CODE_REVIEW.md`（严格遵循 `assets/report-template.md` 结构）
+2) **Review Evidence Block**（MANDATORY，避免“空话审查”）：
+```
+Claim: 完成了对 <范围> 的代码审查
+Command: <实际用于获取 diff 的命令>
+Exit code: <numeric>
+Evidence: <1-3 行 diff 统计/文件列表，证明确实拿到了变更输入>
+Artifacts: CODE_REVIEW.md
+```
+
+### Anti-Anchoring（反锚定，MANDATORY）
+
+- checklist 只是辅助，不得替代对 diff 的真实阅读。
+- **无 diff → 不得输出“泛化建议”充数**：必须 STOP 并请求输入。
+- 模板/示例是格式，不是证据；结论必须指向具体文件/行/风险（不确定就明确说“不确定/需补充上下文”）。
+
 ### 审查步骤
 
 0.  **确认审查对象（避免误触发）**：
@@ -48,12 +66,12 @@ version: "2.0.0"
 2.  **审查维度**：
     *   **正确性**：逻辑错误、边界情况、潜在 Bug。
     *   **代码质量**：可读性、可维护性、命名规范。
-    *   **设计与架构**：SOLID 原则、设计模式、关注点分离。
+    *   **设计与架构**：仅对 **diff 实际触及** 的边界做判断（禁止脱离变更范围泛泛而谈大重构）。
     *   **性能**：算法效率、资源使用。
     *   **安全性**：常见漏洞（SQL 注入、XSS 等）。
     *   **测试**：测试覆盖率、测试质量。
     *   **文档**：注释、API 文档、README 更新。
-    *   **规范一致性**：检查是否符合 `docs/constitution/` 下的相关规范。
+    *   **规范一致性**：仅当仓库存在对应规范且 diff 触及相关模块时才检查（否则不扩展范围）。
 
 3.  **Go 特有检查项 (Go-Specific Checks)**：
     当代码为 Go 时，在通用维度之外，**必须**额外检查以下惯用法：
@@ -77,9 +95,9 @@ version: "2.0.0"
 4.  **MANDATORY TUI HANDOFF**：
     *   报告生成后，**必须**使用 `AskUserQuestion` 提供后续操作选项。
     *   选项：
-        1. "Generate Changelog (Create CHANGELOG.md)" (Recommended)
-        2. "Fix Issues (Create Fix Plan)"
-        3. "Re-run Review (Check Again)"
+        1. "Generate Changelog (Create CHANGELOG.md)" (Recommended) — 基于本次审查范围生成变更记录
+        2. "Fix Issues (Create Fix Plan)" — 基于 Critical/Important 生成修复计划与验证命令
+        3. "Re-run Review (Check Again)" — 重新获取 diff 并复查（用于审查后又有新提交）
 
 ### 工具脚本
 
