@@ -1,6 +1,18 @@
 ---
 name: test-driven-development
-description: Use when implementing any feature or bugfix, before writing implementation code
+description: |
+  Invoke when:
+  - Implementing a new feature, fixing a bug, refactoring, or changing behavior, and you need to follow the Red-Green-Refactor loop.
+  - The user asks to "implement" or "fix" something in code and we want regression protection before/while changing production code.
+
+  Do not use when:
+  - The task is purely planning/design (use brainstorming / writing-plans).
+  - The change is non-code or low-risk configuration/doc edits where TDD is explicitly not required (unless the user requests it).
+  - A throwaway prototype is requested and the user explicitly accepts skipping tests.
+
+  Examples:
+  - "Fix this bug with a failing test first, then implement the minimal fix"
+  - "Add this feature using TDD: write failing tests, then make them pass"
 version: "1.0.0"
 ---
 
