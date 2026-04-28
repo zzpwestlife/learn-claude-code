@@ -17,3 +17,5 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-20	a0fc883	english-immersion	73.3	73.1	keep	D1+D8 round 2	Trim frontmatter to <300 chars + add farewell decision tree + semantic-matching clarification	dry_run
 2026-04-20	f5aa748	english-immersion	73.1	73.1	keep	D6+D8	Farewell 4-step decision tree + reference file fallbacks (wittgenstein inline, taxonomy non-blocking)	dry_run
 2026-04-20	a03d6d9	english-immersion	73.1	75.5	keep	D3+D8	Session continuity after farewell + iCloud path fallback to .claude/english-immersion/tmp/	dry_run
+2026-04-28	baseline	brainstorming	-	85.0	baseline	-	Baseline with sharpened rubric (dry_run; D8 estimated). Comparison refs: pre=016b13c, post=61d83ac	dry_run
+2026-04-28	baseline	writing-plans	-	85.3	baseline	-	Baseline with sharpened rubric (dry_run; D8 estimated). Comparison refs: pre=016b13c, post=61d83ac	dry_run
