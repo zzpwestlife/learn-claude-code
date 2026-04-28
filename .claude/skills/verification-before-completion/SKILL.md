@@ -61,6 +61,18 @@ Exit code: <numeric>
 Evidence: <1-3 lines from output showing pass/fail counts or key success signal>
 ```
 
+### No-Command / No-Environment Rule (MANDATORY)
+
+If you cannot run the verification command (missing repo, missing dependencies, CI-only, no access):
+
+1. **STOP** — do not claim success.
+2. State the limitation explicitly ("I cannot run `<command>` here because ...").
+3. Ask for what you need (repo access, command, CI link/log, dependency install approval).
+4. Provide the *best available alternative evidence* (in descending order):
+   - CI run link/log + exit status
+   - Reproduction steps + screenshot/log excerpt
+   - Minimal diff-based reasoning (only as a hypothesis, not a pass claim)
+
 ## Common Failures
 
 | Claim | Requires | Not Sufficient |
