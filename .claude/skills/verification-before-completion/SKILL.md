@@ -1,6 +1,18 @@
 ---
 name: verification-before-completion
-description: Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always
+description: |
+  Invoke when:
+  - You are about to claim work is complete/fixed/passing, or about to commit/push/create a PR, and you need fresh verification evidence (tests/build/lint/etc).
+  - The user asks "is this fixed?", "does it pass?", "are we done?", or requests a success claim that must be backed by command output.
+
+  Do not use when:
+  - The user only asks for planning or design (use brainstorming / writing-plans).
+  - No verification command exists for the claim (state the limitation and propose the best available check).
+  - The task is purely informational and does not involve asserting code state.
+
+  Examples:
+  - "Before saying tests pass, run `pytest` and quote the output"
+  - "Before merging, run the full verification command and report exit code"
 version: "1.0.0"
 ---
 
