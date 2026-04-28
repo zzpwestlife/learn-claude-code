@@ -29,3 +29,4 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-28	8ec2a97	code-review	83.8	85.3	keep	边界条件覆盖 (D3)	Add non-git fallback: request diff/PR/patch/files instead of producing generic review	dry_run
 2026-04-28	52a791f	brainstorming	85.0	86.0	keep	边界条件覆盖 (D3)	Add triage step: stop/downgrade when mis-triggered or when plan-only is needed	dry_run
 2026-04-28	d006167	brainstorming	86.0	87.5	keep	边界条件覆盖 (D3)	Clarify hard-gate exception + ask one question when triage is ambiguous	dry_run
+2026-04-28	31fa39b	executing-plans	85.3	86.8	keep	边界条件覆盖 (D3)	Add triage: no plan/review-only/non-git downgrade routes	dry_run
