@@ -1,6 +1,18 @@
 ---
 name: executing-plans
-description: Execute implementation plans with review checkpoints.
+description: |
+  Invoke when:
+  - There is an approved implementation plan and we need to execute it task-by-task with verification and review checkpoints.
+  - The user asks to "implement the plan", "execute tasks", or "carry out" a previously written plan (sequential or subagent-per-task).
+
+  Do not use when:
+  - Requirements/approach are not decided yet (use brainstorming).
+  - There is no plan document to follow (use writing-plans first).
+  - The user only wants an explanation or a review without making changes.
+
+  Examples:
+  - "Execute this plan step by step and show diffs between chunks"
+  - "Run the tasks in this implementation plan using subagents with review"
 version: "2.0.0"
 ---
 
