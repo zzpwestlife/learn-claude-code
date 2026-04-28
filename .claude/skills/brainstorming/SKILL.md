@@ -33,6 +33,11 @@ Every project goes through this process. A todo list, a single-function utility,
 
 You MUST create a task for each of these items and complete them in order:
 
+0. **Triage (mis-trigger downgrade path)** — First, confirm this request actually needs brainstorming.
+   - If the user is asking for factual info / explanation only: **STOP** and answer directly (do not run the design loop).
+   - If the user only needs a small, localized edit (typo/formatting/minor config): **STOP** and propose the minimal change without a full design cycle.
+   - If the user wants implementation but the requirements are already clear and approved: consider skipping to `writing-plans` instead.
+
 1. **Explore project context & Research** — Check files, docs, context. **MANDATORY**: Create `docs/research/YYYY-MM-DD-<topic>.md` analyzing existing patterns, dependencies, and constraints. Ensure you understand the "intricacies" before designing.
 2. **Offer visual companion** (if topic will involve visual questions) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
 3. **The "Grill-Me" Interview (Stress-Test & Deep Dive)**:
