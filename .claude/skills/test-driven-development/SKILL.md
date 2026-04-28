@@ -190,6 +190,12 @@ Don't add features, refactor other code, or "improve" beyond the test.
 npm test path/to/test.test.ts
 ```
 
+**Test Command Evidence (MANDATORY):**
+When reporting GREEN, include:
+- Exact command run
+- Exit code
+- 1-3 lines showing the test passed (e.g., PASS summary / 0 failures)
+
 Confirm:
 - Test passes
 - Other tests still pass
