@@ -45,3 +45,4 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-28	f7c359e	verification-before-completion	90.8	92.3	keep	整体架构+检查点设计 (D7/D4)	Add Output Contract artifacts + limitation template + anti-anchoring; shorten description	dry_run
 2026-04-28	f7c359e	test-driven-development	93.5	94.8	keep	整体架构+Frontmatter (D7/D1)	Add TDD evidence block contract + anti-anchoring; shorten description; mark rationale as appendix	dry_run
 2026-04-28	fdc29aa	code-review	85.3	89.3	keep	整体架构+检查点设计+边界条件 (D7/D4/D3)	Add Review Artifact Contract (R) + evidence block + anti-anchoring; update report template; shorten description	dry_run
+2026-04-28	064104b	systematic-debugging	92.8	96.8	keep	整体架构+检查点设计+边界条件 (D7/D4/D3)	Add Debugging Contract (R) + evidence block + anti-anchoring; shorten description; add evidence priority order	dry_run
