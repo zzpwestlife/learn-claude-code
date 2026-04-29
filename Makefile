@@ -20,6 +20,11 @@ search:
 test:
 	python3 -m unittest discover tests
 
+lint-skills:
+	python3 -W ignore::RuntimeWarning scripts/lint_skills.py
+
+check: lint-skills test
+
 run:
 	python3 src/cli/tui.py
 

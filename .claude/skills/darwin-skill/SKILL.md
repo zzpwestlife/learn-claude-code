@@ -1,6 +1,7 @@
 ---
 name: darwin-skill
 description: "Darwin Skill (达尔文.skill): autonomous skill optimizer inspired by Karpathy's autoresearch. Evaluates SKILL.md files using an 8-dimension rubric (structure + effectiveness), runs hill-climbing with git version control, validates improvements through test prompts, and generates visual result cards. Use when user mentions \"优化skill\", \"skill评分\", \"自动优化\", \"auto optimize\", \"skill质量检查\", \"达尔文\", \"darwin\", \"帮我改改skill\", \"skill怎么样\", \"提升skill质量\", \"skill review\", \"skill打分\"."
+version: "1.0.0"
 ---
 
 # Darwin Skill
@@ -10,6 +11,16 @@ description: "Darwin Skill (达尔文.skill): autonomous skill optimizer inspire
 > GitHub: https://github.com/alchaincyf/darwin-skill
 
 ---
+
+## Reusable Interface (R) — Optimization Contract
+
+输入：目标 `.claude/skills/<skill>/SKILL.md` + 评估 prompt（dry_run 或实测）。  
+输出（最小）：`docs/reports/*darwin-skill-eval-<skill>-roundN.md` + 更新 `.claude/skills/darwin-skill/results.tsv`（ratchet 记录）。  
+
+## Anti-Anchoring（反锚定，MANDATORY）
+
+- 评分示例/模板只用于结构说明，不可替代真实 dry_run/实测证据。
+- 若无法运行验证命令或缺少输入资产（目标 SKILL.md 不存在），必须 STOP 并请求补齐输入。
 
 ## 设计哲学
 

@@ -4,6 +4,7 @@ description: |
   Invoke when需要做架构/技术方案（或变更系统行为）且需求/约束/风险尚未澄清，必须先设计再实施。
   降级：已批准 spec → writing-plans；要执行 → executing-plans；要审查改动 → code-review；纯信息/小修 →直接处理。
   输出：L/M/H 定级 + 2-3 方案对比 + spec + 批准摘要（含关键决策日志）。
+version: "1.0.0"
 ---
 
 ## 铁律
