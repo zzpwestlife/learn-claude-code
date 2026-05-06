@@ -49,3 +49,11 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-28	fdc29aa	code-review	85.3	89.3	keep	整体架构+检查点设计+边界条件 (D7/D4/D3)	Add Review Artifact Contract (R) + evidence block + anti-anchoring; update report template; shorten description	dry_run
 2026-04-28	064104b	systematic-debugging	92.8	96.8	keep	整体架构+检查点设计+边界条件 (D7/D4/D3)	Add Debugging Contract (R) + evidence block + anti-anchoring; shorten description; add evidence priority order	dry_run
 2026-04-28	03133f8	writing-plans	88.5	92.0	keep	整体架构+指令具体性+Frontmatter (D7/D5/D1)	Add Plan Contract (R) + anti-anchoring; reduce comprehensive overload; shorten description	dry_run
+2026-04-29	baseline	neat-freak	-	82.9	baseline	-	Initial evaluation: D1=7.0 D2=9.0 D3=8.0 D4=6.5 D5=9.0 D6=9.0 D7=8.8 D8=8.0	dry_run
+2026-04-29	round1	neat-freak	82.9	84.8	keep	Frontmatter质量+检查点设计 (D1/D4)	Add Do-not-use + downgrade + examples in frontmatter; add AskUserQuestion checkpoints for delete/cross-project	dry_run
+2026-04-29	round2	neat-freak	84.8	87.3	keep	实测表现 (D8)	Add Step0 access check + output discipline; D8 scored via baseline-vs-skill contrast	test
+2026-04-29	round3	neat-freak	87.3	88.3	keep	边界条件覆盖 (D3)	Add mis-trigger downgrade templates for no-repo/summary-only/restricted-scope	dry_run
+2026-04-29	round4	neat-freak	88.3	89.0	keep	检查点设计 (D4)	Add checkpoint for large-scale doc restructure (≥5 docs files or ≥150 lines)	dry_run
+2026-04-29	round5	neat-freak	89.0	90.3	keep	实测表现+指令具体性 (D8/D5)	Add first-reply templates (≤8 lines) + minimum evidence set (file inventory/time-words/summary)	dry_run
+2026-04-29	round6	neat-freak	90.3	90.8	keep	实测表现 (D8)	Add evidence presentation template; attach baseline-vs-skill output snippets in report	test
+2026-04-29	round7	neat-freak	90.8	91.2	keep	Frontmatter质量 (D1)	Compress description; add two do-not-use cases + shorter examples	dry_run

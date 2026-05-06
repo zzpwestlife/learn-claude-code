@@ -6,6 +6,23 @@
 
 set -euo pipefail
 
+# Returns 0 when "doc-related" files are dirty.
+# We intentionally scope to "docs/memory hygiene" surface area to avoid over-triggering.
+doc_dirty() {
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 1
+
+  # Porcelain output examples:
+  #  M README.md
+  # ?? docs/new.md
+  # R  docs/old.md -> docs/new.md
+  local status
+  status="$(git status --porcelain --untracked-files=normal 2>/dev/null || true)"
+  [[ -n "$status" ]] || return 1
+
+  echo "$status" | grep -Eq '(^|[[:space:]])(README\.md|CLAUDE\.md|AGENTS\.md|HANDOFF\.md|docs/)' && return 0
+  return 1
+}
+
 # Read hook input from stdin (advanced stop hook API)
 HOOK_INPUT=$(cat)
 
@@ -28,7 +45,19 @@ for candidate in .claude/superpower-loop*.local.md; do
 done
 
 if [[ -z "$SUPERPOWER_STATE_FILE" ]]; then
-  # No active loop for this session - allow exit
+  # No active loop for this session.
+  # If doc-related files are dirty, block exit and offer a TUI choice to run neat-freak.
+  if doc_dirty; then
+    jq -n \
+      '{
+        "decision": "block",
+        "reason": "<system-reminder>⚠️ 检测到文档相关改动（README/docs/CLAUDE.md/AGENTS.md 等）。你 MUST 立刻调用 AskUserQuestion 工具弹出退出前菜单（不要输出其它文本）。\\n\\nquestion: \"退出前是否运行 neat-freak 进行收尾同步？\"\\noptions: 1) \"运行 neat-freak（推荐）\" 2) \"跳过并退出\"\\n\\n如果用户选择运行：调用 Skill(name=\"neat-freak\")，完成后告诉用户可再次 /exit 退出。\\n如果用户选择跳过：只输出一句“已跳过，本次不做同步。可再次 /exit 退出。”\\n\\n注意：此拦截无法覆盖强制杀进程/关机等情况；下次 SessionStart 会再次提醒（若仍存在文档改动）。</system-reminder>",
+        "systemMessage": "neat-freak intercept: docs dirty, show TUI"
+      }'
+    exit 0
+  fi
+
+  # Otherwise allow exit.
   exit 0
 fi
 

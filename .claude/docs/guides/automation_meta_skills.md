@@ -49,6 +49,19 @@ We implemented a **Session Hook Loop**:
 1.  **Save**: A `SessionEnd` hook triggers `.claude/hooks/session-summary.sh` whenever you exit Claude. It saves git status, recent commits, and modified files to `.claude/tmp/session_summary.md`.
 2.  **Restore**: The `/recover` command invokes the `session-recovery` skill. It reads the summary + current git status to reconstruct your mental model.
 
+### Optional: Exit Intercept for Knowledge Hygiene (neat-freak)
+
+To prevent documentation + memory drift, we support an optional **Stop Hook intercept**:
+- When you attempt to exit and **doc-related files** are dirty (`README.md`, `docs/`, `CLAUDE.md`, `AGENTS.md`, `HANDOFF.md`),
+  the stop hook can **block exit** and present a TUI menu:
+  - Run `neat-freak` now (recommended)
+  - Skip and exit
+
+This is best-effort:
+- ✅ Covers normal `/exit` and many Ctrl+C stop paths
+- ❌ Cannot guarantee coverage for hard kills (closing terminal, `kill -9`, shutdown)
+- ✅ Provides a SessionStart fallback reminder if the doc changes still exist
+
 ### Usage
 ```bash
 /recover

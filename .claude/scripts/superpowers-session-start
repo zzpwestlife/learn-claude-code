@@ -30,6 +30,20 @@ escape_for_json() {
 skill_path="${PLUGIN_ROOT}/skills/using-superpowers/SKILL.md"
 session_context="<EXTREMELY_IMPORTANT>\nYou have superpowers.\n\n**Below is the path to your 'using-superpowers' skill:**\n\nSKILL PATH: ${skill_path}\n\nUse the Read tool to load this skill when needed.\n\n${warning_message}\n</EXTREMELY_IMPORTANT>"
 
+doc_dirty() {
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 1
+  local status
+  status="$(git status --porcelain --untracked-files=normal 2>/dev/null || true)"
+  [[ -n "$status" ]] || return 1
+  echo "$status" | grep -Eq '(^|[[:space:]])(README\.md|CLAUDE\.md|AGENTS\.md|HANDOFF\.md|docs/)' && return 0
+  return 1
+}
+
+# SessionStart fallback: remind neat-freak if doc-related files are dirty.
+if doc_dirty; then
+  session_context="${session_context}\n\n<important-reminder>检测到文档相关改动（README/docs/CLAUDE.md/AGENTS.md 等）尚未收尾同步。建议运行 neat-freak：/neat-freak（或在支持的客户端里直接调用 Skill(name=\"neat-freak\")）。</important-reminder>"
+fi
+
 warning_escaped=$(escape_for_json "$warning_message")
 
 # Output context injection as JSON
