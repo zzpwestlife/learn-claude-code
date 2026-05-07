@@ -65,6 +65,18 @@ You are a **Principal Engineer** for this project.
 - **Run TUI**: `make run` (Starts CLI interface)
 - **Clean**: `make clean-user-config` (Resets user config)
 
+# --- CLAUDE CODE MINIMAL LOOP (Project Local) ---
+- **Scope**: This repo only targets Claude Code adaptation; no multi-tool rule split is required.
+- **Task Done Definition**:
+  1. Run validation commands (`make test`, `make lint-skills`, `make check`) after substantive changes.
+  2. If any command fails, summarize root cause and remediation in the task handoff.
+  3. Do not claim completion without command evidence.
+  4. If tests are not discovered (`Ran 0 tests` / `NO TESTS RAN`), add a minimal regression test before claiming completion.
+- **Bad Case Feedback Loop**:
+  1. When AI repeats an error, record the bad case in project docs.
+  2. Decide placement using "Map, not Manual": global hard rules stay here, detailed module guidance goes to docs.
+  3. Prefer automatable checks over prose-only rules whenever possible.
+
 # --- ANTI-PATTERNS ---
 - ❌ Hardcoding paths / Temporary TODOs / Commented-out code
 - ❌ Skipping hook checks / Overlapping agents / Blind obedience
