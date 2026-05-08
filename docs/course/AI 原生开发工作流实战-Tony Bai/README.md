@@ -1,5 +1,7 @@
 # 🚀 AI 原生开发工作流实战 - 课程大纲与学习指南
 
+> link: https://time.geekbang.org/column/intro/101089301?utm_campaign=geektime_search&utm_content=geektime_search&utm_medium=geektime_search&utm_source=geektime_search&utm_term=geektime_search
+
 欢迎来到《AI 原生开发工作流实战》课程资料库. 本课程旨在帮助软件工程师从传统的 "人机协作" 模式, 进化为驾驭 AI Agent 的 "AI 原生" 开发者. 通过 24 讲的系统学习, 你将掌握以 **Claude Code** 为核心的下一代软件工程范式. 
 
 ---
