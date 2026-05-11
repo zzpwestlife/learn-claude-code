@@ -151,7 +151,7 @@ python3 /tmp/write_back.py
 ```
 
 ```python
-import subprocess, json, re
+import subprocess, json, re, sys
 
 def split_by_image(text):
     """按 <image token= 行分割，image 行随前段。"""
@@ -174,6 +174,10 @@ fixed    = open('/tmp/doc_fixed.md',    encoding='utf-8').read()
 
 orig_segs  = split_by_image(original)
 fixed_segs = split_by_image(fixed)
+
+if len(orig_segs) != len(fixed_segs):
+    print(f"ERROR: segment count mismatch ({len(orig_segs)} orig vs {len(fixed_segs)} fixed), aborting")
+    sys.exit(1)
 
 doc_id = open('/tmp/lark_doc_id.txt').read().strip()  # written by Step 1
 success, fail = 0, 0
