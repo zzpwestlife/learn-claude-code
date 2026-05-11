@@ -44,30 +44,15 @@ metadata:
 
 **若 URL 含 `/wiki/`**（如 `https://xxx.feishu.cn/wiki/TOKEN`）：
 ```bash
-lark-cli wiki spaces get_node --params '{"token":"WIKI_TOKEN"}' 2>&1 | python3 -c "
-import json, sys
-raw = sys.stdin.read()
-try:
-    obj_token = json.loads(raw)['data']['node']['obj_token']
-except (json.JSONDecodeError, KeyError) as e:
-    print('WIKI_PARSE_ERROR:', e, '|', raw[:200]); sys.exit(1)
-open('/tmp/lark_doc_id.txt', 'w').write(obj_token)
-print('doc_id:', obj_token)
-"
+lark-cli wiki spaces get_node --params '{"token":"WIKI_TOKEN"}'
+# 从返回 JSON 的 node.obj_token 字段提取真实 doc_id
+echo "OBJ_TOKEN" > /tmp/lark_doc_id.txt
 ```
-
-> 若输出含 `WIKI_PARSE_ERROR:`，提示用户"wiki token 解析失败，请检查 URL 格式，wiki 链接需要 `/wiki/TOKEN` 格式"，退出。
 
 **若 URL 含 `/docx/` 或 `/doc/`**（如 `https://xxx.feishu.cn/docx/DOC_ID`）：
 ```bash
-# 直接从 URL 末段提取 DOC_ID（取最后一个 / 后的段）
-python3 -c "
-import sys
-url = 'FULL_URL_HERE'
-doc_id = url.rstrip('/').split('/')[-1]
-open('/tmp/lark_doc_id.txt', 'w').write(doc_id)
-print('doc_id:', doc_id)
-"
+# 直接从 URL 末段提取 DOC_ID
+echo "DOC_ID" > /tmp/lark_doc_id.txt
 ```
 
 > 若 URL 格式无法识别，提示用户"请粘贴完整飞书文档链接（含 /wiki/ 或 /docx/）"，退出。
