@@ -40,15 +40,22 @@ metadata:
 
 ### Step 1: 解析文档 URL，获取 doc_id
 
-```bash
-# wiki URL: https://xxx.feishu.cn/wiki/TOKEN
-lark-cli wiki spaces get_node --params '{"token":"WIKI_TOKEN"}'
-# 从返回的 node.obj_token 获取真实 doc_id
-# echo "OBJ_TOKEN" > /tmp/lark_doc_id.txt
+根据 URL 类型选择对应路径：
 
-# docx/doc URL: https://xxx.feishu.cn/docx/DOC_ID
-# echo "DOC_ID" > /tmp/lark_doc_id.txt
+**若 URL 含 `/wiki/`**（如 `https://xxx.feishu.cn/wiki/TOKEN`）：
+```bash
+lark-cli wiki spaces get_node --params '{"token":"WIKI_TOKEN"}'
+# 从返回 JSON 的 node.obj_token 字段提取真实 doc_id
+echo "OBJ_TOKEN" > /tmp/lark_doc_id.txt
 ```
+
+**若 URL 含 `/docx/` 或 `/doc/`**（如 `https://xxx.feishu.cn/docx/DOC_ID`）：
+```bash
+# 直接从 URL 末段提取 DOC_ID
+echo "DOC_ID" > /tmp/lark_doc_id.txt
+```
+
+> 若 URL 格式无法识别，提示用户"请粘贴完整飞书文档链接（含 /wiki/ 或 /docx/）"，退出。
 
 ### Step 2: 获取文档内容
 
@@ -86,13 +93,29 @@ python3 /tmp/show_summary.py
 否则，向用户展示摘要，使用 `AskUserQuestion` 确认：
 
 **无代码候选时**（或用户无需代码块整理）：
-- 选项 A: 确认写入（标点 + 空格修复）
-- 选项 B: 取消
+```
+AskUserQuestion(
+  question="检测到 N 处标点/空格需修正，是否写入文档？",
+  options=[
+    { label: "确认写入" },
+    { label: "取消，不修改" }
+  ]
+)
+```
+选"确认写入"→ 进入 Step 5；选"取消"→ 退出。
 
-**有代码候选时**，额外展示候选列表后再询问：
-- 选项 A: 确认写入（标点 + 空格修复，跳过代码候选）
-- 选项 B: 确认写入，并逐一处理代码候选（每段询问用户）
-- 选项 C: 取消
+**有代码候选时**，先打印候选列表，再询问：
+```
+AskUserQuestion(
+  question="检测到 N 处标点/空格 + M 段代码候选，如何处理？",
+  options=[
+    { label: "写入标点修复，跳过代码候选" },
+    { label: "写入标点修复，并逐段确认代码候选" },
+    { label: "取消，不修改" }
+  ]
+)
+```
+选项1 → Step 5（不处理代码候选）；选项2 → Step 5（处理完后逐段询问包裹）；选项3 → 退出。
 
 > **注意**：「代码候选」仅检测可能未包裹的代码段，不自动包裹 — 需用户逐一确认。
 
