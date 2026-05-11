@@ -62,11 +62,18 @@ echo "DOC_ID" > /tmp/lark_doc_id.txt
 ```bash
 lark-cli docs +fetch --doc "<doc_id>" 2>&1 | python3 -c "
 import json,sys
-d=json.load(sys.stdin)
-open('/tmp/doc_original.md','w').write(d['data']['markdown'])
-print('Fetched', len(d['data']['markdown']), 'chars')
+raw=sys.stdin.read()
+try:
+    d=json.loads(raw)
+    md=d['data']['markdown']
+except (json.JSONDecodeError, KeyError) as e:
+    print('FETCH_ERROR:', e, '|', raw[:200]); sys.exit(1)
+open('/tmp/doc_original.md','w').write(md)
+print('Fetched', len(md), 'chars')
 "
 ```
+
+> 若输出含 `FETCH_ERROR:`，提示用户"文档获取失败，请检查 doc_id 是否正确或文档是否可访问"，退出。
 
 ### Step 3: 复制并运行处理脚本
 
@@ -224,7 +231,7 @@ print(f"\n完成: {success} 段成功, {fail} 段失败")
 
 - **wiki token 解析失败**：提示"请检查 URL 格式，wiki 链接需要 `/wiki/TOKEN` 格式"
 - **diff 为空 + 无候选**：告知"文档无需修改"，退出
-- **replace_range 失败**：报告具体段落索引和错误信息，其余段落继续执行
+- **replace_range 失败**：报告具体段落索引和错误信息，其余段落继续执行；所有段落处理完毕后，若 fail > 0，询问用户是否重试失败的段落（最多重试 1 次）
 - **doc_id 解析失败**：要求用户提供文档 token 或重新粘贴 URL
 - **lark-cli 未登录 / token 过期**：提示用户运行 `lark-cli auth` 重新认证，然后重试
 - **文档无编辑权限（只读）**：告知用户当前账号对该文档只有查看权限，无法写入，退出
