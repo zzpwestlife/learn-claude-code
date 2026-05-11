@@ -17,7 +17,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
-**Context:** This should be run in a dedicated worktree (created by brainstorming skill).
+**Context:** If working in an isolated worktree, it should have been created via the `superpowers:using-git-worktrees` skill at execution time.
 
 ## Reusable Interface (R) — Plan Contract
 
@@ -186,6 +186,5 @@ After saving the plan, you **MUST** do the following to ensure the zero-friction
 **If Inline Execution chosen:**
 - **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
 - Batch execution with checkpoints for review
-
 ## Rules
 - **TUI First**: NEVER start execution without explicit user approval via `AskUserQuestion`.

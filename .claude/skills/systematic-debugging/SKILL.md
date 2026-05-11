@@ -44,7 +44,7 @@ Next: <下一条最小假设或需要的补充证据>
 ## Anti-Anchoring（反锚定，MANDATORY）
 
 - 无 repro 且无 logs/traces：**禁止**提出修复方案（只能索取证据/补齐最小复现报告）。
-- 禁止堆“可能原因列表”充数：最多给 2-3 个假设，每个必须配“如何验证”的命令。
+- 禁止堆"可能原因列表"充数：最多给 2-3 个假设，每个必须配"如何验证"的命令。
 - 示例输出只是格式演示，不构成证据；禁止伪造/转述日志输出。
 
 ## The Iron Law
@@ -104,7 +104,7 @@ You MUST complete each phase before proceeding to the next.
      - Stack trace / panic / exception text (full)
      - Environment: OS, language/runtime version, dependency lockfile, CI runner image
      - Config/feature flags (sanitized), inputs/fixtures, seed values
-     - “Last known good” commit + current commit range
+     - "Last known good" commit + current commit range
    - Only after you can reproduce OR you have sufficient evidence to localize the failing component may you proceed.
 
    **Minimum Evidence Request (Priority Order):**

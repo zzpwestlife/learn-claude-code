@@ -72,6 +72,7 @@ You are a **Principal Engineer** for this project.
   2. If any command fails, summarize root cause and remediation in the task handoff.
   3. Do not claim completion without command evidence.
   4. If tests are not discovered (`Ran 0 tests` / `NO TESTS RAN`), add a minimal regression test before claiming completion.
+  5. For Go projects, after modifying any `.go` file, ensure both `make run` and `make test` produce no error output.
 - **Bad Case Feedback Loop**:
   1. When AI repeats an error, record the bad case in project docs.
   2. Decide placement using "Map, not Manual": global hard rules stay here, detailed module guidance goes to docs.

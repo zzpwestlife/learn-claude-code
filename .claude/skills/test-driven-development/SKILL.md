@@ -32,6 +32,39 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 Thinking "skip TDD just this once"? Stop. That's rationalization.
 
+## Reusable Interface (R) — TDD Evidence Blocks
+
+This skill must produce *auditable artifacts* consumable by `executing-plans` and `verification-before-completion`.
+
+### Required Outputs (MANDATORY)
+
+**RED Evidence Block**
+```
+Claim: 已完成 RED — <测试名称> 失败，原因符合预期
+Command: <运行测试的完整命令>
+Exit code: <非零>
+Evidence: <1-3 行失败输出，含测试名称 + 失败原因>
+Next: 实现最小代码使其通过
+```
+
+**GREEN Evidence Block**
+```
+Claim: 已完成 GREEN — <测试名称> 通过
+Command: <运行测试的完整命令>
+Exit code: 0
+Evidence: <1-3 行通过输出，含 PASS 摘要 / 0 failures>
+Next: REFACTOR（如需）或下一个 RED
+```
+
+## Anti-Anchoring（反锚定，MANDATORY）
+
+- 禁止在未观察到 RED（测试因预期原因失败）的情况下声称进入 GREEN 阶段。
+- 禁止在没有运行命令 + exit code 证据的情况下声称测试通过。
+- **如果无法在当前环境运行测试：STOP（No-Test-Runner Rule）**
+  - 索取：仓库访问权限 / 安装批准 / 精确的测试命令 / CI 日志
+  - 仅在能执行测试并观察到预期失败后才继续。
+- 禁止伪造/转述测试输出作为证据。
+
 ## The Iron Law
 
 ```
@@ -39,27 +72,6 @@ NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
 ```
 
 Write code before the test? Delete it. Start over.
-
-## Reusable Interface (R) — TDD Evidence Blocks
-
-This skill must output *auditable artifacts* (so other skills/workflows can reuse them).
-
-### Mandatory evidence format (aligned with verification-before-completion)
-
-When claiming RED or GREEN, include:
-
-```
-Claim: <RED observed / GREEN observed / refactor kept green>
-Command: <exact test command you ran>
-Exit code: <numeric>
-Evidence: <1-3 lines proving fail/pass (e.g., FAIL summary / PASS summary / 0 failures)>
-```
-
-## Anti-Anchoring (MANDATORY)
-
-- Code examples below are **structure demos**, not templates to blindly copy.
-- Always use the project’s real test runner, real command, and real output as the source of truth.
-- If you cannot run tests in this environment: STOP (No-Test-Runner Rule) — do not proceed to GREEN.
 
 **No exceptions:**
 - Don't keep it as "reference"
@@ -143,10 +155,6 @@ Vague name, tests mock not code
 npm test path/to/test.test.ts
 ```
 
-**No-Test-Runner Rule (MANDATORY):**
-- If you cannot run the test command in this environment (missing repo/deps/test runner/permissions): **STOP** — do not proceed to GREEN.
-- Ask for what you need (repo access, install approval, exact test command, CI logs) and only continue after you can execute the test and observe it fail for the expected reason.
-
 Confirm:
 - Test fails (not errors)
 - Failure message is expected
@@ -155,6 +163,10 @@ Confirm:
 **Test passes?** You're testing existing behavior. Fix test.
 
 **Test errors?** Fix error, re-run until it fails correctly.
+
+**No-Test-Runner Rule (MANDATORY):**
+- If you cannot run the test command in this environment (missing repo/deps/test runner/permissions): **STOP** — do not proceed to GREEN.
+- Ask for what you need (repo access, install approval, exact test command, CI logs) and only continue after you can execute the test and observe it fail for the expected reason.
 
 ### GREEN - Minimal Code
 
@@ -202,12 +214,6 @@ Don't add features, refactor other code, or "improve" beyond the test.
 npm test path/to/test.test.ts
 ```
 
-**Test Command Evidence (MANDATORY):**
-When reporting GREEN, include:
-- Exact command run
-- Exit code
-- 1-3 lines showing the test passed (e.g., PASS summary / 0 failures)
-
 Confirm:
 - Test passes
 - Other tests still pass
@@ -216,6 +222,12 @@ Confirm:
 **Test fails?** Fix code, not test.
 
 **Other tests fail?** Fix now.
+
+**Test Command Evidence (MANDATORY):**
+When reporting GREEN, include:
+- Exact command run
+- Exit code
+- 1-3 lines showing the test passed (e.g., PASS summary / 0 failures)
 
 ### REFACTOR - Clean Up
 
@@ -239,8 +251,6 @@ Next failing test for next feature.
 | **Shows intent** | Demonstrates desired API | Obscures what code should do |
 
 ## Why Order Matters
-
-> Appendix note: this section is rationale. During execution, prioritize the L1 loop and evidence blocks above.
 
 **"I'll write tests after to verify it works"**
 

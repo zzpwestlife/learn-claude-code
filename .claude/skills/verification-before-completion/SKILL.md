@@ -3,7 +3,6 @@ name: verification-before-completion
 description: |
   Invoke when you are about to make ANY success/completion claim (tests pass, bug fixed, build succeeds),
   especially before committing/pushing/PR.
-
   Requirement: include an Evidence Block (Claim / Command / Exit code / Evidence).
   If you cannot run a real verification command in this environment: STOP and state the limitation.
 version: "1.0.0"
@@ -21,18 +20,9 @@ Claiming work is complete without verification is dishonesty, not efficiency.
 
 ## Reusable Interface (R) — Output Contract
 
-This skill is designed to be *callable* by other skills (e.g. `executing-plans`, `test-driven-development`, CI/Makefile flows).
-
-**Artifacts that must exist for any completion claim:**
-- Verification command (exact)
-- Exit code (numeric)
-- 1–3 lines of output that prove pass/fail
-- (If code changed) brief change evidence: `git diff --stat` or equivalent summary
+This skill produces *auditable artifacts* consumable by `executing-plans`.
 
 ### Evidence Template (MANDATORY)
-
-When making a success claim, include this minimal evidence block:
-
 ```
 Claim: <what you are asserting>
 Command: <exact command you ran>
@@ -41,18 +31,20 @@ Evidence: <1-3 lines from output showing pass/fail counts or key success signal>
 ```
 
 ### Limitation Template (MANDATORY when you cannot run the command)
-
 ```
 Limitation: I cannot run <command> here because <reason>.
 Need from you: <repo access / exact command / CI log / install approval>.
 Best available evidence now: <CI link/log excerpt OR repro steps/log excerpt OR diff-based hypothesis>.
 ```
 
-## Anti-Anchoring (MANDATORY)
+## Anti-Anchoring（反锚定，MANDATORY）
 
-- **Do not** paraphrase or fabricate command output.
-- Example outputs are formatting demos, not evidence.
-- If the verification command cannot be executed, you **must not** claim success.
+- 禁止在未运行验证命令的情况下声称完成/通过。
+- 禁止使用 "should work"、"probably passing"、"seems correct" 等模糊语言代替证据。
+- **如果无法在当前环境运行验证命令：STOP（No-Command / No-Environment Rule）**
+  - 用 Limitation Template 明确说明限制和所需信息。
+  - 仅在能运行命令并获得真实 exit code + 输出后才声称完成。
+- 禁止伪造/转述命令输出作为证据。
 
 ## The Iron Law
 
@@ -77,18 +69,6 @@ BEFORE claiming any status or expressing satisfaction:
 
 Skip any step = lying, not verifying
 ```
-
-### No-Command / No-Environment Rule (MANDATORY)
-
-If you cannot run the verification command (missing repo, missing dependencies, CI-only, no access):
-
-1. **STOP** — do not claim success.
-2. State the limitation explicitly ("I cannot run `<command>` here because ...").
-3. Ask for what you need (repo access, command, CI link/log, dependency install approval).
-4. Provide the *best available alternative evidence* (in descending order):
-   - CI run link/log + exit status
-   - Reproduction steps + screenshot/log excerpt
-   - Minimal diff-based reasoning (only as a hypothesis, not a pass claim)
 
 ## Common Failures
 

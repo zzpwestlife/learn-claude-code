@@ -117,3 +117,8 @@ After all tasks complete:
 - Follow plan steps exactly.
 - Verify tests before offering finish options.
 - Get typed confirmation for discard.
+
+**Required workflow skills:**
+- **superpowers:using-git-worktrees** - Ensures isolated workspace (creates one or verifies existing)
+- **superpowers:writing-plans** - Creates the plan this skill executes
+- **superpowers:finishing-a-development-branch** - Complete development after all tasks
