@@ -33,6 +33,10 @@ def fix_line(line):
     line = re.sub(r'[?!](?=[\u4e00-\u9fff\u0041-\u005A])', lambda m: m.group(0)+' ', line)
     line = re.sub(r':(?!//|[0-9])(?=[^\s\n])', ': ', line)
     line = re.sub(r';(?=[^\s\n])', '; ', line)
+    # 括号前补空格（非空白/非括号字符后接 (，prose 文本；代码块已跳过）
+    line = re.sub(r'(?<=[^\s(])\(', r' (', line)
+    # 英文复合词斜杠去空格：loading / error → loading/error
+    line = re.sub(r'(?<=[a-zA-Z]) / (?=[a-zA-Z])', '/', line)
     line = re.sub(r'(?<=[^\s\-])--(?=[^\s\-])', ' -- ', line)
     line = re.sub(r'(?<!\n)  +', ' ', line)
     return line
