@@ -8,6 +8,7 @@ metadata:
   assets:
     - lark_copywriting.py   # Step 3: 主处理脚本
     - show_summary.py       # Step 4: 摘要展示脚本
+    - write_back.py         # Step 5: 写回脚本
 ---
 
 # lark-doc-copywriting
@@ -143,78 +144,18 @@ AskUserQuestion(
 
 ### Step 5: 用户确认后 — 逐段写回
 
-以 `<image token=` 行为天然分隔符将文档切成若干段，每段独立调用 `replace_range`。
-使用 Python subprocess 传参（**不走 shell**，避免引号转义问题）。
+使用 Read 工具读取 `.claude/skills/lark-doc-copywriting/write_back.py`，
+然后用 Write 工具写到 `/tmp/write_back.py`，再运行：
 
-```python
-import subprocess, json, re
-
-def split_by_image(text):
-    """按 <image token= 行分割，image 行随前段。"""
-    lines = text.split('\n')
-    segments = []
-    current = []
-    for line in lines:
-        if line.strip().startswith('<image ') and current:
-            current.append(line)
-            segments.append('\n'.join(current))
-            current = []
-        else:
-            current.append(line)
-    if current:
-        segments.append('\n'.join(current))
-    return segments
-
-original = open('/tmp/doc_original.md', encoding='utf-8').read()
-fixed    = open('/tmp/doc_fixed.md',    encoding='utf-8').read()
-
-orig_segs  = split_by_image(original)
-fixed_segs = split_by_image(fixed)
-
-doc_id = open('/tmp/lark_doc_id.txt').read().strip()  # written by Step 1
-success, fail = 0, 0
-failed_items = []  # (i, orig_seg, fixed_seg, selection, markdown)
-
-def write_segment(doc_id, selection, markdown):
-    return subprocess.run(
-        ['lark-cli', 'docs', '+update',
-         '--doc', doc_id,
-         '--mode', 'replace_range',
-         '--selection-with-ellipsis', selection,
-         '--markdown', markdown],
-        capture_output=True, text=True
-    )
-
-for i, (orig_seg, fixed_seg) in enumerate(zip(orig_segs, fixed_segs)):
-    if orig_seg == fixed_seg:
-        continue  # 无变更，跳过
-
-    orig_lines = [l for l in orig_seg.strip().split('\n')
-                  if l.strip() and not l.strip().startswith('<image ')]
-    if not orig_lines:
-        continue
-    first_line = orig_lines[0][:50].strip()
-    last_line  = orig_lines[-1][-50:].strip() if len(orig_lines) > 1 else ''
-    selection  = f"{first_line}...{last_line}" if last_line and first_line != last_line else first_line
-
-    fixed_lines = [l.rstrip() for l in fixed_seg.split('\n')]
-    while fixed_lines and not fixed_lines[0]: fixed_lines.pop(0)
-    while fixed_lines and not fixed_lines[-1]: fixed_lines.pop()
-    markdown = '\n\n'.join(fixed_lines)
-
-    result = write_segment(doc_id, selection, markdown)
-    resp = json.loads(result.stdout) if result.stdout.strip().startswith('{') else {}
-    if resp.get('data', {}).get('success'):
-        success += 1
-    else:
-        fail += 1
-        failed_items.append((i, selection, markdown))
-        print(f"Segment {i} FAILED: {result.stdout[:200]}")
-
-print(f"\n完成: {success} 段成功, {fail} 段失败")
+```bash
+python3 /tmp/write_back.py
 ```
 
-**若 `fail > 0`** — 询问用户是否重试（最多 1 次）：
+脚本读取 `/tmp/doc_original.md`、`/tmp/doc_fixed.md`、`/tmp/lark_doc_id.txt`，
+按 `<image token=` 行分段，每段独立调用 `replace_range`（**不走 shell**，避免引号转义）。
+失败段索引写入 `/tmp/write_back_failed.json`。
+
+**若输出含 `fail > 0`** — 询问用户是否重试（最多 1 次）：
 
 ```
 AskUserQuestion(
@@ -226,20 +167,7 @@ AskUserQuestion(
 )
 ```
 
-选"重试"时执行：
-
-```python
-retry_fail = 0
-for i, selection, markdown in failed_items:
-    result = write_segment(doc_id, selection, markdown)
-    resp = json.loads(result.stdout) if result.stdout.strip().startswith('{') else {}
-    if resp.get('data', {}).get('success'):
-        print(f"Segment {i} 重试成功")
-    else:
-        retry_fail += 1
-        print(f"Segment {i} 重试仍失败: {result.stdout[:200]}")
-print(f"重试完成: {len(failed_items) - retry_fail} 成功, {retry_fail} 仍失败")
-```
+选"重试"时，读取 `/tmp/write_back_failed.json`，对每个 `[i, selection, markdown]` 再次调用相同的 `lark-cli docs +update` subprocess，汇报重试结果。
 
 ---
 
