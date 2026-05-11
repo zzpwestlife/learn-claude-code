@@ -57,3 +57,8 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-04-29	round5	neat-freak	89.0	90.3	keep	实测表现+指令具体性 (D8/D5)	Add first-reply templates (≤8 lines) + minimum evidence set (file inventory/time-words/summary)	dry_run
 2026-04-29	round6	neat-freak	90.3	90.8	keep	实测表现 (D8)	Add evidence presentation template; attach baseline-vs-skill output snippets in report	test
 2026-04-29	round7	neat-freak	90.8	91.2	keep	Frontmatter质量 (D1)	Compress description; add two do-not-use cases + shorter examples	dry_run
+2026-05-11	baseline	lark-doc-copywriting	-	55.4	baseline	-	Initial evaluation: P0 bug in Step4 (import json outside python3 block), P1 bug (hardcoded doc_id), P2 unquoted version	dry_run
+2026-05-11	local	lark-doc-copywriting	55.4	65.0	keep	D8/D2 (P0 bug)	Fixed Step4: import json moved inside python3 -c block; candidates loop fixed	dry_run
+2026-05-11	local	lark-doc-copywriting	65.0	70.0	keep	D5 (P1 bug)	Fixed Step5: doc_id reads /tmp/lark_doc_id.txt instead of hardcoded placeholder	dry_run
+2026-05-11	local	lark-doc-copywriting	70.0	74.6	keep	D1 (P2)	Frontmatter version quoted ("1.0.0"); added metadata.requires.bins	dry_run
+2026-05-11	local	lark-doc-copywriting	74.6	82.0	keep	D2/D7 (R4)	Extract Python to companion files lark_copywriting.py + show_summary.py; SKILL.md 302→176 lines	dry_run

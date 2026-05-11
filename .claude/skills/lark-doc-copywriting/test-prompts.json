@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "帮我整理这篇飞书文档的排版：https://example.feishu.cn/docx/ABCDEF123",
+    "expected": "解析 doc_id → fetch markdown → run Python → show diff summary → AskUserQuestion confirm → write back"
+  },
+  {
+    "id": 2,
+    "prompt": "标点半角化：https://example.feishu.cn/wiki/WIKI456",
+    "expected": "调用 wiki spaces get_node 解析 obj_token → 走同样流程"
+  },
+  {
+    "id": 3,
+    "prompt": "整理这篇文档的代码块：https://example.feishu.cn/docx/XYZ789",
+    "expected": "完成后打印代码候选列表（lang/行号/preview），让用户决定是否包裹"
+  }
+]
