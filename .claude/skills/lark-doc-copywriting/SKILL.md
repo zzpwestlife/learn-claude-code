@@ -173,12 +173,22 @@ fixed_segs = split_by_image(fixed)
 
 doc_id = open('/tmp/lark_doc_id.txt').read().strip()  # written by Step 1
 success, fail = 0, 0
+failed_items = []  # (i, orig_seg, fixed_seg, selection, markdown)
+
+def write_segment(doc_id, selection, markdown):
+    return subprocess.run(
+        ['lark-cli', 'docs', '+update',
+         '--doc', doc_id,
+         '--mode', 'replace_range',
+         '--selection-with-ellipsis', selection,
+         '--markdown', markdown],
+        capture_output=True, text=True
+    )
 
 for i, (orig_seg, fixed_seg) in enumerate(zip(orig_segs, fixed_segs)):
     if orig_seg == fixed_seg:
         continue  # 无变更，跳过
 
-    # 取段落内非 image 行作为选区
     orig_lines = [l for l in orig_seg.strip().split('\n')
                   if l.strip() and not l.strip().startswith('<image ')]
     if not orig_lines:
@@ -187,28 +197,48 @@ for i, (orig_seg, fixed_seg) in enumerate(zip(orig_segs, fixed_segs)):
     last_line  = orig_lines[-1][-50:].strip() if len(orig_lines) > 1 else ''
     selection  = f"{first_line}...{last_line}" if last_line and first_line != last_line else first_line
 
-    # 用 \n\n 分隔段落；保留段中空行（原有空行不压缩，允许多不允许少）
     fixed_lines = [l.rstrip() for l in fixed_seg.split('\n')]
     while fixed_lines and not fixed_lines[0]: fixed_lines.pop(0)
     while fixed_lines and not fixed_lines[-1]: fixed_lines.pop()
     markdown = '\n\n'.join(fixed_lines)
 
-    result = subprocess.run(
-        ['lark-cli', 'docs', '+update',
-         '--doc', doc_id,
-         '--mode', 'replace_range',
-         '--selection-with-ellipsis', selection,
-         '--markdown', markdown],
-        capture_output=True, text=True
-    )
+    result = write_segment(doc_id, selection, markdown)
     resp = json.loads(result.stdout) if result.stdout.strip().startswith('{') else {}
     if resp.get('data', {}).get('success'):
         success += 1
     else:
         fail += 1
+        failed_items.append((i, selection, markdown))
         print(f"Segment {i} FAILED: {result.stdout[:200]}")
 
 print(f"\n完成: {success} 段成功, {fail} 段失败")
+```
+
+**若 `fail > 0`** — 询问用户是否重试（最多 1 次）：
+
+```
+AskUserQuestion(
+  question=f"有 {fail} 段写入失败，是否重试？",
+  options=[
+    { label: "重试失败段落" },
+    { label: "跳过，保持现状" }
+  ]
+)
+```
+
+选"重试"时执行：
+
+```python
+retry_fail = 0
+for i, selection, markdown in failed_items:
+    result = write_segment(doc_id, selection, markdown)
+    resp = json.loads(result.stdout) if result.stdout.strip().startswith('{') else {}
+    if resp.get('data', {}).get('success'):
+        print(f"Segment {i} 重试成功")
+    else:
+        retry_fail += 1
+        print(f"Segment {i} 重试仍失败: {result.stdout[:200]}")
+print(f"重试完成: {len(failed_items) - retry_fail} 成功, {retry_fail} 仍失败")
 ```
 
 ---
