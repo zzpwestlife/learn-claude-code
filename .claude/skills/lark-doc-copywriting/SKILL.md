@@ -12,8 +12,7 @@ metadata:
 
 # lark-doc-copywriting
 
-> **前置条件：** 确认 `lark-cli` 已登录（`lark-cli auth`）且有目标文档编辑权限。
-> 完整认证规则见 [`../lark-shared/SKILL.md`](../lark-shared/SKILL.md)（token 不提交 git、多 app 配置等）。
+> **前置条件：** 先阅读 [`../lark-shared/SKILL.md`](../lark-shared/SKILL.md) 了解认证和安全规则。
 
 改造版中文文案排版整理，针对飞书文档执行：
 1. 全角标点 → 半角（PUNCT_MAP 映射）
