@@ -165,8 +165,10 @@ for i, (orig_seg, fixed_seg) in enumerate(zip(orig_segs, fixed_segs)):
     last_line  = orig_lines[-1][-50:].strip() if len(orig_lines) > 1 else ''
     selection  = f"{first_line}...{last_line}" if last_line and first_line != last_line else first_line
 
-    # 用 \n\n 分隔段落（单 \n 在 lark-doc 中只是软换行）
-    fixed_lines = [l for l in fixed_seg.split('\n') if l.strip()]
+    # 用 \n\n 分隔段落；保留段中空行（原有空行不压缩，允许多不允许少）
+    fixed_lines = [l.rstrip() for l in fixed_seg.split('\n')]
+    while fixed_lines and not fixed_lines[0]: fixed_lines.pop(0)
+    while fixed_lines and not fixed_lines[-1]: fixed_lines.pop()
     markdown = '\n\n'.join(fixed_lines)
 
     result = subprocess.run(

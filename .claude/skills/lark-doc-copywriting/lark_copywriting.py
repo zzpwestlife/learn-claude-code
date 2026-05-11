@@ -28,8 +28,11 @@ def fix_line(line):
     line = re.sub(r'\s+([,.:;!?])(?![-/])', r'\1', line)
     line = re.sub(r'(?<![0-9/\s]),(?=[^\s\n,])', ', ', line)
     line = re.sub(r'(?<![0-9/\s\.])\.(?=["\u4e00-\u9fffA-Z])', '. ', line)
+    # CJK后接数字开头新句（如"做.08讲"），lookbehind排除数字防止触发"1.5"
+    line = re.sub(r'(?<=[\u4e00-\u9fff])\.(?=[0-9])', '. ', line)
     line = re.sub(r'[?!](?=[\u4e00-\u9fff\u0041-\u005A])', lambda m: m.group(0)+' ', line)
     line = re.sub(r':(?!//|[0-9])(?=[^\s\n])', ': ', line)
+    line = re.sub(r';(?=[^\s\n])', '; ', line)
     line = re.sub(r'(?<=[^\s\-])--(?=[^\s\-])', ' -- ', line)
     line = re.sub(r'(?<!\n)  +', ' ', line)
     return line
