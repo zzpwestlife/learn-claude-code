@@ -144,7 +144,11 @@ AskUserQuestion(
 ### Step 5: 用户确认后 — 逐段写回
 
 以 `<image token=` 行为天然分隔符将文档切成若干段，每段独立调用 `replace_range`。
-使用 Python subprocess 传参（**不走 shell**，避免引号转义问题）。
+使用 Write 工具将以下代码写到 `/tmp/write_back.py`，再运行：
+
+```bash
+python3 /tmp/write_back.py
+```
 
 ```python
 import subprocess, json, re
