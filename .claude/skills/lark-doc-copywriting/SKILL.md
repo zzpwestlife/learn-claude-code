@@ -231,7 +231,9 @@ AskUserQuestion(
 ```python
 retry_fail = 0
 for i, selection, markdown in failed_items:
-    result = write_segment(doc_id, selection, markdown)
+    # 换更短的 anchor 避免原 selection 模糊匹配再次失败
+    short_sel = selection.split('...')[0][:20].strip() or selection[:20]
+    result = write_segment(doc_id, short_sel, markdown)
     resp = json.loads(result.stdout) if result.stdout.strip().startswith('{') else {}
     if resp.get('data', {}).get('success'):
         print(f"Segment {i} 重试成功")
