@@ -119,6 +119,21 @@ AskUserQuestion(
 
 > **注意**：「代码候选」仅检测可能未包裹的代码段，不自动包裹 — 需用户逐一确认。
 
+**逐段确认代码候选**（选项2 后执行）：
+遍历 `/tmp/code_candidates.json` 每条候选，逐一询问：
+```
+AskUserQuestion(
+  question="代码候选 {i}/{total} [{lang}] 行{start}-{end}: {preview}\n是否包裹？",
+  options=[
+    { label: "包裹为 {lang} 代码块" },
+    { label: "跳过此块" },
+    { label: "全部跳过" }
+  ]
+)
+```
+选"包裹" → 在 `/tmp/doc_fixed.md` 第 `start` 行前插入 ` ```{lang} `、第 `end+1` 行后插入 ` ``` `；
+选"全部跳过" → 退出循环；完成后进入 Step 5。
+
 ### Step 5: 用户确认后 — 逐段写回
 
 以 `<image token=` 行为天然分隔符将文档切成若干段，每段独立调用 `replace_range`。
@@ -213,3 +228,20 @@ print(f"\n完成: {success} 段成功, {fail} 段失败")
 - **doc_id 解析失败**：要求用户提供文档 token 或重新粘贴 URL
 - **lark-cli 未登录 / token 过期**：提示用户运行 `lark-cli auth` 重新认证，然后重试
 - **文档无编辑权限（只读）**：告知用户当前账号对该文档只有查看权限，无法写入，退出
+
+---
+
+## Companion scripts — 输出格式参考
+
+### `show_summary.py` 输出格式
+
+```
+变更行数: N
+  BEFORE: 原始行内容
+  AFTER:  修复后内容
+代码候选: [lang] 行 start-end: 首行预览
+```
+
+- 若第一行为 `变更行数: 0` 且无 `代码候选:` 行 → 文档无需修改，退出
+- BEFORE/AFTER 示例最多展示 3 对
+- `代码候选:` 行每条候选各一行；无候选时无此行
