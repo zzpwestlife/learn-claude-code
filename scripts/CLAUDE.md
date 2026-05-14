@@ -42,3 +42,4 @@ This context is automatically loaded when you are working in the `scripts/` dire
 - **Arguments**: Use `getopts` for command-line arguments.
 - **Comments**: Explain complex logic or "why" something is done a certain way.
 - **Idempotency**: Scripts should be safe to run multiple times.
+- **Go 代码变动**：如果本次工作涉及改动任意 `.go` 文件，修改后必须执行 `make run` 和 `make test`，两者均无报错才算完成。

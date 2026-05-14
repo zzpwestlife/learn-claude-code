@@ -10,6 +10,7 @@ PUNCT_MAP = [
     ('\u201c', '"'), ('\u201d', '"'),
     ('\uff1f', '?'), ('\uff1b', ';'), ('\uff01', '!'),
     ('\u2014\u2014', '--'), ('\u2014', '-'),
+    ('\u2192', '->'),
 ]
 
 CODE_PATTERNS = {
@@ -30,11 +31,13 @@ def fix_line(line):
     line = re.sub(r'(?<![0-9/\s\.])\.(?=["\u4e00-\u9fffA-Z])', '. ', line)
     # CJK后接数字开头新句（如"做.08讲"），lookbehind排除数字防止触发"1.5"
     line = re.sub(r'(?<=[\u4e00-\u9fff])\.(?=[0-9])', '. ', line)
+    # CJK后接小写英文开头新句（如"不同.superpowers"→"不同. superpowers"）
+    line = re.sub(r'(?<=[\u4e00-\u9fff])\.(?=[a-z])', '. ', line)
     line = re.sub(r'[?!](?=[\u4e00-\u9fff\u0041-\u005A])', lambda m: m.group(0)+' ', line)
     line = re.sub(r':(?!//|[0-9])(?=[^\s\n])', ': ', line)
     line = re.sub(r';(?=[^\s\n])', '; ', line)
-    # 括号前补空格（非空白/非括号字符后接 (，prose 文本；代码块已跳过）
-    line = re.sub(r'(?<=[^\s(])\(', r' (', line)
+    # 括号前补空格（非空白/非括号/非] 字符后接 (，排除 markdown 链接 ](url) 语法）
+    line = re.sub(r'(?<=[^\s()\]])\(', r' (', line)
     # 英文复合词斜杠去空格：loading / error → loading/error
     line = re.sub(r'(?<=[a-zA-Z]) / (?=[a-zA-Z])', '/', line)
     line = re.sub(r'(?<=[^\s\-])--(?=[^\s\-])', ' -- ', line)
@@ -108,6 +111,19 @@ def process(src_path):
     print(f"Changed: {changed} lines | Code candidates: {len(candidates)}")
     for c in candidates:
         print(f"  [{c['lang']}] lines {c['start']}-{c['end']}: {c['preview']}")
+
+def make_selection(line):
+    """Build replace_range anchor that covers the full line.
+    Short lines: return as-is (≤80 chars).
+    Long lines: head[:40]...tail[-40:] ellipsis to cover the full span."""
+    s = line.strip()
+    if len(s) <= 80:
+        return s
+    head = s[:40]
+    tail = s[-40:]
+    if head == tail:
+        return head
+    return f"{head}...{tail}"
 
 if __name__ == '__main__':
     src = sys.argv[1] if len(sys.argv) > 1 else '/tmp/doc_original.md'
