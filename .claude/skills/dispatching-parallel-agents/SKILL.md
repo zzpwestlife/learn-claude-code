@@ -1,6 +1,7 @@
 ---
 name: dispatching-parallel-agents
 description: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies
+version: "1.0.0"
 ---
 
 # Dispatching Parallel Agents
@@ -172,6 +173,12 @@ After agents return:
 3. **Run full suite** - Verify all fixes work together
 4. **Spot check** - Agents can make systematic errors
 
+## Budget Check Before Fan-out
+- fan-out 前先做预算检查, 先判断任务是否真的独立, 而不是默认并行
+- 研究/分析/高不确定性任务优先分段执行
+- 子任务失败后只重试最小子段, 禁止把完整背景原样重发
+- 已出现长会话续接或上下文膨胀时, 优先收口而不是继续并行
+
 ## Real-World Impact
 
 From debugging session (2025-10-03):
@@ -180,3 +187,18 @@ From debugging session (2025-10-03):
 - All investigations completed concurrently
 - All fixes integrated successfully
 - Zero conflicts between agent changes
+
+## Reusable Interface (R)
+
+This skill must leave behind a reusable execution handoff for the coordinating agent.
+
+Minimum contract:
+- Record which tasks were deemed independent and why they were safe to parallelize.
+- Return one compact summary per agent with scope, result, and any follow-up dependency.
+- End with an integration note describing what still needs sequential verification.
+
+## Anti-Anchoring
+
+- Do not parallelize tasks that share state, edit the same files, or depend on ordered results.
+- Do not dispatch extra agents just to look busy; stop at the smallest safe parallel set.
+- Keep each agent brief focused on one domain, and avoid dumping full-session context.

@@ -86,3 +86,21 @@ cat /tmp/eval/20260319/api_requests.csv
 # 4. 对比两个会话
 # (未来可扩展 compare-sessions.sh)
 ```
+
+---
+
+## Token 场景观测
+
+导出会话后，可以用独立 Python CLI 直接生成场景台账、三维排序和 Top3：
+
+```bash
+python3 scripts/session_token_observer.py /tmp/eval/20260319
+```
+
+输出基于 `session-eval.sh` 导出的 `api_requests.jsonl` 与 `user_prompts.jsonl`：
+- `场景台账`：按每次用户提示词切分场景，汇总其后的 assistant API 调用
+- `模型与缓存`：同时展示每个场景涉及的模型、`cache_read_input_tokens` 与 `cache_creation_input_tokens`
+- `按 input_tokens 排序`：场景输入 token 降序
+- `按 output_tokens 排序`：场景输出 token 降序
+- `按调用频次排序`：场景内 API 调用次数降序
+- `Top3`：每个维度单独输出前三

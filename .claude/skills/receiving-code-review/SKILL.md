@@ -1,6 +1,7 @@
 ---
 name: receiving-code-review
 description: Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation
+version: "1.0.0"
 ---
 
 # Code Review Reception
@@ -211,3 +212,18 @@ When replying to inline review comments on GitHub, reply in the comment thread (
 Verify. Question. Then implement.
 
 No performative agreement. Technical rigor always.
+
+## Reusable Interface (R)
+
+This skill must produce a reusable review-response handoff.
+
+Minimum contract:
+- List each review item with one of: accept, clarify, or push back.
+- Record the codebase evidence used for any pushback or scope change.
+- End with the next implementation step so downstream execution can proceed without re-reading the full thread.
+
+## Anti-Anchoring
+
+- Do not anchor on reviewer confidence; anchor on repository evidence.
+- Do not batch-accept unclear items just to appear responsive.
+- Keep replies technical and minimal instead of drifting into social performance.

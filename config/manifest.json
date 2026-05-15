@@ -46,6 +46,7 @@
     ],
     "hooks": [
       "claudeception-activator.sh",
+      "rtk-rewrite.sh",
       "go/format-go-code.sh"
     ],
     "rules": [

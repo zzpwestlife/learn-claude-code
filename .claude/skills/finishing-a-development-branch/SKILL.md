@@ -1,6 +1,7 @@
 ---
 name: finishing-a-development-branch
 description: Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup
+version: "1.0.0"
 ---
 
 # Finishing a Development Branch
@@ -225,6 +226,21 @@ git worktree prune  # Self-healing: clean up any stale registrations
 **Cleaning up harness-owned worktrees**
 - **Problem:** Removing a worktree the harness created causes phantom state
 - **Fix:** Only clean up worktrees under `.worktrees/`, `worktrees/`, or `~/.config/superpowers/worktrees/`
+
+## Reusable Interface (R)
+
+This skill must leave behind a clear branch-resolution handoff.
+
+Minimum contract:
+- Record which completion option the user chose and what branch/worktree state it applies to.
+- List the verification evidence used before offering merge, PR, keep, or discard.
+- End with explicit cleanup status so the next session knows whether the branch is still active.
+
+## Anti-Anchoring
+
+- Do not push the user toward merge or discard before tests and environment checks are complete.
+- Do not assume every isolated workspace is safe to delete; verify provenance first.
+- Keep the option menu exact and bounded instead of improvising extra workflow branches.
 
 **No confirmation for discard**
 - **Problem:** Accidentally delete work

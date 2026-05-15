@@ -1,6 +1,7 @@
 ---
 name: subagent-driven-development
 description: Use when executing implementation plans with independent tasks in the current session
+version: "1.0.0"
 ---
 
 # Subagent-Driven Development
@@ -253,6 +254,21 @@ Done!
 - Answer clearly and completely
 - Provide additional context if needed
 - Don't rush them into implementation
+
+## Reusable Interface (R)
+
+This skill must maintain a reusable per-task execution ledger.
+
+Minimum contract:
+- For each task, capture implementation scope, spec-review status, and code-review status.
+- Record unresolved blockers or reviewer findings before moving to the next task.
+- End with a final readiness note summarizing what is merged, pending, or requires human decision.
+
+## Anti-Anchoring
+
+- Do not skip the spec-review stage just because the implementation "looks right."
+- Do not keep stale subagent context alive across unrelated tasks; re-dispatch fresh when scope changes.
+- Keep each task packet minimal and explicit instead of pasting the whole plan blindly.
 
 **If reviewer finds issues:**
 - Implementer (same subagent) fixes them

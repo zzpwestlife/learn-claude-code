@@ -37,6 +37,20 @@ Need from you: <repo access / exact command / CI log / install approval>.
 Best available evidence now: <CI link/log excerpt OR repro steps/log excerpt OR diff-based hypothesis>.
 ```
 
+## Output Budget
+
+- 轻任务输出上限:
+  - 测试步骤: 最多 8 步
+  - UI 建议: 最多 5 条
+  - changelog: 最多 100 字
+- 调试结论固定四段: 问题 / 原因 / 修复 / 验证
+- 轻任务默认只保留改动、命令、结果, 优先压缩解释性废话
+
+Do not compress:
+- exit code
+- failing test names
+- command evidence
+
 ## Anti-Anchoring（反锚定，MANDATORY）
 
 - 禁止在未运行验证命令的情况下声称完成/通过。

@@ -1,6 +1,7 @@
 ---
 name: using-superpowers
 description: Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions
+version: "1.0.0"
 ---
 
 <SUBAGENT-STOP>
@@ -115,3 +116,25 @@ The skill itself tells you which.
 ## User Instructions
 
 Instructions say WHAT, not HOW. "Add X" or "Fix Y" doesn't mean skip workflows.
+
+## Task-Class Router
+
+- 轻任务: 文档润色、changelog、commit message、测试步骤整理、简单 UI 建议
+- 中任务: 普通 bugfix、小范围实现、单模块调试
+- 重任务: 架构设计、大范围重构、多源研究、长上下文续接
+- Routing guidance: 轻任务优先轻量模型或短会话; 中任务默认中等模型; 重任务才进入重模型主链路
+
+## Reusable Interface (R)
+
+This skill must leave behind a reusable routing decision for the current request.
+
+Minimum contract:
+- Record which skill was invoked or why no skill applied.
+- Keep the chosen workflow visible enough that downstream turns can continue consistently.
+- End with the next governing process skill when the request moves from design to planning to execution.
+
+## Anti-Anchoring
+
+- Do not invoke extra skills after a clear routing decision has already been made.
+- Do not treat "maybe relevant" as "load everything"; pick the smallest applicable skill set.
+- Keep the workflow decision explicit, but avoid repeating full skill doctrine once routing is done.

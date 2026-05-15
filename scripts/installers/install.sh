@@ -434,7 +434,7 @@ ensure_dir "$CLAUDE_ROOT"
 for item in ".claude"/*; do
     basename=$(basename "$item")
     # Skip profiles directory as it is handled separately/specifically later
-    if [ "$basename" == "profiles" ] || [ "$basename" == "tmp" ]; then
+    if [ "$basename" == "profiles" ] || [ "$basename" == "tmp" ] || [ "$basename" == "settings.json" ]; then
         continue
     fi
     
@@ -470,7 +470,15 @@ fi
 safe_install "$PROFILE_DIR/CLAUDE.md" "$TARGET_DIR/CLAUDE.md"
 safe_install "$PROFILE_DIR/Makefile" "$TARGET_DIR/Makefile"
 
-# 3. Permissions
+# 3. Patch Claude settings
+SOURCE_SETTINGS="$(pwd)/.claude/settings.json"
+TARGET_SETTINGS="$CLAUDE_ROOT/settings.json"
+cecho "$BLUE" "🧩 Patching Claude settings..."
+"$PYTHON_CMD" "$(pwd)/scripts/installers/patch_claude_settings.py" \
+    "$SOURCE_SETTINGS" \
+    "$TARGET_SETTINGS"
+
+# 4. Permissions
 cecho "$BLUE" "🔒 Setting permissions..."
 find "$CLAUDE_ROOT" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
 find "$CLAUDE_ROOT" -name "*.py" -exec chmod +x {} \; 2>/dev/null || true
@@ -513,5 +521,4 @@ if [ -t 0 ]; then
         fi
     done
 fi
-
 

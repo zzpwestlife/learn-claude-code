@@ -1,6 +1,7 @@
 ---
 name: using-git-worktrees
 description: Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback
+version: "1.0.0"
 ---
 
 # Using Git Worktrees
@@ -213,3 +214,18 @@ Ready to implement <feature-name>
 - Verify directory is ignored for project-local
 - Auto-detect and run project setup
 - Verify clean test baseline
+
+## Reusable Interface (R)
+
+This skill must leave behind a reusable workspace-state record.
+
+Minimum contract:
+- Record whether work happens in place, in a native worktree, or in a git fallback worktree.
+- Capture the resulting path, branch, and cleanup ownership decision.
+- End with baseline verification status so later tasks know whether failures are pre-existing.
+
+## Anti-Anchoring
+
+- Do not assume isolation is always required; honor explicit user preference and existing harness state.
+- Do not create extra worktrees once an isolated workspace already exists.
+- Keep setup bounded to workspace safety and baseline verification, not unrelated project refactors.

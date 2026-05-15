@@ -1,112 +1,142 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Smart Skill Architect Activator
-# Automatically detects task completion context and prompts for skill evolution.
-#
-# Context-Aware Logic:
-# 1. Checks if CHANGELOG.md was modified recently (indicating task completion).
-# 2. Checks if the latest plan in docs/plans/ is completed and modified recently.
-# 3. Checks if review_report.md was generated recently.
-# 4. Logs decisions to .claude/logs/activator.log.
+# Detects task-completion signals, dedupes repeated reminders, and keeps output compact.
 
 LOG_FILE=".claude/logs/activator.log"
-mkdir -p "$(dirname "$LOG_FILE")"
+CACHE_FILE=".claude/tmp/claudeception-activator.cache"
+THRESHOLD="${CLAUDECEPTION_ACTIVATOR_THRESHOLD_SECONDS:-300}"
+CACHE_TTL="${CLAUDECEPTION_ACTIVATOR_CACHE_SECONDS:-1800}"
+WINDOW_SIZE="${CLAUDECEPTION_ACTIVATOR_WINDOW_SIZE:-5}"
+
+mkdir -p "$(dirname "$LOG_FILE")" "$(dirname "$CACHE_FILE")"
+
+is_disabled() {
+    case "${ENABLE_SKILL_ARCHITECT_ACTIVATOR:-1}" in
+        0|false|FALSE|no|NO|off|OFF) return 0 ;;
+        *) return 1 ;;
+    esac
+}
 
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOG_FILE"
 }
 
-# Threshold in seconds (5 minutes)
-THRESHOLD=300
-SHOULD_RUN=false
-REASON=""
-
-# Function to get file modification time age in seconds
-get_file_age() {
-    local file="$1"
-    local age
+file_mtime() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS
-        local mod_time=$(stat -f %m "$file")
-        local now=$(date +%s)
-        age=$((now - mod_time))
+        stat -f %m "$1"
     else
-        # Linux
-        local mod_time=$(stat -c %Y "$file")
-        local now=$(date +%s)
-        age=$((now - mod_time))
+        stat -c %Y "$1"
     fi
-    echo "$age"
 }
 
-# Check CHANGELOG.md
-if [ -f "CHANGELOG.md" ]; then
-    AGE=$(get_file_age "CHANGELOG.md")
-    if [ "$AGE" -lt "$THRESHOLD" ]; then
-        SHOULD_RUN=true
-        REASON="CHANGELOG.md modified ${AGE}s ago"
-    fi
-fi
+file_age() {
+    local modified now
+    modified=$(file_mtime "$1" 2>/dev/null) || return 1
+    now=$(date +%s)
+    echo $((now - modified))
+}
 
-# Check latest plan in docs/plans/ (only if not already running)
-if [ "$SHOULD_RUN" = "false" ] && [ -d "docs/plans" ]; then
-    # Find the most recently modified .md file in docs/plans/
+find_latest_plan() {
+    [ -d "docs/plans" ] || return 1
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS: stat -f "%m %N" | sort -rn | head -1
-        LATEST_PLAN=$(find docs/plans -name "*.md" -type f -exec stat -f "%m %N" {} + | sort -rn | head -n 1 | cut -d ' ' -f 2-)
+        find docs/plans -name "*.md" -type f -exec stat -f "%m %N" {} + | sort -rn | head -n 1 | cut -d ' ' -f 2-
     else
-        # Linux: stat -c "%Y %n" | sort -rn | head -1
-        LATEST_PLAN=$(find docs/plans -name "*.md" -type f -exec stat -c "%Y %n" {} + | sort -rn | head -n 1 | cut -d ' ' -f 2-)
+        find docs/plans -name "*.md" -type f -exec stat -c "%Y %n" {} + | sort -rn | head -n 1 | cut -d ' ' -f 2-
+    fi
+}
+
+detect_signal() {
+    local age latest_plan
+
+    if [ -f "CHANGELOG.md" ]; then
+        age=$(file_age "CHANGELOG.md")
+        if [ "$age" -lt "$THRESHOLD" ]; then
+            echo "changelog|CHANGELOG.md updated ${age}s ago"
+            return 0
+        fi
     fi
 
-    if [ -n "$LATEST_PLAN" ]; then
-        # Check if all tasks are checked (no empty [ ])
-        if ! grep -q "\- \[ \]" "$LATEST_PLAN"; then
-            AGE=$(get_file_age "$LATEST_PLAN")
-            if [ "$AGE" -lt "$THRESHOLD" ]; then
-                SHOULD_RUN=true
-                REASON="Plan $(basename "$LATEST_PLAN") completed & modified ${AGE}s ago"
+    latest_plan=$(find_latest_plan)
+    if [ -n "$latest_plan" ] && ! grep -q "\- \[ \]" "$latest_plan"; then
+        age=$(file_age "$latest_plan")
+        if [ "$age" -lt "$THRESHOLD" ]; then
+            echo "plan:$(basename "$latest_plan")|Plan $(basename "$latest_plan") completed ${age}s ago"
+            return 0
+        fi
+    fi
+
+    for review_file in CODE_REVIEW.md review_report.md; do
+        if [ -f "$review_file" ]; then
+            age=$(file_age "$review_file")
+            if [ "$age" -lt "$THRESHOLD" ]; then
+                echo "review:$review_file|$review_file generated ${age}s ago"
+                return 0
             fi
         fi
+    done
+
+    return 1
+}
+
+prune_cache() {
+    local now
+    local kept
+    local pruned
+    [ -f "$CACHE_FILE" ] || return 1
+    now=$(date +%s)
+    kept=$(awk -F'|' -v now="$now" -v ttl="$CACHE_TTL" '
+        NF >= 2 && (now - $1) < ttl { print $0 }
+    ' "$CACHE_FILE")
+    if [ -n "$kept" ]; then
+        pruned=$(printf '%s\n' "$kept" | tail -n "$WINDOW_SIZE")
+        printf '%s\n' "$pruned" > "$CACHE_FILE"
+        return 0
     fi
-fi
+    : > "$CACHE_FILE"
+    return 1
+}
 
-# Check CODE_REVIEW.md (or legacy review_report.md)
-if [ "$SHOULD_RUN" = "false" ]; then
-    if [ -f "CODE_REVIEW.md" ]; then
-        AGE=$(get_file_age "CODE_REVIEW.md")
-        if [ "$AGE" -lt "$THRESHOLD" ]; then
-            SHOULD_RUN=true
-            REASON="CODE_REVIEW.md generated ${AGE}s ago"
-        fi
-    elif [ -f "review_report.md" ]; then
-         AGE=$(get_file_age "review_report.md")
-         if [ "$AGE" -lt "$THRESHOLD" ]; then
-             SHOULD_RUN=true
-             REASON="review_report.md generated ${AGE}s ago"
-         fi
-    fi
-fi
+should_skip_cached_signal() {
+    local signal_key="$1"
+    prune_cache || return 1
+    awk -F'|' -v key="$signal_key" 'NF >= 2 && $2 == key { found=1 } END { exit found ? 0 : 1 }' "$CACHE_FILE"
+}
 
-if [ "$SHOULD_RUN" = "true" ]; then
-    log "ACTIVATED: $REASON"
-    cat << 'EOF'
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧠 SKILL ARCHITECT: EVOLUTION CHECK
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cache_signal() {
+    local tmp_file
+    prune_cache >/dev/null 2>&1 || true
+    tmp_file=$(mktemp "${CACHE_FILE}.XXXXXX")
+    {
+        [ -s "$CACHE_FILE" ] && cat "$CACHE_FILE"
+        printf '%s|%s\n' "$(date +%s)" "$1"
+    } | tail -n "$WINDOW_SIZE" > "$tmp_file"
+    mv "$tmp_file" "$CACHE_FILE"
+}
 
-Context detected: Task likely completed.
-Evaluate if you have gained new knowledge:
-
-1. NEW CAPABILITY?
-   → Use `skill-architect` (Tool: Forge) to create a new skill.
-
-2. NEW WISDOM? (Bug fix, better prompt, preference)
-   → Use `skill-architect` (Tool: Refine) to save it to an existing skill.
-
-This ensures your toolkit gets smarter over time.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+print_prompt() {
+    local reason="$1"
+    cat <<EOF
+[Skill Architect] Completion signal: $reason
+- New reusable workflow or capability: create/refine a skill.
+- New bug fix, prompt tweak, or preference: save it into existing skill memory.
 EOF
+}
+
+if is_disabled; then
+    log "SKIPPED: activator disabled by env"
+    exit 0
 fi
 
-# Always exit successfully to prevent hook errors
+SIGNAL=$(detect_signal) || exit 0
+SIGNAL_KEY=${SIGNAL%%|*}
+REASON=${SIGNAL#*|}
+
+if should_skip_cached_signal "$SIGNAL_KEY"; then
+    log "SKIPPED: cached duplicate for $SIGNAL_KEY"
+    exit 0
+fi
+
+cache_signal "$SIGNAL_KEY"
+log "ACTIVATED: $REASON"
+print_prompt "$REASON"
 exit 0

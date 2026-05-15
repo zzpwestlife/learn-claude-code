@@ -3,6 +3,11 @@
 # 读取 stdin 输入
 input=$(cat)
 
+CUTOVER_API_THRESHOLD="${CLAUDE_SOFT_GUARD_API_THRESHOLD:-30}"
+CUTOVER_OUTPUT_THRESHOLD="${CLAUDE_SOFT_GUARD_OUTPUT_THRESHOLD:-50000}"
+CUTOVER_CACHE_READ_THRESHOLD="${CLAUDE_SOFT_GUARD_CACHE_READ_THRESHOLD:-2000000}"
+SNAPSHOT_FILE=".claude/tmp/session_usage_snapshot.json"
+
 # 定义颜色
 RESET='\033[0m'
 BOLD='\033[1m'
@@ -37,9 +42,18 @@ CONTEXT_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 200
 USAGE=$(echo "$input" | jq '.context_window.current_usage')
 PERCENT_USED=0
 TOKEN_DISPLAY=""
+OUTPUT_TOKENS=0
+CACHE_READ_TOKENS=0
+API_REQUESTS=0
+GUARD_STATUS="OK"
+CONTINUED_SESSION=false
 
 if [ "$USAGE" != "null" ] && [ "$USAGE" != "" ]; then
     # 计算总 Token
+    OUTPUT_TOKENS=$(echo "$USAGE" | jq -r '.output_tokens // 0')
+    CACHE_READ_TOKENS=$(echo "$USAGE" | jq -r '.cache_read_input_tokens // 0')
+    API_REQUESTS=$(echo "$input" | jq -r '.session.api_requests // 0')
+    CONTINUED_SESSION=$(echo "$input" | jq -r '.session.continued_session // false')
     CURRENT_TOKENS=$(echo "$USAGE" | jq '.input_tokens + (.cache_creation_input_tokens // 0) + (.cache_read_input_tokens // 0)')
     
     # 计算百分比
@@ -68,6 +82,14 @@ if [ "$USAGE" != "null" ] && [ "$USAGE" != "" ]; then
     elif [ "$PERCENT_USED" -ge 50 ]; then
         TOKEN_COLOR=$YELLOW
     fi
+
+    if [ "$CACHE_READ_TOKENS" -ge "$CUTOVER_CACHE_READ_THRESHOLD" ] || \
+        [ "$OUTPUT_TOKENS" -ge "$CUTOVER_OUTPUT_THRESHOLD" ] || \
+        [ "$API_REQUESTS" -ge "$CUTOVER_API_THRESHOLD" ]; then
+        GUARD_STATUS="CUTOVER"
+    elif [ "$PERCENT_USED" -ge 50 ]; then
+        GUARD_STATUS="WATCH"
+    fi
     
     # 显示格式: 📊 11% (22.1k)
     TOKEN_DISPLAY="${TOKEN_COLOR}📊 ${PERCENT_USED}% (${TOKENS_FMT})${RESET}"
@@ -89,6 +111,12 @@ fi
 
 # 分隔符
 SEP="${GRAY}|${RESET}"
+GUARD_DISPLAY="${GRAY}⚠ ${GUARD_STATUS}${RESET}"
+
+mkdir -p "$(dirname "$SNAPSHOT_FILE")"
+cat > "$SNAPSHOT_FILE" <<EOF
+{"api_requests": $API_REQUESTS, "output_tokens": $OUTPUT_TOKENS, "cache_read_input_tokens": $CACHE_READ_TOKENS, "continued_session": $CONTINUED_SESSION, "guard_status": "$GUARD_STATUS"}
+EOF
 
 # 组合输出
-echo -e "${MODEL_DISPLAY} ${SEP} ${DIR_DISPLAY}${GIT_DISPLAY} ${SEP} ${TOKEN_DISPLAY}${COST_DISPLAY}"
+echo -e "${MODEL_DISPLAY} ${SEP} ${DIR_DISPLAY}${GIT_DISPLAY} ${SEP} ${TOKEN_DISPLAY}${COST_DISPLAY} ${SEP} ${GUARD_DISPLAY}"

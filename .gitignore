@@ -7,7 +7,9 @@ node_modules/
 *.tmp
 .env
 *.pyc
-tests/
+tests/*
+!tests/test_password_gen.py
+!tests/test_session_token_observer.py
 
 # Claude Code Runtime
 .claude/audit/

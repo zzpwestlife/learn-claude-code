@@ -1,6 +1,7 @@
 ---
 name: writing-skills
 description: Use when creating new skills, editing existing skills, or verifying skills work before deployment
+version: "1.0.0"
 ---
 
 # Writing Skills
@@ -653,3 +654,18 @@ Same cycle: RED (baseline) → GREEN (write skill) → REFACTOR (close loopholes
 Same benefits: Better quality, fewer surprises, bulletproof results.
 
 If you follow TDD for code, follow it for skills. It's the same discipline applied to documentation.
+
+## Reusable Interface (R)
+
+This skill must leave behind reusable skill-authoring artifacts.
+
+Minimum contract:
+- Capture the RED baseline scenario that justified creating or editing the skill.
+- Record the final trigger conditions, expected outputs, and verification steps for the skill being authored.
+- End with deployment status so another agent can test, lint, or publish the skill without re-deriving intent.
+
+## Anti-Anchoring
+
+- Do not create a new skill for one-off project trivia or automatable lint rules.
+- Do not let examples sprawl into a full tutorial when a small reference is enough.
+- Keep the authored skill focused on repeatable judgment, not a transcript of one session.

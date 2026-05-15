@@ -1,6 +1,7 @@
 ---
 name: requesting-code-review
 description: Use when completing tasks, implementing major features, or before merging to verify work meets requirements
+version: "1.0.0"
 ---
 
 # Requesting Code Review
@@ -101,3 +102,18 @@ You: [Fix progress indicators]
 - Request clarification
 
 See template at: requesting-code-review/code-reviewer.md
+
+## Reusable Interface (R)
+
+This skill must leave behind a review packet another agent can consume without session history.
+
+Minimum contract:
+- Include the exact requirement or task summary being reviewed.
+- Include the code range, diff range, or artifact scope being handed to the reviewer.
+- End with a triaged finding list: critical, important, minor, or no findings.
+
+## Anti-Anchoring
+
+- Do not ask for review without a bounded scope or acceptance criteria.
+- Do not over-specify internal thought process; reviewers need the work product and intent.
+- Do not skip follow-up triage after review returns; review is only complete once findings are classified.
