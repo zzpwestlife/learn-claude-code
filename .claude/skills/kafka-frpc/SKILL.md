@@ -106,6 +106,25 @@ disable_start_check = true
 id = "<consumer-group-id>"
 ```
 
+### 完整示例（SG · 消费者 · topic=OrderEvents）
+
+```toml
+[frpc.kafka.order_kafka]
+address            = "fns://kafka_finrd_mq"
+net.sasl.enable    = true
+net.sasl.mechanism = "SCRAM-SHA-256"
+net.sasl.user      = "ckafka-b4bqdbrn#test_user"
+net.sasl.password  = "***"
+client_id          = "order-svc"
+rack_id            = "#INNER_IP"
+
+[frpc.kafka.order_kafka.consumers.order_consumer]
+topics              = ["OrderEvents"]
+disable_start_check = true
+[frpc.kafka.order_kafka.consumers.order_consumer.group]
+id = "order-svc-group"
+```
+
 ---
 
 ## 2. 其他地区/自建集群通用模板
