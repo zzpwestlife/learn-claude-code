@@ -18,7 +18,8 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 **Step 1 — 需求采集**（一次提出，等用户回答后再继续）
 - 地区：AU / CA / HK / HKVA / JP / MY / SG / TH / US / USVA
 - 用途：只需生产者 / 只需消费者 / 两者都要？
-- topic 名、consumer group id（如有）？
+- topic 名？
+- consumer group id？（**仅当用途包含消费者时才问**；只需生产者不问此项）
 
 **Step 2 — 给配置**
 → 查 Section 1 速查表，给出对应的 conf.toml 配置块（按用途只给需要的段）。
@@ -285,5 +286,5 @@ func handleMsg(
 
 | 资源 | 路径 | 说明 |
 |------|------|------|
-| 完整集成指南 | `docs/kafka-frpc-integration-guide.md` | 覆盖 Setup/Cleanup 钩子、分区处理器等高级消费者模式（§4.2、§4.3） |
-| 多区域连通性验证 | `verifyall-tutorial.md` | 验证跨地区 Kafka 连通性的 verifyall 工具用法 |
+| 完整集成指南 | `reference/kafka-frpc-integration-guide.md` | 覆盖 Setup/Cleanup 钩子、分区处理器等高级消费者模式（§4.2、§4.3） |
+all-tutorial.md` | 验证跨地区 Kafka 连通性的 verifyall 工具用法 |
