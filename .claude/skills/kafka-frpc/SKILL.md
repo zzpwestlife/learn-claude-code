@@ -104,7 +104,7 @@ options: 本地/测试（IP:port）, 线上（fns://）
 
 ```toml
 [frpc.kafka.<config_key>]
-address            = "fns://kafka_finrd_mq"
+address            = "fns://kafka_finrd_mq"   # 线上；本地/测试改为 "<IP>:<port>"
 net.tls.enable     = true               # 仅 AU/CA（AWS MSK）需要，其他地区删掉此行
 net.sasl.enable    = true
 net.sasl.mechanism = "<从表中取>"        # AU/CA=SCRAM-SHA-512；其余=SCRAM-SHA-256
@@ -127,7 +127,7 @@ id = "<consumer-group-id>"
 
 ```toml
 [frpc.kafka.<config_key>]
-address         = "fns://kafka_finrd_mq"
+address         = "fns://kafka_finrd_mq"   # 线上；本地/测试改为 "<IP>:<port>"
 net.sasl.enable = false
 client_id       = "<your_service_name>"
 rack_id         = "#INNER_IP"
