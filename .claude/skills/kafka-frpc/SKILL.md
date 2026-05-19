@@ -28,7 +28,7 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 
 **Step 2 — 给配置**
 → 查 Section 1 速查表，给出对应的 conf.toml 配置块（按用途只给需要的段）。
-→ 提醒：新配置块追加到 **`conf/conf.toml` 文件末尾**，除非用户指定了其他配置文件。
+→ 提醒：新配置块追加到 **`conf/conf.toml` 文件末尾**，除非用户指定了其他配置文件。若找不到 `conf/conf.toml`，询问用户配置文件路径。
 → 提醒：账号密码向 joeyzou 获取，告知地区 + topic + 读/写权限。
 
 **Step 2.5 — 配置确认**（检查点）
