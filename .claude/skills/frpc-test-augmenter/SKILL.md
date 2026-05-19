@@ -15,6 +15,7 @@ categories: ["开发工具", "测试"]
 | Step | 输入 | 关键产物 |
 |---|---|---|
 | 0 前置检测 | `go.mod` | frpc 版本、过/不过 |
+| 0.5 TUI 需求采集 | 用户对话 | 目标包 / 覆盖率目标 / 优先级 / TestMain 策略 |
 | 1 覆盖率盘点 | 目标包 | 未覆盖函数清单 + 命中的 mock 类别 |
 | 1.5 计划确认 | 函数清单 | 用户签字的待办清单 |
 | 2 TestMain 决策 | 同包 *_test.go | 不动 / 询问新增 / 跳过 |
@@ -36,6 +37,18 @@ categories: ["开发工具", "测试"]
 2. 解析版本号，确认 ≥ v1.14.2（按 SemVer 比较，主.次.修订）。
 3. `go env GOMOD` 非空，`go version` 输出包含 `go1.`。
 
+## Step 0.5 — TUI 需求采集（必须先做，未答完禁止扫描）
+在跑覆盖率前，**必须**用 `AskUserQuestion` 收齐 4 项输入。用户未答完任一项 → 停在此步反复追问，不要凭推测进入 Step 1。
+
+| 字段 | 选项（bilingual） | 默认/推荐 |
+|---|---|---|
+| `target_packages` | 单个包 / 多个包（逗号分隔） / 全仓 `./...` | 单个包 |
+| `coverage_goal` | ≥60% / ≥80% / ≥90% / 仅补未覆盖函数（不设阈值） | ≥80% |
+| `priority` | happy path 优先 / error 分支优先 / edge case 优先 / 三类均衡 | 三类均衡 |
+| `testmain_policy` | 缺失则自动生成 / 缺失则停下询问 / 不动 TestMain | 缺失则停下询问 |
+
+收齐后回显 4 项给用户复核一次（"以下是我理解的需求, 确认无误后进入扫描"），用户改口则更新；用户确认才进入 Step 1。这 4 项后续在 Step 1.5 计划清单里再次显式引用。
+
 ## Step 1 — 覆盖率盘点 + 上下文分析
 1. **覆盖率基线**：执行 `go test -cover -coverprofile=/tmp/frpc-cover.out ./<目标包>` 获取既有覆盖率与未覆盖行；失败（如包内无测试）则视为 0%，记录 `no_baseline=true`。
 2. 解析 `coverprofile`：列出**未覆盖的函数**与**部分覆盖的分支**。一行命令取 <100% 函数清单：`go tool cover -func=/tmp/frpc-cover.out | awk '$3 != "100.0%"'`（最后一行 total 忽略）。
@@ -55,10 +68,12 @@ categories: ["开发工具", "测试"]
 6. **仅按需** Read 步骤 4 命中的 reference 文件，未命中的 mock 类别不要读。
 
 ## Step 1.5 — 计划确认（检查点）
-向用户输出待办清单后等待确认：
-- 待生成/修改的文件路径与新增/追加用例数。
+向用户输出待办清单后等待确认。清单**必须显式引用 Step 0.5 的 4 项需求**：
+- 待生成/修改的文件路径与新增/追加用例数（对照 `target_packages`）。
+- 预计达成覆盖率 vs `coverage_goal`（差距 → 是否追加 case 或调目标）。
+- 用例分布是否符合 `priority`（happy/error/edge 各几条）。
+- TestMain 处置（按 `testmain_policy` 决定，见 Step 2）。
 - 已检测的 FRPC 版本与 mock 类别命中列表。
-- TestMain 处置策略（见 Step 2）。
 - 断言库探测：`grep -q 'github.com/stretchr/testify' go.sum && echo testify || echo stdlib`。命中 testify → 用 `assert`+`require`；否则用标准 `testing`。
 
 未获确认前禁止写盘。
