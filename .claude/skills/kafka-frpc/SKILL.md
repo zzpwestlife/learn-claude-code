@@ -16,13 +16,13 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 按以下步骤顺序引导用户：
 
 **Step 1 — 需求采集**（一次提出，等用户回答后再继续）
-- 地区：AU / CA / HK / HKVA / JP / MY / SG / TH / US / USVA / 其他？
+- 地区：AU / CA / HK / HKVA / JP / MY / SG / TH / US / USVA
 - 用途：只需生产者 / 只需消费者 / 两者都要？
 - topic 名、consumer group id（如有）？
 
 **Step 2 — 给配置**
 → 查 Section 1 速查表，给出对应的 conf.toml 配置块（按用途只给需要的段）。
-→ 提醒：密码向 joeyzou 获取，告知地区 + topic + 读/写权限。
+→ 提醒：账号密码向 joeyzou 获取，告知地区 + topic + 读/写权限。
 
 **Step 2.5 — 配置确认**（检查点）
 → 给完配置后问：「配置看起来正确吗？config_key / topic / group id 是否需要调整？」
@@ -40,7 +40,7 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 
 **适用**：在已有 frpc Go 项目中接入 Kafka（配置、生产者、消费者）。
 
-**不适用，请降级为普通对话**：
+**不适用**：
 - 非 frpc 框架（原生 sarama、confluent-kafka 等）→ 直接给原生用法
 - 搭建 Kafka 集群 / 运维集群 → 超出本 Skill 范围
 - 生产环境鉴权配置 → 本 Skill 仅覆盖测试环境；生产环境联系 joeyzou
@@ -231,14 +231,17 @@ func handleMsg(
     session sarama.ConsumerGroupSession,
     msg *kafka.ConsumerMessage,
 ) error {
-    // msg.Value / msg.Key / msg.Topic / msg.Offset
+    defer session.MarkMessage(msg, "")  // 用 defer 确保任何情况下都会 mark
 
-    session.MarkMessage(msg, "")   // 必须调用，否则会重复消费
+    if err := processMessage(ctx, msg.Value); err != nil {
+        // handler 返回 error 不会自动重试 — 在此消化并记录
+        log.Errorf("kafka msg error: topic=%s offset=%d err=%v", msg.Topic, msg.Offset, err)
+    }
     return nil
 }
 ```
 
-> **at-least-once**：handler 返回 `error` 不会自动重试，业务侧需幂等处理。
+> **at-least-once**：rebalance/重启等场景同一消息可能被投递多次，`processMessage` 需幂等（如以 msg.Key 或唯一业务 ID 去重）。
 
 ---
 
