@@ -21,6 +21,7 @@ categories: ["开发工具", "测试"]
 | 2 TestMain 决策 | 同包 *_test.go | 不动 / 询问新增 / 跳过 |
 | 3 用例生成 | 决策 + reference | 表驱动用例 + mock 注册 |
 | 4 验证 | 新文件 | `go test -v` 通过 |
+| 5 覆盖率对比 | before/after profile | markdown 表 + 目标达成判定 |
 
 ## 适用与不适用
 **适用**：项目根 `go.mod` 含 `gitlab.futunn.com/infra/frpc` 且版本 ≥ v1.14.2，业务函数依赖 FRPC 客户端、消息队列消费者、HTTP Client 等。
@@ -50,10 +51,11 @@ categories: ["开发工具", "测试"]
 收齐后回显 4 项给用户复核一次（"以下是我理解的需求, 确认无误后进入扫描"），用户改口则更新；用户确认才进入 Step 1。这 4 项后续在 Step 1.5 计划清单里再次显式引用。
 
 ## Step 1 — 覆盖率盘点 + 上下文分析
-1. **覆盖率基线**：执行 `go test -cover -coverprofile=/tmp/frpc-cover.out ./<目标包>` 获取既有覆盖率与未覆盖行；失败（如包内无测试）则视为 0%，记录 `no_baseline=true`。
-2. 解析 `coverprofile`：列出**未覆盖的函数**与**部分覆盖的分支**。一行命令取 <100% 函数清单：`go tool cover -func=/tmp/frpc-cover.out | awk '$3 != "100.0%"'`（最后一行 total 忽略）。
-3. Read 目标文件，对未覆盖函数列出入参/返回值与可能错误分支。
-4. 静态扫描函数体内的 import 与调用，识别**外部依赖类别**（仅出现以下类别才需对应 mock）：
+1. **覆盖率基线**：执行 `go test -cover -coverprofile=/tmp/frpc-cover-before.out ./<目标包>` 获取既有覆盖率与未覆盖行；失败（如包内无测试）则视为 0%，记录 `no_baseline=true`。
+2. **基线总数**：`go tool cover -func=/tmp/frpc-cover-before.out | tail -1`（取 `total: (statements) X%`），把这一行**原样回显给用户**（"当前包覆盖率：XX.X%"），让用户对照 `coverage_goal` 判断目标合理性。
+3. 解析 `coverprofile`：列出**未覆盖的函数**与**部分覆盖的分支**。一行命令取 <100% 函数清单：`go tool cover -func=/tmp/frpc-cover-before.out | awk '$3 != "100.0%"'`（最后一行 total 忽略）。
+4. Read 目标文件，对未覆盖函数列出入参/返回值与可能错误分支。
+5. 静态扫描函数体内的 import 与调用，识别**外部依赖类别**（仅出现以下类别才需对应 mock）：
 
 | 信号 | 依赖类别 | 待加载 reference |
 |---|---|---|
@@ -64,8 +66,8 @@ categories: ["开发工具", "测试"]
 | `amqp.Delivery` / `Acknowledger` | RabbitMQ | `references/rmq-mock.md` |
 | `metadata.FromIncomingContext` / `srpc.CRpcHead` / 链路追踪 | Metadata/Trace | `references/metadata-and-trace.md` |
 
-5. 同包扫描：`ls` 同目录 `*_test.go`，记录已存在的 TestMain 与已覆盖函数（与覆盖率清单交叉验证）。
-6. **仅按需** Read 步骤 4 命中的 reference 文件，未命中的 mock 类别不要读。
+6. 同包扫描：`ls` 同目录 `*_test.go`，记录已存在的 TestMain 与已覆盖函数（与覆盖率清单交叉验证）。
+7. **仅按需** Read 步骤 5 命中的 reference 文件，未命中的 mock 类别不要读。
 
 ## Step 1.5 — 计划确认（检查点）
 向用户输出待办清单后等待确认。清单**必须显式引用 Step 0.5 的 4 项需求**：
@@ -117,8 +119,27 @@ func TestMain(m *testing.M) {
 - 失败 → 读报错，针对性修复（mock 注册键不匹配、断言类型不符、TestMain 端口冲突等），最多 3 轮。
 - 3 轮仍失败：保留已生成文件，向用户输出 {失败用例名、最后一次报错、推断根因、建议人工介入点}。
 
+## Step 5 — 覆盖率对比摘要（必须输出）
+测试通过后立即跑：`go test -cover -coverprofile=/tmp/frpc-cover-after.out ./<目标包>`，与 Step 1 的 `frpc-cover-before.out` 比对，输出 markdown 表格：
+
+```markdown
+### 覆盖率对比 — <目标包>
+| 指标 | Before | After | Δ | 目标 |
+|---|---|---|---|---|
+| 总覆盖率 | XX.X% | YY.Y% | +N.N pp | `coverage_goal` |
+| 已覆盖函数数 | a | b | +c | — |
+| <100% 函数数 | x | y | -z | — |
+
+**新增覆盖**（达到 100%）：fnA, fnB, ...
+**仍未达标**（<100%）：fnC (剩余分支：...), ...
+**目标达成**：✅/❌（达成 → 收工；未达成 → 列出建议增加的 case 类别）
+```
+
+覆盖率数据来源固定为 `go tool cover -func=<file> | tail -1`（总）+ `awk '$3 == "100.0%"' | wc -l`（已覆盖函数数）。
+
 ## 交付物
 1. 生成/修改的文件路径列表（含 TestMain 是否新增）。
 2. 命中的 mock 类别与对应 reference。
 3. 覆盖场景摘要（happy/error/edge 拆分）。
 4. `go test -v` 输出片段证明（如 `ok package/path 0.012s`）。
+5. **Step 5 覆盖率对比表**（before/after/Δ/目标达成）。
