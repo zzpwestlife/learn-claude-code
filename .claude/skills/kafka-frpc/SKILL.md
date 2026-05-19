@@ -22,6 +22,10 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 → 查 Section 1 速查表，给出对应的 conf.toml 配置块（按用途只给需要的段）。
 → 提醒：密码向 joeyzou 获取，告知地区 + topic + 读/写权限。
 
+**Step 2.5 — 配置确认**（检查点）
+→ 给完配置后问：「配置看起来正确吗？config_key / topic / group id 是否需要调整？」
+→ 等用户确认后再继续，有改动则更新配置块。
+
 **Step 3 — 给代码**
 → 按需给出 Section 3（生产者）/ Section 4（消费者）代码，替换占位符。
 
