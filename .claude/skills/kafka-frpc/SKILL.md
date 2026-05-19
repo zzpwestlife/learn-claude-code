@@ -311,4 +311,4 @@ func handleMsg(
 | 资源 | 路径 | 说明 |
 |------|------|------|
 | 完整集成指南 | `reference/kafka-frpc-integration-guide.md` | 覆盖 Setup/Cleanup 钩子、分区处理器等高级消费者模式（§4.2、§4.3） |
-all-tutorial.md` | 验证跨地区 Kafka 连通性的 verifyall 工具用法 |
+| Verifyall 工具 | `reference/verifyall-tutorial.md` | 验证跨地区 Kafka 连通性的 verifyall 工具用法 |
