@@ -46,6 +46,11 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 - 生产环境鉴权配置 → 本 Skill 仅覆盖测试环境；生产环境联系 joeyzou
 - 地区不在速查表且无法确认集群类型 → 使用 Section 2 通用模板，并提示用户确认鉴权方式
 
+**FAQ 未覆盖的连接失败 — 通用兜底路径**：
+1. 先检查 Section 2 鉴权规则表（TLS / SASL mechanism 是否匹配集群类型）
+2. 本地测试连通性：`nc -zv <broker-ip> 9092`（或 `telnet <broker-ip> 9092`）
+3. 仍失败 → 提供给 joeyzou：错误日志全文 + 地区 + 集群类型（AWS/CKafka/AliKafka）
+
 ---
 
 ## 1. 地区配置速查
