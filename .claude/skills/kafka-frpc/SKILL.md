@@ -287,7 +287,7 @@ func handleMsg(
 □ 生产者：调用 kafka.GetSyncProducer + SendMessageContext
 □ 消费者：在 init() 调用 kafka.RegisterConsumer
 □ 消费者 handler 中已调用 session.MarkMessage(msg, "")
-□ 本地/测试验证：address 已换成直连 IP:port（非 fns:// 地址）
+□ address 格式已按环境正确设置（线上=fns://kafka_finrd_mq，本地/测试=直连 IP:port）
 ```
 
 ---
