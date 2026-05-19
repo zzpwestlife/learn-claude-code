@@ -15,6 +15,11 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 
 按以下步骤顺序引导用户：
 
+**Step 0 — 现状探查**（先做，再问需求）
+→ 在项目代码库中搜索已有 Kafka 配置：`grep -r "frpc.kafka" --include="*.toml" .`
+→ 查看已有 `[frpc.kafka.xxx]` 段，了解现有 config_key 命名风格，避免重复或冲突。
+→ 若已有配置，展示给用户确认是复用还是新增。
+
 **Step 1 — 需求采集**（一次提出，等用户回答后再继续）
 - 地区：AU / CA / HK / HKVA / JP / MY / SG / TH / US / USVA
 - 用途：只需生产者 / 只需消费者 / 两者都要？
@@ -23,6 +28,7 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 
 **Step 2 — 给配置**
 → 查 Section 1 速查表，给出对应的 conf.toml 配置块（按用途只给需要的段）。
+→ 提醒：新配置块追加到 conf.toml **文件末尾**，不要插入中间。
 → 提醒：账号密码向 joeyzou 获取，告知地区 + topic + 读/写权限。
 
 **Step 2.5 — 配置确认**（检查点）
