@@ -36,7 +36,7 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 → 查 Section 1 速查表，给出对应的 conf.toml 配置块（按用途只给需要的段）。
 → address 格式按使用环境决定：
   - **线上**：`address = "fns://kafka_finrd_mq"`
-  - **本地/测试**：`address = "<IP>:<port>"`（请用户提供 broker 地址）
+  - **本地/测试**：先问用户「请提供 broker 地址（IP:port）」，拿到后直接填入配置
 → 提醒：新配置块追加到 **`conf/conf.toml` 文件末尾**，块前留一个空行与上方内容隔开。若找不到 `conf/conf.toml`，询问用户配置文件路径。
 → 提醒：账号密码向 joeyzou 获取，告知地区 + topic + 读/写权限。
 
