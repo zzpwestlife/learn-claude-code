@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "bugs": [
+    {
+      "id": "bug-001",
+      "timestamp": "2026-05-19T22:11:00+08:00",
+      "error_message": "本地 claude -p headless A/B 运行返回 API Error: 402 账户余额不足",
+      "file": "docs/reports/2026-05-19-skill-ab-eval-execution-chain.md",
+      "root_cause": "独立 headless runner 依赖的 Claude API 账户余额不足, 导致 with-skill / baseline transcript 无法产出",
+      "fix": "在报告中明确记录环境限制, 将结论降级为限制说明 + 合同级差异分析, 不伪造实测 transcript",
+      "tags": ["claude-cli", "ab-eval", "environment", "402"],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-19T22:11:00+08:00"
+    },
+    {
+      "id": "bug-002",
+      "timestamp": "2026-05-20T07:34:00+08:00",
+      "error_message": "Python 3.9 下导入 scripts/session_token_observer.py 时，str | Path 注解触发 TypeError",
+      "file": "scripts/session_token_observer.py",
+      "root_cause": "脚本在 Python 3.9 环境中运行时会立即求值 `str | Path` 注解；项目默认解释器并非始终是 Python 3.10+。",
+      "fix": "添加 `from __future__ import annotations`，让注解延迟求值，保持 Python 3.9 兼容。",
+      "tags": ["python", "typing", "python39", "session-token-observer"],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T07:34:00+08:00"
+    },
+    {
+      "id": "bug-003",
+      "timestamp": "2026-05-20T07:34:00+08:00",
+      "error_message": "test_rtk_hook_rewrites_bash_command_when_rtk_returns_output 在未安装 rtk 的环境下失败",
+      "file": "tests/test_task2_task5_token_optimization.py",
+      "root_cause": "测试默认依赖本机已安装 `rtk`，但 hook 设计本身是在缺少 `rtk` 时静默透传，因此测试把可选依赖误当成了强依赖。",
+      "fix": "在测试中注入临时 fake `rtk` 可执行文件，通过 PATH 显式模拟 rewrite 行为，不再依赖宿主环境。",
+      "tags": ["test", "rtk", "environment", "hook"],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T07:34:00+08:00"
+    }
+  ]
+}

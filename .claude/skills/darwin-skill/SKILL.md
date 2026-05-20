@@ -102,6 +102,8 @@ autoresearch 的精髓：
    - 相比不带skill的baseline，质量提升明显吗？
    - 有没有skill引入的负面影响（过度冗余、跑偏、格式奇怪）？
 
+- D8 报告默认复用 `docs/reports/templates/skill-d8-eval-template.md`；若只能做 `dry_run`，必须完整填写 `Limitation` 与 `D8 Decision`。
+
 如果无法跑子agent（时间/资源限制），可以退化为「干跑验证」：读完skill后模拟一个典型prompt的执行思路，判断流程是否合理。但要在results.tsv中标注 `dry_run`。
 
 ---

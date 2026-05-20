@@ -23,7 +23,10 @@ test:
 lint-skills:
 	python3 -W ignore::RuntimeWarning scripts/lint_skills.py
 
-check: lint-skills test
+lint-d8-reports:
+	python3 scripts/lint_d8_reports.py
+
+check: lint-skills lint-d8-reports test
 
 run:
 	python3 src/cli/tui.py

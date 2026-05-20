@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "按现有 plan 执行一个小改动，把任务拆成最小可验证步骤，每步都给出验证命令。",
+    "expected": "输出应体现 task tracking、chunk diffs、Evidence Block，且不会跳过 plan 依赖。"
+  },
+  {
+    "id": 2,
+    "prompt": "我只有一个模糊想法，还没有 plan，直接帮我开工。",
+    "expected": "输出应停止或降级，明确指出缺少 plan，不应伪造执行结果。"
+  },
+  {
+    "id": 3,
+    "prompt": "只帮我 review 现有实现，不要执行任何改动。",
+    "expected": "输出应识别为误触发并降级，不应进入执行链路。"
+  }
+]
