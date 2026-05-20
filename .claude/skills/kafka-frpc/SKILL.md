@@ -133,6 +133,8 @@ disable_start_check = true
 id = "<consumer-group-id>"
 ```
 
+> **命名惯例**：`config_key` 用蛇形命名，建议加地区前缀（如 `sg_order_kafka`）；`client_id` 填当前服务名（如 `order-svc`）；`consumer_key` 与 topic 相关（如 `order_consumer`）。
+
 ### 完整示例（SG · 消费者 · topic=OrderEvents）
 
 ```toml
