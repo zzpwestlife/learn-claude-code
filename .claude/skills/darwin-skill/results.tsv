@@ -98,3 +98,5 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-20	c4949d0	kafka-frpc	92.1	92.6	keep	边界条件(D3)	Step 0补充无代码库访问时的fallback路径	dry_run
 2026-05-20	a59d19a	kafka-frpc	92.6	92.9	keep	检查点设计(D4)	本地/测试环境先问broker地址再生成配置	dry_run
 2026-05-20	ba53e9a	kafka-frpc	92.9	93.7	keep	指令具体性(D5)	补充config_key/client_id/consumer_key命名惯例	dry_run
+2026-05-20T13:43	baseline	kafka-frpc	-	78.7	baseline	-	初始评估	dry_run
+2026-05-20T14:00	d1787d0	kafka-frpc	78.7	80.95	keep	D5-指令具体性	Step1第一步改为条件判断（已知环境跳过）	dry_run

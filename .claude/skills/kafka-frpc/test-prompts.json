@@ -1,17 +1,17 @@
 [
   {
     "id": 1,
-    "prompt": "我要在 SG 地区的 frpc 项目里新增一个 Kafka 消费者，topic 是 OrderEvents，consumer group 叫 order-svc-group",
-    "expected": "给出 SG 地区的完整 conf.toml 配置（含 consumer 段）+ 消费者 Go 代码 + Checklist"
+    "prompt": "我需要在 HK 地区的 frpc 服务里新增一个 Kafka 消费者，topic 是 BindServiceEvent",
+    "expected": "先问使用环境(本地/线上)→识别地区=HK→问用途→逐一问 config_key/group_id→生成完整 conf.toml 配置块（HK broker=10.10.6.83:9092 或 fns://，SCRAM-SHA-256，无TLS）→生成消费者代码→给出 Checklist"
   },
   {
     "id": 2,
-    "prompt": "接入 kafka 报错 SASL Error 34 / IllegalSASLState，怎么解决？",
-    "expected": "识别为 AWS MSK 缺少 TLS，给出 net.tls.enable = true 的解决方案"
+    "prompt": "接入 kafka，AU 地区，生产者+消费者都要，本地测试",
+    "expected": "识别环境=本地测试、地区=AU、用途=生产者+消费者→问 topic/config_key/group_id→生成配置（AWS MSK: TLS=true, SCRAM-SHA-512, broker=b-1.aumsk...9096）→生成生产者+消费者代码"
   },
   {
     "id": 3,
-    "prompt": "我需要在 AU 地区同时接生产者和消费者，topic 叫 PaymentEvent",
-    "expected": "给出 AU 配置（producer + consumer 段）+ 生产者代码 + 消费者代码 + 完整 Checklist"
+    "prompt": "kafka frpc 配置，SG，只需要生产者，线上环境",
+    "expected": "识别地区=SG、用途=仅生产者、环境=线上→问 topic/config_key→生成配置（fns://kafka_finrd_mq, SCRAM-SHA-256, 无TLS）→只给生产者代码段，不生成消费者"
   }
 ]
