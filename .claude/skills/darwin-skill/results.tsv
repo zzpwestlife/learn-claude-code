@@ -100,3 +100,7 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-20	ba53e9a	kafka-frpc	92.9	93.7	keep	指令具体性(D5)	补充config_key/client_id/consumer_key命名惯例	dry_run
 2026-05-20T13:43	baseline	kafka-frpc	-	78.7	baseline	-	初始评估	dry_run
 2026-05-20T14:00	d1787d0	kafka-frpc	78.7	80.95	keep	D5-指令具体性	Step1第一步改为条件判断（已知环境跳过）	dry_run
+2026-05-20T14:10	16aa1cd	kafka-frpc	80.95	81.7	keep	D5-指令具体性	第三步/第四步增加条件跳过+确认逻辑	dry_run
+2026-05-20T14:20	6eada0b	kafka-frpc	81.7	83.3	keep	D1-Frontmatter	补充 when-NOT-to-use 声明到 description	dry_run
+2026-05-20T14:30	2289d20	kafka-frpc	83.3	84.8	keep	D7-整体架构	补全quick-jump §2入口 + 参考区补编号§7	dry_run
+2026-05-20T14:40	6fc4787	kafka-frpc	84.8	85.55	keep	D7-整体架构	§0.5改为###子节消除小数编号异常	dry_run
