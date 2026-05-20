@@ -35,11 +35,13 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
   > 「这次接入哪个地区的 Kafka？请回复地区代码（只选一个）：AU / CA / HK / HKVA / JP / MY / SG / TH / US / USVA」
 - **一次只接入一个地区，无论用户如何表达都不批量处理。**
 
-**第三步**：AskUserQuestion 询问用途（单选，`multiSelect: false`）：
-`options: 只需生产者 / 只需消费者 / 生产者+消费者都要`
+**第三步 — 确认用途**：
+- 若用户触发时已说明用途（含：只需生产者、只需消费者、生产者+消费者、producer、consumer），直接记录，跳到第四步。
+- 若未说明：AskUserQuestion（单选，`multiSelect: false`）：
+  `options: 只需生产者 / 只需消费者 / 生产者+消费者都要`
 
 **第四步**：逐一追问（每次只问一个，不合并，直接在回复文本中问，不调用工具）：
-1. 「topic 名称是什么？」
+1. 若 topic 已在触发 prompt 中说明，直接复述确认（「topic 是 XXX，对吗？」）；否则问「topic 名称是什么？」
 2. 「config_key 是什么？（建议格式：`{地区前缀}_{业务名}_kafka`，如 `hk_order_kafka`）」
 3. 仅当用途包含消费者时：「consumer group id 是什么？（建议格式：`{服务名}_{地区}_group`，如 `order_svc_hk_group`）」
 
