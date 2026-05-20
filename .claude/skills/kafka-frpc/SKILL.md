@@ -19,34 +19,25 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 → 在项目代码库中搜索已有 Kafka 配置：`grep -r "frpc.kafka" --include="*.toml" .`
 → 查看已有 `[frpc.kafka.xxx]` 段，了解现有 config_key 命名风格，避免重复或冲突。
 → 若已有配置，展示给用户确认是复用还是新增。
+→ **若无法访问代码库或未找到任何配置**：直接进入 Step 1，按新增流程引导。
 
-**Step 1 — 需求采集**（用 AskUserQuestion 逐项收集，等用户回答后再继续）
+**Step 1 — 需求采集**
 
-第一问：接入地区（multiSelect: true，列出所有选项）
-```
-options: AU, CA, HK, HKVA, JP, MY, SG, TH, US, USVA
-```
+**第一步**：一次 AskUserQuestion，3 个问题同时发出：
+- 接入地区（单选）`options: AU, CA, HK, HKVA, JP, MY, SG, TH, US, USVA`
+- 用途（单选）`options: 只需生产者 / 只需消费者 / 生产者+消费者都要`
+- 使用环境（单选，**影响 address 格式**）`options: 本地/测试（IP:port） / 线上（fns://）`
 
-第二问：用途（单选）
-```
-options: 只需生产者, 只需消费者, 生产者+消费者都要
-```
-
-第三问：使用环境（单选，**影响 address 格式**）
-```
-options: 本地/测试（IP:port）, 线上（fns://）
-```
-
-第四问（文本）：topic 名是什么？
-
-第五问（文本，**仅当用途包含消费者时才问**）：consumer group id 是什么？
+**第二步**：收到回答后，以文本追问：
+- topic 名是什么？
+- （**仅当用途包含消费者时**）consumer group id 是什么？
 
 **Step 2 — 给配置**
 → 查 Section 1 速查表，给出对应的 conf.toml 配置块（按用途只给需要的段）。
 → address 格式按使用环境决定：
   - **线上**：`address = "fns://kafka_finrd_mq"`
-  - **本地/测试**：`address = "<IP>:<port>"`（请用户提供 broker 地址）
-→ 提醒：新配置块追加到 **`conf/conf.toml` 文件末尾**，除非用户指定了其他配置文件。若找不到 `conf/conf.toml`，询问用户配置文件路径。
+  - **本地/测试**：先问用户「请提供 broker 地址（IP:port）」，拿到后直接填入配置
+→ 提醒：新配置块追加到 **`conf/conf.toml` 文件末尾**，块前留一个空行与上方内容隔开。若找不到 `conf/conf.toml`，询问用户配置文件路径。
 → 提醒：账号密码向 joeyzou 获取，告知地区 + topic + 读/写权限。
 
 **Step 2.5 — 配置确认**（检查点）
@@ -104,7 +95,7 @@ options: 本地/测试（IP:port）, 线上（fns://）
 
 ```toml
 [frpc.kafka.<config_key>]
-address            = "fns://kafka_finrd_mq"
+address            = "fns://kafka_finrd_mq"   # 线上；本地/测试改为 "<IP>:<port>"
 net.tls.enable     = true               # 仅 AU/CA（AWS MSK）需要，其他地区删掉此行
 net.sasl.enable    = true
 net.sasl.mechanism = "<从表中取>"        # AU/CA=SCRAM-SHA-512；其余=SCRAM-SHA-256
@@ -127,7 +118,7 @@ id = "<consumer-group-id>"
 
 ```toml
 [frpc.kafka.<config_key>]
-address         = "fns://kafka_finrd_mq"
+address         = "fns://kafka_finrd_mq"   # 线上；本地/测试改为 "<IP>:<port>"
 net.sasl.enable = false
 client_id       = "<your_service_name>"
 rack_id         = "#INNER_IP"
@@ -141,6 +132,8 @@ disable_start_check = true
 [frpc.kafka.<config_key>.consumers.<consumer_key>.group]
 id = "<consumer-group-id>"
 ```
+
+> **命名惯例**：`config_key` 用蛇形命名，建议加地区前缀（如 `sg_order_kafka`）；`client_id` 填当前服务名（如 `order-svc`）；`consumer_key` 与 topic 相关（如 `order_consumer`）。
 
 ### 完整示例（SG · 消费者 · topic=OrderEvents）
 
@@ -287,7 +280,7 @@ func handleMsg(
 □ 生产者：调用 kafka.GetSyncProducer + SendMessageContext
 □ 消费者：在 init() 调用 kafka.RegisterConsumer
 □ 消费者 handler 中已调用 session.MarkMessage(msg, "")
-□ 本地/测试验证：address 已换成直连 IP:port（非 fns:// 地址）
+□ address 格式已按环境正确设置（线上=fns://kafka_finrd_mq，本地/测试=直连 IP:port）
 ```
 
 ---
@@ -311,4 +304,4 @@ func handleMsg(
 | 资源 | 路径 | 说明 |
 |------|------|------|
 | 完整集成指南 | `reference/kafka-frpc-integration-guide.md` | 覆盖 Setup/Cleanup 钩子、分区处理器等高级消费者模式（§4.2、§4.3） |
-all-tutorial.md` | 验证跨地区 Kafka 连通性的 verifyall 工具用法 |
+| Verifyall 工具 | `reference/verifyall-tutorial.md` | 验证跨地区 Kafka 连通性的 verifyall 工具用法 |

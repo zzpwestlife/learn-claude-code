@@ -1,23 +1,32 @@
 ---
-name: "frpc-test-augmenter"
-description: "Augment unit tests for existing FRPC Go codebases (gitlab.futunn.com/infra/frpc) to raise coverage. Trigger when user asks 补单测/补充测试用例/提升覆盖率/加测试 for an FRPC repo. SKIP if go.mod lacks frpc dependency."
+name: "add-frpc-tests"
+description: "Add unit tests for FRPC Go codebases (gitlab.futunn.com/infra/frpc) to raise coverage. Trigger when user asks 补单测/补充测试用例/提升覆盖率/加测试 for an FRPC repo. SKIP if go.mod lacks frpc dependency."
 version: "1.0.0"
 tags: ["FRPC", "Golang", "Testing", "Coverage", "Mock"]
 categories: ["开发工具", "测试"]
 ---
 
-# FRPC Test Augmenter
+# Add FRPC Tests
 
 ## 简介
 针对**已有 FRPC 代码库**（`gitlab.futunn.com/infra/frpc`，v1.14.2+）的测试用例补充器，目标是**提升覆盖率**。基于既有测试基线做增量：识别未覆盖的函数与分支，复用框架测试基建（`application.Run`、RPC/HTTP/Redis/Kafka/RabbitMQ Mock、Metadata、log/trace），**外科手术式**追加用例，不破坏既有结构。
+
+## 核心约束（不可违反）
+
+| 约束 | 规则 |
+|---|---|
+| **零改动原则** | 绝不修改任何非 `_test.go` 的生产代码。若覆盖率目标必须依赖重构才能达到，停下来告知用户，说明原因与方案，获得明确同意后才能动产品代码。 |
+| **表驱动优先** | 生成的测试必须遵循项目规范。Step 0.5 后立即读 `CLAUDE.md` 检查是否要求 table-driven，若有，则全部测试必须使用 `[]struct{name; ...} + t.Run`，不得用独立 `func Test*`。 |
+| **全局状态隔离** | 凡修改包级变量（全局单例、atomic.Pointer 等）的测试，必须用 `t.Cleanup(func(){ ... })` 恢复原值，防止测试间污染。 |
+| **预估必须加权** | 承诺覆盖率目标前，必须先扣除不可测文件（`main.go`、依赖外部 SDK 无法注入的文件），用语句数加权计算可达上限，不可凭感觉承诺。 |
 
 ## TL;DR — 流程速查
 | Step | 输入 | 关键产物 |
 |---|---|---|
 | 0 前置检测 | `go.mod` | frpc 版本、过/不过 |
-| 0.5 TUI 需求采集 | 用户对话 | 目标包 / 覆盖率目标 / 优先级 / TestMain 策略 |
-| 1 覆盖率盘点 | 目标包 | 未覆盖函数清单 + 命中的 mock 类别 |
-| 1.5 计划确认 | 函数清单 | 用户签字的待办清单 |
+| 0.5 TUI 需求采集 + 规范探测 | 用户对话 + CLAUDE.md | 目标包 / 覆盖率目标 / 优先级 / TestMain 策略 / 测试风格规范 |
+| 1 覆盖率盘点 + 不可测文件标记 | 目标包 | 未覆盖函数清单 + 不可测文件列表 + 调整后可达上限 |
+| 1.5 计划确认 | 函数清单 | 用户签字的待办清单（含加权覆盖率预估） |
 | 2 TestMain 决策 | 同包 *_test.go | 不动 / 询问新增 / 跳过 |
 | 3 用例生成 | 决策 + reference | 表驱动用例 + mock 注册 |
 | 4 验证 | 新文件 | `go test -v` 通过 |
@@ -50,11 +59,28 @@ categories: ["开发工具", "测试"]
 
 收齐后回显 4 项给用户复核一次（"以下是我理解的需求, 确认无误后进入扫描"），用户改口则更新；用户确认才进入 Step 1。这 4 项后续在 Step 1.5 计划清单里再次显式引用。
 
+**规范探测（与 TUI 同步执行）**：读取 `CLAUDE.md`（或 `.claude/AGENTS.md`），提取测试风格要求。重点检测：
+- 是否要求 table-driven tests → 若是，Step 3 全部测试必须使用 `[]struct{name;...}+t.Run`，禁止独立 `func Test*`。
+- 最大行数 / 函数长度限制 → 生成时遵守。
+- 格式化工具（`gofumpt`/`goimports`）→ 生成后提示用户运行。
+记录探测结果，在 Step 1.5 计划清单中声明"将遵循项目 XXX 规范"。
+
 ## Step 1 — 覆盖率盘点 + 上下文分析
 1. **覆盖率基线**：执行 `go test -cover -coverprofile=/tmp/frpc-cover-before.out ./<目标包>` 获取既有覆盖率与未覆盖行；失败（如包内无测试）则视为 0%，记录 `no_baseline=true`。
 2. **基线总数**：`go tool cover -func=/tmp/frpc-cover-before.out | tail -1`（取 `total: (statements) X%`），把这一行**原样回显给用户**（"当前包覆盖率：XX.X%"），让用户对照 `coverage_goal` 判断目标合理性。
 3. 解析 `coverprofile`：列出**未覆盖的函数**与**部分覆盖的分支**。一行命令取 <100% 函数清单：`go tool cover -func=/tmp/frpc-cover-before.out | awk '$3 != "100.0%"'`（最后一行 total 忽略）。
-4. Read 目标文件，对未覆盖函数列出入参/返回值与可能错误分支。
+4. **不可测文件标记（必做）**：逐一审查 0% 函数所在文件，判断是否属于以下不可测类别并打标：
+   - `main()` / `init()` 入口 → 标记 `[SKIP: entrypoint]`
+   - 依赖 `application.Run` 的 bootstrap → 标记 `[SKIP: frpc-infra]`
+   - 依赖外部 SDK（FCC、OSS、外部 RPC）且无法注入 mock → 标记 `[SKIP: external-sdk]`
+   - `// Code generated` 文件 → 标记 `[SKIP: generated]`
+
+   用打标结果计算**加权可达上限**：
+   ```
+   可达上限 = 1 - (skip_statements / total_statements)
+   ```
+   若 `coverage_goal` 超过可达上限，在 Step 1.5 中提前警告用户并建议调低目标。
+5. Read 目标文件，对未覆盖函数列出入参/返回值与可能错误分支。
 5. 静态扫描函数体内的 import 与调用，识别**外部依赖类别**（仅出现以下类别才需对应 mock）：
 
 | 信号 | 依赖类别 | 待加载 reference |
@@ -72,10 +98,13 @@ categories: ["开发工具", "测试"]
 ## Step 1.5 — 计划确认（检查点）
 向用户输出待办清单后等待确认。清单**必须显式引用 Step 0.5 的 4 项需求**：
 - 待生成/修改的文件路径与新增/追加用例数（对照 `target_packages`）。
-- 预计达成覆盖率 vs `coverage_goal`（差距 → 是否追加 case 或调目标）。
+- **不可测文件清单**（来自 Step 1.4 的打标结果），注明各文件的 `[SKIP]` 原因。
+- **加权可达上限**（扣除不可测语句后计算），若 `coverage_goal` 超过上限，明确提示"当前目标不可达，建议调整为 XX%"，让用户决定是继续还是降目标。
+- 预计达成覆盖率（**必须基于语句数加权计算**，不得凭感觉估算）。
 - 用例分布是否符合 `priority`（happy/error/edge 各几条）。
 - TestMain 处置（按 `testmain_policy` 决定，见 Step 2）。
 - 已检测的 FRPC 版本与 mock 类别命中列表。
+- 项目测试规范声明（来自 Step 0.5 规范探测，如"将使用 table-driven 风格"）。
 - 断言库探测：`grep -q 'github.com/stretchr/testify' go.sum && echo testify || echo stdlib`。命中 testify → 用 `assert`+`require`；否则用标准 `testing`。
 
 未获确认前禁止写盘。
@@ -108,11 +137,32 @@ func TestMain(m *testing.M) {
 若包不需启动 RPC Server，必须保留 `DeleteServerConfig` + `DoNotCheckPortConsistency`，否则端口冲突会失败。
 
 ## Step 3 — 用例生成规范
-- **表格驱动**：`[]struct{ name string; args args; want want; wantErr bool }` + `t.Run`。
+
+### 生产代码零改动
+- **绝不修改非 `_test.go` 文件**。若某函数因未导出或无法注入依赖而难以测试，只能在计划中注明"需重构才可测，请用户决定"，不得擅自修改产品代码。
+
+### 测试风格（项目规范优先）
+- **表格驱动（项目有要求时强制）**：`[]struct{ name string; input ...; want ...; wantErr bool }` + `t.Run(tc.name, func(t *testing.T){ ... })`。每条 case 独立断言，禁止循环内共用变量。
+- 项目无明确要求时，函数少于 3 个分支可用独立 `func Test*`，3 个及以上必须用 table-driven。
 - **覆盖度**：每个目标函数至少 1 happy / 1 error / 1 edge。
+
+### 全局状态隔离
+- 凡测试修改包级变量（`atomic.Pointer`、全局单例、包级 `var`），**必须**用 `t.Cleanup` 恢复：
+  ```go
+  orig := globalVar.Load()
+  t.Cleanup(func() { globalVar.Store(orig) })
+  ```
+- 禁止依赖测试执行顺序来保证全局状态正确。
+
+### 追加安全（Edit 工具）
+- 向既有 `_test.go` 末尾追加时，`old_string` **必须包含最后一个函数的完整结尾** `\n}`，避免原文件的闭括号残留导致双重 `}` 语法错误。
+- 写入后立即 `go build ./...` 验证语法，通过再执行 Step 4。
+
+### 其他规范
 - **Mock 注册**：每条用例必要时在 `t.Run` 内 `mock.RegisterForTest(...)`，并 `defer` 清理；包级共享则放 TestMain。
 - **Context**：需要 metadata/trace 的用例从 `metadata.WithIncomingContextForTest` 与 `trace.InitSpanContextForTest` 起手，参考 `references/metadata-and-trace.md`。
 - **绝不静默覆盖**：发现既有 `_test.go` 同名函数测试，必须在 Step 1.5 显式请示"新增 / 追加用例 / 替换"。
+- **Import 最小化**：只 import 实际使用的包，生成后检查 `go build` 是否报 `imported and not used`。
 
 ## Step 4 — 验证与失败兜底
 - 写入后必须执行 `go test -v ./<目标包路径>`。
