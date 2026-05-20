@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "我要在 SG 地区的 frpc 项目里新增一个 Kafka 消费者，topic 是 OrderEvents，consumer group 叫 order-svc-group",
+    "expected": "给出 SG 地区的完整 conf.toml 配置（含 consumer 段）+ 消费者 Go 代码 + Checklist"
+  },
+  {
+    "id": 2,
+    "prompt": "接入 kafka 报错 SASL Error 34 / IllegalSASLState，怎么解决？",
+    "expected": "识别为 AWS MSK 缺少 TLS，给出 net.tls.enable = true 的解决方案"
+  },
+  {
+    "id": 3,
+    "prompt": "我需要在 AU 地区同时接生产者和消费者，topic 叫 PaymentEvent",
+    "expected": "给出 AU 配置（producer + consumer 段）+ 生产者代码 + 消费者代码 + 完整 Checklist"
+  }
+]

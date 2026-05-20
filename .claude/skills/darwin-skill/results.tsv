@@ -76,3 +76,24 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-11	48da497	lark-doc-copywriting	86.7	89.0	keep	D7/D8 (R16)	Step5: replace inline subprocess note with explicit Write+Bash instruction (write_back.py); D8 21/25 (+1), D7 13/15 (+0); total 89	dry_run
 2026-05-11	cb8c431	lark-doc-copywriting	89.0	85.0	revert	D8/D5 (R17)	Concrete wiki token parse (python3 -c jq-style) + docx URL python split; introduced FULL_URL_HERE placeholder; stricter evaluator on D2/D3/D4/D8; ratchet -4	dry_run
 2026-05-11	348f879	lark-doc-copywriting	89.0	86.0	revert	D8 (R18)	Segment count assertion before zip + import sys; evaluator noted retry loop outside write_back.py body (not in Write-to-disk block); D8 22/25 but D2/D7 dropped; ratchet -3	dry_run
+2026-05-19	baseline	kafka-frpc	-	63.6	baseline	-	初始评估	dry_run
+2026-05-19	bc7bad3	kafka-frpc	63.6	68.1	keep	整体架构(D7)	10地区配置块合并为速查表+单一模板，减少139行重复	dry_run
+2026-05-19	b348ee3	kafka-frpc	68.1	70.6	keep	边界条件(D3)	补充Section 0.5不适用场景声明和4个降级路径	dry_run
+2026-05-19	6c6064b	kafka-frpc	70.6	73.6	keep	工作流清晰度(D2)	Section 0改为4步线性接入工作流，每步有明确输入/输出	dry_run
+2026-05-19	07a9ccc	kafka-frpc	73.6	75.1	keep	指令具体性(D5)	补充SG地区完整填写示例，提供可对照的填写参照	dry_run
+2026-05-19	445aebb	kafka-frpc	75.1	76.7	keep	Frontmatter(D1)	精简description结构，补充英文触发词提高跨语言召回	dry_run
+2026-05-19	d88369e	kafka-frpc	76.7	77.7	keep	检查点设计(D4)	新增Step 2.5配置确认检查点，共3个交互确认点	dry_run
+2026-05-19	29f9899	kafka-frpc	77.7	79.2	keep	工作流清晰度(D2)	添加快速跳转导航（§1/§3/§4/§5/§6），4场景精准定位	dry_run
+2026-05-19	d47a802	kafka-frpc	79.2	80.5	keep	资源整合度(D6)	明确Skill自包含性，参考节结构化为表格含路径+用途说明	dry_run
+2026-05-19	382d61f	kafka-frpc	80.5	81.7	keep	实测表现(D8)	消费者改用defer MarkMessage，增加错误处理模式和幂等说明	dry_run
+2026-05-19	3e331aa	kafka-frpc	81.7	82.7	keep	边界条件(D3)	补充FAQ未覆盖时的3步通用兜底路径（规则检查→连通测试→联系joeyzou）	dry_run
+2026-05-19	7a8c663	kafka-frpc	82.7	82.7	keep	正确性修复	Step 1 consumer group id 仅在用途包含消费者时才询问（生产者专用不问）	dry_run
+2026-05-19	046d595	kafka-frpc	-	86.3	baseline	-	Session 2 重新基线：含Step0探查/AskUserQuestion多选/环境aware address	dry_run
+2026-05-19	d7a9a34	kafka-frpc	86.3	87.3	keep	资源整合度(D6)	修复参考表截断行，补全verifyall-tutorial.md路径	dry_run
+2026-05-19	ca987b6	kafka-frpc	87.3	88.8	keep	整体架构(D7)	address模板注释标注线上/本地两种写法	dry_run
+2026-05-19	c82e860	kafka-frpc	88.8	90.1	keep	指令具体性+实测(D5/D8)	Checklist address项改为环境感知表述	dry_run
+2026-05-20	cc1ed66	kafka-frpc	90.1	90.1	keep	正确性修复	地区改为单选+conf.toml新块前要求空行	dry_run
+2026-05-20	8a5568c	kafka-frpc	90.1	92.1	keep	工作流清晰度(D2)	Step 1前三问合并为单次AskUserQuestion，后两问文本追问	dry_run
+2026-05-20	c4949d0	kafka-frpc	92.1	92.6	keep	边界条件(D3)	Step 0补充无代码库访问时的fallback路径	dry_run
+2026-05-20	a59d19a	kafka-frpc	92.6	92.9	keep	检查点设计(D4)	本地/测试环境先问broker地址再生成配置	dry_run
+2026-05-20	ba53e9a	kafka-frpc	92.9	93.7	keep	指令具体性(D5)	补充config_key/client_id/consumer_key命名惯例	dry_run
