@@ -36,6 +36,30 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-20T07:34:00+08:00"
+    },
+    {
+      "id": "bug-004",
+      "timestamp": "2026-05-20T20:28:00+08:00",
+      "error_message": "Git merge conflict left .claude/skills/darwin-skill/results.tsv in UU state",
+      "file": ".claude/skills/darwin-skill/results.tsv",
+      "root_cause": "双方在 results.tsv 同一尾部位置追加新记录，自动合并失败并留下 conflict markers。",
+      "fix": "手工保留两边新增记录，移除 merge markers，并执行 git add 将文件标记为已解决。",
+      "tags": ["git", "merge-conflict", "results-tsv"],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T20:28:00+08:00"
+    },
+    {
+      "id": "bug-005",
+      "timestamp": "2026-05-20T20:30:00+08:00",
+      "error_message": "make check blocked by newly added skill files failing scripts/lint_skills.py",
+      "file": ".claude/skills/add-frpc-tests/SKILL.md, .claude/skills/humanizer/SKILL.md, .claude/skills/kafka-frpc/SKILL.md",
+      "root_cause": "工作区新增的 3 个 skill 文件未满足现有 lint 规则，缺少 `Reusable Interface (R)`、`Anti-Anchoring/反锚定`，其中 `kafka-frpc` 还缺 `frontmatter.version`。",
+      "fix": "本轮未修改这些无关 skill；记录为既有阻塞，后续若要恢复 make check 全绿，需要补齐对应 lint 必填项。",
+      "tags": ["lint", "skills", "make-check", "workspace"],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-20T20:30:00+08:00"
     }
   ]
 }

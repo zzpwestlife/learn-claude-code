@@ -49,3 +49,5 @@
 | 07:34 | 修复仓库基线失败并更新 OpenWolf 记录 | scripts/session_token_observer.py, tests/test_task2_task5_token_optimization.py, .wolf/buglog.json, .wolf/cerebrum.md | make test/check 全绿 | ~2600 |
 | 07:41 | 为 darwin-skill 补独立测试资产并加回归测试 | .claude/skills/darwin-skill/test-prompts.json, tests/test_darwin_skill_assets.py, .wolf/anatomy.md | 独立测试资产已可复用到下一轮 self-host | ~1800 |
 | 07:55 | 落地通用 D8 报告模板并试套执行链路 A/B 报告 | docs/reports/templates/skill-d8-eval-template.md, docs/reports/2026-05-19-skill-ab-eval-execution-chain.md, .claude/skills/darwin-skill/SKILL.md, tests/test_skill_d8_report_template.py, .wolf/anatomy.md | D8 模板已可复用，样例报告已对齐，验证全绿 | ~2300 |
+| 20:28 | Resolved merge conflict in darwin-skill results.tsv and marked file as resolved | .claude/skills/darwin-skill/results.tsv | conflict cleared, no merge markers remain | ~300 |
+| 20:30 | Completed D8 lint semantic validation; make check blocked by unrelated skill lint failures | scripts/lint_d8_reports.py, tests/test_lint_d8_reports.py | D8 lint green; repo check still blocked upstream | ~450 |
