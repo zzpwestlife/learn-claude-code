@@ -22,7 +22,7 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 
 **Step 1 — 需求采集**（用 AskUserQuestion 逐项收集，等用户回答后再继续）
 
-第一问：接入地区（multiSelect: true，列出所有选项）
+第一问：接入地区（单选，列出所有选项）
 ```
 options: AU, CA, HK, HKVA, JP, MY, SG, TH, US, USVA
 ```
@@ -46,7 +46,7 @@ options: 本地/测试（IP:port）, 线上（fns://）
 → address 格式按使用环境决定：
   - **线上**：`address = "fns://kafka_finrd_mq"`
   - **本地/测试**：`address = "<IP>:<port>"`（请用户提供 broker 地址）
-→ 提醒：新配置块追加到 **`conf/conf.toml` 文件末尾**，除非用户指定了其他配置文件。若找不到 `conf/conf.toml`，询问用户配置文件路径。
+→ 提醒：新配置块追加到 **`conf/conf.toml` 文件末尾**，块前留一个空行与上方内容隔开。若找不到 `conf/conf.toml`，询问用户配置文件路径。
 → 提醒：账号密码向 joeyzou 获取，告知地区 + topic + 读/写权限。
 
 **Step 2.5 — 配置确认**（检查点）
