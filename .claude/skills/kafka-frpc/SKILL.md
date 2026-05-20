@@ -24,8 +24,10 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 
 **Step 1 — 需求采集**
 
-**第一步（最先执行）**：AskUserQuestion 询问使用环境（单选，`multiSelect: false`），这是生成配置的前提，**不得跳过，不得与其他问题合并**：
-`options: 本地/测试（需提供 broker IP:port） / 线上（fns://）`
+**第一步（最先执行）— 确认使用环境**：
+- 若用户触发时已说明环境（含以下关键词之一：本地、测试、local、线上、生产、online、prod、fns://），直接记录，跳到第二步。
+- 若未说明：AskUserQuestion 询问使用环境（单选，`multiSelect: false`），**不得与其他问题合并**：
+  `options: 本地/测试（直连 broker IP:port） / 线上（fns:// 服务发现）`
 
 **第二步 — 确认地区**：
 - 若用户触发时已说明地区（如"接入 HK 的 kafka"），直接记录，跳到第三步
