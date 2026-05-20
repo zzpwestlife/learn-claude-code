@@ -1,6 +1,6 @@
 ---
 name: kafka-frpc
-description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查）、生产者/消费者代码、接入 Checklist。触发词：接入 kafka / 新增 kafka 消费者 / kafka 生产者 / add kafka consumer / kafka producer / kafka frpc 配置。
+description: frpc Go 项目接入 Kafka 的向导（配置、代码、Checklist），仅适用 frpc 框架（非 frpc 项目不触发）。触发词：接入 kafka / 新增 kafka 消费者 / kafka 生产者 / add kafka consumer / kafka producer / kafka frpc 配置。
 ---
 
 # Kafka × frpc 接入向导
