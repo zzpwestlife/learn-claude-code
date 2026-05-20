@@ -19,6 +19,7 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 → 在项目代码库中搜索已有 Kafka 配置：`grep -r "frpc.kafka" --include="*.toml" .`
 → 查看已有 `[frpc.kafka.xxx]` 段，了解现有 config_key 命名风格，避免重复或冲突。
 → 若已有配置，展示给用户确认是复用还是新增。
+→ **若无法访问代码库或未找到任何配置**：直接进入 Step 1，按新增流程引导。
 
 **Step 1 — 需求采集**
 
