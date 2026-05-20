@@ -20,24 +20,39 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 → 查看已有 `[frpc.kafka.xxx]` 段，了解现有 config_key 命名风格，避免重复或冲突。
 → 若已有配置，展示给用户确认是复用还是新增。
 → **若无法访问代码库或未找到任何配置**：直接进入 Step 1，按新增流程引导。
+→ **【不得因探查结果影响配置文件选择】** 即使发现 `conf/hk/conf.toml` 等地区专属文件，写入目标仍默认为 `conf/conf.toml`，不得擅自改为地区专属路径。
 
 **Step 1 — 需求采集**
 
-**第一步**：一次 AskUserQuestion，3 个问题同时发出：
-- 接入地区（单选）`options: AU, CA, HK, HKVA, JP, MY, SG, TH, US, USVA`
-- 用途（单选）`options: 只需生产者 / 只需消费者 / 生产者+消费者都要`
-- 使用环境（单选，**影响 address 格式**）`options: 本地/测试（IP:port） / 线上（fns://）`
+**第一步（最先执行）**：AskUserQuestion 询问使用环境（单选，`multiSelect: false`），这是生成配置的前提，**不得跳过，不得与其他问题合并**：
+`options: 本地/测试（需提供 broker IP:port） / 线上（fns://）`
 
-**第二步**：收到回答后，以文本追问：
-- topic 名是什么？
-- （**仅当用途包含消费者时**）consumer group id 是什么？
+**第二步 — 确认地区**：
+- 若用户触发时已说明地区（如"接入 HK 的 kafka"），直接记录，跳到第三步
+- 若未说明：直接在回复文本中问（不调用任何工具）：
+  > 「这次接入哪个地区的 Kafka？请回复地区代码（只选一个）：AU / CA / HK / HKVA / JP / MY / SG / TH / US / USVA」
+- **一次只接入一个地区，无论用户如何表达都不批量处理。**
+
+**第三步**：AskUserQuestion 询问用途（单选，`multiSelect: false`）：
+`options: 只需生产者 / 只需消费者 / 生产者+消费者都要`
+
+**第四步**：逐一追问（每次只问一个，不合并，直接在回复文本中问，不调用工具）：
+1. 「topic 名称是什么？」
+2. 「config_key 是什么？（建议格式：`{地区前缀}_{业务名}_kafka`，如 `hk_order_kafka`）」
+3. 仅当用途包含消费者时：「consumer group id 是什么？（建议格式：`{服务名}_{地区}_group`，如 `order_svc_hk_group`）」
 
 **Step 2 — 给配置**
 → 查 Section 1 速查表，给出对应的 conf.toml 配置块（按用途只给需要的段）。
-→ address 格式按使用环境决定：
+→ address 按 Step 1 第一步的环境选择填入：
+  - **本地/测试**：直接从 Section 1 速查表查对应地区的「测试 broker 地址」列填入，**无需问用户**
   - **线上**：`address = "fns://kafka_finrd_mq"`
-  - **本地/测试**：先问用户「请提供 broker 地址（IP:port）」，拿到后直接填入配置
-→ 提醒：新配置块追加到 **`conf/conf.toml` 文件末尾**，块前留一个空行与上方内容隔开。若找不到 `conf/conf.toml`，询问用户配置文件路径。
+  - 若跳过了环境问题：视为本地/测试，从速查表取地址
+→ 写入前，用 AskUserQuestion（单选，`multiSelect: false`）做 yes/no 确认：
+  - 问题文字必须是：「配置将写入 conf/conf.toml，确认吗？」（一字不差，不得改写成"写入哪个文件"等开放式问法）
+  - 选项只有两个：「是，写入 conf/conf.toml」 / 「不，我来指定路径」
+  - 不得添加第三个选项（如地区专属路径）
+  若用户选第 2 项，在回复文本中追问具体路径（不调用工具）。
+→ 确认后，将配置块追加到目标文件末尾，块前留一个空行。
 → 提醒：账号密码向 joeyzou 获取，告知地区 + topic + 读/写权限。
 
 **Step 2.5 — 配置确认**（检查点）
@@ -73,21 +88,22 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 
 > 测试环境配置。**密码请联系 joeyzou 获取**（告知：地区、topic 名、读/写权限）。
 
-### 参数速查表
+### 参数速查表（测试环境，含完整连接信息）
 
-| 地区 | 云厂商 | mechanism | TLS | SASL user |
-|------|--------|-----------|:---:|-----------|
-| AU | AWS MSK | SCRAM-SHA-512 | ✅ | `bda` |
-| CA | AWS MSK | SCRAM-SHA-512 | ✅ | `bda` |
-| HK | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-jmqqwo7b#test_user` |
-| HKVA | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-542257a8#test_user` |
-| JP | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-pbpw5go7#test_user` |
-| MY | 阿里云 AliKafka | PLAINTEXT | ❌ | （无需鉴权） |
-| SG | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-b4bqdbrn#test_user` |
-| TH | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-dm3j2bka#test_user` |
-| US/USVA | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-rkazwkwr#test_user` |
+| 地区 | 云厂商 | mechanism | TLS | SASL user | 测试密码 | 测试 broker 地址 |
+|------|--------|-----------|:---:|-----------|---------|----------------|
+| AU | AWS MSK | SCRAM-SHA-512 | ✅ | `bda` | `***` | `b-1.aumskfinrdtest.xptw01.c2.kafka.ap-southeast-2.amazonaws.com:9096` |
+| CA | AWS MSK | SCRAM-SHA-512 | ✅ | `bda` | `***` | `b-1.cafinrdpublictest.ow5uiz.c3.kafka.ca-central-1.amazonaws.com:9096` |
+| HK | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-jmqqwo7b#test_user` | `***` | `10.10.6.83:9092` |
+| HKVA | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-542257a8#test_user` | `***` | `10.5.37.28:9092` |
+| JP | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-pbpw5go7#test_user` | `***` | `10.7.108.22:9092` |
+| MY | 阿里云 AliKafka | PLAINTEXT | ❌ | （无需鉴权） | （无需密码） | `alikafka-pre-public-intl-sg-8lb3syedy01-3-vpc.alikafka.aliyuncs.com:9092` |
+| SG | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-b4bqdbrn#test_user` | `***` | `10.3.193.92:9092` |
+| TH | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-dm3j2bka#test_user` | `***` | `10.58.4.3:9092` |
+| US | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-rkazwkwr#test_user` | `***` | `10.3.245.19:9092` |
+| USVA | 腾讯云 CKafka | SCRAM-SHA-256 | ❌ | `ckafka-rkazwkwr#test_user` | `***` | `10.3.245.19:9092` |
 
-> **关键坑**：AWS MSK 必须开 TLS；CKafka 开 TLS 反而报错。两者完全相反。
+> **关键坑**：AU/CA（AWS MSK）必须开 TLS，端口 **9096**；CKafka 开 TLS 反而报错，端口 **9092**。
 
 ### conf.toml 配置模板
 
@@ -95,7 +111,7 @@ description: frpc 项目 Kafka 接入向导：conf.toml 配置（多地区速查
 
 ```toml
 [frpc.kafka.<config_key>]
-address            = "fns://kafka_finrd_mq"   # 线上；本地/测试改为 "<IP>:<port>"
+address            = "<从速查表取：本地/测试填 broker 地址，线上填 fns://kafka_finrd_mq>"
 net.tls.enable     = true               # 仅 AU/CA（AWS MSK）需要，其他地区删掉此行
 net.sasl.enable    = true
 net.sasl.mechanism = "<从表中取>"        # AU/CA=SCRAM-SHA-512；其余=SCRAM-SHA-256
@@ -118,7 +134,7 @@ id = "<consumer-group-id>"
 
 ```toml
 [frpc.kafka.<config_key>]
-address         = "fns://kafka_finrd_mq"   # 线上；本地/测试改为 "<IP>:<port>"
+address         = "<从速查表取：本地/测试填 broker 地址，线上填 fns://kafka_finrd_mq>"
 net.sasl.enable = false
 client_id       = "<your_service_name>"
 rack_id         = "#INNER_IP"
@@ -139,7 +155,7 @@ id = "<consumer-group-id>"
 
 ```toml
 [frpc.kafka.order_kafka]
-address            = "fns://kafka_finrd_mq"
+address            = "<从速查表取：本地/测试填 broker 地址，线上填 fns://kafka_finrd_mq>"
 net.sasl.enable    = true
 net.sasl.mechanism = "SCRAM-SHA-256"
 net.sasl.user      = "ckafka-b4bqdbrn#test_user"
@@ -171,8 +187,7 @@ id = "order-svc-group"
 
 ```toml
 [frpc.kafka.<config_key>]
-address            = "fns://<fns_service_name>"
-# address          = "10.x.x.1:9092"   # 本地测试换直连
+address            = "<从速查表取：本地/测试填 broker 地址，线上填 fns://<fns_service_name>>"
 net.tls.enable     = true               # AWS MSK 必须；CKafka 删掉此行
 net.sasl.enable    = true
 net.sasl.mechanism = "SCRAM-SHA-512"    # CKafka 改为 SCRAM-SHA-256
