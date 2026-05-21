@@ -1,36 +1,34 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-19T22:00:00.998Z
-> Files: 345 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-21T04:00:00.609Z
+> Files: 365 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
 - `.claudeignore` — Core ignores to reduce context window usage and improve performance (~79 tok)
-- `.DS_Store` (~2186 tok)
+- `.DS_Store` (~3824 tok)
 - `.gitignore` — Git ignore rules (~105 tok)
 - `ARCHITECTURE.md` — Project Architecture (~495 tok)
 - `CLAUDE.md` — OpenWolf (~169 tok)
 - `HANDOFF.md` — HANDOFF — learn-claude-code (~408 tok)
-- `Makefile` — Make build targets (~168 tok)
+- `INTERNAL_SKILLS_EVALUATION.md` — 内部 Skill Hub 上架评估报告 (~780 tok)
+- `Makefile` — Make build targets (~186 tok)
 - `README.md` — Project documentation (~1302 tok)
 - `skills-lock.json` (~1118 tok)
 - `SuBMdg8yoorjYsxLZQEcTxtgnae.md` — 架构设计: 为什么需要 Tool Registry? (~3017 tok)
-- `tmp.log` (~728 tok)
 
 ## .claude/
 
+- `.DS_Store` (~2732 tok)
+- `.ft-claude-pre-tool-use.log` (~104383 tok)
 - `AGENTS.md` — ================================== (~1208 tok)
 - `changelog_config.json` (~50 tok)
 - `lessons.md` — Lessons (Project Memory) (~64 tok)
 - `settings.json` (~874 tok)
 - `settings.local.json` (~292 tok)
-- `skill-usage.log` (~16 tok)
+- `skill-usage.log` (~568 tok)
 - `SOUL.md` — SOUL.md - AI Identity & Core Values (~630 tok)
 - `superpowers.lock.json` (~129 tok)
-
-## .claude/audit/
-
-- `planning.log` (~123 tok)
 
 ## .claude/checklists/
 
@@ -112,10 +110,6 @@
 
 - `format-python-code.sh` — Claude Code Hook: Auto Format Python Code (~222 tok)
 
-## .claude/logs/
-
-- `activator.log` (~26 tok)
-
 ## .claude/rules/
 
 - `CORE_RULES.md` — CORE RULES & PROTOCOLS (Unified V1.0) (~1319 tok)
@@ -138,6 +132,24 @@
 - `sync-superpowers.py` — Configuration (~1699 tok)
 - `tidy-memory.sh` — Tidy Memory Script (~258 tok)
 - `token-analyzer.py` — estimate_tokens, analyze_directory (~754 tok)
+
+## .claude/skills/
+
+- `.DS_Store` (~2186 tok)
+
+## .claude/skills/add-frpc-tests/
+
+- `SKILL.md` — Add FRPC Tests (~2029 tok)
+- `test-prompts.json` (~173 tok)
+
+## .claude/skills/add-frpc-tests/references/
+
+- `http-mock.md` — HTTP Mock — httptest 优先 / httpmock 兜底 (~391 tok)
+- `kafka-mock.md` — Kafka Mock — `pkg/thirdparty/mq/kafka` (~300 tok)
+- `metadata-and-trace.md` — Metadata 构造 + 链路追踪初始化 (~496 tok)
+- `redis-mock.md` — Redis Mock — miniredis (~375 tok)
+- `rmq-mock.md` — RabbitMQ Mock — `pkg/thirdparty/mq/rmq` (~275 tok)
+- `rpc-mock.md` — RPC Client Mock — `pkg/client/mock` (~355 tok)
 
 ## .claude/skills/brainstorming/
 
@@ -166,10 +178,10 @@
 
 - `README_EN.md` — darwin.skill (~1316 tok)
 - `README.md` — Project documentation (~845 tok)
-- `results.tsv` (~3419 tok)
+- `results.tsv` (~4089 tok)
 - `showcase.html` — 自主技能优化系统 (~6832 tok)
-- `SKILL.md` — Darwin Skill (~2867 tok)
-- `test-prompts.json` — darwin-skill 独立评测输入 (~126 tok)
+- `SKILL.md` — Darwin Skill (~2896 tok)
+- `test-prompts.json` (~214 tok)
 
 ## .claude/skills/darwin-skill/assets/
 
@@ -239,9 +251,23 @@
 
 - `SKILL.md` — Finishing a Development Branch (~1934 tok)
 
+## .claude/skills/humanizer/
+
+- `SKILL.md` — Humanizer: Remove AI Writing Patterns (~6920 tok)
+
 ## .claude/skills/ielts/
 
 - `SKILL.md` — IELTS Skill — Active Feeder (~502 tok)
+
+## .claude/skills/kafka-frpc/
+
+- `SKILL.md` — Kafka × frpc 接入向导 (~2514 tok)
+- `STABILITY.md` — kafka-frpc Skill 稳定性问题记录 (~902 tok)
+- `test-prompts.json` (~193 tok)
+
+## .claude/skills/kafka-frpc/reference/
+
+- `kafka-frpc-integration-guide.md` — Kafka × frpc 接入指南 (~1523 tok)
 
 ## .claude/skills/lark-doc-copywriting/
 
@@ -305,40 +331,39 @@
 
 ## .claude/tmp/
 
-- `phase_state_325b9b7f4fa9546424a2950f7c5711d1` (~1 tok)
-- `planning_status.md` — Planning Status (~134 tok)
-- `session_cutover.md` — Session Cutover Handoff (~114 tok)
-- `session_summary.md` — Session Summary - 2026-05-19 22:10:11 (~293 tok)
-- `session_usage_snapshot.json` (~38 tok)
+- `session_summary.md` — Session Summary - 2026-05-21 09:23:29 (~202 tok)
 
-## .pytest_cache/
+## .trae/
 
-- `.gitignore` — Git ignore rules (~10 tok)
-- `CACHEDIR.TAG` (~51 tok)
-- `README.md` — Project documentation (~76 tok)
+- `.DS_Store` (~2186 tok)
 
-## .pytest_cache/v/cache/
+## .trae/skills/
 
-- `lastfailed` (~1 tok)
-- `nodeids` (~102 tok)
+- `.DS_Store` (~1640 tok)
 
-## .trae/specs/map-skill-evolver-article/
+## .trae/specs/ai-observability-knowledge-system/
 
-- `checklist.md` (~102 tok)
-- `spec.md` — 把 Skill 自进化文章映射到当前仓库 Spec (~482 tok)
-- `tasks.md` — Tasks (~248 tok)
+- `checklist.md` (~124 tok)
+- `spec.md` — AI Observability Knowledge System Spec (~185 tok)
+- `tasks.md` — Tasks (~226 tok)
 
-## .trae/specs/reduce-token-usage/
+## .trae/specs/create-golang-test-generator-skill/
 
-- `checklist.md` (~121 tok)
-- `spec.md` — Token 消耗系统优化 Spec (~766 tok)
-- `tasks.md` — Tasks (~314 tok)
+- `checklist.md` (~74 tok)
+- `spec.md` — Golang Test Generator Skill Spec (~231 tok)
+- `tasks.md` — Tasks (~152 tok)
 
-## .trae/specs/simplify-claude-dir/
+## .trae/specs/evaluate-internal-skills/
 
-- `checklist.md` (~130 tok)
-- `spec.md` — Simplify .claude Directory Spec (~602 tok)
-- `tasks.md` — Tasks (~222 tok)
+- `checklist.md` (~30 tok)
+- `spec.md` — Evaluate Internal Skills for Skill Hub Spec (~158 tok)
+- `tasks.md` — Tasks (~137 tok)
+
+## .trae/specs/lean-skill-catalog/
+
+- `checklist.md` (~24 tok)
+- `spec.md` — 精简技能改造方案 Spec (~396 tok)
+- `tasks.md` — Tasks (~132 tok)
 
 ## claude_plugins/gopls/
 
@@ -353,7 +378,7 @@
 
 ## docs/
 
-- `.DS_Store` (~2186 tok)
+- `.DS_Store` (~2732 tok)
 - `consolidation_report.md` — 文档整理报告 (Documentation Consolidation Report) (~401 tok)
 - `README.md` — Project documentation (~275 tok)
 - `zh-copywriting-guidelines.md` — 中文文案排版指北 (Chinese Copywriting Guidelines) (~435 tok)
@@ -368,6 +393,10 @@
 - `context_isolation.md` — Context Isolation: The "AI Flow State" Strategy (~717 tok)
 - `dual_persona_workflow.md` — The Dual Persona Workflow: Builder (Opus) vs. Critic (Codex) (~657 tok)
 - `review_strategy_comparison.md` — Code Review Strategy Comparison: `/new` Session vs. SubAgent (Multi-Model) (~933 tok)
+
+## docs/course/
+
+- `.DS_Store` (~2186 tok)
 
 ## docs/course/AI 原生开发工作流实战-Tony Bai/
 
@@ -435,9 +464,16 @@
 - `report-20260414-zh.md` — Claude Code 洞察报告 (~2058 tok)
 - `report-20260414.html` — Claude Code Insights (~19126 tok)
 
-## docs/plans/
+## docs/insights/
 
-- `.DS_Store` (~1640 tok)
+- `claude-code-insight-report-20260414.md` — Claude Code Insights Report (2026-04-14) (~442 tok)
+- `claude-code-insight-report.html` — Claude Code Insights (~17469 tok)
+- `claude-code-insight-report.md` — Claude Code 使用深度分析报告 (~833 tok)
+- `memory_architecture_2026.md` — 2026 Agent 记忆工程趋势与本项目架构映射 (~593 tok)
+- `report-20260317.html` — Claude Code Insights (~17191 tok)
+- `report-20260327.html` — Claude Code Insights (~18957 tok)
+- `report-20260414-zh.md` — Claude Code 洞察报告 (~2058 tok)
+- `report-20260414.html` — Claude Code Insights (~19126 tok)
 
 ## docs/references/
 
@@ -495,13 +531,13 @@
 - `2026-05-14-session-cutover-handoff-validation.md` — 2026-05-14 Session Cutover Handoff Validation (~836 tok)
 - `2026-05-14-soft-token-guards-validation.md` — 2026-05-14 Soft Token Guards Validation (~590 tok)
 - `2026-05-14-token-optimization-summary.md` — 2026-05-14 Token Optimization Summary (~1393 tok)
-- `2026-05-19-darwin-skill-self-host-round1.md` — darwin-skill Self-Host Round 1（2026-05-19） (~460 tok)
-- `2026-05-19-skill-ab-eval-execution-chain.md` — 执行链路 Skills A/B 实测结果（2026-05-19） (~1396 tok)
+- `2026-05-19-darwin-skill-self-host-round1.md` — darwin-skill Self-Host Round 1（2026-05-19） (~910 tok)
+- `2026-05-19-skill-ab-eval-execution-chain.md` — 执行链路 Skills A/B 实测结果（2026-05-19） (~1614 tok)
 - `review_report.md` — Review Report for Learn Claude Code (~323 tok)
 
 ## docs/reports/templates/
 
-- `skill-d8-eval-template.md` — 通用 D8 评测报告模板 (~139 tok)
+- `skill-d8-eval-template.md` — Skill D8 Evaluation Template (~251 tok)
 
 ## docs/research/
 
@@ -516,6 +552,10 @@
 
 - `skill-telemetry-setup.md` — Claude Code Session Evaluator - Setup Guide (~475 tok)
 
+## docs/skills/
+
+- `README.md` — Project documentation (~708 tok)
+
 ## docs/specs/
 
 - `2026-04-21--audit-skill.md` — 设计：darwin-skill 边界声明增强 (~125 tok)
@@ -528,6 +568,7 @@
 - `2026-05-14-soft-token-guards.md` — Soft Token Guards Implementation Plan (~2607 tok)
 - `2026-05-14-task1-session-token-observer.md` — Task1 Session Token Observer Implementation Plan (~1170 tok)
 - `2026-05-14-task2-5-token-optimization.md` — Task2-Task5 Token Optimization Implementation Plan (~869 tok)
+- `2026-05-19-skill-d8-report-template.md` — Skill D8 Report Template Implementation Plan (~1550 tok)
 - `2026-05-19-skill-evolver-p1-p2.md` — Skill Evolver P1-P2 Implementation Plan (~2121 tok)
 
 ## docs/superpowers/specs/
@@ -548,11 +589,12 @@
 - `2026-05-14-installation-activation-fix-design.md` — Claude Code Installation Activation Fix Design (~1268 tok)
 - `2026-05-14-session-cutover-handoff-design.md` — Claude Code Session Cutover Handoff Design (~1149 tok)
 - `2026-05-14-soft-token-guards-design.md` — Claude Code 软治理 Token Guards Design (~1155 tok)
+- `2026-05-19-skill-d8-report-template-design.md` — Skill D8 Report Template Design (~1512 tok)
 
 ## docs/一个文件让 AI Coding 效率翻倍! AGENTS.md 实践指南/
 
-- `一个文件让 AI Coding 效率翻倍! AGENTS.md 实践指南.md` — 1. <span style="color: rgb(222,120,2); background-color: inherit">前言</span> (~6882 tok)
 - `Claude-Code-适配落地与执行记录.md` — Claude Code 适配落地与执行记录 (~855 tok)
+- `一个文件让 AI Coding 效率翻倍! AGENTS.md 实践指南.md` — 1. <span style="color: rgb(222,120,2); background-color: inherit">前言</span> (~6882 tok)
 
 ## scripts/
 
@@ -560,9 +602,10 @@
 - `CLAUDE.md` — Claude Code Configuration Entry Point (~451 tok)
 - `clean_settings_json.py` — clean_settings (~333 tok)
 - `clean_user_config.sh` — Script: clean_user_config.sh (Now acts as: UNINSTALL CLAUDE CODE) (~1896 tok)
+- `lint_d8_reports.py` — Lint adopted D8 report files for required template markers. (~937 tok)
 - `lint_skills.py` — INPUT: Git 跟踪的 .claude/skills/*/SKILL.md 文件 (~815 tok)
 - `password_gen.py` — INPUT: --length (optional, default=16) (~272 tok)
-- `session_token_observer.py` — Session token observer CLI. (~1621 tok)
+- `session_token_observer.py` — Session token observer CLI. (~1631 tok)
 - `token_optimization_benchmark.py` — Benchmark prompt/token reductions for Task2-Task5 changes. (~1484 tok)
 
 ## scripts/installers/
@@ -572,10 +615,6 @@
 - `install.sh` (~5005 tok)
 - `patch_claude_settings.py` — INPUT: source settings path, target settings path (~807 tok)
 
-## templates/
-
-- `.DS_Store` (~1640 tok)
-
 ## templates/go/
 
 - `CLAUDE.md` — Claude Code Configuration Entry Point (~222 tok)
@@ -583,11 +622,9 @@
 
 ## tests/
 
-- `test_darwin_skill_assets.py` — Regression tests for darwin-skill evaluation assets. (~186 tok)
-- `test_installation_activation.py` — INPUT: installation activation fix plan (~1692 tok)
 - `test_password_gen.py` — INPUT: None (tests only) (~591 tok)
 - `test_session_token_observer.py` — Regression tests for session token observer CLI. (~1741 tok)
-- `test_skill_d8_report_template.py` — Regression tests for the skill D8 report template. (~162 tok)
-- `test_soft_token_guards.py` — INPUT: statusline/session-summary/skill docs current repo state (~2615 tok)
-- `test_task2_task5_token_optimization.py` — Regression tests for Task2-Task5 token optimization changes. (~1852 tok)
-- `test_token_optimization_benchmark.py` — Tests for token optimization benchmark helpers. (~494 tok)
+
+## 柜台资产业务全景图/
+
+- `.DS_Store` (~1640 tok)
