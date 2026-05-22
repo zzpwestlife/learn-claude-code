@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-21T22:00:00.420Z
-> Files: 343 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-22T04:00:00.543Z
+> Files: 376 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -137,12 +137,29 @@
 
 - `.DS_Store` (~1640 tok)
 
-## .claude/skills/brainstorming/
+## .claude/skills/add-frpc-tests/
 
-- `SKILL.md` — Brainstorming Ideas Into Designs (~3619 tok)
+- `README.md` — Project documentation (~330 tok)
+- `SKILL.md` — Add FRPC Tests (~2104 tok)
+- `test-prompts.json` (~173 tok)
+
+## .claude/skills/add-frpc-tests/references/
+
+- `http-mock.md` — HTTP Mock — httptest 优先 / httpmock 兜底 (~391 tok)
+- `kafka-mock.md` — Kafka Mock — `pkg/thirdparty/mq/kafka` (~300 tok)
+- `metadata-and-trace.md` — Metadata 构造 + 链路追踪初始化 (~496 tok)
+- `redis-mock.md` — Redis Mock — miniredis (~375 tok)
+- `rmq-mock.md` — RabbitMQ Mock — `pkg/thirdparty/mq/rmq` (~275 tok)
+- `rpc-mock.md` — RPC Client Mock — `pkg/client/mock` (~355 tok)
+
+## .claude/skills/claude-config-manager/
+
+- `README.md` — Project documentation (~684 tok)
+- `SKILL.md` — Claude Config Manager (~983 tok)
 
 ## .claude/skills/code-review/
 
+- `README.md` — Project documentation (~343 tok)
 - `SKILL.md` — Code Review Skill (~1649 tok)
 
 ## .claude/skills/code-review/assets/
@@ -160,68 +177,23 @@
 - `lint-runner.py` — has_file, run, main (~195 tok)
 - `metadata-checker.py` — is_text_file, scan_module_readme, scan_headers, main (~533 tok)
 
-## .claude/skills/darwin-skill/
-
-- `README_EN.md` — darwin.skill (~1316 tok)
-- `README.md` — Project documentation (~845 tok)
-- `results.tsv` (~4089 tok)
-- `showcase.html` — 自主技能优化系统 (~6832 tok)
-- `SKILL.md` — Darwin Skill (~2896 tok)
-- `test-prompts.json` (~214 tok)
-
-## .claude/skills/darwin-skill/assets/
-
-- `chart-loop-en.html` — darwin.skill - Core Loop (~1876 tok)
-- `chart-loop.html` — 达尔文.skill - Core Loop (~2322 tok)
-- `chart-phases-en.html` — Optimization Lifecycle (~1183 tok)
-- `chart-phases.html` — Optimization Lifecycle (~1167 tok)
-- `chart-ratchet-en.html` — Ratchet Mechanism (~1994 tok)
-- `chart-ratchet.html` — Ratchet Mechanism (~2021 tok)
-- `chart-rubric-en.html` (~2107 tok)
-- `chart-rubric.html` (~2067 tok)
-
-## .claude/skills/darwin-skill/docs/
-
-- `index.html` — 自主技能优化系统 (~6832 tok)
-
-## .claude/skills/darwin-skill/scripts/
-
-- `screenshot.mjs` — Darwin Skill - 高清截图脚本 (~471 tok)
-
-## .claude/skills/darwin-skill/templates/
-
-- `result-card-dark.html` — Darwin Skill - 暗夜成就 (~4624 tok)
-- `result-card-white.html` — Darwin Skill - 我的Skill进化报告（白金版） (~2916 tok)
-- `result-card.html` — Darwin Skill - 我的Skill进化报告 (~4080 tok)
-
 ## .claude/skills/design-first/
 
-- `result-card.html` — Darwin Skill - 我的Skill进化报告 (~4095 tok)
-- `SKILL.md` — 铁律 (~1629 tok)
+- `.DS_Store` (~1640 tok)
+- `README.md` — Project documentation (~264 tok)
+- `SKILL.md` — 铁律 (~1693 tok)
 - `test-prompts.json` (~133 tok)
 
-## .claude/skills/dispatching-parallel-agents/
+## .claude/skills/kafka-frpc/
 
-- `SKILL.md` — Dispatching Parallel Agents (~1818 tok)
+- `README.md` — Project documentation (~342 tok)
+- `SKILL.md` — Kafka × frpc 接入向导 (~2547 tok)
+- `STABILITY.md` — kafka-frpc Skill 稳定性问题记录 (~902 tok)
+- `test-prompts.json` (~193 tok)
 
-## .claude/skills/executing-plans/
+## .claude/skills/kafka-frpc/reference/
 
-- `SKILL.md` — Executing Plans (~1229 tok)
-- `test-prompts.json` (~110 tok)
-
-## .claude/skills/executing-plans/assets/prompts/
-
-- `code-quality-reviewer-prompt.md` — Code Quality Reviewer Prompt Template (~158 tok)
-- `implementer-prompt.md` — Implementer Subagent Prompt Template (~723 tok)
-- `spec-reviewer-prompt.md` — Spec Compliance Reviewer Prompt Template (~499 tok)
-
-## .claude/skills/finishing-a-development-branch/
-
-- `SKILL.md` — Finishing a Development Branch (~1934 tok)
-
-## .claude/skills/humanizer/
-
-- `SKILL.md` — Humanizer: Remove AI Writing Patterns (~6920 tok)
+- `kafka-frpc-integration-guide.md` — Kafka × frpc 接入指南 (~1523 tok)
 
 ## .claude/skills/lark-doc-copywriting/
 
@@ -231,57 +203,100 @@
 - `SKILL.md` — lark-doc-copywriting (~2019 tok)
 - `test-prompts.json` (~145 tok)
 
-## .claude/skills/neat-freak/
+## .claude/skills/skill-evolver/
 
-- `SKILL.md` — 洁癖 — Knowledge Base Neat-Freak (~2463 tok)
-- `test-prompts.json` (~364 tok)
+- `.DS_Store` (~1640 tok)
+- `FAQ.md` — FAQ (~823 tok)
+- `Makefile` — Make build targets (~111 tok)
+- `QUICKSTART.md` — Quickstart (~764 tok)
+- `README.md` — Project documentation (~731 tok)
+- `SKILL.md` — Skill Evolver (~5695 tok)
+- `test-prompts.json` (~281 tok)
 
-## .claude/skills/neat-freak/references/
+## .claude/skills/skill-evolver/.skill_evolve/
 
-- `agent-paths.md` — Agent 记忆与配置路径速查 (~530 tok)
-- `sync-matrix.md` — 变更影响矩阵 (~578 tok)
+- `baseline.json` (~1413 tok)
+- `evolve_plan.md` — skill-evolver Evolution Plan (~493 tok)
+- `experiments.jsonl` (~718 tok)
+- `final_report.json` (~1105 tok)
+- `results.tsv` (~318 tok)
 
-## .claude/skills/receiving-code-review/
+## .claude/skills/skill-evolver/.skill_evolve/iterations/
 
-- `SKILL.md` — Code Review Reception (~1722 tok)
+- `iter-001-discard.md` — Iteration 1 — DISCARD (~486 tok)
+- `iter-002-keep.md` — Iteration 2 — KEEP (~442 tok)
+- `iter-003-keep.md` — Iteration 3 — KEEP (~409 tok)
 
-## .claude/skills/requesting-code-review/
+## .claude/skills/skill-evolver/.skill_evolve/workspace/
 
-- `SKILL.md` — Requesting Code Review (~872 tok)
+- `safety-rules.md.snap-20260521T150000` — L1 Safety Rules (~671 tok)
+- `SKILL.md.baseline` — Declares mentioned (~5684 tok)
+- `SKILL.md.darwin-bak-20260521T162228` — Declares mentioned (~5743 tok)
+- `SKILL.md.darwin-bak-r2-20260521T162331` — Declares mentioned (~5908 tok)
+- `SKILL.md.darwin-bak-r3-20260521T162417` — Declares mentioned (~5957 tok)
+- `SKILL.md.darwin-bak-r4-20260521T162713` — Declares mentioned (~6009 tok)
+- `SKILL.md.darwin-bak-r5-20260521T162750` — Declares mentioned (~6025 tok)
+- `SKILL.md.snap-20260521T144955` — Declares mentioned (~5684 tok)
+- `SKILL.md.snap-20260521T151000` — Declares mentioned (~5684 tok)
 
-## .claude/skills/subagent-driven-development/
+## .claude/skills/skill-evolver/assets/example/dataset/
 
-- `SKILL.md` — Subagent-Driven Development (~3306 tok)
+- `dev.jsonl` (~112 tok)
+- `gt.jsonl` (~55 tok)
+- `holdout.jsonl` (~58 tok)
+- `regression.jsonl` (~55 tok)
 
-## .claude/skills/systematic-debugging/
+## .claude/skills/skill-evolver/assets/example/dataset/traces/
 
-- `SKILL.md` — Systematic Debugging (~2972 tok)
+- `dev-1.json` (~117 tok)
+- `dev-2.json` (~55 tok)
+- `gt-1.json` (~52 tok)
+- `holdout-1.json` (~65 tok)
+- `reg-1.json` (~64 tok)
 
-## .claude/skills/test-driven-development/
+## .claude/skills/skill-evolver/assets/example/target_skill/
 
-- `SKILL.md` — Test-Driven Development (TDD) (~2832 tok)
-- `test-prompts.json` (~102 tok)
+- `SKILL.md` — Demo Router (~132 tok)
 
-## .claude/skills/using-git-worktrees/
+## .claude/skills/skill-evolver/dataset/
 
-- `SKILL.md` — Using Git Worktrees (~2166 tok)
+- `dev.jsonl` (~84 tok)
+- `gt.jsonl` (~28 tok)
+- `holdout.jsonl` (~31 tok)
+- `regression.jsonl` (~32 tok)
 
-## .claude/skills/using-superpowers/
+## .claude/skills/skill-evolver/dataset/traces/
 
-- `SKILL.md` — Instruction Priority (~1575 tok)
+- `dev-extracted-20260521-002.json` (~276 tok)
+- `dev-extracted-20260521-003.json` (~205 tok)
+- `dev-extracted-20260521-004.json` (~206 tok)
+- `gt-extracted-20260521-001.json` (~257 tok)
+- `holdout-extracted-20260521-005.json` (~204 tok)
+- `regression-extracted-20260521-006.json` (~178 tok)
 
-## .claude/skills/verification-before-completion/
+## .claude/skills/skill-evolver/docs/specs/
 
-- `SKILL.md` — Verification Before Completion (~1356 tok)
-- `test-prompts.json` (~103 tok)
+- `2026-05-22--trace-recorder.md` — 设计：Skill Trace 自动录制层 (~892 tok)
 
-## .claude/skills/writing-plans/
+## .claude/skills/skill-evolver/references/
 
-- `SKILL.md` — Writing Plans (~2122 tok)
+- `artifacts.md` — Artifact Contract (~417 tok)
+- `dataset-format.md` — Dataset Format (~613 tok)
+- `distribution.md` — Distribution Contract (~468 tok)
+- `eval-noise.md` — LLM Eval Noise Mitigation (~360 tok)
+- `evaluation-layers.md` — Evaluation Layers (~559 tok)
+- `mutation-layers.md` — Mutation Layers (~468 tok)
+- `runbook.md` — Local Evolution Runbook (~316 tok)
+- `safety-rules.md` — L1 Safety Rules (~638 tok)
+- `trace-recorder.md` — Trace Recorder — 集成说明 (~608 tok)
 
-## .claude/skills/writing-skills/
+## .claude/skills/skill-evolver/scripts/
 
-- `SKILL.md` — Writing Skills (~5812 tok)
+- `check_skill_package.py` — check_skill_package, main (~914 tok)
+- `setup_workspace.py` — detect_git_status, setup_workspace, main (~1222 tok)
+- `trace-recorder.js` — fs: readStdin, findTranscript, extractText + 6 more (~1268 tok)
+- `trace-review.js` — fs: loadPending, savePending, promoteTrace, age, run (~1142 tok)
+- `validate_dataset.py` — validate_dataset, main (~892 tok)
 
 ## .claude/tmp/
 
