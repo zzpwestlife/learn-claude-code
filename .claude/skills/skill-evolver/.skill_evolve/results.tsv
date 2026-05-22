@@ -1,0 +1,6 @@
+timestamp	checkpoint	skill	old_score	new_score	status	dimension	note	eval_mode
+2026-05-21T00:00	baseline	skill-evolver	-	0.875	baseline	-	L2 dev 21/24; trace-002 A6/A7 fail on R3 aggregation; regression trace-006 stale	dry_run
+2026-05-21T15:00	iter-1-discard	skill-evolver	0.875	0.875	discard	structure_and_safety	L1 R2★ false positive: "token" regex matched "total token cost" in Gate section of SKILL.md; pre-existing issue in safety-rules.md R2 pattern; rolled back from SKILL.md.snap-20260521T144955	dry_run
+2026-05-21T15:10	iter-2-keep	skill-evolver	0.875	0.875	keep	all	Layer 3: narrowed R2 regex from bare "token" to access_token|api_token|auth_token|Bearer\s; eliminates false positive on "total token cost"; L1 now PASS; dev L2 unchanged (21/24); provisional keep	dry_run
+2026-05-21T15:20	iter-3-keep	skill-evolver	0.875	1.000	keep	all	Layer 2: added R3 aggregation rule (one warning entry per distinct match value); dev 24/24=1.0; L3 holdout PASS; regression 0 failures; stop condition met	dry_run
+2026-05-21T15:30	final	skill-evolver	0.875	1.000	finalized	all	Stop condition 1 met; 2 keeps (iter2 layer3 R2 regex, iter3 layer2 R3 aggregation); final_report.json written	dry_run

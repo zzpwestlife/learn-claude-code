@@ -1,0 +1,27 @@
+{
+  "id": "extracted-20260521-004",
+  "skill": "skill-evolver",
+  "split": "dev",
+  "input": "使用 skill-evolver 评测优化一下 design-first skill",
+  "expected_output": {
+    "mode": "Degraded Mode",
+    "target_skill": "design-first",
+    "l1": {
+      "structure": "PASS",
+      "safety": "PASS with 0 warnings"
+    },
+    "rubric": {
+      "D1": "YES",
+      "D2": "YES",
+      "D3": "YES",
+      "D4": "NO"
+    },
+    "score": "3/4",
+    "operator_action": "直接修复 D4",
+    "mutations": [
+      {"layer": "layer1", "dimension": "D4", "change": "在 Examples 节末尾追加 INVOKE×2 + SKIP×3 示例对"}
+    ],
+    "re_evaluation": {"score": "4/4", "safety_warnings": 0}
+  },
+  "notes": "dev trace；仅 D4 修复；design-first 有复杂降级路由，SKIP 示例对增至 3 条"
+}

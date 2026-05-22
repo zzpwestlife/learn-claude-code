@@ -104,3 +104,9 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 2026-05-20T14:20	6eada0b	kafka-frpc	81.7	83.3	keep	D1-Frontmatter	补充 when-NOT-to-use 声明到 description	dry_run
 2026-05-20T14:30	2289d20	kafka-frpc	83.3	84.8	keep	D7-整体架构	补全quick-jump §2入口 + 参考区补编号§7	dry_run
 2026-05-20T14:40	6fc4787	kafka-frpc	84.8	85.55	keep	D7-整体架构	§0.5改为###子节消除小数编号异常	dry_run
+2026-05-21T16:00	baseline	skill-evolver	-	79.2	baseline	-	D1=5.6 D2=12.0 D3=8.0 D4=6.3 D5=12.0 D6=4.0 D7=10.5 D8=20.8; 最弱D7(无模式分发表)+D1(示例在body)	dry_run
+2026-05-21T16:10	darwin-r1	skill-evolver	79.2	81.45	keep	整体架构(D7)	在 SKIP examples 后插入 Mode Dispatch 6行路由表；D7 7→8.5(+1.5×15/10=+2.25pt)	dry_run
+2026-05-21T16:20	darwin-r2	skill-evolver	81.45	83.05	keep	Frontmatter质量(D1)	description改为多行YAML：Invoke when/Do not use when/Example (invoke+skip)；D1 7→9(+2×8/10=+1.6pt)	dry_run
+2026-05-21T16:30	darwin-r3	skill-evolver	83.05	84.55	keep	指令具体性(D5)	skill-creator不可用时从"stop"改为显式dry_run fallback：surface gap、skip quick_validate、simulate L2/L3、mark eval_mode；D5 8→9(+1×15/10=+1.5pt)	dry_run
+2026-05-21T16:40	darwin-r4	skill-evolver	84.55	85.3	keep	整体架构(D7)	"## Iteration Loop"重命名为"## Phase 1: Iteration Loop"+桥接句；Phase 0/1 标签对称；D7 8.5→9(+0.5×15/10=+0.75pt)	dry_run
+2026-05-21T16:50	darwin-r5	skill-evolver	85.3	85.8	keep	边界条件覆盖(D3)	Phase 0 Step 2补充GT缺失时的明确stop条件；D3 8→8.5(+0.5×10/10=+0.5pt)	dry_run

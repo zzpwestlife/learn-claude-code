@@ -1,0 +1,29 @@
+{
+  "id": "extracted-20260521-001",
+  "skill": "skill-evolver",
+  "split": "gt",
+  "input": "使用 skill-evolver 评测优化一下 add-frpc-tests skill",
+  "expected_output": {
+    "mode": "Degraded Mode",
+    "target_skill": "add-frpc-tests",
+    "l1": {
+      "structure": "PASS",
+      "safety": "PASS with 1 warning",
+      "warnings": ["R3: /tmp/frpc-cover-before.out and /tmp/frpc-cover-after.out (3 occurrences)"]
+    },
+    "rubric": {
+      "D1": "YES",
+      "D2": "YES",
+      "D3": "YES",
+      "D4": "NO"
+    },
+    "score": "3/4",
+    "operator_action": "直接修复两处问题",
+    "mutations": [
+      {"layer": "layer1", "dimension": "D4", "change": "追加 INVOKE×2 + SKIP×2 示例对至适用与不适用节末尾"},
+      {"layer": "layer2", "dimension": "R3", "change": "3 处 /tmp/ 替换为 ${TMPDIR:-/tmp}"}
+    ],
+    "re_evaluation": {"score": "4/4", "safety_warnings": 0}
+  },
+  "notes": "gt 基准 trace；Degraded Mode 正向路径；包含 D4+R3 双修模式"
+}

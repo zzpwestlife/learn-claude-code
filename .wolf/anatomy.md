@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-21T04:00:00.609Z
-> Files: 365 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-21T22:00:00.420Z
+> Files: 343 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -135,21 +135,7 @@
 
 ## .claude/skills/
 
-- `.DS_Store` (~2186 tok)
-
-## .claude/skills/add-frpc-tests/
-
-- `SKILL.md` — Add FRPC Tests (~2029 tok)
-- `test-prompts.json` (~173 tok)
-
-## .claude/skills/add-frpc-tests/references/
-
-- `http-mock.md` — HTTP Mock — httptest 优先 / httpmock 兜底 (~391 tok)
-- `kafka-mock.md` — Kafka Mock — `pkg/thirdparty/mq/kafka` (~300 tok)
-- `metadata-and-trace.md` — Metadata 构造 + 链路追踪初始化 (~496 tok)
-- `redis-mock.md` — Redis Mock — miniredis (~375 tok)
-- `rmq-mock.md` — RabbitMQ Mock — `pkg/thirdparty/mq/rmq` (~275 tok)
-- `rpc-mock.md` — RPC Client Mock — `pkg/client/mock` (~355 tok)
+- `.DS_Store` (~1640 tok)
 
 ## .claude/skills/brainstorming/
 
@@ -218,24 +204,6 @@
 
 - `SKILL.md` — Dispatching Parallel Agents (~1818 tok)
 
-## .claude/skills/english-immersion/
-
-- `SKILL.md` — English Immersion Skill (~726 tok)
-- `test-prompts.json` — Declares in (~331 tok)
-
-## .claude/skills/english-immersion/reference/
-
-- `error-pattern-taxonomy.md` — Error Pattern Taxonomy (~2134 tok)
-- `ielts-rubrics.md` — IELTS Rubrics Reference (~2523 tok)
-- `wittgenstein-style.md` — Wittgenstein-Style Word Explanation (~959 tok)
-
-## .claude/skills/english-immersion/sub-skills/
-
-- `ielts-read-aloud.md` — /ielts-read-aloud (~1344 tok)
-- `ielts-speaking.md` — /ielts-speaking (~2011 tok)
-- `ielts-task1.md` — /ielts-task1 (~1381 tok)
-- `ielts-task2.md` — /ielts-task2 (~1428 tok)
-
 ## .claude/skills/executing-plans/
 
 - `SKILL.md` — Executing Plans (~1229 tok)
@@ -254,20 +222,6 @@
 ## .claude/skills/humanizer/
 
 - `SKILL.md` — Humanizer: Remove AI Writing Patterns (~6920 tok)
-
-## .claude/skills/ielts/
-
-- `SKILL.md` — IELTS Skill — Active Feeder (~502 tok)
-
-## .claude/skills/kafka-frpc/
-
-- `SKILL.md` — Kafka × frpc 接入向导 (~2514 tok)
-- `STABILITY.md` — kafka-frpc Skill 稳定性问题记录 (~902 tok)
-- `test-prompts.json` (~193 tok)
-
-## .claude/skills/kafka-frpc/reference/
-
-- `kafka-frpc-integration-guide.md` — Kafka × frpc 接入指南 (~1523 tok)
 
 ## .claude/skills/lark-doc-copywriting/
 

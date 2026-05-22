@@ -1,0 +1,99 @@
+{
+  "created_at": "2026-05-21",
+  "target_skill": "skill-evolver",
+  "skill_path": "/Users/admin/.claude/skills/skill-evolver/SKILL.md",
+  "dataset_path": "/Users/admin/.claude/skills/skill-evolver/dataset/",
+  "workspace_backup": ".skill_evolve/workspace/SKILL.md.baseline",
+  "git_state": "not_a_git_repo",
+  "checkpoint_strategy": "file_snapshot",
+  "dependency_gaps": ["skill-creator unavailable — L1 step 2 (quick_validate) skipped"],
+  "eval_mode": "dry_run",
+
+  "l1_baseline": {
+    "structure": "PASS",
+    "quick_validate": "SKIPPED — skill-creator unavailable",
+    "safety": "PASS",
+    "safety_warnings": 0,
+    "gt_smoke": "PASS — 1 GT trace structurally sound"
+  },
+
+  "l2_baseline": {
+    "eval_mode": "dry_run",
+    "dev_traces": [
+      {
+        "id": "extracted-20260521-002",
+        "target_skill": "claude-config-manager",
+        "assertions": [
+          {"id": "A1", "type": "contains",  "pattern": "Degraded Mode",  "result": "PASS"},
+          {"id": "A2", "type": "contains",  "pattern": "3/4",            "result": "PASS"},
+          {"id": "A3", "type": "contains",  "pattern": "D4",             "result": "PASS"},
+          {"id": "A4", "type": "contains",  "pattern": "R3",             "result": "PASS"},
+          {"id": "A5", "type": "contains",  "pattern": "4/4",            "result": "PASS"},
+          {"id": "A6", "type": "contains",  "pattern": "2 warnings",     "result": "FAIL",
+           "note": "SKILL.md safety scan does not specify how to count multiple occurrences of the same rule; output format is ambiguous"},
+          {"id": "A7", "type": "llm_judge", "question": "Does SKILL.md clearly specify aggregating multiple distinct R3 paths as separate warning entries?", "result": "FAIL"},
+          {"id": "A8", "type": "fact_coverage", "facts": ["mode:Degraded","score:3/4","D4:NO","R3:2 warnings","re-eval:4/4"], "result": "PARTIAL"}
+        ],
+        "pass_count": 5,
+        "total": 8,
+        "pass_rate": 0.625
+      },
+      {
+        "id": "extracted-20260521-003",
+        "target_skill": "darwin-skill",
+        "assertions": [
+          {"id": "A1", "type": "contains",     "pattern": "Degraded Mode", "result": "PASS"},
+          {"id": "A2", "type": "contains",     "pattern": "3/4",           "result": "PASS"},
+          {"id": "A3", "type": "contains",     "pattern": "D4",            "result": "PASS"},
+          {"id": "A4", "type": "contains",     "pattern": "0 warnings",    "result": "PASS"},
+          {"id": "A5", "type": "contains",     "pattern": "4/4",           "result": "PASS"},
+          {"id": "A6", "type": "not_contains", "pattern": "R3",            "result": "PASS"},
+          {"id": "A7", "type": "llm_judge",    "question": "Does SKILL.md correctly skip R3 fix when L1 shows 0 warnings?", "result": "PASS"},
+          {"id": "A8", "type": "fact_coverage","facts": ["mode:Degraded","score:3/4","D4:NO","L1 clean","re-eval:4/4"], "result": "PASS"}
+        ],
+        "pass_count": 8,
+        "total": 8,
+        "pass_rate": 1.0
+      },
+      {
+        "id": "extracted-20260521-004",
+        "target_skill": "design-first",
+        "assertions": [
+          {"id": "A1", "type": "contains",     "pattern": "Degraded Mode", "result": "PASS"},
+          {"id": "A2", "type": "contains",     "pattern": "3/4",           "result": "PASS"},
+          {"id": "A3", "type": "contains",     "pattern": "D4",            "result": "PASS"},
+          {"id": "A4", "type": "contains",     "pattern": "0 warnings",    "result": "PASS"},
+          {"id": "A5", "type": "contains",     "pattern": "4/4",           "result": "PASS"},
+          {"id": "A6", "type": "not_contains", "pattern": "R3",            "result": "PASS"},
+          {"id": "A7", "type": "llm_judge",    "question": "Does the response correctly apply 3 SKIP examples for design-first routing complexity?", "result": "PASS"},
+          {"id": "A8", "type": "fact_coverage","facts": ["mode:Degraded","score:3/4","D4:NO","L1 clean","re-eval:4/4"], "result": "PASS"}
+        ],
+        "pass_count": 8,
+        "total": 8,
+        "pass_rate": 1.0
+      }
+    ],
+    "dev_pass_rate": 0.875,
+    "dev_cases_total": 24,
+    "dev_cases_passed": 21,
+    "persistent_failures": ["extracted-20260521-002:A6", "extracted-20260521-002:A7"]
+  },
+
+  "l3_baseline": {
+    "eval_mode": "dry_run",
+    "triggered_by": "dev_pass_rate >= 0.90 not yet met; L3 NOT triggered at baseline",
+    "holdout": {"id": "extracted-20260521-005", "status": "pending"},
+    "regression": {
+      "id": "extracted-20260521-006",
+      "status": "STALE",
+      "note": "Trace expected score=3/4 but skill has since been fixed; expected_output needs updating before L3 can run"
+    }
+  },
+
+  "baseline_score": 0.875,
+  "target_score": 1.0,
+  "known_gaps": [
+    "A6/A7 on trace-002: SKILL.md safety scan output format unspecified for multiple R3 occurrences",
+    "Regression trace-006 stale: expected_output reflects pre-fix state"
+  ]
+}

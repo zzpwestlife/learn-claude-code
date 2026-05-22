@@ -1,0 +1,27 @@
+{
+  "id": "extracted-20260521-003",
+  "skill": "skill-evolver",
+  "split": "dev",
+  "input": "使用 skill-evolver 评测优化一下 darwin-skill skill",
+  "expected_output": {
+    "mode": "Degraded Mode",
+    "target_skill": "darwin-skill",
+    "l1": {
+      "structure": "PASS",
+      "safety": "PASS with 0 warnings"
+    },
+    "rubric": {
+      "D1": "YES",
+      "D2": "YES",
+      "D3": "YES",
+      "D4": "NO"
+    },
+    "score": "3/4",
+    "operator_action": "直接修复 D4",
+    "mutations": [
+      {"layer": "layer1", "dimension": "D4", "change": "在使用方式节末尾追加 INVOKE×2 + SKIP×2 示例对"}
+    ],
+    "re_evaluation": {"score": "4/4", "safety_warnings": 0}
+  },
+  "notes": "dev trace；仅 D4 修复；L1 safety 全绿无警告；与 trace-001/002 形成对比"
+}

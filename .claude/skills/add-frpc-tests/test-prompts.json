@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "帮我给 internal/service/order 这个包补单测，提升覆盖率",
+    "expected": "skill 应先 cat go.mod 验证 frpc 依赖与版本、跑 go test -cover 取基线、列出 <100% 函数清单、识别外部依赖类别、给出计划清单等待用户确认；写入后跑 go test -v 验证。"
+  },
+  {
+    "id": 2,
+    "prompt": "这个 Kafka 消费者 handler 没测试，帮我加几个用例覆盖一下错误分支",
+    "expected": "skill 应识别 sarama.ConsumerGroupSession 信号 → 命中 Kafka 类别，按需读取 references/kafka-mock.md，提供 happy/error/edge 三组用例，避开未命中的 mock 类别（不读 RPC/HTTP 等）。"
+  },
+  {
+    "id": 3,
+    "prompt": "帮我给一个纯逻辑的 utils 工具函数加测试",
+    "expected": "skill 应识别无外部依赖 → TestMain 跳过、无需 mock；按表格驱动直接生成函数级用例；不读任何 mock reference。"
+  }
+]

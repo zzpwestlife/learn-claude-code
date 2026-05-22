@@ -370,6 +370,14 @@ timestamp	commit	skill	old_score	new_score	status	dimension	note	eval_mode
 → 读取并展示 results.tsv
 ```
 
+**调用示例（INVOKE）**：
+- ✅ "帮我优化 huashu-slides 这个 skill" → 调用，执行 Phase 0-2
+- ✅ "给所有 skills 打个分，看看质量怎么样" → 调用，执行 Phase 0.5-1
+
+**跳过示例（SKIP）**：
+- ❌ "帮我解释一下 Karpathy autoresearch 是什么" → 跳过，纯问答，不是 skill 优化任务
+- ❌ "帮我给这个 Go 项目写单测" → 跳过，不是 skill 优化请求，改用对应测试 skill
+
 ---
 
 ## 设计灵感

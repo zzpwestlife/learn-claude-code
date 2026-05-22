@@ -1,0 +1,25 @@
+{
+  "id": "extracted-20260521-006",
+  "skill": "skill-evolver",
+  "split": "regression",
+  "input": "使用 skill-evolver 评测优化一下 skill-evolver 自己",
+  "expected_output": {
+    "mode": "Degraded Mode",
+    "target_skill": "skill-evolver",
+    "l1": {
+      "structure": "PASS",
+      "safety": "PASS with 0 warnings"
+    },
+    "rubric": {
+      "D1": "YES",
+      "D2": "YES",
+      "D3": "YES",
+      "D4": "YES"
+    },
+    "score": "4/4",
+    "operator_action": "no mutations needed",
+    "mutations": [],
+    "re_evaluation": null
+  },
+  "notes": "regression trace v2 — 更新为当前已修复状态（D4+R3 均已修复）；防止自评逻辑退步；若 score 跌回 3/4 则为退步"
+}

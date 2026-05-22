@@ -1,0 +1,32 @@
+{
+  "id": "extracted-20260521-002",
+  "skill": "skill-evolver",
+  "split": "dev",
+  "input": "使用 skill-evolver 评测优化一下 claude-config-manager skill",
+  "expected_output": {
+    "mode": "Degraded Mode",
+    "target_skill": "claude-config-manager",
+    "l1": {
+      "structure": "PASS",
+      "safety": "PASS with 2 warnings",
+      "warnings": [
+        "R3: /tmp/claude-config-manager.pid (multiple occurrences)",
+        "R3: /tmp/ccm.log (multiple occurrences)"
+      ]
+    },
+    "rubric": {
+      "D1": "YES",
+      "D2": "YES",
+      "D3": "YES",
+      "D4": "NO"
+    },
+    "score": "3/4",
+    "operator_action": "直接修复两处问题",
+    "mutations": [
+      {"layer": "layer1", "dimension": "D4", "change": "在不适用场景节末尾追加 INVOKE×2 + SKIP×2 示例对"},
+      {"layer": "layer2", "dimension": "R3", "change": "5 处 /tmp/ 替换为 ${TMPDIR:-/tmp}"}
+    ],
+    "re_evaluation": {"score": "4/4", "safety_warnings": 0}
+  },
+  "notes": "dev trace；D4+R3 双修；R3 警告数量(2条/5处)多于 trace-001"
+}
