@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "prompt": "帮我 review 这个 feature branch 相对 main 的改动",
+    "expected": "运行 git diff main...HEAD（或 origin/main），生成 CODE_REVIEW.md + Evidence Block，TUI HANDOFF 选项"
+  },
+  {
+    "id": 2,
+    "prompt": "帮我 review 一下这段 Go 代码（用户粘贴含资源泄露函数，无 git 上下文）",
+    "expected": "识别为文件内容输入，走 review 流程，Critical 发现：defer Close() 缺失"
+  },
+  {
+    "id": 3,
+    "prompt": "帮我看看我写的代码写得怎么样",
+    "expected": "STOP，请求明确审查对象（diff/PR/patch/文件），不得输出泛化建议"
+  }
+]

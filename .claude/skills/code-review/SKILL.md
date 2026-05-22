@@ -1,13 +1,24 @@
 ---
 name: code-review
 description: |
-  Invoke when the user provides (or asks you to obtain) a concrete review target: PR link, git diff, commit range, or file set.
-  Hard gate: if there is no diff / not a git repo, STOP and ask for review inputs (diff/patch/files).
-  Output: must generate CODE_REVIEW.md (template) + a Review Evidence Block proving what was reviewed.
+  Invoke when: user provides a concrete review target — PR link, git diff, commit range, file set, or asks to review staged/feature-branch changes.
+  Do not use when: user asks a general coding question, asks to fix a small typo, or provides no diff/file/PR at all.
+  Output: CODE_REVIEW.md (from template) + Review Evidence Block.
+  Examples:
+    invoke: "帮我 review 这个 PR" / "review staged changes" / "review feature branch vs main"
+    skip: "帮我看看代码写得怎么样" (no diff) / "修一下这个拼写错误"
 version: "2.0.0"
 ---
 
 # Code Review Skill
+
+## 使用入口（快速分发）
+
+| 场景 | 跳转 |
+|------|------|
+| 执行审查（有 diff/PR/文件） | → [一、执行代码审查](#一执行代码审查-performing-code-review) |
+| 请求审查（完成功能后委托 subagent） | → [二、请求代码审查](#二请求代码审查-requesting-code-review) |
+| 接收审查反馈（处理他人意见） | → [三、接收代码审查](#三接收代码审查-receiving-code-review) |
 
 ## 角色与心态 (Role & Mindset)
 
@@ -53,15 +64,24 @@ Artifacts: CODE_REVIEW.md
 ### 审查步骤
 
 0.  **确认审查对象（避免误触发）**：
-    *   优先审查暂存区：运行 `git diff --cached`。
+    *   若用户明确提及「与 main/master 对比」「feature branch 变更」「相对主分支」「branch diff」：直接运行
+        ```bash
+        BASE=$(git merge-base HEAD origin/main 2>/dev/null \
+               || git merge-base HEAD main 2>/dev/null \
+               || git rev-parse origin/main 2>/dev/null \
+               || git rev-parse main 2>/dev/null)
+        git diff “$BASE”...HEAD
+        ```
+    *   否则，优先审查暂存区：运行 `git diff --cached`。
     *   若 `git diff --cached` 为空，再运行 `git diff HEAD`。
-    *   若两者都为空：**停止**，并向用户请求明确的审查对象（PR 链接 / commit range / 文件路径），不要输出“泛化审查建议”充数。
-    *   若用户只是要“修一个小问题/格式化/拼写修正”：提示无需走完整审查流程，直接给出最小修改建议即可。
+    *   若两者仍为空，尝试上述 branch diff（`git diff $(git merge-base HEAD origin/main 2>/dev/null || git rev-parse main)...HEAD`）。
+    *   若所有方式均无输出：**停止**，请求用户提供明确审查对象（PR 链接 / commit range / 文件路径），不要输出”泛化审查建议”充数。
+    *   若用户只是要”修一个小问题/格式化/拼写修正”：提示无需走完整审查流程，直接给出最小修改建议即可。
     *   若当前目录不是 git 仓库、或 git 命令不可用：**停止**，请求用户提供可审查输入（例如：`git diff` 输出、PR 链接、patch 文件、或指定需要审查的文件内容）。
 
 1.  **分析变更**：
-    *   运行 `git diff --cached`（优先）或 `git diff HEAD` 来查看变更。
-    *   如果变更包含新文件，请确保读取文件内容。
+    *   按 Step 0 确定的方式获取 diff；如果变更包含新文件，读取文件内容。
+    *   **大 diff 检查点**：若 diff 超过 500 行（`git diff ... | wc -l`），在继续前用 AskUserQuestion 询问：「变更较大，是否聚焦某个模块/文件？」提供选项：① 全量审查 ② 仅看指定路径（用户输入）③ 仅看 Critical 问题。
 
 2.  **审查维度**：
     *   **正确性**：逻辑错误、边界情况、潜在 Bug。
@@ -99,16 +119,18 @@ Artifacts: CODE_REVIEW.md
         2. "Fix Issues (Create Fix Plan)" — 基于 Critical/Important 生成修复计划与验证命令
         3. "Re-run Review (Check Again)" — 重新获取 diff 并复查（用于审查后又有新提交）
 
-### 工具脚本
+### 工具脚本（何时调用）
 
-- `scripts/get-diff.sh`: 自动选择 staged 或 unstaged diff 并输出。
-- `scripts/lint-runner.py`: 根据语言检测执行 go vet 或 flake8。
-- `scripts/metadata-checker.py`: 检查模块 README 与源文件头部 INPUT/OUTPUT/POS。
+| 脚本 | 调用时机 |
+|------|---------|
+| `scripts/get-diff.sh` | Step 0 无法确定 diff 来源时，作为辅助兜底 |
+| `scripts/lint-runner.py` | Step 2 分析完成后，可选运行以补充静态检查（go vet / flake8）；结果写入 CODE_REVIEW.md 的 Code Style 节 |
+| `scripts/metadata-checker.py` | 当 diff 包含模块新增或 README 变更时，验证头部 INPUT/OUTPUT/POS 完整性 |
 
 ### 参考资料
 
-- `references/review-checklist.md`: 审查清单与常见问题提示。
-- `assets/report-template.md`: CODE_REVIEW.md 模板。
+- `references/review-checklist.md`: 审查清单与常见问题提示（Step 2 可对照）。
+- `assets/report-template.md`: CODE_REVIEW.md 模板（Step 4 **必须**读取）。
 
 ### 测试策略
 
@@ -118,9 +140,9 @@ Artifacts: CODE_REVIEW.md
 
 ### 注意事项
 
-*   忽略琐碎的格式问题（假设已有自动格式化工具）。
-*   提供建设性的反馈，解释原因。
-*   指出问题代码的具体位置。
+*   **格式问题**：忽略缩进/尾随空格等自动格式化工具能处理的问题；仅报告影响可读性或产生歧义的命名问题。
+*   **反馈方式**：每条建议须包含「问题是什么」→「为什么是问题」→「建议改为什么」，不得只写"这里有问题"。
+*   **定位精度**：批注必须到文件名 + 函数名/行范围，不接受"某处""该模块"等模糊定位。
 
 ---
 
