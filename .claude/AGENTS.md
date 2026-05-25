@@ -42,6 +42,11 @@ You are a **Principal Engineer** for this project.
 - **Read-on-Demand**: Do NOT read full skill/doc files unless executing that specific task.
 - **References**: Heavy docs are in `.claude/docs/references/`.
 
+# --- CODE NAVIGATION (Non-Negotiable, see CORE_RULES §5.1) ---
+- **Discovery**: `Grep` / `Glob` — find files and patterns.
+- **Understanding**: LSP first (definitions, references, types) when enabled; do not read entire source files for navigation.
+- **Fallback**: No LSP (Markdown, config, strings) → `Read` with line range; see `docs/guides/claude-code-lsp-setup.md`.
+
 # --- NAVIGATION ---
 | Task | Path |
 |------|------|
@@ -49,6 +54,7 @@ You are a **Principal Engineer** for this project.
 | Hooks | `.claude/hooks/` |
 | Skills | `.claude/skills/` |
 | Guides | `.claude/docs/guides/` |
+| Code navigation + LSP | `docs/guides/claude-code-lsp-setup.md` · `CORE_RULES.md` §5.1 |
 | Soul | `SOUL.md` |
 | Lessons | `.claude/lessons.md` |
 | MCPs | Loaded by superpowers plugin (~15K tokens). Source: `~/.claude/plugins/` |

@@ -15,6 +15,16 @@ Start by understanding the current project context, then ask questions one at a 
 Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
 </HARD-GATE>
 
+## Reverse-Prompting STOP (MANDATORY)
+
+When listing clarifying questions (batch or one-by-one):
+
+1. **STOP after listing** — do NOT answer your own questions or fill in "assumed" answers.
+2. **Wait for the user** — proceed only after the user responds (or explicitly says "use reasonable defaults for the rest").
+3. After Q&A, offer to write a **requirements acknowledgment** using `docs/plans/_templates/requirements-ack.md` → save as `docs/plans/YYYY-MM-DD-<topic>-requirements-ack.md` and get explicit confirmation before `writing-plans`.
+
+See `docs/guides/reverse-prompting.md` for user-facing prompt snippets.
+
 ## Anti-Pattern: "This Is Too Simple To Need A Design"
 
 Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
@@ -97,6 +107,7 @@ digraph brainstorming {
 
 **Documentation:**
 - Write the validated design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
+- When reverse-prompting was used, also write `docs/plans/YYYY-MM-DD-<topic>-requirements-ack.md` from `docs/plans/_templates/requirements-ack.md` (confirmed assumptions + out-of-scope)
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
 

@@ -133,6 +133,7 @@ Even with RTK, follow these principles for custom scripts:
 1.  **Silence is Golden**: Scripts should output nothing on success, or a single confirmation line.
 2.  **Filter First**: Never run `cat huge_file.log`. Use `grep "ERROR" huge_file.log` or `tail -n 20 huge_file.log`.
 3.  **Search > Read**: For large codebases, use search tools (`grep`, `ripgrep`) to locate relevant sections before reading files.
+4.  **LSP > Full Read** (typed code): When `ENABLE_LSP_TOOL=1`, use LSP for definitions/references/types; see `CORE_RULES.md` §5.1 and `docs/guides/claude-code-lsp-setup.md`.
 
 ### 7.4 Safety Mechanisms: Does Optimization Mean Information Loss?
 

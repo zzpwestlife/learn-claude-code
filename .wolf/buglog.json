@@ -8,7 +8,12 @@
       "file": "docs/reports/2026-05-19-skill-ab-eval-execution-chain.md",
       "root_cause": "独立 headless runner 依赖的 Claude API 账户余额不足, 导致 with-skill / baseline transcript 无法产出",
       "fix": "在报告中明确记录环境限制, 将结论降级为限制说明 + 合同级差异分析, 不伪造实测 transcript",
-      "tags": ["claude-cli", "ab-eval", "environment", "402"],
+      "tags": [
+        "claude-cli",
+        "ab-eval",
+        "environment",
+        "402"
+      ],
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-19T22:11:00+08:00"
@@ -20,7 +25,12 @@
       "file": "scripts/session_token_observer.py",
       "root_cause": "脚本在 Python 3.9 环境中运行时会立即求值 `str | Path` 注解；项目默认解释器并非始终是 Python 3.10+。",
       "fix": "添加 `from __future__ import annotations`，让注解延迟求值，保持 Python 3.9 兼容。",
-      "tags": ["python", "typing", "python39", "session-token-observer"],
+      "tags": [
+        "python",
+        "typing",
+        "python39",
+        "session-token-observer"
+      ],
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-20T07:34:00+08:00"
@@ -32,7 +42,12 @@
       "file": "tests/test_task2_task5_token_optimization.py",
       "root_cause": "测试默认依赖本机已安装 `rtk`，但 hook 设计本身是在缺少 `rtk` 时静默透传，因此测试把可选依赖误当成了强依赖。",
       "fix": "在测试中注入临时 fake `rtk` 可执行文件，通过 PATH 显式模拟 rewrite 行为，不再依赖宿主环境。",
-      "tags": ["test", "rtk", "environment", "hook"],
+      "tags": [
+        "test",
+        "rtk",
+        "environment",
+        "hook"
+      ],
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-20T07:34:00+08:00"
@@ -44,7 +59,11 @@
       "file": ".claude/skills/darwin-skill/results.tsv",
       "root_cause": "双方在 results.tsv 同一尾部位置追加新记录，自动合并失败并留下 conflict markers。",
       "fix": "手工保留两边新增记录，移除 merge markers，并执行 git add 将文件标记为已解决。",
-      "tags": ["git", "merge-conflict", "results-tsv"],
+      "tags": [
+        "git",
+        "merge-conflict",
+        "results-tsv"
+      ],
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-20T20:28:00+08:00"
@@ -56,10 +75,143 @@
       "file": ".claude/skills/add-frpc-tests/SKILL.md, .claude/skills/humanizer/SKILL.md, .claude/skills/kafka-frpc/SKILL.md",
       "root_cause": "工作区新增的 3 个 skill 文件未满足现有 lint 规则，缺少 `Reusable Interface (R)`、`Anti-Anchoring/反锚定`，其中 `kafka-frpc` 还缺 `frontmatter.version`。",
       "fix": "本轮未修改这些无关 skill；记录为既有阻塞，后续若要恢复 make check 全绿，需要补齐对应 lint 必填项。",
-      "tags": ["lint", "skills", "make-check", "workspace"],
+      "tags": [
+        "lint",
+        "skills",
+        "make-check",
+        "workspace"
+      ],
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-05-20T20:30:00+08:00"
+    },
+    {
+      "id": "bug-006",
+      "timestamp": "2026-05-25T01:13:08.496Z",
+      "error_message": "Significant refactor of ",
+      "file": "docs/talks/2026-05-25-claude-code-sharing.md",
+      "root_cause": "5 lines replaced/restructured",
+      "fix": "Rewrote 13→50 lines (5 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T01:13:08.496Z"
+    },
+    {
+      "id": "bug-007",
+      "timestamp": "2026-05-25T01:25:17.056Z",
+      "error_message": "Significant refactor of ",
+      "file": "docs/talks/demo-parallel-review-script.md",
+      "root_cause": "12 lines replaced/restructured",
+      "fix": "Rewrote 26→11 lines (12 removed) | Also: **理想 MR 标准**：; - 1-3 个文件、< 200 行 diff（subagent 不会跑太久）",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-05-25T01:25:29.681Z"
+    },
+    {
+      "id": "bug-008",
+      "timestamp": "2026-05-25T01:26:00.962Z",
+      "error_message": "Significant refactor of ",
+      "file": "docs/talks/2026-05-25-claude-code-sharing.md",
+      "root_cause": "7 lines replaced/restructured",
+      "fix": "Rewrote 23→25 lines (7 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T01:26:00.962Z"
+    },
+    {
+      "id": "bug-009",
+      "timestamp": "2026-05-25T01:48:52.413Z",
+      "error_message": "Significant refactor of ",
+      "file": "docs/talks/demo-parallel-review-script.md",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 11→22 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T01:48:52.413Z"
+    },
+    {
+      "id": "bug-010",
+      "timestamp": "2026-05-25T01:54:22.775Z",
+      "error_message": "Significant refactor of ",
+      "file": "docs/talks/demo-parallel-review-script.md",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 5→5 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T01:54:22.775Z"
+    },
+    {
+      "id": "bug-011",
+      "timestamp": "2026-05-25T01:56:32.765Z",
+      "error_message": "Significant refactor of ",
+      "file": "docs/talks/example-skill-review-mr/SKILL.md",
+      "root_cause": "4 lines replaced/restructured",
+      "fix": "Rewrote 12→26 lines (4 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T01:56:32.765Z"
+    },
+    {
+      "id": "bug-012",
+      "timestamp": "2026-05-25T02:06:08.041Z",
+      "error_message": "Wrong reference: 800 should be 1500",
+      "file": "docs/talks/example-skill-review-mr/SKILL.md",
+      "root_cause": "Used \"800\" instead of \"1500\"",
+      "fix": "Changed 800 → 1500",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T02:06:08.041Z"
+    },
+    {
+      "id": "bug-013",
+      "timestamp": "2026-05-25T03:02:56.563Z",
+      "error_message": "Significant refactor of ",
+      "file": "docs/talks/demo-parallel-review-script.md",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 13→42 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-05-25T03:02:56.563Z"
     }
   ]
 }

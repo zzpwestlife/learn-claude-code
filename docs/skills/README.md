@@ -21,7 +21,7 @@
 | **`subagent-driven-development`** | 在当前会话中，需要为计划中的独立任务分配子 Agent 时触发。 | 为每个任务分配全新的子 Agent，并包含两阶段 Review。 |
 | **`dispatching-parallel-agents`** | 面临 2 个以上相互独立、无共享状态或顺序依赖的任务时触发。 | 并发调度多个子 Agent 处理独立问题，节省时间。 |
 | **`test-driven-development`** | 发生任何行为变更（新功能、修复、重构）时触发。 | 强制 TDD 流程：写测试 -> 观察失败 (RED) -> 写代码 -> 验证通过 (GREEN)。 |
-| **`systematic-debugging`** | 遇到具体的错误（报错、崩溃、退退化），在修复前必须先找出根本原因时触发。 | 强制系统性排查，生成最小复现报告和调试证据块，避免盲目尝试。 |
+| **`systematic-debugging`** | 遇到具体的错误（报错、崩溃、退化），在修复前必须先找出根本原因时触发。 | 先诊断式提问（反向引导），再复现→假设→验证；见 `docs/guides/reverse-prompting.md`。 |
 | **`verification-before-completion`** | 当你准备声称某个任务完成（测试通过、修复完成）时触发，特别是 commit/PR 之前。 | 强制运行真实的验证命令并附上退出码和输出作为证据。 |
 | **`code-review`** | 用户提供具体的审查目标（PR 链接、Git Diff、Commit 范围）时触发。 | 作为严苛的审查员，进行代码安全、性能和质量审查，产出审查报告。 |
 | **`requesting-code-review`** | 完成任务、实现主要功能或准备合并代码，需要请求 Review 时触发。 | 调度 code-reviewer 子 Agent 进行早期代码审查。 |
@@ -51,6 +51,16 @@
 | :--- | :--- | :--- |
 | **`humanizer`** | 当需要编辑或检查文本，去除其中 AI 生成的痕迹使其更自然、更像人类写作时触发。 | 基于 Wikipedia 的 “Signs of AI writing” 指南，去除 AI 常用词、被动语态、过度修饰等机器痕迹。 |
 | **`lark-doc-copywriting`** | 用户要求“帮我整理排版”、“标点半角化”、“中文排版修复”时触发。 | 自动化将飞书等文档的中文标点转半角、修复空格规范并整理代码块。 |
+
+---
+
+## 6. 会话技巧（非 Skill，文档驱动）
+
+| 文档 | 用途 |
+|------|------|
+| [reverse-prompting.md](../guides/reverse-prompting.md) | 魔法句、提问旋钮、与 Skill 的配合 |
+| [2026-05-25-wechat-reverse-prompting.md](../research/2026-05-25-wechat-reverse-prompting.md) | 微信文章分析与仓库落地对照 |
+| [requirements-ack 模板](../plans/_templates/requirements-ack.md) | 需求确认书 |
 
 ---
 *此文档用于快速查阅仓库已具备的能力，帮助您更好地通过提示词触发特定的工作流引擎。*

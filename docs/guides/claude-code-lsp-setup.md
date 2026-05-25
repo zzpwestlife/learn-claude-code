@@ -2,6 +2,14 @@
 
 本文档旨在指导 macOS 用户如何在 Claude Code 命令行工具中开启并配置 Golang 语言服务器 (LSP)，以实现代码跳转、精准搜索和实时错误检查，从而获得 IDE 级的开发体验。
 
+> **Agent 强制规则**（已写入 `.claude/rules/CORE_RULES.md` §5.1 与 `.claude/AGENTS.md`）：
+>
+> - 用 **Grep/Glob** 做发现（找文件、搜模式）
+> - 用 **LSP** 做理解（定义跳转、引用查找、类型信息）
+> - 找到文件后，优先用 LSP 导航，而不是读取整个文件
+>
+> 无 LSP 的文件类型（Markdown、JSON、Shell 等）仍用 Grep + 分段 `Read`。
+
 ## 为什么需要开启 LSP？
 
 默认情况下，Claude Code 使用 `grep` 进行文本搜索，这在大型项目中可能导致：
@@ -100,17 +108,18 @@ export ENABLE_LSP_TOOL=1
 
 ---
 
-## 进阶配置：优化项目提示词 (CLAUDE.md)
+## 进阶配置：与用户项目对齐
 
-为了确保 Claude 优先使用 LSP 而非 grep，建议在项目根目录的 `CLAUDE.md` 文件中添加以下指令：
+安装本套件后，**`.claude/AGENTS.md` 已包含**上述代码导航策略（通过 `CORE_RULES` 链式加载），一般无需在 `CLAUDE.md` 再抄一遍。
 
-```markdown
-## Tool Usage Guidelines
-- **Code Navigation**: For finding definitions, ALWAYS use `goToDefinition` or `workspaceSymbol` via LSP first.
-- **References**: Use `findReferences` for tracking usage.
-- **Fallback**: Only use `grep` or text search for comments, strings, or when LSP returns no results.
-- **Type Checking**: Regularly check for diagnostics after significant edits using LSP.
-```
+若目标仓库**未**安装本套件、仅有 `CLAUDE.md`，可粘贴与 CORE_RULES §5.1 相同的 3 条；并设置 `ENABLE_LSP_TOOL=1`。
+
+**Go 项目额外建议**（LSP 已开启时）：
+
+- 定义 / 符号：`goToDefinition`、`workspaceSymbol`
+- 引用：`findReferences`
+- 大改后：用 LSP diagnostics 扫一遍
+- 仅当 LSP 无结果时再 `grep`（注释、字符串、生成码）
 
 ## 常见问题
 

@@ -24,3 +24,7 @@ docs/plans/
 
 # Local duplicate exports (kept untracked)
 docs/insights/
+
+# Talk demo recordings (binary too large for git)
+docs/talks/**/*.mp4
+docs/talks/**/*.mov

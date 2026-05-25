@@ -20,8 +20,9 @@ version: "1.0.0"
 1) **复杂度定级**：L / M / H + 1-3 条理由
 2) **方案表**：2-3 个方案（工作量/风险/回滚/依赖），且必须包含一个最小化选项
 3) **Spec**（M/H 级）：写入并提交到指定路径（默认 `docs/specs/YYYY-MM-DD--{feature}.md`，用户偏好可覆盖）
-4) **批准摘要**（阶段6模板块，固定格式）
-5) **关键决策日志**：3-5 个决策（选项+理由）
+4) **需求确认书**（M/H 必写）：`docs/plans/YYYY-MM-DD--{feature}-requirements-ack.md`（模板 `docs/plans/_templates/requirements-ack.md`）
+5) **批准摘要**（阶段6模板块，固定格式）
+6) **关键决策日志**：3-5 个决策（选项+理由）
 
 ## Anti-Anchoring（反锚定，MANDATORY）
 
@@ -157,7 +158,23 @@ version: "1.0.0"
 
 ### 🚪 门控
 
-> 声明"信息充足，进入方案探索" → 进入阶段3
+> 声明"信息充足，进入假设暴露" → 进入阶段2b（L 级可跳过，直接进入阶段3）
+
+---
+
+## 阶段2b：假设暴露（M/H 级；L 级跳过）
+
+**目的**：在出方案前列出隐性假设，避免基于错误前提设计（尤其多地区、多租户、鉴权层级）。
+
+### 规则
+
+- 列出 **≥5 条**你将依赖的假设（用户行为、数据存放、验证前后端、默认值、时区/货币/日期格式等）。
+- **STOP**：不得在同一轮内给出方案或实现建议。
+- 用户确认或纠正后，将**已确认**条目写入后续 `requirements-ack` / spec。
+
+### 🚪 门控
+
+> 用户已确认或纠正假设列表 → 进入阶段3
 
 ---
 
@@ -296,9 +313,11 @@ version: "1.0.0"
 
 ---
 
-## 阶段6：批准摘要
+## 阶段6：批准摘要与需求确认书
 
-**目的**：输出最终设计摘要，等待实施指令。所有级别都执行此阶段。
+**目的**：输出最终设计摘要，并固化可粘贴到新会话的**需求确认书**。所有级别都执行本阶段。
+
+### 6a · 批准摘要（控制台输出）
 
 ```
 ═══════════════════════════════════════
@@ -311,6 +330,13 @@ version: "1.0.0"
 ## 未知项：显式延期 + 原因 + 负责人
 ═══════════════════════════════════════
 ```
+
+### 6b · 需求确认书（文件，M/H 必写；L 可选）
+
+- 路径：`docs/plans/YYYY-MM-DD--{feature}-requirements-ack.md`
+- 模板：`docs/plans/_templates/requirements-ack.md`
+- 必须包含：Agent 理解版功能描述、边界条件、**已确认**假设、out-of-scope
+- 用户显式确认后，方可路由 `writing-plans` / `executing-plans`
 
 **输出后停止。** 实施只在用户明确请求时开始。
 
@@ -336,4 +362,4 @@ version: "1.0.0"
 
 ---
 
-**融合来源**：[think](https://github.com/tw93/Waza/blob/main/skills/think/SKILL.md) · [grill-me](https://github.com/mattpocock/skills/blob/main/grill-me/SKILL.md) · [brainstorming](https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md)
+**融合来源**：[think](https://github.com/tw93/Waza/blob/main/skills/think/SKILL.md) · [grill-me](https://github.com/mattpocock/skills/blob/main/grill-me/SKILL.md) · [brainstorming](https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md) · [反向引导](https://mp.weixin.qq.com/s/jDuIako0hnVlEVzlcZ4iJg)（`docs/research/2026-05-25-wechat-reverse-prompting.md`）

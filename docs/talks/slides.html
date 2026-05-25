@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 的隐藏装备</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+<style>
+  :root {
+    --cream: #F8F6F1;
+    --coral: #C4674A;
+    --coral-light: #DC9278;
+    --coral-pale: rgba(196,103,74,0.08);
+    --ink: #1D1B18;
+    --ink-muted: #6A6058;
+    --ink-faint: #A89F97;
+    --card-bg: #FFFFFF;
+    --border: #E6E1D8;
+    --green: #3C6E50;
+    --green-pale: rgba(60,110,80,0.09);
+    --shadow-sm: 0 1px 3px rgba(29,27,24,0.06), 0 1px 2px rgba(29,27,24,0.04);
+    --shadow-md: 0 4px 16px rgba(29,27,24,0.07), 0 1px 4px rgba(29,27,24,0.05);
+    --shadow-coral: 0 3px 12px rgba(196,103,74,0.25);
+  }
+
+  /* Grain texture overlay — fixed, pointer-events-none for zero GPU repaint cost */
+  .reveal-viewport::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    pointer-events: none;
+    opacity: 0.028;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+
+  .reveal-viewport { background: var(--cream); }
+  .reveal { font-family: 'Outfit', sans-serif; color: var(--ink); }
+  .reveal .slides section { text-align: left; }
+
+  /* Typography */
+  .reveal h1, .reveal h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600; color: var(--ink);
+    line-height: 1.1; text-transform: none; letter-spacing: -0.025em;
+  }
+  .reveal h1 { font-size: 2.8em; }
+  .reveal h2 { font-size: 1.85em; margin-bottom: 0.45em; }
+  .reveal h3 {
+    font-family: 'Outfit', sans-serif; font-size: 0.72em; font-weight: 600;
+    color: var(--coral); text-transform: uppercase; letter-spacing: 0.13em;
+    margin-bottom: 0.3em;
+  }
+  .reveal p, .reveal li { font-size: 0.82em; line-height: 1.72; color: var(--ink); }
+  .reveal code {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.79em;
+    background: var(--coral-pale); color: var(--coral);
+    padding: 0.16em 0.44em; border-radius: 4px;
+    border: 1px solid rgba(196,103,74,0.14);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+  .reveal ul { list-style: none; padding: 0; margin: 0; }
+  .reveal ul li::before { content: "—"; color: var(--coral); margin-right: 0.6em; font-weight: 600; opacity: 0.65; }
+  .reveal a { color: var(--coral); }
+
+  /* Accent bar — 2px, longer feather */
+  .reveal .slides section::before {
+    content: ''; display: block; height: 2px;
+    background: linear-gradient(90deg, var(--coral) 0%, var(--coral-light) 20%, transparent 60%);
+    margin-bottom: 1.7em; border-radius: 1px; opacity: 0.85;
+  }
+  .reveal .slides section.no-bar::before,
+  .reveal .slides section.cover-slide::before { display: none; }
+
+  /* Cover */
+  .cover-slide {
+    text-align: center !important; display: flex !important; flex-direction: column;
+    justify-content: center; align-items: center; min-height: 100%;
+    background-image: radial-gradient(circle, rgba(196,103,74,0.11) 1px, transparent 1px);
+    background-size: 30px 30px;
+    position: relative;
+  }
+  /* vignette that fades the dot grid toward edges */
+  .cover-slide::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 55% 55% at 50% 50%, transparent 25%, var(--cream) 100%);
+    pointer-events: none;
+  }
+  .cover-slide h1 {
+    font-size: 3.5em; margin: 0.1em 0 0.3em;
+    letter-spacing: -0.03em;
+    position: relative; z-index: 1;
+  }
+  .cover-sub { font-size: 0.78em; color: var(--ink-muted); margin-top: 0.2em; position: relative; z-index: 1; }
+  .cover-coral { color: var(--coral); }
+  .cover-divider {
+    width: 32px; height: 2px;
+    background: linear-gradient(90deg, var(--coral), var(--coral-light));
+    margin: 1em auto; border-radius: 2px;
+    position: relative; z-index: 1;
+  }
+  .cover-eyebrow { font-size: 0.62em; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--coral); margin-bottom: 0.8em; }
+  /* pill row replacing the plain sub-text for the tech stack line */
+  .cover-pills {
+    display: flex; gap: 0.45em; justify-content: center; flex-wrap: wrap;
+    margin-top: 0.85em; position: relative; z-index: 1;
+  }
+  .cover-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.53em; font-weight: 400; letter-spacing: 0.04em;
+    padding: 0.38em 0.85em; border-radius: 100px;
+    border: 1px solid var(--border); color: var(--ink-muted);
+    background: rgba(255,255,255,0.72); backdrop-filter: blur(6px);
+  }
+
+  /* Cards */
+  .cards { display: grid; gap: 0.7em; }
+  .cards-2 { grid-template-columns: 1fr 1fr; }
+  .card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 11px;
+    padding: 1em 1.1em; border-left: 2px solid var(--coral);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.35s cubic-bezier(0.16,1,0.3,1), transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  .card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .card-title { font-weight: 600; font-size: 0.84em; margin-bottom: 0.28em; color: var(--ink); letter-spacing: -0.01em; }
+  .card-body { font-size: 0.71em; color: var(--ink-muted); line-height: 1.58; margin: 0; }
+  .card-tag { font-size: 0.58em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--coral); margin-bottom: 0.38em; display: block; opacity: 0.82; }
+
+  /* Table */
+  .reveal table { width: 100%; border-collapse: collapse; font-size: 0.72em; }
+  .reveal th { background: var(--ink); color: var(--cream); padding: 0.62em 0.9em; text-align: left; font-weight: 600; letter-spacing: 0.01em; }
+  .reveal td { padding: 0.52em 0.9em; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .reveal tr:nth-child(even) td { background: rgba(196,103,74,0.03); }
+  .reveal .highlight-row td { border-left: 2px solid var(--coral); font-weight: 600; background: rgba(196,103,74,0.05) !important; }
+
+  /* Data flow */
+  .flow { display: flex; flex-direction: column; gap: 0.3em; font-size: 0.74em; width: 100%; }
+  .flow-step { display: flex; align-items: flex-start; gap: 0.78em; width: 100%; }
+  .flow-step > div:last-child { flex: 1; min-width: 0; }
+  .flow-num {
+    background: var(--coral); color: white; border-radius: 50%;
+    width: 1.55em; height: 1.55em; display: flex; align-items: center; justify-content: center;
+    font-size: 0.82em; font-weight: 700; flex-shrink: 0; margin-top: 0.05em;
+    box-shadow: var(--shadow-coral);
+  }
+  .flow-label { color: var(--ink-muted); font-size: 0.83em; margin-top: 0.08em; }
+  .flow-main { font-weight: 500; }
+  .flow-arrow { color: var(--coral); font-size: 0.95em; margin: 0.03em 0; padding-left: 0.5em; opacity: 0.38; }
+  .flow-branch { display: flex; gap: 0.45em; margin-top: 0.38em; }
+  .flow-agent {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.38em 0.62em; font-size: 0.78em; flex: 1; text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .flow-agent strong { color: var(--coral); display: block; font-size: 0.88em; margin-bottom: 0.08em; font-weight: 600; }
+
+  /* Q grid */
+  .q-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.62em; margin-top: 0.8em; }
+  .q-card {
+    background: var(--coral-pale); border: 1px solid rgba(196,103,74,0.16);
+    border-radius: 12px; padding: 0.88em 1em;
+    box-shadow: 0 1px 4px rgba(29,27,24,0.04);
+    transition: border-color 0.28s cubic-bezier(0.16,1,0.3,1), box-shadow 0.28s cubic-bezier(0.16,1,0.3,1);
+  }
+  .q-card:hover {
+    border-color: rgba(196,103,74,0.32);
+    box-shadow: 0 4px 16px rgba(29,27,24,0.07);
+  }
+  .q-label { font-size: 0.58em; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; color: var(--coral); margin-bottom: 0.22em; opacity: 0.85; }
+  .q-text { font-size: 0.79em; color: var(--ink); margin: 0; font-weight: 400; line-height: 1.55; }
+
+  /* Checklist */
+  .checklist { list-style: none !important; padding: 0 !important; }
+  .checklist li::before { content: "□" !important; color: var(--coral) !important; font-size: 1em; margin-right: 0.52em; opacity: 0.65; }
+  .checklist li { padding: 0.42em 0; border-bottom: 1px solid rgba(230,225,216,0.8); font-size: 0.82em; line-height: 1.56; }
+  .checklist li:last-child { border-bottom: none; }
+
+  /* Tags & badges */
+  .tag {
+    display: inline-block; background: var(--coral-pale); color: var(--coral);
+    border-radius: 5px; padding: 0.11em 0.46em; font-size: 0.67em; font-weight: 600;
+    margin-right: 0.22em; border: 1px solid rgba(196,103,74,0.15);
+  }
+  .tag-green { background: var(--green-pale) !important; color: var(--green) !important; border-color: rgba(60,110,80,0.18) !important; }
+  .badges { display: flex; gap: 0.45em; flex-wrap: wrap; margin-top: 0.8em; }
+
+  /* Quote */
+  .big-quote {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.8em; font-style: italic;
+    line-height: 1.32; color: var(--ink); max-width: 80%; margin: 0 auto; text-align: center;
+    letter-spacing: -0.01em;
+  }
+  .cover-divider + .big-quote { margin-top: 0.55em; }
+
+  /* Two-col */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5em; align-items: start; }
+
+  /* Video */
+  .video-wrap {
+    width: 100%; border-radius: 10px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06); background: #0E0D0C;
+    margin-top: 0.5em;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+  .video-wrap video { width: 100%; display: block; max-height: 52vh; }
+
+  /* Slide number */
+  .reveal .slide-number {
+    color: var(--ink-faint); font-size: 0.5em;
+    background: transparent; font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Progress bar */
+  .reveal .progress { height: 2px; color: var(--coral); }
+
+  /* Fragment animations — premium spring-feel cubic-bezier */
+  .reveal .slides .fragment {
+    opacity: 0;
+    transition: opacity 0.48s cubic-bezier(0.16,1,0.3,1), transform 0.48s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal .slides .fragment.visible { opacity: 1; }
+  .reveal .slides .fragment.fade-up { transform: translateY(12px); }
+  .reveal .slides .fragment.fade-up.visible { transform: translateY(0); }
+
+  /* Selection tint */
+  ::selection { background: rgba(196,103,74,0.18); }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ① COVER -->
+<section class="cover-slide" data-background-color="#FAF9F5">
+  <!-- <p class="cover-eyebrow">2026 · 内部技术分享</p> -->
+  <h1>Claude Code<br><span class="cover-coral">的隐藏装备</span></h1>
+  <div class="cover-divider"></div>
+  <p class="cover-sub">从「AI 帮我写代码」到「AI 帮我搭工作流」</p>
+  <div class="cover-pills">
+    <span class="cover-pill">Skills</span>
+    <span class="cover-pill">Hooks</span>
+    <span class="cover-pill">Subagents</span>
+    <span class="cover-pill">CLI</span>
+  </div>
+  <aside class="notes">
+    开场白：今天不讲怎么让 AI 写代码——那大家已经在用了。
+    讲的是怎么让 CC 跑工作流、怎么把团队的最佳实践装进 AI。
+    先提问校准，再讲装备，最后放录屏。
+  </aside>
+</section>
+
+<!-- ② 破冰 4 问 -->
+<section>
+  <!-- <h3>破冰</h3> -->
+  <h2>先听再讲</h2>
+  <div class="q-grid">
+    <div class="q-card fragment fade-up">
+      <div class="q-label">Q1 · 举手题</div>
+      <p class="q-text">用过哪些 AI 编程工具？<br><span class="tag">Copilot</span><span class="tag">Cursor</span><span class="tag">CC</span><span class="tag">Codex</span></p>
+    </div>
+    <div class="q-card fragment fade-up">
+      <div class="q-label">Q2 · 点名题</div>
+      <p class="q-text">你平时怎么用 CC？<br>写代码 / debug / 接 API / 跑自动化？</p>
+    </div>
+    <div class="q-card fragment fade-up">
+      <div class="q-label">Q3 · 举手题</div>
+      <p class="q-text">自己写过 Skill / Hook / 自定义命令吗？写过什么？</p>
+    </div>
+    <div class="q-card fragment fade-up">
+      <div class="q-label">Q4 · 白板题 ✍️</div>
+      <p class="q-text">你最希望 AI 多帮你做什么？<br><span style="color:var(--ink-muted); font-size:0.85em;">每人一句，记白板，最后回扣</span></p>
+    </div>
+  </div>
+  <aside class="notes">
+    每问约 1 min，按 → 逐个显示，边问边显卡片。
+    Q4 答案记白板——最后「今天就能抄」那张幻灯片现场回扣。
+    衔接语：「大家都在用 AI 做单点任务。CC 和其他工具的核心差异，是它能做多步工作流。」
+  </aside>
+</section>
+
+<!-- ③ Why CC -->
+<!-- <section>
+  <h3>为什么是 Claude Code</h3>
+  <h2>不是更聪明的补全<br>是可编程的 AI 同事</h2>
+  <table style="margin-top:0.7em;">
+    <tr><th>工具</th><th>形态</th><th>可编程性</th><th>适合场景</th></tr>
+    <tr><td>Copilot</td><td>IDE 补全</td><td>低</td><td>行级补全</td></tr>
+    <tr><td>Cursor / Windsurf</td><td>IDE Agent</td><td>中（界面驱动）</td><td>单文件改造</td></tr>
+    <tr><td>ChatGPT 网页</td><td>对话框</td><td>无</td><td>问答、写片段</td></tr>
+    <tr class="highlight-row">
+      <td><strong>Claude Code</strong></td><td>CLI Agent</td><td>高（文件即配置）</td><td>跨文件·跨步骤·团队复用</td>
+    </tr>
+  </table>
+  <div class="badges">
+    <span class="tag">CLI-first = 可 git 追踪</span>
+    <span class="tag">Agentic，不是 Completion</span>
+    <span class="tag">Skill + Hook + Agent = 乐高</span>
+  </div>
+  <aside class="notes">
+    一句话定调：「Cursor 的设置在 GUI 里，CC 的设置在你的代码仓库里。」
+    三个关键差异：
+    1. CLI-first → 可 git 追踪，团队共享
+    2. Agentic → 自己规划、调工具、读输出再决定，不是补全
+    3. 生态可组合 → Skill + Hook + Subagent + CLI 是工程化的乐高
+  </aside>
+</section> -->
+
+<!-- ④ 四大装备 -->
+<section>
+  <h2>Claude Code 的四大隐藏装备</h2>
+  <div class="cards cards-2" style="margin-top:0.7em;">
+    <div class="card fragment fade-up">
+      <span class="card-tag">① Skills</span>
+      <div class="card-title">把团队最佳实践打包成技能</div>
+      <p class="card-body">一个目录 + 一份 SKILL.md，写清触发条件和流程。无需 slash 命令，CC 按 description 自动路由。</p>
+      <p class="card-body" style="margin-top:0.35em;"><code>.claude/skills/review-mr/SKILL.md</code></p>
+    </div>
+    <div class="card fragment fade-up">
+      <span class="card-tag">② Hooks</span>
+      <div class="card-title">工具调用前后自动跑脚本</div>
+      <p class="card-body">settings.json 挂钩 PreToolUse / PostToolUse / Stop。把「每次都要记得做」变成「永远不会忘」。</p>
+      <p class="card-body" style="margin-top:0.35em;">例：改完 .go 自动 <code>make lint</code>；发完 MR 评论自动打开浏览器</p>
+    </div>
+    <div class="card fragment fade-up">
+      <span class="card-tag">③ Subagents</span>
+      <div class="card-title">并行派发，不污染主上下文</div>
+      <p class="card-body">主 agent 派子任务，各自独立上下文，结果汇总。调研 / 审查 / 多目录探索直接并行。</p>
+      <p class="card-body" style="margin-top:0.35em;">单条消息发多个 Agent 调用 = 真并行</p>
+    </div>
+    <div class="card fragment fade-up">
+      <span class="card-tag">④ CLI Tools</span>
+      <div class="card-title">别用 MCP，用现有 CLI</div>
+      <p class="card-body">MCP 要起 server、管生命周期、调协议。主流场景一个 CLI 就够——<code>gh</code> / <code>glab</code> / <code>kubectl</code>，CC Bash 直接调。</p>
+      <p class="card-body" style="margin-top:0.35em; font-style:italic; color:var(--coral);">MCP 会被 CLI 替代。</p>
+    </div>
+  </div>
+  <aside class="notes">
+    按 → 逐张显示，每张说 30 秒。
+    ① Skills：「把你们组 code review 的标准写成文件，下次就不用重复解释了。」
+    ② Hooks：「永远不会忘」比「记得做」可靠一个数量级。
+    ③ Subagents：三个独立上下文不互相污染——这是 demo 要展示的核心。
+    ④ CLI：个人观点，欢迎 Q&A 挑战。
+  </aside>
+</section>
+
+<!-- ⑤ Demo 数据流 -->
+<section>
+  <h3>Demo · 四大装备全覆盖</h3>
+  <h2>并行 Subagent 改造<br>GitLab MR Code Review</h2>
+  <div class="flow" style="margin-top:0.6em;">
+    <div class="flow-step fragment fade-up">
+      <div class="flow-num">1</div>
+      <div>
+        <div class="flow-main">用户粘贴 MR URL <span class="tag">Skills</span></div>
+        <div class="flow-label">CC 按 description 自动触发 <code>review-mr</code>（无 slash 命令）</div>
+      </div>
+    </div>
+    <div class="flow-arrow fragment">↓</div>
+    <div class="flow-step fragment fade-up">
+      <div class="flow-num">2</div>
+      <div>
+        <div class="flow-main"><code>glab mr view</code> + <code>glab mr diff</code> <span class="tag">CLI</span></div>
+        <div class="flow-label">拿到 MR 元信息和 diff——用 CLI，不用 GitLab MCP</div>
+      </div>
+    </div>
+    <div class="flow-arrow fragment">↓</div>
+    <div class="flow-step fragment fade-up">
+      <div class="flow-num">3</div>
+      <div style="width:100%;">
+        <div class="flow-main">单条消息派 3 个 Subagent（真并行）<span class="tag">Subagents</span></div>
+        <div class="flow-branch">
+          <div class="flow-agent"><strong>安全</strong>SQL 注入 / 泄露 / Auth</div>
+          <div class="flow-agent"><strong>性能</strong>N+1 / 热路径 / 大分配</div>
+          <div class="flow-agent"><strong>可读性</strong>命名 / 嵌套 / 死代码</div>
+        </div>
+      </div>
+    </div>
+    <div class="flow-arrow fragment">↓</div>
+    <div class="flow-step fragment fade-up">
+      <div class="flow-num">4</div>
+      <div>
+        <div class="flow-main">主 Agent 汇总 → <code>glab mr note</code> 回贴 MR</div>
+        <div class="flow-label">结构化表格直接进 MR 评论，CLI 一条命令搞定</div>
+      </div>
+    </div>
+    <div class="flow-arrow fragment">↓</div>
+    <div class="flow-step fragment fade-up">
+      <div class="flow-num" style="background:var(--green);">5</div>
+      <div>
+        <div class="flow-main">Hook: PostToolUse → 浏览器自动打开 MR <span class="tag tag-green">Hooks</span></div>
+        <div class="flow-label">glab mr note 成功后 Hook 解析 URL，调 <code>open &lt;URL&gt;</code>——零点击</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    这张幻灯片在 demo 前讲，逐步按 → 显示每步。
+    说完第 3 步停一下强调：「三个独立上下文——安全的不知道性能在看什么，互不干扰，避免提示词污染。串行做 token 翻三倍。」
+    第 5 步是惊喜：「glab mr note 一执行完，浏览器 tab 自己弹出来——这就是 Hook 的价值。」
+    讲完数据流，翻下一张播录屏。
+  </aside>
+</section>
+
+<!-- ⑥ Demo 录屏 -->
+<section class="no-bar" data-background-color="#1C1A18">
+  <h3 style="color:var(--coral-light);">录屏回放</h3>
+  <h2 style="color:#FAF9F5; margin-bottom:0.3em;">从 URL 到结构化 Review 报告</h2>
+  <div class="video-wrap">
+    <video controls preload="metadata" poster="demo/merge review by claude code.png">
+      <source src="demo/3 subagents review a gitlab mr.mp4" type="video/mp4">
+      <p style="color:#E8E4DC; text-align:center; padding:2em;">视频文件路径：<code style="background:rgba(255,255,255,0.1); color:#E8A88E;">demo/3 subagents review a gitlab mr.mp4</code></p>
+    </video>
+  </div>
+  <p style="color:var(--ink-muted); font-size:0.58em; margin-top:0.45em; text-align:center; letter-spacing:0.03em;">
+    全程约 1 min 21 sec &nbsp;·&nbsp; Security: 2 &nbsp;·&nbsp; Performance: 2 &nbsp;·&nbsp; Readability: 9 &nbsp;·&nbsp; Hook: 浏览器自动打开
+  </p>
+  <aside class="notes">
+    播放时口播节奏：
+    0:00–0:45  展示 Skill 文件——「关键就这句：派三个 subagent」
+    0:45–1:30  粘贴 URL，glab 拿 diff——「没用 MCP，就是 CLI」
+    1:30–结束  三个 spinner 同时转——「这是最强卖点，三个独立上下文」
+    收尾：「输出是结构化表格，每行能直接进 MR 评论。然后浏览器自动打开——Hook 在工作。」
+  </aside>
+</section>
+
+<!-- ⑦ 今天就能抄 -->
+<section>
+  <!-- <h3>今天就能抄</h3> -->
+  <h2>4 条最小起点</h2>
+  <div class="two-col" style="margin-top:0.7em;">
+    <div>
+      <ul class="checklist">
+        <li class="fragment fade-up">把组里「反复要做的检查」写成 Skill（&lt; 200 行）</li>
+        <li class="fragment fade-up">在 <code>settings.json</code> 加一个 PreToolUse Hook 拦危险命令</li>
+        <li class="fragment fade-up">下次做 review / 调研，试试 Subagent 并行</li>
+        <li class="fragment fade-up">把常用 CLI（<code>gh</code> / <code>kubectl</code> / 内部 cli）加进 allow list</li>
+      </ul>
+    </div>
+    <div class="fragment fade-up">
+      <div class="card">
+        <span class="card-tag">问题</span>
+        <ul style="margin-top:0.3em;">
+          <li style="font-size:0.75em;">组里哪个重复劳动最适合做成 Skill？</li>
+          <li style="font-size:0.75em;">CI 之外还有哪些「人肉检查」值得 Hook 自动化？</li>
+          <li style="font-size:0.75em;">哪些「调研类任务」可以拆给 Subagent 并行？</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    按 → 逐条显示清单，每条配一句话点评：
+    ① Skill → 「把这次 demo 的 SKILL.md 抄回去改就行，< 50 行。」
+    ② Hook → 「最小 Hook：PreToolUse 拦 rm -rf，五分钟装好。」
+    ③ Subagent → 「下次调研类任务，让两个 subagent 分头找，主 agent 整合。」
+    ④ CLI → 「gh pr view / kubectl get pods，加进 allow list 就能用。」
+    最后显示启发问题卡片，逐条念白板上 Q4 的答案现场回扣。
+  </aside>
+</section>
+
+<!-- ⑧ 收尾金句 -->
+<section class="cover-slide no-bar" data-background-color="#FAF9F5">
+  <p class="big-quote">工具的天花板不在工具，<br>在你愿意把多少团队智慧灌进去。</p>
+  <div class="cover-divider"></div>
+  <!-- <p class="cover-sub" style="font-size:0.62em; color:var(--ink-muted);">slides + demo 脚本分享后发群里</p> -->
+  <aside class="notes">
+    收尾不说「谢谢大家」——直接进 Q&A。
+    备用回答：
+    「比 Cursor 强在哪」→ 设置在 git 仓库里，团队共享、版本管理、CI 可测。
+    「Subagent token 不炸吗」→ 各自独立上下文，三份小 context 比一份大 context 省。
+    「MCP 真会被 CLI 替代」→ 个人观点，主流场景够用；双向推送的场景 MCP 有价值，但那是少数。
+  </aside>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/plugin/notes/notes.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: 'c/t',
+  progress: true,
+  transition: 'fade',
+  transitionSpeed: 'fast',
+  backgroundTransition: 'fade',
+  center: false,
+  width: 1280,
+  height: 720,
+  margin: 0.06,
+  plugins: [ RevealNotes ]
+});
+</script>
+</body>
+</html>

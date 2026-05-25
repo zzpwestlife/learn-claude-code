@@ -1,19 +1,25 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-22T04:00:00.543Z
-> Files: 376 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-25T09:28:00.800Z
+> Files: 391 tracked | Anatomy hits: 0 | Misses: 0
+
+## ../../.cursor/projects/Users-admin-openSource-learn-claude-code/agent-tools/
+
+- `0035193c-4c85-4a9a-b395-0e5cf97cb88e.txt` (~25036 tok)
+- `312829ab-cedc-463e-8a37-f55bb13006c3.txt` (~6688 tok)
+- `ee27a6f2-544d-4184-a174-5e2bc9019ec7.txt` (~21830 tok)
 
 ## ./
 
 - `.claudeignore` — Core ignores to reduce context window usage and improve performance (~79 tok)
 - `.DS_Store` (~3824 tok)
-- `.gitignore` — Git ignore rules (~105 tok)
+- `.gitignore` — Git ignore rules (~129 tok)
 - `ARCHITECTURE.md` — Project Architecture (~495 tok)
 - `CLAUDE.md` — OpenWolf (~169 tok)
 - `HANDOFF.md` — HANDOFF — learn-claude-code (~408 tok)
 - `INTERNAL_SKILLS_EVALUATION.md` — 内部 Skill Hub 上架评估报告 (~780 tok)
 - `Makefile` — Make build targets (~186 tok)
-- `README.md` — Project documentation (~1302 tok)
+- `README.md` — Project documentation (~1352 tok)
 - `skills-lock.json` (~1118 tok)
 - `SuBMdg8yoorjYsxLZQEcTxtgnae.md` — 架构设计: 为什么需要 Tool Registry? (~3017 tok)
 
@@ -21,12 +27,12 @@
 
 - `.DS_Store` (~2732 tok)
 - `.ft-claude-pre-tool-use.log` (~104383 tok)
-- `AGENTS.md` — ================================== (~1208 tok)
+- `AGENTS.md` — ================================== (~1324 tok)
 - `changelog_config.json` (~50 tok)
 - `lessons.md` — Lessons (Project Memory) (~64 tok)
 - `settings.json` (~874 tok)
 - `settings.local.json` (~292 tok)
-- `skill-usage.log` (~568 tok)
+- `skill-usage.log` (~591 tok)
 - `SOUL.md` — SOUL.md - AI Identity & Core Values (~630 tok)
 - `superpowers.lock.json` (~129 tok)
 
@@ -65,7 +71,7 @@
 ## .claude/docs/references/
 
 - `mental_model_whitepaper.md` — 心理模型应用白皮书：构建认知驱动的 AI 原生架构 (~898 tok)
-- `token_optimization.md` — Token Optimization & Context Management Whitepaper (~2114 tok)
+- `token_optimization.md` — Token Optimization & Context Management Whitepaper (~2157 tok)
 
 ## .claude/docs/references/commands/
 
@@ -76,7 +82,7 @@
 ## .claude/docs/references/skills/
 
 - `auto_doc_full.md` — Auto-Doc Skill: Recursive Documentation Maintenance (~681 tok)
-- `brainstorming_full.md` — Brainstorming Ideas Into Designs (~1503 tok)
+- `brainstorming_full.md` — Brainstorming Ideas Into Designs (~1703 tok)
 - `condition-based-waiting.md` — Condition-Based Waiting (~875 tok)
 - `defense-in-depth.md` — Defense-in-Depth Validation (~912 tok)
 - `executing_plans_full.md` — Executing Plans (~999 tok)
@@ -112,7 +118,7 @@
 
 ## .claude/rules/
 
-- `CORE_RULES.md` — CORE RULES & PROTOCOLS (Unified V1.0) (~1319 tok)
+- `CORE_RULES.md` — CORE RULES & PROTOCOLS (Unified V1.0) (~1507 tok)
 - `openwolf.md` (~313 tok)
 
 ## .claude/scripts/
@@ -135,7 +141,7 @@
 
 ## .claude/skills/
 
-- `.DS_Store` (~1640 tok)
+- `.DS_Store` (~3278 tok)
 
 ## .claude/skills/add-frpc-tests/
 
@@ -160,7 +166,8 @@
 ## .claude/skills/code-review/
 
 - `README.md` — Project documentation (~343 tok)
-- `SKILL.md` — Code Review Skill (~1649 tok)
+- `SKILL.md` — Code Review Skill (~1961 tok)
+- `test-prompts.json` (~130 tok)
 
 ## .claude/skills/code-review/assets/
 
@@ -181,7 +188,7 @@
 
 - `.DS_Store` (~1640 tok)
 - `README.md` — Project documentation (~264 tok)
-- `SKILL.md` — 铁律 (~1693 tok)
+- `SKILL.md` — 铁律 (~1894 tok)
 - `test-prompts.json` (~133 tok)
 
 ## .claude/skills/kafka-frpc/
@@ -298,9 +305,13 @@
 - `trace-review.js` — fs: loadPending, savePending, promoteTrace, age, run (~1142 tok)
 - `validate_dataset.py` — validate_dataset, main (~892 tok)
 
+## .claude/skills/systematic-debugging/
+
+- `SKILL.md` — Systematic Debugging (~550 tok)
+
 ## .claude/tmp/
 
-- `session_summary.md` — Session Summary - 2026-05-21 09:23:29 (~202 tok)
+- `session_summary.md` — Session Summary - 2026-05-25 11:00:28 (~159 tok)
 
 ## .trae/
 
@@ -408,13 +419,14 @@
 - `agent_orchestration_tools.md` — AI 编程 Agent 编排工具指南：Superset, Conductor, OpenCode 与 OpenClaw (~803 tok)
 - `ai_native_workflow.md` — AI 原生开发工作流指南 (~455 tok)
 - `CHROME_DEBUGGING_GUIDE.md` — Claude Code + Chrome Remote Debugging 配置指南 (~459 tok)
-- `claude-code-lsp-setup.md` — Claude Code (CLI) Golang LSP 配置指南 (~792 tok)
+- `claude-code-lsp-setup.md` — Claude Code (CLI) Golang LSP 配置指南 (~815 tok)
 - `claude-config-optimization-guide.md` — Claude Code 配置优化指南 (~2498 tok)
 - `creating-skills.md` — Writing Skills (~5595 tok)
 - `documentation-standards.md` — Documentation Context (~336 tok)
 - `memory-architecture.md` — 分层记忆架构指南 (Layered Memory Architecture) (~551 tok)
 - `parallel-agents.md` — Dispatching Parallel Agents (~1605 tok)
 - `README.md` — Project documentation (~166 tok)
+- `reverse-prompting.md` — 反向引导（Reverse Prompting）— 使用指南 (~386 tok)
 - `skill-management.md` — 技能管理指南 (Skill Management Guide) (~846 tok)
 - `soul-md-guide.md` — SOUL.md：为 AI 注入灵魂的深度指南 (~1034 tok)
 - `statusline_configuration.md` — Claude Code 炫酷状态行配置指南 (~1076 tok)
@@ -443,6 +455,10 @@
 - `report-20260327.html` — Claude Code Insights (~18957 tok)
 - `report-20260414-zh.md` — Claude Code 洞察报告 (~2058 tok)
 - `report-20260414.html` — Claude Code Insights (~19126 tok)
+
+## docs/plans/_templates/
+
+- `requirements-ack.md` — 需求确认书 · [功能名称] (~184 tok)
 
 ## docs/references/
 
@@ -514,6 +530,7 @@
 - `2026-04-28-skill-boundary-audit.md` — Skill 边界与治理：现状调研（2026-04-28） (~431 tok)
 - `2026-04-28-skill-optimization-batch2.md` — Batch2：后续 Skills 优化范围调研（2026-04-28） (~278 tok)
 - `2026-04-28-wechat-skill-optimization-checklist.md` — 基于微信文章《Skill 到底能蒸馏我们的几分之几？》的 Skill 优化清单（草案） (~576 tok)
+- `2026-05-25-wechat-reverse-prompting.md` — 微信文章《让 Claude Code 自己提问》— 分析与落地对照 (~990 tok)
 - `README.md` — Project documentation (~250 tok)
 - `wechat-skill-evolver-repo-mapping.md` — 微信文章「让 Skill 自己训练自己」与 darwin-skill 仓库映射清单 (~1612 tok)
 
@@ -523,7 +540,7 @@
 
 ## docs/skills/
 
-- `README.md` — Project documentation (~708 tok)
+- `README.md` — Project documentation (~798 tok)
 
 ## docs/specs/
 
@@ -559,6 +576,22 @@
 - `2026-05-14-session-cutover-handoff-design.md` — Claude Code Session Cutover Handoff Design (~1149 tok)
 - `2026-05-14-soft-token-guards-design.md` — Claude Code 软治理 Token Guards Design (~1155 tok)
 - `2026-05-19-skill-d8-report-template-design.md` — Skill D8 Report Template Design (~1512 tok)
+
+## docs/talks/
+
+- `.DS_Store` (~2186 tok)
+- `2026-05-25-claude-code-sharing.md` — Claude Code 的隐藏装备 (~1331 tok)
+- `demo-parallel-review-script.md` — Demo 脚本 · 并行 Subagent 改造 GitLab MR Code Review (~1281 tok)
+- `slides.html` — Claude Code 的隐藏装备 (~4743 tok)
+
+## docs/talks/demo/
+
+- `.DS_Store` (~1640 tok)
+
+## docs/talks/example-skill-review-mr/
+
+- `open-mr-after-note.sh` — PostToolUse hook: open MR in browser after glab mr note posts a review comment (~158 tok)
+- `SKILL.md` — review-mr (~1207 tok)
 
 ## docs/一个文件让 AI Coding 效率翻倍! AGENTS.md 实践指南/
 

@@ -40,6 +40,20 @@
 - **Iterative Retrieval**: Start with a summary/search; ONLY read full content if specific details are needed.
 - **Truncation Awareness**: If output is truncated, explicitly state "Output truncated, use filter to see more."
 
+### 5.1 Code Navigation Strategy（代码导航）
+
+**Discovery（发现）** — use `Grep` / `Glob` to find files and text patterns (paths, symbols, error strings, config keys).
+
+**Understanding（理解）** — when `ENABLE_LSP_TOOL=1` and the language has a server (Go, Python, TypeScript, Rust, etc.):
+- Prefer LSP for definitions, references, workspace symbols, and type/diagnostic info.
+- After locating a file, navigate with LSP instead of reading the whole file.
+
+**Fallback（回退）**:
+- Markdown, JSON, Shell, generated code, or no LSP result → `Grep`/`Glob` then `Read` with `offset`/`limit` (still no full-file dump for files >100 lines).
+- Use text search for comments, string literals, and log messages LSP cannot resolve.
+
+Setup: `docs/guides/claude-code-lsp-setup.md`.
+
 ## 6. Context Isolation (AI Flow State)
 - **Project-Level Only**: DO NOT use user-level (`~/.claude/`) configuration for project-specific rules or tools.
 - **Dependency Isolation**: All MCP servers and Skills MUST be defined within the repository (`.claude/`), ensuring reproducibility.

@@ -123,4 +123,6 @@ graph TD
 ## 📚 文档与指南
 
 - [**Agent BDD Loop (Red-Green) 工作流指南**](.claude/docs/guides/agent_bdd_loop.md): 详细介绍了基于状态追踪的红绿 Agent 开发模式，确保复杂任务的原子化执行与零 Laziness。
+- [**反向引导（Reverse Prompting）**](docs/guides/reverse-prompting.md): 让 Claude 先提问再实现；含魔法句、需求确认书模板与 Skill 配合方式。
+- [**微信文章分析：反向引导**](docs/research/2026-05-25-wechat-reverse-prompting.md): 原文对照与本仓库落地清单。
 - [**Claude Code Golang LSP 配置指南**](docs/guides/claude-code-lsp-setup.md): 开启 `ENABLE_LSP_TOOL`，让 Claude Code 拥有 IDE 级的代码跳转与补全能力 (50ms 响应)。
