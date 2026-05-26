@@ -13,4 +13,9 @@
 
 ## Lessons
 
-- None yet
+### Investigation Discipline — Verify Before Asserting
+
+- **Mistake**: Claude asserted a root cause (e.g., "broker SmsCodeSend failed") without reading the actual code path, forcing the user to push back to get the real answer (`NextSendInterval==0` was the true cause).
+- **Impact**: Wasted a full back-and-forth loop; eroded trust in diagnostic output.
+- **Rule**: Before stating a root cause, read the exact function body and call site in question. If the path cannot be confirmed within 2–3 file reads, surface the uncertainty explicitly ("I haven't verified the actual call — here's my hypothesis") rather than asserting as fact.
+- **Where**: Enforced here; referenced in CORE_RULES §1 Evidence-Based principle.

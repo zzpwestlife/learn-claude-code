@@ -162,3 +162,34 @@
 | 17:27 | Created docs/guides/claude-code-lsp-setup.md | — | ~870 |
 | 17:28 | Created .claude/docs/references/token_optimization.md | — | ~2301 |
 | 17:28 | Session end: 35 writes across 19 files (slides.html, open-mr-after-note.sh, demo-parallel-review-script.md, settings.json, ft-settings.json) | 29 reads | ~122797 tok |
+
+## Session: 2026-05-25 17:30
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-05-26 15:09
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 15:19 | Edited .claude/settings.json | expanded (+9 lines) | ~223 |
+| 15:19 | Edited .claude/AGENTS.md | expanded (+6 lines) | ~175 |
+| 15:19 | Edited .claude/lessons.md | modified body() | ~195 |
+| 15:20 | Session end: 3 writes across 3 files (settings.json, AGENTS.md, lessons.md) | 4 reads | ~2881 tok |
+| 15:20 | Session end: 3 writes across 3 files (settings.json, AGENTS.md, lessons.md) | 4 reads | ~2881 tok |
+
+## Session: 2026-05-26 15:40
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 15:44 | Edited .claude/AGENTS.md | 1→2 lines | ~104 |
+| 15:44 | Edited .claude/AGENTS.md | 1→2 lines | ~78 |
+| 15:44 | Edited .claude/AGENTS.md | expanded (+6 lines) | ~106 |
+| 15:45 | Analyzed 4 proposed additions; added GitLab MR Workflow section, Batch Edits bullet, Unverified Root Cause anti-pattern to AGENTS.md; skipped 2 duplicates | .claude/AGENTS.md | done | ~120 |
+| 15:45 | Session end: 3 writes across 1 files (AGENTS.md) | 1 reads | ~549 tok |
+| 15:45 | Session end: 3 writes across 1 files (AGENTS.md) | 1 reads | ~549 tok |
+| 15:45 | Edited .claude/AGENTS.md | modified bodies() | ~114 |
+| 15:46 | Edited .claude/AGENTS.md | 1→2 lines | ~76 |
+| 15:46 | Added DEBUGGING PROTOCOL section + Pre-edit check bullet to SKILL AUTHORING CONVENTIONS | .claude/AGENTS.md | done | ~80 |
+| 15:46 | Session end: 5 writes across 1 files (AGENTS.md) | 1 reads | ~752 tok |
+| 15:46 | Session end: 5 writes across 1 files (AGENTS.md) | 1 reads | ~752 tok |

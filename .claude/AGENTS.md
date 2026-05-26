@@ -46,6 +46,7 @@ You are a **Principal Engineer** for this project.
 - **Discovery**: `Grep` / `Glob` — find files and patterns.
 - **Understanding**: LSP first (definitions, references, types) when enabled; do not read entire source files for navigation.
 - **Fallback**: No LSP (Markdown, config, strings) → `Read` with line range; see `docs/guides/claude-code-lsp-setup.md`.
+- **Batch Edits**: When a formatter auto-strips imports on save, batch the code change and import addition into a single Edit call to avoid a broken intermediate state.
 
 # --- NAVIGATION ---
 | Task | Path |
@@ -84,9 +85,32 @@ You are a **Principal Engineer** for this project.
   2. Decide placement using "Map, not Manual": global hard rules stay here, detailed module guidance goes to docs.
   3. Prefer automatable checks over prose-only rules whenever possible.
 
+# --- DEBUGGING PROTOCOL ---
+When debugging, follow this sequence:
+1. **Locate** — reproduce or find the exact error path in code
+2. **Hypothesize** — state the hypothesis explicitly before reading
+3. **Verify** — read the relevant function bodies and call sites
+4. **Assert** — only then propose a root cause
+
+If you cannot verify within 3 file reads, ask for guidance instead of guessing.
+
+# --- GITLAB MR REVIEW WORKFLOW ---
+- Fetch the diff first; filter out generated code (protobuf, mocks, build artifacts) before analysis
+- Apply parallel review lenses: security, performance, readability, correctness
+- Post the structured review as an MR comment when complete
+- When given a listing URL, resolve to a specific MR before starting the review
+
+# --- SKILL AUTHORING CONVENTIONS ---
+- **SKILL.md = agent runtime only**: Imperative instructions for the agent. No marketing copy, no changelog, no "why this skill exists" framing, no upgrade notes.
+- **README.md = humans**: Install instructions, examples, changelog, value proposition — all of it goes here, not in SKILL.md.
+- **Pre-edit check**: Before any skill edit, state which file each piece of content belongs in (SKILL.md or README.md).
+- **Post-restructure check**: After renaming or deleting any file inside a skill directory, grep for dangling references to the old filename before declaring done.
+- **Done condition for skill changes**: frontmatter valid + description ≤12 words + manually invoked once + no README content in SKILL.md.
+
 # --- ANTI-PATTERNS ---
 - ❌ Hardcoding paths / Temporary TODOs / Commented-out code
 - ❌ Skipping hook checks / Overlapping agents / Blind obedience
 - ❌ **False Assumptions (Karpathy)**: Making wrong assumptions and running with them — not surfacing confusion, not seeking clarification, not exposing contradictions, not presenting trade-offs, not pushing back when you should
 - ❌ **Over-Complexification (Karpathy)**: Over-engineering code and APIs, inflating abstraction layers, not cleaning dead code — 1000 lines for what should be 100
 - ❌ **Collateral Damage (Karpathy)**: Modifying/deleting code you don't fully understand, even when unrelated to the task
+- ❌ **Unverified Root Cause**: Asserting a diagnosis without reading the actual code path first. If unconfirmed within 2–3 reads, surface the hypothesis explicitly ("I haven't verified — here's my hypothesis") rather than stating it as fact. See `.claude/lessons.md`.

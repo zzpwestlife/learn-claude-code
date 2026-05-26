@@ -1,13 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-05-25T09:28:00.800Z
-> Files: 391 tracked | Anatomy hits: 0 | Misses: 0
-
-## ../../.cursor/projects/Users-admin-openSource-learn-claude-code/agent-tools/
-
-- `0035193c-4c85-4a9a-b395-0e5cf97cb88e.txt` (~25036 tok)
-- `312829ab-cedc-463e-8a37-f55bb13006c3.txt` (~6688 tok)
-- `ee27a6f2-544d-4184-a174-5e2bc9019ec7.txt` (~21830 tok)
+> Auto-maintained by OpenWolf. Last scanned: 2026-05-26T07:46:09.029Z
+> Files: 388 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -27,10 +21,10 @@
 
 - `.DS_Store` (~2732 tok)
 - `.ft-claude-pre-tool-use.log` (~104383 tok)
-- `AGENTS.md` — ================================== (~1324 tok)
+- `AGENTS.md` — ================================== (~1808 tok)
 - `changelog_config.json` (~50 tok)
-- `lessons.md` — Lessons (Project Memory) (~64 tok)
-- `settings.json` (~874 tok)
+- `lessons.md` — Lessons (Project Memory) (~241 tok)
+- `settings.json` (~952 tok)
 - `settings.local.json` (~292 tok)
 - `skill-usage.log` (~591 tok)
 - `SOUL.md` — SOUL.md - AI Identity & Core Values (~630 tok)
@@ -311,7 +305,7 @@
 
 ## .claude/tmp/
 
-- `session_summary.md` — Session Summary - 2026-05-25 11:00:28 (~159 tok)
+- `session_summary.md` — Session Summary - 2026-05-25 17:30:41 (~157 tok)
 
 ## .trae/
 
@@ -358,7 +352,7 @@
 
 ## docs/
 
-- `.DS_Store` (~2732 tok)
+- `.DS_Store` (~3824 tok)
 - `consolidation_report.md` — 文档整理报告 (Documentation Consolidation Report) (~401 tok)
 - `README.md` — Project documentation (~275 tok)
 - `zh-copywriting-guidelines.md` — 中文文案排版指北 (Chinese Copywriting Guidelines) (~435 tok)
@@ -582,7 +576,7 @@
 - `.DS_Store` (~2186 tok)
 - `2026-05-25-claude-code-sharing.md` — Claude Code 的隐藏装备 (~1331 tok)
 - `demo-parallel-review-script.md` — Demo 脚本 · 并行 Subagent 改造 GitLab MR Code Review (~1281 tok)
-- `slides.html` — Claude Code 的隐藏装备 (~4743 tok)
+- `slides.html` — Claude Code 的隐藏装备 (~5642 tok)
 
 ## docs/talks/demo/
 
